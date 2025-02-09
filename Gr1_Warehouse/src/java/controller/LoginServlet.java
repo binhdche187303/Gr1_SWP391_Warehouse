@@ -33,99 +33,98 @@ public class LoginServlet extends HttpServlet {
     }
 
     @Override
-protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    String code = request.getParameter("code");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String code = request.getParameter("code");
 
-    if (code == null || code.trim().isEmpty()) {
-        request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
-        return;
-    }
-
-    GoogleLogin googleLogin = new GoogleLogin();
-    String accessToken;
-
-    try {
-        accessToken = googleLogin.getToken(code);
-    } catch (Exception e) {
-        e.printStackTrace();
-        request.setAttribute("error", "Failed to retrieve access token from Google.");
-        request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
-        return;
-    }
-
-    GoogleAccount googleAccount;
-    try {
-        googleAccount = googleLogin.getUserInfo(accessToken);
-    } catch (Exception e) {
-        e.printStackTrace();
-        request.setAttribute("error", "Failed to retrieve Google account information.");
-        request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
-        return;
-    }
-
-    if (googleAccount == null || googleAccount.getEmail() == null) {
-        request.setAttribute("error", "Failed to retrieve Google account email.");
-        request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
-        return;
-    }
-
-    UserDAO userDAO = new UserDAO();
-    User user = userDAO.findByEmail(googleAccount.getEmail());
-
-    if (user == null) {
-        // Nếu user chưa tồn tại, tạo mới
-        user = new User();
-        user.setEmail(googleAccount.getEmail());
-        user.setUsername(googleAccount.getName());
-        user.setFullname(googleAccount.getName()); // Fullname giống username
-        user.setPassword("123"); // Mật khẩu mặc định là 123
-
-        // Thiết lập Role mặc định
-        Role role = new Role();
-        role.setRoleId(2);  // Role id 2 là Customer
-        user.setRole(role);  // Gán role cho user
-        user.setStatus("Active");
-
-        try {
-            userDAO.create(user);
-            System.out.println("New user created in the database.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Failed to create new user in the database.");
+        if (code == null || code.trim().isEmpty()) {
             request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
             return;
         }
+
+        GoogleLogin googleLogin = new GoogleLogin();
+        String accessToken;
+
+        try {
+            accessToken = googleLogin.getToken(code);
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Failed to retrieve access token from Google.");
+            request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
+            return;
+        }
+
+        GoogleAccount googleAccount;
+        try {
+            googleAccount = googleLogin.getUserInfo(accessToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Failed to retrieve Google account information.");
+            request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
+            return;
+        }
+
+        if (googleAccount == null || googleAccount.getEmail() == null) {
+            request.setAttribute("error", "Failed to retrieve Google account email.");
+            request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
+            return;
+        }
+
+        UserDAO userDAO = new UserDAO();
+        User user = userDAO.findByEmail(googleAccount.getEmail());
+
+        if (user == null) {
+            // Nếu user chưa tồn tại, tạo mới
+            user = new User();
+            user.setEmail(googleAccount.getEmail());
+            user.setUsername(googleAccount.getName());
+            user.setFullname(googleAccount.getName()); // Fullname giống username
+            user.setPassword("123"); // Mật khẩu mặc định là 123
+
+            // Thiết lập Role mặc định
+            Role role = new Role();
+            role.setRoleId(2);  // Role id 2 là Customer
+            user.setRole(role);  // Gán role cho user
+            user.setStatus("Active");
+
+            try {
+                userDAO.create(user);
+                System.out.println("New user created in the database.");
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("error", "Failed to create new user in the database.");
+                request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
+                return;
+            }
+        }
+
+        // Nếu user đã tồn tại hoặc vừa được tạo, tiến hành đăng nhập
+        HttpSession session = request.getSession();
+        session.setAttribute("acc", user);
+
+        // Xác định đường dẫn chuyển hướng theo role_id
+        int roleId = user.getRole().getRoleId();
+
+        switch (roleId) {
+            case 1:  // Admin system
+                response.sendRedirect("dashboard");
+                break;
+            case 2:  // Customer
+                response.sendRedirect(request.getContextPath() + "/pages/home.jsp");
+                break;
+            case 3:  // Warehouse manager
+                response.sendRedirect("warehouse/manager/dashboard");
+                break;
+            case 4:  // Warehouse staff
+                response.sendRedirect("warehouse/staff/home");
+                break;
+            case 5:  // Packing staff
+                response.sendRedirect("packing/staff/dashboard");
+                break;
+            default:
+                response.sendRedirect("error");
+        }
     }
-
-    // Nếu user đã tồn tại hoặc vừa được tạo, tiến hành đăng nhập
-    HttpSession session = request.getSession();
-    session.setAttribute("acc", user);
-
-    // Xác định đường dẫn chuyển hướng theo role_id
-    int roleId = user.getRole().getRoleId();
-
-    switch (roleId) {
-        case 1:  // Admin system
-            response.sendRedirect("dashboard");
-            break;
-        case 2:  // Customer
-            response.sendRedirect(request.getContextPath() + "/pages/home.jsp");
-            break;
-        case 3:  // Warehouse manager
-            response.sendRedirect("warehouse/manager/dashboard");
-            break;
-        case 4:  // Warehouse staff
-            response.sendRedirect("warehouse/staff/home");
-            break;
-        case 5:  // Packing staff
-            response.sendRedirect("packing/staff/dashboard");
-            break;
-        default:
-            response.sendRedirect("error");
-    }
-}
-
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -168,14 +167,20 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
             return;
         }
 
-        // Gọi phương thức login để kiểm tra thông tin người dùng
         User user = userDAO.login(email, password);
 
-        // Nếu đăng nhập thất bại
-        if (user == null || user.getUserId() == 0) {
+        if (user == null) {
             System.out.println("Login failed for email: " + email);
-            request.setAttribute("email", email); // Lưu email vào request để hiển thị lại
+            request.setAttribute("email", email);
             request.setAttribute("error", "Email or Password is incorrect. Please try again!");
+            request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
+            return;
+        }
+
+        if (user.getStatus() == null || "Deactive".equalsIgnoreCase(user.getStatus())) {
+            System.out.println("Login attempt with deactivated account: " + email);
+            request.setAttribute("email", email);
+            request.setAttribute("error", "Your account is deactivated. Please contact support.");
             request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
             return;
         }
