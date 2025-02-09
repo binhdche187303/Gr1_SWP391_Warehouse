@@ -130,14 +130,14 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Lấy thông tin từ form
-        String email = request.getParameter("email");
+        String identifier = request.getParameter("identifier"); // Nhận email hoặc username
         String password = request.getParameter("pass");
         String savePass = request.getParameter("save-pass"); // Kiểm tra checkbox "Remember me"
 
         // Kiểm tra nếu email và password trống
-        if (email == null || email.trim().isEmpty()) {
-            System.out.println("Email is empty.");
-            request.setAttribute("error", "Email cannot be empty");
+        if (identifier == null || identifier.trim().isEmpty()) {
+            System.out.println("User is empty.");
+            request.setAttribute("error", "Email or Username cannot be empty");
             request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
             return;
         }
@@ -149,8 +149,8 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        // Loại bỏ khoảng trắng thừa ở đầu và cuối
-        email = email.trim();
+        // Loại bỏ khoảng trắng thừa
+        identifier = identifier.trim();
         password = password.trim();
 
         // Khởi tạo UserDAO để kiểm tra đăng nhập
@@ -167,25 +167,25 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        User user = userDAO.login(email, password);
+        User user = userDAO.login(identifier, password);
 
         if (user == null) {
-            System.out.println("Login failed for email: " + email);
-            request.setAttribute("email", email);
-            request.setAttribute("error", "Email or Password is incorrect. Please try again!");
+            System.out.println("Login failed for identifier: " + identifier);
+            request.setAttribute("identifier", identifier);
+            request.setAttribute("error", "Email/Username or Password is incorrect. Please try again!");
             request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
             return;
         }
 
         if (user.getStatus() == null || "Deactive".equalsIgnoreCase(user.getStatus())) {
-            System.out.println("Login attempt with deactivated account: " + email);
-            request.setAttribute("email", email);
+            System.out.println("Login attempt with deactivated account: " + identifier);
+            request.setAttribute("identifier", identifier);
             request.setAttribute("error", "Your account is deactivated. Please contact support.");
             request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
             return;
         }
 
-        System.out.println("Login successful for email: " + email);
+        System.out.println("Login successful for identifier: " + identifier);
 
         // Đăng nhập thành công, lưu thông tin người dùng vào session
         HttpSession session = request.getSession();
@@ -194,7 +194,7 @@ public class LoginServlet extends HttpServlet {
         // Lưu email vào cookie nếu người dùng chọn "Remember me"
         if (savePass != null) {
             // Lưu email vào cookie với thời gian tồn tại là 7 ngày
-            Cookie emailCookie = new Cookie("email", email);
+            Cookie emailCookie = new Cookie("identifier", identifier);
             emailCookie.setMaxAge(7 * 24 * 60 * 60);  // Lưu cookie trong 7 ngày
             emailCookie.setPath("/");  // Cookie có sẵn cho toàn bộ website
             response.addCookie(emailCookie);
@@ -205,14 +205,14 @@ public class LoginServlet extends HttpServlet {
             passwordCookie.setPath("/");
             response.addCookie(passwordCookie);
 
-            System.out.println("Email and password saved in cookies for 7 days.");
+            System.out.println("Identifier and password saved in cookies for 7 days.");
         } else {
             // Nếu không chọn "Remember me", xóa cookie email
-            Cookie emailCookie = new Cookie("email", "");
+            Cookie emailCookie = new Cookie("identifier", "");
             emailCookie.setMaxAge(0);  // Xóa cookie ngay lập tức
             emailCookie.setPath("/");  // Đảm bảo cookie bị xóa trên toàn bộ trang web
             response.addCookie(emailCookie);
-            System.out.println("Email cookie deleted.");
+            System.out.println("Identifier cookie deleted.");
         }
 
         // Kiểm tra vai trò của người dùng và chuyển hướng tới trang tương ứng
@@ -225,24 +225,26 @@ public class LoginServlet extends HttpServlet {
         }
 
         System.out.println("Redirecting user with role: " + roleName);
-        switch (roleName) {
-            case "Admin system":
+        // Xác định đường dẫn chuyển hướng theo role_id
+        int roleId = user.getRole().getRoleId();
+
+        switch (roleId) {
+            case 1:  // Admin system
                 response.sendRedirect("dashboard");
                 break;
-            case "Customer":
+            case 2:  // Customer
                 response.sendRedirect(request.getContextPath() + "/pages/home.jsp");
                 break;
-            case "Warehouse manager":
+            case 3:  // Warehouse manager
                 response.sendRedirect("warehouse/manager/dashboard");
                 break;
-            case "Warehouse staffs":
+            case 4:  // Warehouse staff
                 response.sendRedirect("warehouse/staff/home");
                 break;
-            case "Packing staffs":
+            case 5:  // Packing staff
                 response.sendRedirect("packing/staff/dashboard");
                 break;
             default:
-                System.out.println("Unknown role: " + roleName + ". Redirecting to error page.");
                 response.sendRedirect("error");
         }
     }

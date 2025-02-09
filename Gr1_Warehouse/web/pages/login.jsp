@@ -65,8 +65,8 @@
                                 <form class="row g-4" method="post" action="${pageContext.request.contextPath}/login">
                                     <div class="col-12">
                                         <div class="form-floating theme-form-floating log-in-form">
-                                            <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
-                                            <label for="email">Email</label>
+                                            <input type="text" class="form-control" id="identifier" name="identifier" placeholder="Email or Username" required>
+                                            <label for="identifier">Email or Username</label>
                                         </div>
                                     </div>
 

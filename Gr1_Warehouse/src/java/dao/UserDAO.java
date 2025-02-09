@@ -17,16 +17,18 @@ import model.Role;
 public class UserDAO extends DBContext {
 
     // Phương thức login
-    public User login(String email, String password) {
+    public User login(String identifier, String password) {
         User user = null;
-        String sql = "SELECT u.user_id, u.username, u.password, u.fullname, u.phone, u.email, u.role_id, u.status, u.address, r.role_name "
+        String sql = "SELECT u.user_id, u.username, u.password, u.fullname, u.phone, u.email, "
+                + "u.role_id, u.status, u.address, r.role_name "
                 + "FROM Users u "
                 + "JOIN Roles r ON u.role_id = r.role_id "
-                + "WHERE u.email = ? AND u.password = ?";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, email);
-            ps.setString(2, password);
+                + "WHERE (u.email = ? OR u.username = ?) AND u.password = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, identifier); // Dùng email hoặc username
+            ps.setString(2, identifier);
+            ps.setString(3, password);
 
             ResultSet rs = ps.executeQuery();
 
@@ -38,7 +40,7 @@ public class UserDAO extends DBContext {
                 user.setFullname(rs.getString("fullname"));
                 user.setPhone(rs.getString("phone"));
                 user.setEmail(rs.getString("email"));
-                user.setAddress(rs.getString("address")); // Gán giá trị address
+                user.setAddress(rs.getString("address"));
 
                 model.Role role = new model.Role();
                 role.setRoleId(rs.getInt("role_id"));
@@ -242,7 +244,7 @@ public class UserDAO extends DBContext {
     }
 
     //Change password
-        public void updatePassword(String password, int user_id) {
+    public void updatePassword(String password, int user_id) {
         String sql = "UPDATE dbo.Users SET password=? WHERE user_id=?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -253,12 +255,13 @@ public class UserDAO extends DBContext {
             System.out.println(e);
         }
     }
-    
+
     public static void main(String[] args) {
         UserDAO uu = new UserDAO();
-        
+
 //        uu.updatePassword("1255", 7);
 //        uu.updateUser("HIHI", "11112499999", "DAAAAAAAA", 7);
-   User u = uu.getUserById(7);
-    System.out.println(u.toString());}
+        User u = uu.getUserById(7);
+        System.out.println(u.toString());
+    }
 }
