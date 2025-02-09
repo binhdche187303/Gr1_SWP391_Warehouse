@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import model.Categories;
 import model.Products;
@@ -57,12 +58,23 @@ public class Shop extends HttpServlet {
 protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
     ProductDAO pdao = new ProductDAO();
-    List<Products> products = pdao.getAllProducts();
-    request.setAttribute("p_list", products);
-    
     List<Categories> cat = pdao.getCategoryProductCounts();
     request.setAttribute("category", cat); 
     
+    // Lấy các category_id được chọn từ checkbox
+        String[] selectedCategories = request.getParameterValues("category_id");
+        request.setAttribute("selectedCategories", selectedCategories);
+        List<Products> filteredProducts = new ArrayList<>();
+
+        if (selectedCategories != null && selectedCategories.length > 0) {
+            // Nếu có danh mục được chọn, lọc sản phẩm theo các category_id
+            filteredProducts = pdao.getAllProductsByCategories(selectedCategories);
+        } else {
+            // Nếu không có gì được chọn, lấy tất cả sản phẩm
+            filteredProducts = pdao.getAllProducts();
+        }
+        request.setAttribute("p_list", filteredProducts);
+        
     String productIdParam = request.getParameter("productId");
     if (productIdParam != null && !productIdParam.trim().isEmpty()) {
         try {

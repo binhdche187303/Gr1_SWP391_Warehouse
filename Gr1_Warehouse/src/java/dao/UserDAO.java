@@ -255,13 +255,4 @@ public class UserDAO extends DBContext {
             System.out.println(e);
         }
     }
-
-    public static void main(String[] args) {
-        UserDAO uu = new UserDAO();
-
-//        uu.updatePassword("1255", 7);
-//        uu.updateUser("HIHI", "11112499999", "DAAAAAAAA", 7);
-        User u = uu.getUserById(7);
-        System.out.println(u.toString());
-    }
 }

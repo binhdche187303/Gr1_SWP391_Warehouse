@@ -7,6 +7,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -196,28 +198,27 @@
                                         </h2>
                                         <div id="collapseOne" class="accordion-collapse collapse show"
                                              aria-labelledby="headingOne">
-                                            <div class="accordion-body">
-<!--                                                <div class="form-floating theme-form-floating-2 search-box">
-                                                    <input type="search" class="form-control" id="search"
-                                                           placeholder="Search ${pageContext.request.contextPath}">
-                                                    <label for="search">Search</label>
-                                                </div>-->
-
-                                                <ul class="category-list custom-padding custom-height">
-                                                    <c:forEach var="cat" items="${requestScope.category}"> 
-                                                    <li>
-                                                        <div class="form-check ps-0 m-0 category-list-box">
-                                                            <input class="checkbox_animated" type="checkbox" id="${cat.category_id}">
-                                                            <label class="form-check-label" for="${cat.category_id}">
-                                                                <span class="name">${cat.category_name}</span>
-                                                                <span class="number">(${cat.totalProducts})</span>
-                                                            </label>
-                                                        </div>
-                                                    </li>
-                                                    </c:forEach> 
-                                                </ul>
-                                            </div>
-                                        </div>
+                                            <form action="shop" method="get">
+                                                <div class="accordion-body">
+                                                    <ul class="category-list custom-padding custom-height">
+                                                        <c:forEach var="cat" items="${requestScope.category}"> 
+                                                            <li>
+                                                                <div class="form-check ps-0 m-0 category-list-box">
+                                                                    <input class="checkbox_animated" type="checkbox" name="category_id"
+                                                                           value="${cat.category_id}" id="${cat.category_id}">
+                                                                    
+                                                                    <label class="form-check-label" for="${cat.category_id}">
+                                                                        <span class="name">${cat.category_name}</span>
+                                                                        <span class="number">(${cat.totalProducts})</span>
+                                                                    </label>
+                                                                </div>
+                                                            </li>
+                                                        </c:forEach> 
+                                                    </ul>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Apply Filter</button>
+                                            </form>
+                                 </div>
                                     </div>
 
                                     <div class="accordion-item">
@@ -225,7 +226,7 @@
                                             <button class="accordion-button collapsed" type="button"
                                                     data-bs-toggle="collapse" data-bs-target="#collapseTwo"
                                                     aria-expanded="false" aria-controls="collapseTwo">
-                                                <span>Food Preference</span>
+                                                <span>Brands</span>
                                             </button>
                                         </h2>
                                         <div id="collapseTwo" class="accordion-collapse collapse show"
@@ -242,15 +243,7 @@
                                                         </div>
                                                     </li>
 
-                                                    <li>
-                                                        <div class="form-check ps-0 m-0 category-list-box">
-                                                            <input class="checkbox_animated" type="checkbox" id="non">
-                                                            <label class="form-check-label" for="non">
-                                                                <span class="name">Non Vegetarian</span>
-                                                                <span class="number">(09)</span>
-                                                            </label>
-                                                        </div>
-                                                    </li>
+
                                                 </ul>
                                             </div>
                                         </div>
@@ -1286,61 +1279,61 @@
         <div class="bg-overlay"></div>
         <!-- Bg overlay End -->
 
-<script>
-function viewProduct(productId) {
-    fetch(`/Gr1_Warehouse/shop?productId=` + productId)
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                console.error('Lỗi:', data.error);
-                return;
+        <script>
+            function viewProduct(productId) {
+                fetch(`/Gr1_Warehouse/shop?productId=` + productId)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.error) {
+                                console.error('Lỗi:', data.error);
+                                return;
+                            }
+
+                            // Cập nhật thông tin sản phẩm
+                            document.getElementById('modal-product-name').textContent = data.productName;
+                            document.getElementById('modal-product-brand').textContent = data.brandName || "N/A";
+                            document.getElementById('modal-product-code').textContent = data.sku || "N/A";
+                            document.getElementById('modal-product-description').textContent = data.description;
+                            document.getElementById('modal-product-price').textContent =
+                                    new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(data.variants[0].price);
+
+                            // Cập nhật danh sách size (without price)
+                            let sizeSelect = document.getElementById('modal-product-size');
+                            sizeSelect.innerHTML = ''; // Xóa size cũ
+                            data.variants.forEach(variant => {
+                                let option = document.createElement('option');
+                                option.value = variant.sizeId;
+                                option.textContent = variant.sizeName; // Only size name here
+                                sizeSelect.appendChild(option);
+                            });
+
+                            // Cập nhật hình ảnh chính
+                            document.getElementById('modal-product-image').src = data.firstImageUrl;
+                            document.getElementById('modal-product-image').style.width = '300px'; // Adjust the width as needed
+
+                            // Cập nhật danh sách thumbnail
+                            let thumbnailContainer = document.getElementById('modal-thumbnails');
+                            thumbnailContainer.innerHTML = ''; // Xóa ảnh cũ
+                            data.images.forEach(img => {
+                                let imgElement = document.createElement('img');
+                                imgElement.src = img.imageUrl;
+                                imgElement.classList.add('img-thumbnail', 'me-2');
+                                imgElement.style.width = "50px";
+                                imgElement.onclick = () => {
+                                    document.getElementById('modal-product-image').src = img.imageUrl;
+                                };
+                                thumbnailContainer.appendChild(imgElement);
+                            });
+
+                            // Cập nhật link "View More Details"
+                            document.getElementById('modal-view-more').setAttribute('onclick', `location.href='product-detail.jsp?productId=${data.productId}'`);
+
+                            // Mở modal
+                            new bootstrap.Modal(document.getElementById('quickViewModal')).show();
+                        })
+                        .catch(error => console.error('Lỗi khi lấy dữ liệu:', error));
             }
-
-            // Cập nhật thông tin sản phẩm
-            document.getElementById('modal-product-name').textContent = data.productName;
-            document.getElementById('modal-product-brand').textContent = data.brandName || "N/A";
-            document.getElementById('modal-product-code').textContent = data.sku || "N/A";
-            document.getElementById('modal-product-description').textContent = data.description;
-            document.getElementById('modal-product-price').textContent = 
-                new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(data.variants[0].price);
-
-            // Cập nhật danh sách size (without price)
-            let sizeSelect = document.getElementById('modal-product-size');
-            sizeSelect.innerHTML = ''; // Xóa size cũ
-            data.variants.forEach(variant => {
-                let option = document.createElement('option');
-                option.value = variant.sizeId;
-                option.textContent = variant.sizeName; // Only size name here
-                sizeSelect.appendChild(option);
-            });
-
-            // Cập nhật hình ảnh chính
-document.getElementById('modal-product-image').src = data.firstImageUrl;
-document.getElementById('modal-product-image').style.width = '300px'; // Adjust the width as needed
-
-            // Cập nhật danh sách thumbnail
-            let thumbnailContainer = document.getElementById('modal-thumbnails');
-            thumbnailContainer.innerHTML = ''; // Xóa ảnh cũ
-            data.images.forEach(img => {
-                let imgElement = document.createElement('img');
-                imgElement.src = img.imageUrl;
-                imgElement.classList.add('img-thumbnail', 'me-2');
-                imgElement.style.width = "50px";
-                imgElement.onclick = () => {
-                    document.getElementById('modal-product-image').src = img.imageUrl;
-                };
-                thumbnailContainer.appendChild(imgElement);
-            });
-
-            // Cập nhật link "View More Details"
-            document.getElementById('modal-view-more').setAttribute('onclick', `location.href='product-detail.jsp?productId=${data.productId}'`);
-
-            // Mở modal
-            new bootstrap.Modal(document.getElementById('quickViewModal')).show();
-        })
-        .catch(error => console.error('Lỗi khi lấy dữ liệu:', error));
-}
-</script>
+        </script>
 
 
 
