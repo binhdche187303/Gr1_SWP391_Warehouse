@@ -78,7 +78,7 @@
                                                                         class="col-lg-2 col-md-3 col-form-label form-label-title">Coupon
                                                                         Code</label>
                                                                     <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="text" name="discount_code" required >
+                                                                        <input class="form-control" type="text" name="discount_code" required value="${requestScope.discount_code}">
                                                                     </div>
                                                                 </div>
 
@@ -86,7 +86,7 @@
                                                                     <label
                                                                         class="col-lg-2 col-md-3 col-form-label form-label-title">Discount (%)</label>
                                                                     <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="number" name="discount_percentage" min="1" max="99" required>
+                                                                        <input class="form-control" type="number" name="discount_percentage" min="1" max="99"  value="${requestScope.discount_percentage}" required>
                                                                     </div>
                                                                 </div>
                                                                 <div class="mb-4 row align-items-center">
@@ -94,7 +94,7 @@
                                                                         class="col-lg-2 col-md-3 col-form-label form-label-title">Start
                                                                         Date</label>
                                                                     <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="date" name="start_date" required>
+                                                                        <input class="form-control" type="date" name="start_date" value="${requestScope.start_date}" required>
                                                                     </div>
                                                                 </div>
 
@@ -103,7 +103,7 @@
                                                                         class="col-lg-2 col-md-3 col-form-label form-label-title">End
                                                                         Date</label>
                                                                     <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="date" name="end_date">
+                                                                        <input class="form-control" type="date" name="end_date" value="${requestScope.end_date}">
                                                                     </div>
                                                                 </div>
 
@@ -111,7 +111,7 @@
                                                                     <label
                                                                         class="col-lg-2 col-md-3 col-form-label form-label-title">Quantity</label>
                                                                     <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="number" name="max_uses" min="0">
+                                                                        <input class="form-control" type="number" name="max_uses" min="0" value="${requestScope.max_uses}">
                                                                     </div>
                                                                 </div>
 
@@ -119,9 +119,10 @@
                                                                     <label class="col-sm-2 col-form-label form-label-title">Status
                                                                     </label>
                                                                     <div class="col-sm-10">
-                                                                        <select class="" name="status">
-                                                                            <option value="Active">Active</option>
-                                                                            <option value="Inactive">Inactive</option>
+                                                                        <select name="status">
+                                                                            <option value="Active" ${requestScope.status == 'Active' ? 'selected' : ''}>Active</option>
+                                                                            <option value="Inactive" ${requestScope.status == 'Inactive' ? 'selected' : ''}>Inactive</option>
+
                                                                         </select>
                                                                     </div>
                                                                 </div>

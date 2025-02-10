@@ -22,7 +22,8 @@ public class DiscountDAO extends DBContext {
     public List<Discounts> getAllDiscounts() {
 
         List<Discounts> list = new ArrayList<>();
-        String sql = "SELECT * FROM dbo.Discounts";
+        String sql = "SELECT * FROM dbo.Discounts\n"
+                + "ORDER BY discount_id DESC";
 
         try {
             PreparedStatement st = connection.prepareStatement(sql);

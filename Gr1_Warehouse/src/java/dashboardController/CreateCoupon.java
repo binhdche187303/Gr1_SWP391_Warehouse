@@ -77,19 +77,38 @@ public class CreateCoupon extends HttpServlet {
         try {
             // Lấy dữ liệu từ form
             String discountCode = request.getParameter("discount_code");
-            double discountPercentage = Double.parseDouble(request.getParameter("discount_percentage"));
+            String discountPercentageStr = request.getParameter("discount_percentage");
             String startDateStr = request.getParameter("start_date");
             String endDateStr = request.getParameter("end_date");
             String maxUsesStr = request.getParameter("max_uses");
             String status = request.getParameter("status");
 
+            // Gán lại dữ liệu để hiển thị nếu có lỗi
+            request.setAttribute("discount_code", discountCode);
+            request.setAttribute("discount_percentage", discountPercentageStr);
+            request.setAttribute("start_date", startDateStr);
+            request.setAttribute("end_date", endDateStr);
+            request.setAttribute("max_uses", maxUsesStr);
+            request.setAttribute("status", status);
+
+            // Kiểm tra mã giảm giá đã tồn tại chưa
+            DiscountDAO discountDAO = new DiscountDAO();
+            if (discountDAO.isDiscountCodeExists(discountCode)) {
+                request.setAttribute("message", "Discount code already exists! Please use another code.");
+                request.getRequestDispatcher("/dashboard/create-coupon.jsp").forward(request, response);
+                return;
+            }
+
             // Chuyển đổi dữ liệu
+            double discountPercentage = Double.parseDouble(discountPercentageStr);
             LocalDateTime startDate = (startDateStr != null && !startDateStr.isEmpty())
                     ? LocalDateTime.parse(startDateStr + "T00:00:00")
-                    : LocalDateTime.now(); // Nếu không nhập, dùng ngày hiện tại
-
+                    : LocalDateTime.now();
             LocalDateTime endDate = (endDateStr != null && !endDateStr.isEmpty())
                     ? LocalDateTime.parse(endDateStr + "T00:00:00")
+                    : null;
+            Integer maxUses = (maxUsesStr != null && !maxUsesStr.isEmpty())
+                    ? Integer.parseInt(maxUsesStr)
                     : null;
 
             // Kiểm tra ngày start và end
@@ -99,28 +118,15 @@ public class CreateCoupon extends HttpServlet {
                 return;
             }
 
-            Integer maxUses = (maxUsesStr != null && !maxUsesStr.isEmpty())
-                    ? Integer.parseInt(maxUsesStr)
-                    : null;
-
-            // Gọi DAO để tạo mới mã giảm giá
-            DiscountDAO discountDAO = new DiscountDAO();
-            
-                    // ? Kiểm tra mã giảm giá đã tồn tại chưa
-        if (discountDAO.isDiscountCodeExists(discountCode)) {
-            request.setAttribute("message", "Discount code already exists! Please use another code.");
-            request.getRequestDispatcher("/dashboard/create-coupon.jsp").forward(request, response);
-            return;
-        }
+            // Tạo mới mã giảm giá
             Discounts newDiscount = discountDAO.createDiscount(
-                    discountCode, discountPercentage, startDate, endDate, maxUses, LocalDateTime.now(), status, 1 // userId giả định là 1
+                    discountCode, discountPercentage, startDate, endDate, maxUses, LocalDateTime.now(), status, 1
             );
 
             if (newDiscount != null) {
                 response.sendRedirect("/Gr1_Warehouse/couponlist");
-
             } else {
-                System.out.println("Failed to create discount. Code may already exist.");
+                request.setAttribute("message", "Failed to create discount.");
                 request.getRequestDispatcher("/dashboard/create-coupon.jsp").forward(request, response);
             }
 
@@ -129,7 +135,6 @@ public class CreateCoupon extends HttpServlet {
             request.setAttribute("message", "Error: " + e.getMessage());
             request.getRequestDispatcher("/dashboard/create-coupon.jsp").forward(request, response);
         }
-
     }
 
     /**
