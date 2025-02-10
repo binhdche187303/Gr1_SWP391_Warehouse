@@ -143,8 +143,7 @@
 
                                                                 <td>
                                                                     <ul>
-                                                                        <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                                           data-bs-target="">
+                                                                        <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#detailDiscount">
                                                                             <i class="ri-eye-line"></i>
                                                                         </a>
 
@@ -183,6 +182,54 @@
 
         </div>
         <!-- page-wrapper End -->
+
+        <!-- Detail Discount Modal -->
+        <div class="modal fade theme-modal" id="detailDiscount" tabindex="-1" aria-labelledby="detailDiscountLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-sm-down">
+                <div class="modal-content" style="width: 120%">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="detailDiscountLabel">Discount Details</h5>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Discount Details Table -->
+                        <div class="">
+                            <table class="table table-bordered" style="min-width: 1200px;">
+                                <thead>
+                                    <tr>
+                                        <th style="min-width: 150px;">Ngày thay đổi</th>
+                                        <th style="min-width: 120px;">% Giảm cũ</th>
+                                        <th style="min-width: 120px;">% Giảm mới</th>
+                                        <th style="min-width: 150px;">Trạng thái cũ</th>
+                                        <th style="min-width: 150px;">Trạng thái mới</th>
+                                        <th style="min-width: 130px;">Max Uses cũ</th>
+                                        <th style="min-width: 130px;">Max Uses mới</th>
+                                        <th style="min-width: 150px;">Người thay đổi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td id="detail_change_date"></td>
+                                        <td id="detail_old_discount"></td>
+                                        <td id="detail_new_discount"></td>
+                                        <td id="detail_old_status"></td>
+                                        <td id="detail_new_status"></td>
+                                        <td id="detail_old_max_uses"></td>
+                                        <td id="detail_new_max_uses"></td>
+                                        <td id="detail_changed_by"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Modal Footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Detail Profile Modal End -->
+
 
         <!-- Edit Discount Modal -->
         <div class="modal fade theme-modal" id="edit-discount" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
