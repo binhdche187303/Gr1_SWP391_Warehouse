@@ -143,9 +143,12 @@
 
                                                                 <td>
                                                                     <ul>
-                                                                        <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#detailDiscount">
+                                                                        <a href="javascript:void(0)" 
+                                                                           class="view-discount-history" 
+                                                                           data-id="${ld.discount_id}">
                                                                             <i class="ri-eye-line"></i>
                                                                         </a>
+
 
                                                                         <li>
                                                                             <a href="javascript:void(0)" 
@@ -203,20 +206,28 @@
                                         <th style="min-width: 150px;">Trạng thái mới</th>
                                         <th style="min-width: 130px;">Max Uses cũ</th>
                                         <th style="min-width: 130px;">Max Uses mới</th>
-                                        <th style="min-width: 150px;">Người thay đổi</th>
+                                        <th style="min-width: 130px;">Người thay đổi</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td id="detail_change_date"></td>
-                                        <td id="detail_old_discount"></td>
-                                        <td id="detail_new_discount"></td>
-                                        <td id="detail_old_status"></td>
-                                        <td id="detail_new_status"></td>
-                                        <td id="detail_old_max_uses"></td>
-                                        <td id="detail_new_max_uses"></td>
-                                        <td id="detail_changed_by"></td>
-                                    </tr>
+                                    <c:forEach items="${requestScope.listDistcountHistory}" var="ldh">
+
+                                        <tr>
+                                            <fmt:parseDate value="${ldh.change_date}" pattern="yyyy-MM-dd'T'HH:mm" var="changeDate" />
+                                            <td id="detail_change_date">
+                                                <fmt:formatDate value="${changeDate}" pattern="dd/MM/yyyy"/>
+                                            </td>
+                                            <td id="detail_old_discount">${ldh.old_discount_percentage}</td>
+                                            <td id="detail_new_discount">${ldh.new_discount_percentage}</td>
+                                            <td id="detail_old_status">${ldh.old_status}</td>
+                                            <td id="detail_new_status">${ldh.new_status}</td>
+                                            <td id="detail_old_max_uses">${ldh.old_max_uses}</td>
+                                            <td id="detail_new_max_uses">${ldh.new_max_uses}</td>
+                                            <td id="detail_changed_by">${ldh.changed_by}</td>
+                                        </tr>
+                                    </c:forEach>
+
                                 </tbody>
                             </table>
                         </div>
@@ -372,7 +383,53 @@
                 });
             });
 
+
+            document.addEventListener("DOMContentLoaded", function () {
+                document.querySelectorAll(".view-discount-history").forEach(item => {
+                    item.addEventListener("click", function () {
+                        let discountId = this.getAttribute("data-id");
+
+                        if (discountId) {
+                            let xhr = new XMLHttpRequest();
+                            xhr.open("GET", "/Gr1_Warehouse/listdiscounthistory?discount_id=" + discountId, true);
+
+                            xhr.onreadystatechange = function () {
+                                if (xhr.readyState === 4 && xhr.status === 200) {
+                                    // Parse response HTML
+                                    let parser = new DOMParser();
+                                    let doc = parser.parseFromString(xhr.responseText, "text/html");
+
+                                    // Lấy dữ liệu mới từ response
+                                    let newListHistory = doc.querySelectorAll("#detailDiscount tbody tr");
+
+                                    // Cập nhật tbody trong modal hiện tại
+                                    let modalTbody = document.querySelector("#detailDiscount tbody");
+                                    modalTbody.innerHTML = ''; // Xóa dữ liệu cũ
+
+                                    // Thêm dữ liệu mới
+                                    newListHistory.forEach(row => {
+                                        modalTbody.appendChild(row.cloneNode(true));
+                                    });
+
+                                    // Hiển thị modal
+                                    let detailModal = new bootstrap.Modal(document.getElementById("detailDiscount"));
+                                    detailModal.show();
+                                }
+                            };
+
+                            xhr.onerror = function () {
+                                console.error("An error occurred during the request");
+                            };
+
+                            xhr.send();
+                        }
+                    });
+                });
+            });
+
         </script>
+
+
 
     </body>
 

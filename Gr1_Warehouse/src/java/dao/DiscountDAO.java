@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import model.DiscountHistory;
 
 /**
  *
@@ -227,12 +228,45 @@ public class DiscountDAO extends DBContext {
         return false;
     }
 
+    public List<DiscountHistory> getDiscountHistoryByDiscountId(int discount_id) {
+        List<DiscountHistory> list = new ArrayList<>();
+        String sql = "SELECT * FROM dbo.DiscountHistory dh\n"
+                + "LEFT JOIN dbo.Users u ON u.user_id = dh.changed_by\n"
+                + "JOIN dbo.Roles r ON r.role_id = u.role_id\n"
+                + "WHERE dh.discount_id = ?\n"
+                + "ORDER BY dh.discount_history_id DESC";
+
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, discount_id);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                DiscountHistory history = new DiscountHistory();
+                history.setDiscount_history_id(rs.getInt("discount_history_id"));
+                history.setDiscount_id(rs.getInt("discount_id"));
+                history.setOld_discount_percentage(rs.getObject("old_discount_percentage", Double.class));
+                history.setNew_discount_percentage(rs.getDouble("new_discount_percentage"));
+                history.setOld_status(rs.getString("old_status"));
+                history.setNew_status(rs.getString("new_status"));
+                history.setOld_max_uses(rs.getObject("old_max_uses", Integer.class));
+                history.setNew_max_uses(rs.getObject("new_max_uses", Integer.class));
+                history.setChange_date(rs.getTimestamp("change_date").toLocalDateTime());
+                history.setChanged_by(rs.getString("role_name"));
+
+                list.add(history);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
     public static void main(String[] args) throws SQLException {
         DiscountDAO dd = new DiscountDAO();
-//         Discounts d1 = dd.createDiscount("KimTuan", 10, LocalDateTime.now(), LocalDateTime.now().plusDays(30), 100, LocalDateTime.now(), "Active", 1);
-//Discounts d3 = dd.createDiscount("KimTuna11", 30, LocalDateTime.now(), null, null, LocalDateTime.now(), "Inactive", 2);
-
-        boolean updated = dd.updateDiscount(20, 15, "Active", 120, 1);
-        System.out.println(updated);
+        List<DiscountHistory> list = dd.getDiscountHistoryByDiscountId(50);
+        for (DiscountHistory discountHistory : list) {
+            System.out.println(discountHistory);
+        }
     }
 }
