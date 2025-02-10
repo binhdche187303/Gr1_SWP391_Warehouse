@@ -75,7 +75,7 @@
                                             <div class="right-options">
                                                 <ul>
                                                     <li>
-                                                        <a class="btn btn-solid" href="add-new-product.html">Add Coupon</a>
+                                                        <a class="btn btn-solid" href="/Gr1_Warehouse/createcoupon">Add Coupon</a>
                                                     </li>
                                                 </ul>
                                             </div>

@@ -151,7 +151,7 @@
                                     <li>
                                         <a href="support-ticket.html">
                                             <i data-feather="phone"></i>
-                                            <span>Spports Tickets</span>
+                                            <span>Sports Tickets</span>
                                         </a>
                                     </li>
                                     <li>
@@ -348,7 +348,7 @@
                                             </li>
 
                                             <li>
-                                                <a href="/Gr1_Warehouse/create-coupon.jsp">Create Coupon</a>
+                                                <a href="/Gr1_Warehouse/createcoupon">Create Coupon</a>
                                             </li>
                                         </ul>
                                     </li>

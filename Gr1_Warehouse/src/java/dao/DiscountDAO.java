@@ -213,7 +213,7 @@ public class DiscountDAO extends DBContext {
         }
     }
 
-    private boolean isDiscountCodeExists(String discountCode) throws SQLException {
+    public boolean isDiscountCodeExists(String discountCode) throws SQLException {
         String checkCodeSql = "SELECT COUNT(*) FROM dbo.Discounts WHERE discount_code = ?";
         try (PreparedStatement ps = connection.prepareStatement(checkCodeSql)) {
             ps.setString(1, discountCode);

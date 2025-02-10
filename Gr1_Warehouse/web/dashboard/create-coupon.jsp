@@ -1,3 +1,5 @@
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
@@ -68,32 +70,31 @@
                                                 </div>
                                                 <div class="tab-content" id="pills-tabContent">
                                                     <div class="tab-pane fade show active" id="pills-home" role="tabpanel">
-                                                        <form class="theme-form theme-form-2 mega-form">
+                                                        <form class="theme-form theme-form-2 mega-form" action="createcoupon" method="post">
                                                             <div class="row">
-                                                                <div class="mb-4 row align-items-center">
-                                                                    <label
-                                                                        class="form-label-title col-lg-2 col-md-3 mb-0">Coupon
-                                                                        Title</label>
-                                                                    <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="text">
-                                                                    </div>
-                                                                </div>
 
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label
                                                                         class="col-lg-2 col-md-3 col-form-label form-label-title">Coupon
                                                                         Code</label>
                                                                     <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="number">
+                                                                        <input class="form-control" type="text" name="discount_code" required >
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label
+                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Discount (%)</label>
+                                                                    <div class="col-md-9 col-lg-10">
+                                                                        <input class="form-control" type="number" name="discount_percentage" min="1" max="99" required>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="mb-4 row align-items-center">
+                                                                    <label
                                                                         class="col-lg-2 col-md-3 col-form-label form-label-title">Start
                                                                         Date</label>
                                                                     <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="date">
+                                                                        <input class="form-control" type="date" name="start_date" required>
                                                                     </div>
                                                                 </div>
 
@@ -102,23 +103,7 @@
                                                                         class="col-lg-2 col-md-3 col-form-label form-label-title">End
                                                                         Date</label>
                                                                     <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="date">
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="mb-4 row align-items-center">
-                                                                    <label
-                                                                        class="form-label-title col-lg-2 col-md-3 mb-0">Free
-                                                                        Shipping</label>
-                                                                    <div class="col-md-9">
-                                                                        <div class="form-check user-checkbox ps-0">
-                                                                            <input class="checkbox_animated check-it"
-                                                                                   type="checkbox" value=""
-                                                                                   id="flexCheckDefault">
-                                                                            <label
-                                                                                class="form-label-title col-md-2 mb-0">Allow
-                                                                                Free Shipping</label>
-                                                                        </div>
+                                                                        <input class="form-control" type="date" name="end_date">
                                                                     </div>
                                                                 </div>
 
@@ -126,23 +111,21 @@
                                                                     <label
                                                                         class="col-lg-2 col-md-3 col-form-label form-label-title">Quantity</label>
                                                                     <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="number">
+                                                                        <input class="form-control" type="number" name="max_uses" min="0">
                                                                     </div>
                                                                 </div>
 
-                                                                <div class="row align-items-center">
-                                                                    <label
-                                                                        class="form-label-title col-lg-2 col-md-3 mb-0">Status</label>
-                                                                    <div class="col-md-9">
-                                                                        <div class="form-check user-checkbox ps-0">
-                                                                            <input class="checkbox_animated check-it"
-                                                                                   type="checkbox" value=""
-                                                                                   id="flexCheckDefault1">
-                                                                            <label class="form-label-title col-md-2 mb-0">
-                                                                                Enable the Coupon</label>
-                                                                        </div>
+                                                                <div class="mb-4 row align-items-center">
+                                                                    <label class="col-sm-2 col-form-label form-label-title">Status
+                                                                    </label>
+                                                                    <div class="col-sm-10">
+                                                                        <select class="" name="status">
+                                                                            <option value="Active">Active</option>
+                                                                            <option value="Inactive">Inactive</option>
+                                                                        </select>
                                                                     </div>
                                                                 </div>
+
                                                                 </br>
                                                                 </br>
                                                                 </br>
@@ -154,6 +137,14 @@
                                                             </div>
 
                                                         </form>
+                                                        <c:if test="${not empty requestScope.message}">
+                                                            <div class="alert alert-dismissible fade show" 
+                                                                 role="alert" 
+                                                                 style="margin-top: 10px; background-color: red; color: white; border: 1px solid darkred; font-weight: bold;">
+                                                                ${requestScope.message}
+                                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="filter: invert(1);"></button>
+                                                            </div>
+                                                        </c:if>
                                                     </div>
                                                 </div>
                                             </div>
