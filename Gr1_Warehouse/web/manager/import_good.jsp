@@ -61,7 +61,7 @@
                                             <h5>Danh sách phiếu nhập hàng</h5>
                                             <div class="d-inline-flex gap-2">
                                                 <a href="#" class="btn btn-solid">Xuất dữ liệu</a>
-                                                <a href="#" class="btn btn-solid">Tạo phiếu nhập kho</a>
+                                                <a href="handle_import.jsp" class="btn btn-solid">Tạo phiếu nhập kho</a>
                                             </div>
                                         </div>
                                         <div>

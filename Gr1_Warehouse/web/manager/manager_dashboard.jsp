@@ -1,4 +1,5 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
@@ -218,24 +219,24 @@
                                     <li class="sidebar-list">
                                         <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
                                             <i class="ri-store-3-line"></i>
-                                            <span>Inventory Management</span>
+                                            <span>Quản lí tồn kho</span>
                                         </a>
                                         <ul class="sidebar-submenu">
                                             <li>
-                                                <a href="products.html">Inventory Details</a>
+                                                <a href="products.html">Chi tiết tồn kho</a>
                                             </li>
 
                                             <li>
-                                                <a href="add-new-product.html">Import Goods</a>
+                                                <a href="import_good.jsp">Nhập hàng</a>
                                             </li>
                                             <li>
-                                                <a href="add-new-product.html">Supplier</a>
+                                                <a href="${pageContext.request.contextPath}/supplier">Nhà cung cấp</a>
                                             </li>
                                             <li>
-                                                <a href="add-new-product.html">Return Goods</a>
+                                                <a href="add-new-product.html">Trả hàng</a>
                                             </li>
                                             <li>
-                                                <a href="add-new-product.html">History</a>
+                                                <a href="add-new-product.html">Lịch sử</a>
                                             </li> 
                                         </ul>
                                     </li>

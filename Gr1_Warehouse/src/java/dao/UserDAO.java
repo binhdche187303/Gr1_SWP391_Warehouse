@@ -187,10 +187,10 @@ public class UserDAO extends DBContext {
         String sql = "UPDATE users SET password = ? WHERE email = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, password);
-            ps.setString(2, email);  // Sử dụng email để tìm người dùng
+            ps.setString(2, email);  
             ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();  // Kiểm tra nếu có lỗi
+            e.printStackTrace();  
         }
     }
 
