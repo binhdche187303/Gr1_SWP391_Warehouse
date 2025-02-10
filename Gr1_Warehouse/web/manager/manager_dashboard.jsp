@@ -1,3 +1,4 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
@@ -16,7 +17,7 @@
 
         <!-- Google font-->
         <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-            rel="stylesheet">
+              rel="stylesheet">
         <!-- Linear Icon css -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets2/css/linearicon.css">
         <!-- fontawesome css -->
@@ -43,12 +44,6 @@
     </head>
 
     <body>
-        <!-- tap on top start -->
-        <div class="tap-top">
-            <span class="lnr lnr-chevron-up"></span>
-        </div>
-        <!-- tap on tap end -->
-
         <!-- page-wrapper Start-->
         <div class="page-wrapper compact-wrapper" id="pageWrapper">
             <!-- Page Header Start-->
@@ -57,14 +52,14 @@
                     <div class="header-logo-wrapper p-0">
                         <div class="logo-wrapper">
                             <a href="index.html">
-                                <img class="img-fluid main-logo" src="assets/images/logo/1.png" alt="logo">
-                                <img class="img-fluid white-logo" src="assets/images/logo/1-white.png" alt="logo">
+                                <img class="img-fluid main-logo" src="${pageContext.request.contextPath}/assets2/images/logo/1.png" alt="logo">
+                                <img class="img-fluid white-logo" src="${pageContext.request.contextPath}/assets2/images/logo/1-white.png" alt="logo">
                             </a>
                         </div>
                         <div class="toggle-sidebar">
                             <i class="status_toggle middle sidebar-toggle" data-feather="align-center"></i>
                             <a href="index.html">
-                                <img src="assets/images/logo/1.png" class="img-fluid" alt="">
+                                <img src="${pageContext.request.contextPath}/assets2/images/logo/1.png" class="img-fluid" alt="">
                             </a>
                         </div>
                     </div>
@@ -131,22 +126,18 @@
                                 </ul>
                             </li>
 
-                            <li>
-                                <div class="mode">
-                                    <i class="ri-moon-line"></i>
-                                </div>
-                            </li>
+
                             <li class="profile-nav onhover-dropdown pe-0 me-0">
                                 <div class="media profile-media">
-                                    <img class="user-profile rounded-circle" src="assets/images/users/4.jpg" alt="">
+
                                     <div class="user-name-hide media-body">
-                                        <span>Emay Walter</span>
+                                        <span>${sessionScope.acc.username}</span>
                                         <p class="mb-0 font-roboto">Admin<i class="middle ri-arrow-down-s-line"></i></p>
                                     </div>
                                 </div>
                                 <ul class="profile-dropdown onhover-show-div">
                                     <li>
-                                        <a href="all-users.html">
+                                        <a href="allusers">
                                             <i data-feather="users"></i>
                                             <span>Users</span>
                                         </a>
@@ -164,7 +155,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="profile-setting.html">
+                                        <a href="/Gr1_Warehouse/profilesettingadmin">
                                             <i data-feather="settings"></i>
                                             <span>Settings</span>
                                         </a>
@@ -192,7 +183,7 @@
                     <div>
                         <div class="logo-wrapper logo-wrapper-center">
                             <a href="index.html" data-bs-original-title="" title="">
-                                <img class="img-fluid for-white" src="assets/images/logo/full-white.png" alt="logo">
+                                <img class="img-fluid for-white" src="${pageContext.request.contextPath}/assets2/images/logo/full-white.png" alt="logo">
                             </a>
                             <div class="back-btn">
                                 <i class="fa fa-angle-left"></i>
@@ -203,8 +194,8 @@
                         </div>
                         <div class="logo-icon-wrapper">
                             <a href="index.html">
-                                <img class="img-fluid main-logo main-white" src="assets/images/logo/logo.png" alt="logo">
-                                <img class="img-fluid main-logo main-dark" src="assets/images/logo/logo-white.png"
+                                <img class="img-fluid main-logo main-white" src="${pageContext.request.contextPath}/assets2/images/logo/logo.png" alt="logo">
+                                <img class="img-fluid main-logo main-dark" src="${pageContext.request.contextPath}/assets2/images/logo/logo-white.png"
                                      alt="logo">
                             </a>
                         </div>
@@ -227,168 +218,25 @@
                                     <li class="sidebar-list">
                                         <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
                                             <i class="ri-store-3-line"></i>
-                                            <span>Product</span>
+                                            <span>Inventory Management</span>
                                         </a>
                                         <ul class="sidebar-submenu">
                                             <li>
-                                                <a href="products.html">Prodcts</a>
+                                                <a href="products.html">Inventory Details</a>
                                             </li>
 
                                             <li>
-                                                <a href="add-new-product.html">Add New Products</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-list-check-2"></i>
-                                            <span>Category</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="category.html">Category List</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="add-new-category.html">Add New Category</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-list-settings-line"></i>
-                                            <span>Attributes</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="attributes.html">Attributes</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="add-new-attributes.html">Add Attributes</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-user-3-line"></i>
-                                            <span>Users</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="all-users.html">All users</a>
+                                                <a href="add-new-product.html">Import Goods</a>
                                             </li>
                                             <li>
-                                                <a href="add-new-user.html">Add new user</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-user-3-line"></i>
-                                            <span>Roles</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="role.html">All roles</a>
+                                                <a href="add-new-product.html">Supplier</a>
                                             </li>
                                             <li>
-                                                <a href="create-role.html">Create Role</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="media.html">
-                                            <i class="ri-price-tag-3-line"></i>
-                                            <span>Media</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-archive-line"></i>
-                                            <span>Orders</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="order-list.html">Order List</a>
+                                                <a href="add-new-product.html">Return Goods</a>
                                             </li>
                                             <li>
-                                                <a href="order-detail.html">Order Detail</a>
-                                            </li>
-                                            <li>
-                                                <a href="order-tracking.html">Order Tracking</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-focus-3-line"></i>
-                                            <span>Localization</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="translation.html">Translation</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="currency-rates.html">Currency Rates</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-price-tag-3-line"></i>
-                                            <span>Coupons</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="coupon-list.html">Coupon List</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="create-coupon.html">Create Coupon</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="taxes.html">
-                                            <i class="ri-price-tag-3-line"></i>
-                                            <span>Tax</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="product-review.html">
-                                            <i class="ri-star-line"></i>
-                                            <span>Product Review</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="support-ticket.html">
-                                            <i class="ri-phone-line"></i>
-                                            <span>Support Ticket</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-settings-line"></i>
-                                            <span>Settings</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="profile-setting.html">Profile Setting</a>
-                                            </li>
+                                                <a href="add-new-product.html">History</a>
+                                            </li> 
                                         </ul>
                                     </li>
 
@@ -396,13 +244,6 @@
                                         <a class="sidebar-link sidebar-title link-nav" href="reports.html">
                                             <i class="ri-file-chart-line"></i>
                                             <span>Reports</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="list-page.html">
-                                            <i class="ri-list-check"></i>
-                                            <span>List Page</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -415,32 +256,28 @@
                     </div>
                 </div>
                 <!-- Page Sidebar Ends-->
-
-
-
             </div>
             <!-- Page Body End -->
-        </div>
-        <!-- page-wrapper End-->
 
-        <!-- Modal Start -->
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-             aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog  modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <h5 class="modal-title" id="staticBackdropLabel">Logging Out</h5>
-                        <p>Are you sure you want to log out?</p>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        <div class="button-box">
-                            <button type="button" class="btn btn--no" data-bs-dismiss="modal">No</button>
-                            <button type="button" class="btn  btn--yes btn-primary">Yes</button>
+            <!-- Modal Start -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+                <div class="modal-dialog  modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <h5 class="modal-title" id="staticBackdropLabel">Logging Out</h5>
+                            <p>Are you sure you want to log out?</p>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div class="button-box">
+                                <button type="button" class="btn btn--no" data-bs-dismiss="modal">No</button>
+                                <a href="<%= request.getContextPath() %>/logout" class="btn btn--yes btn-primary">Yes</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- Modal End -->
         </div>
-        <!-- Modal End -->
+        <!-- page-wrapper End-->
 
         <!-- latest js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
@@ -464,8 +301,8 @@
 
         <!-- Plugins JS -->
         <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>
+<!--        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
+        <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
 
         <!-- Apexchar js -->
         <script src="${pageContext.request.contextPath}/assets2/js/chart/apex-chart/apex-chart1.js"></script>
