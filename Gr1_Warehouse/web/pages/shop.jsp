@@ -186,214 +186,94 @@
                                     <h3><i class="fa-solid fa-arrow-left"></i> Back</h3>
                                 </div>
 
-<div class="accordion custome-accordion" id="accordionExample">
-    <form action="shop" method="get">
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingOne">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseOne" aria-expanded="true"
-                        aria-controls="collapseOne">
-                    <span>Categories</span>
-                </button>
-            </h2>
-            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
-                <div class="accordion-body">
-                    <ul class="category-list custom-padding custom-height">
-                        <c:forEach var="cat" items="${requestScope.category}">
-    <li>
-        <div class="form-check ps-0 m-0 category-list-box">
-            <input class="checkbox_animated" type="checkbox" name="category_id"
-                   value="${cat.category_id}" id="cat-${cat.category_id}"
-                    ${selectedCategories.contains(cat.category_id) ? 'checked' : ''}>
-
-            <label class="form-check-label" for="cat-${cat.category_id}">
-                <span class="name">${cat.category_name}</span>
-                <span class="number">(${cat.totalProducts})</span>
-            </label>
-        </div>
-    </li>
-</c:forEach>
-
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingTwo">
-                <button class="accordion-button collapsed" type="button"
-                        data-bs-toggle="collapse" data-bs-target="#collapseTwo"
-                        aria-expanded="false" aria-controls="collapseTwo">
-                    <span>Brands</span>
-                </button>
-            </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
-                <div class="accordion-body">
-                    <ul class="category-list custom-padding">
-                        <c:forEach var="brand" items="${requestScope.brand}">
-                            <li>
-                                <div class="form-check ps-0 m-0 category-list-box">
-                                    <input class="checkbox_animated" type="checkbox" name="brand_id"
-                                    value="${brand.brand_id}" id="brand-${brand.brand_id}"
-                                    ${selectedBrands.contains(brand.brand_id) ? 'checked' : ''}>
-
-                                <label class="form-check-label" for="brand-${brand.brand_id}">
-                                    <span class="name">${brand.brand_name}</span>
-                                    <span class="number">(${brand.totalProducts})</span>
-                                </label>
-                                </div>
-                            </li>
-                        </c:forEach>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingThree">
-                <button class="accordion-button collapsed" type="button"
-                        data-bs-toggle="collapse" data-bs-target="#collapseThree"
-                        aria-expanded="false" aria-controls="collapseThree">
-                    <span>Price</span>
-                </button>
-            </h2>
-            <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree">
-                <div class="accordion-body">
-                    <div class="range-slider">
-                        <input type="text" class="js-range-slider" name="price_range" value="">
-                    </div>
-                </div>
-            </div>
-<!--<div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree">
-    <div class="accordion-body">
-        <div class="range-slider">
-            <input type="text" class="js-range-slider" name="price_range" value="0;250000">
-            <input type="hidden" id="min_price" name="min_price">
-            <input type="hidden" id="max_price" name="max_price">
-        </div>
-    </div>
-</div>-->
-
-<script>
-    $(document).ready(function () {
-        $(".js-range-slider").ionRangeSlider({
-            type: "double",
-            min: 0,
-            max: 1000000,
-            from: 0,
-            to: 250000,
-            grid: true,
-            onFinish: function (data) {
-                // Cập nhật input ẩn trước khi submit
-                $("#min_price").val(data.from);
-                $("#max_price").val(data.to);
-            }
-        });
-
-        // Khi submit form, kiểm tra min_price & max_price đã có giá trị chưa
-        $("form").submit(function () {
-            var rangeSlider = $(".js-range-slider").data("ionRangeSlider");
-            $("#min_price").val(rangeSlider.result.from);
-            $("#max_price").val(rangeSlider.result.to);
-        });
-    });
-</script>
-
-
-
-        </div>
-
-        <!-- Nút áp dụng filter -->
-        <div class="text-center mt-3">
-            <button type="submit" class="btn btn-primary">Apply Filter</button>
-        </div>
-    </form>
-</div>
-
-<!--                                <div class="accordion custome-accordion" id="accordionExample">
+                                <div class="accordion custome-accordion" id="accordionExample">
                                     <form action="shop" method="get">
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="headingOne">
-                                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                                    data-bs-target="#collapseOne" aria-expanded="true"
-                                                    aria-controls="collapseOne">
-                                                <span>Categories</span>
-                                            </button>
-                                        </h2>
-                                        <div id="collapseOne" class="accordion-collapse collapse show"
-                                             aria-labelledby="headingOne">
-                                            
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="headingOne">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                        data-bs-target="#collapseOne" aria-expanded="true"
+                                                        aria-controls="collapseOne">
+                                                    <span>Categories</span>
+                                                </button>
+                                            </h2>
+                                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
                                                 <div class="accordion-body">
                                                     <ul class="category-list custom-padding custom-height">
                                                         <c:forEach var="cat" items="${requestScope.category}">
-                            <li>
-                                <div class="form-check ps-0 m-0 category-list-box">
-                                    <input class="checkbox_animated" type="checkbox" name="category_id"
-                                        value="${cat.category_id}" id="cat-${cat.category_id}"
-                                        <c:if test="${param.category_id eq cat.category_id}">checked</c:if> >
-                                    
-                                    <label class="form-check-label" for="cat-${cat.category_id}">
-                                        <span class="name">${cat.category_name}</span>
-                                        <span class="number">(${cat.totalProducts})</span>
-                                    </label>
-                                </div>
-                            </li>
-                        </c:forEach>
+                                                            <li>
+                                                                <div class="form-check ps-0 m-0 category-list-box">
+                                                                    <input class="checkbox_animated" type="checkbox" name="category_id"
+                                                                           value="${cat.category_id}" id="cat-${cat.category_id}"
+                                                                           ${selectedCategories.contains(cat.category_id) ? 'checked' : ''}>
+
+                                                                    <label class="form-check-label" for="cat-${cat.category_id}">
+                                                                        <span class="name">${cat.category_name}</span>
+                                                                        <span class="number">(${cat.totalProducts})</span>
+                                                                    </label>
+                                                                </div>
+                                                            </li>
+                                                        </c:forEach>
+
                                                     </ul>
                                                 </div>
-                                                <button type="submit" class="btn btn-primary">Apply Filter</button>
-                                            </form>
-                                 </div>
-                                    </div>
-
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="headingTwo">
-                                            <button class="accordion-button collapsed" type="button"
-                                                    data-bs-toggle="collapse" data-bs-target="#collapseTwo"
-                                                    aria-expanded="false" aria-controls="collapseTwo">
-                                                <span>Brands</span>
-                                            </button>
-                                        </h2>
-                                        <div id="collapseTwo" class="accordion-collapse collapse show"
-                                             aria-labelledby="headingTwo">
-                                            <div class="accordion-body">
-                                                <ul class="category-list custom-padding">
-                                                    <li>
-                                                        <div class="form-check ps-0 m-0 category-list-box">
-                                                            <input class="checkbox_animated" type="checkbox" id="veget">
-                                                            <label class="form-check-label" for="veget">
-                                                                <span class="name">Vegetarian</span>
-                                                                <span class="number">(08)</span>
-                                                            </label>
-                                                        </div>
-                                                    </li>
-
-
-                                                </ul>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="headingThree">
-                                            <button class="accordion-button collapsed" type="button"
-                                                    data-bs-toggle="collapse" data-bs-target="#collapseThree"
-                                                    aria-expanded="false" aria-controls="collapseThree">
-                                                <span>Price</span>
-                                            </button>
-                                        </h2>
-                                        <div id="collapseThree" class="accordion-collapse collapse show"
-                                             aria-labelledby="headingThree">
-                                            <div class="accordion-body">
-                                                <div class="range-slider">
-                                                    <input type="text" class="js-range-slider" value="">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="headingTwo">
+                                                <button class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                                                        aria-expanded="false" aria-controls="collapseTwo">
+                                                    <span>Brands</span>
+                                                </button>
+                                            </h2>
+                                            <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
+                                                <div class="accordion-body">
+                                                    <ul class="category-list custom-padding">
+                                                        <c:forEach var="brand" items="${requestScope.brand}">
+                                                            <li>
+                                                                <div class="form-check ps-0 m-0 category-list-box">
+                                                                    <input class="checkbox_animated" type="checkbox" name="brand_id"
+                                                                           value="${brand.brand_id}" id="brand-${brand.brand_id}"
+                                                                           ${selectedBrands.contains(brand.brand_id) ? 'checked' : ''}>
+
+                                                                    <label class="form-check-label" for="brand-${brand.brand_id}">
+                                                                        <span class="name">${brand.brand_name}</span>
+                                                                        <span class="number">(${brand.totalProducts})</span>
+                                                                    </label>
+                                                                </div>
+                                                            </li>
+                                                        </c:forEach>
+                                                    </ul>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    
-                    </form>
-                                </div>-->
+
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="headingThree">
+                                                <button class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#collapseThree"
+                                                        aria-expanded="false" aria-controls="collapseThree">
+                                                    <span>Price</span>
+                                                </button>
+                                            </h2>
+                                            <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree">
+                                                <div class="accordion-body">
+                                                    <div class="range-slider">
+                                                        <input type="text" class="js-range-slider" name="price_range" value="${price_range}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                     
+
+
+                                        <!-- Nút áp dụng filter -->
+                                        <div class="text-center mt-3">
+                                            <button type="submit" class="btn btn-primary">Apply Filter</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>

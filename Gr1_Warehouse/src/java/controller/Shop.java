@@ -84,12 +84,13 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                 minPrice = Double.parseDouble(prices[0]);
                 maxPrice = Double.parseDouble(prices[1]);
             } catch (NumberFormatException e) {
-                // Nếu xảy ra lỗi khi chuyển đổi, có thể gán minPrice và maxPrice về null
                 System.out.println("Invalid price range format.");
             }
         }
     }
-
+    request.setAttribute("minPrice", minPrice);
+    request.setAttribute("maxPrice", maxPrice);
+    
     // Chuyển đổi tham số category_ids và brand_ids từ mảng String[] thành List<Integer>
     List<Integer> categoryIds = categoryIdsParam != null ? Arrays.asList(categoryIdsParam).stream().map(Integer::parseInt).collect(Collectors.toList()) : null;
     List<Integer> brandIds = brandIdsParam != null ? Arrays.asList(brandIdsParam).stream().map(Integer::parseInt).collect(Collectors.toList()) : null;
@@ -98,6 +99,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     System.out.println("Received Params - category_ids: " + categoryIds 
             + ", brand_ids: " + brandIds 
             + ", min_price: " + minPrice 
+            + ", price-range: " + priceRange 
             + ", max_price: " + maxPrice);
 
     // Gọi DAO để lấy danh sách sản phẩm đã lọc
@@ -106,6 +108,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
 
     // Đẩy dữ liệu lên JSP
     request.setAttribute("p_list", filteredProducts);
+    request.setAttribute("price_range", priceRange); 
     String productIdParam = request.getParameter("productId");
     if (productIdParam != null && !productIdParam.trim().isEmpty()) {
         try {
