@@ -1,0 +1,135 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
+package controller;
+
+import dao.DAOTokenForget;
+import dao.UserDAO;
+import java.io.IOException;
+import java.io.PrintWriter;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
+import model.TokenForgetPassword;
+import model.User;
+
+/**
+ *
+ * @author Dell
+ */
+public class requestPassword extends HttpServlet {
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet requestPassword</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet requestPassword at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher("/pages/forgot.jsp").forward(request, response);
+    }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        UserDAO UserDAO = new UserDAO();
+        String email = request.getParameter("email");
+
+        // Kiểm tra xem email có tồn tại trong cơ sở dữ liệu không
+        User user = UserDAO.getUserByEmail(email);
+        if (user == null) {
+            request.setAttribute("mess", "Email does not exist");
+            request.getRequestDispatcher("/pages/forgot.jsp").forward(request, response);
+            return;
+        }
+
+        // Tạo token và liên kết reset
+        resetService service = new resetService();
+        String token = service.generateToken();
+        String encodedToken = URLEncoder.encode(token, "UTF-8");
+        String linkReset = "http://localhost:9999/Gr1_Warehouse/reset?token=" + encodedToken;
+
+        TokenForgetPassword newTokenForget = new TokenForgetPassword(user.getUserId(), false, token, service.expireDateTime());
+
+        // Ghi log trước khi chèn token vào cơ sở dữ liệu
+        System.out.println("Inserting token into the database");
+        DAOTokenForget daoToken = new DAOTokenForget();
+        boolean isInserted = daoToken.insertTokenForget(newTokenForget);
+        if (!isInserted) {
+            System.out.println("Token insert failed"); // Ghi log lỗi
+            request.setAttribute("mess", "An error occurred on the server");
+            request.getRequestDispatcher("/pages/forgot.jsp").forward(request, response);
+            return;
+        }
+        // Gửi email
+        try {
+            // Gọi phương thức gửi email
+            boolean isSent = service.sendEmail(email, linkReset, user.getUsername());
+            if (!isSent) {
+                throw new Exception("Failed to send email."); // Ném lỗi nếu gửi email không thành công
+            }
+        } catch (Exception e) {
+            System.out.println("Error occurred: " + e.getMessage()); // Ghi log lỗi
+            request.setAttribute("mess", "An error occurred on the server: " + e.getMessage());
+            request.getRequestDispatcher("/pages/forgot.jsp").forward(request, response);
+            return; // Đảm bảo dừng xử lý nếu xảy ra lỗi
+        }
+
+        request.setAttribute("mess", "Request sent successfully");
+        request.getRequestDispatcher("/pages/forgot.jsp").forward(request, response);
+
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
+}
