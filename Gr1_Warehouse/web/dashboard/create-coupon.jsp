@@ -122,7 +122,6 @@
                                                                         <select name="status">
                                                                             <option value="Active" ${requestScope.status == 'Active' ? 'selected' : ''}>Active</option>
                                                                             <option value="Inactive" ${requestScope.status == 'Inactive' ? 'selected' : ''}>Inactive</option>
-
                                                                         </select>
                                                                     </div>
                                                                 </div>
