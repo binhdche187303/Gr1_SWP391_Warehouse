@@ -40,6 +40,10 @@
         <servlet-name>SupplierServlet</servlet-name>
         <servlet-class>controller.SupplierServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddSupplierServlet</servlet-name>
+        <servlet-class>controller.AddSupplierServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -79,5 +83,9 @@
     <servlet-mapping>
         <servlet-name>SupplierServlet</servlet-name>
         <url-pattern>/supplier</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddSupplierServlet</servlet-name>
+        <url-pattern>/addSupplier</url-pattern>
     </servlet-mapping>
 </web-app>

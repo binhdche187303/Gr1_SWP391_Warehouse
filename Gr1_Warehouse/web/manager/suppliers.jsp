@@ -60,10 +60,45 @@
                                         <div class="title-header option-title">
                                             <h5>All Suppliers</h5>
                                             <form class="d-inline-flex">
-                                                <a href="add-new-supplier.jsp" class="align-items-center btn btn-theme d-flex">
+                                                <button type="button" class="align-items-center btn btn-theme d-flex" data-bs-toggle="modal" data-bs-target="#addSupplierModal">
                                                     <i data-feather="plus"></i>Add New Supplier
-                                                </a>
+                                                </button>
                                             </form>
+                                        </div>
+
+
+                                        <!-- Modal -->
+                                        <!-- Modal thêm nhà cung cấp -->
+                                        <div class="modal fade" id="addSupplierModal" tabindex="-1" aria-labelledby="addSupplierModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="addSupplierModalLabel">Thêm Nhà Cung Cấp</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form id="addSupplierForm">
+                                                            <div class="mb-3">
+                                                                <label for="supplierName" class="form-label">Tên Nhà Cung Cấp</label>
+                                                                <input type="text" class="form-control" id="supplierName" name="supplierName" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="phone" class="form-label">Số Điện Thoại</label>
+                                                                <input type="text" class="form-control" id="phone" name="phone" >
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="email" class="form-label">Email</label>
+                                                                <input type="text" class="form-control" id="email" name="email" >
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="address" class="form-label">Địa Chỉ</label>
+                                                                <input type="text" class="form-control" id="address" name="address" >
+                                                            </div>
+                                                            <button type="submit" class="btn btn-primary">Thêm</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <div class="table-responsive table-product">
@@ -156,6 +191,104 @@
                 <!-- All User Table Ends-->
             </div>                
         </div>
+        <script>
+//            document.getElementById("addSupplierForm").addEventListener("submit", function (event) {
+//                if (!this.checkValidity()) {
+//                    event.preventDefault(); 
+//
+//                    let invalidFields = this.querySelectorAll(":invalid");
+//                    invalidFields.forEach(function (field) {
+//                        field.classList.add("is-invalid"); 
+//                    });
+//
+//                    alert("Vui lòng nhập đầy đủ và chính xác thông tin."); 
+//                } else {
+//                    event.preventDefault(); 
+//
+//                    let formData = new URLSearchParams(new FormData(this));
+//
+//                    let xhr = new XMLHttpRequest();
+//                    xhr.open("POST", "addSupplier", true);
+//
+//                    xhr.onload = function () {
+//                        if (xhr.status === 200) {
+//                            let result = xhr.responseText;
+//                            console.log("Server response:", result);
+//                            if (result === "success") {
+//                                alert("Thêm nhà cung cấp thành công!");
+//                                location.reload();
+//                            } else {
+//                                alert("Có lỗi xảy ra: " + result);
+//                            }
+//                        } else {
+//                            alert("Lỗi kết nối: " + xhr.status);
+//                        }
+//                    };
+//                    xhr.send(formData);
+//                }
+//            });
+document.getElementById("addSupplierForm").addEventListener("submit", function (event) {
+    event.preventDefault(); 
+
+    let isValid = true; 
+
+    let invalidFields = this.querySelectorAll(".is-invalid");
+    invalidFields.forEach(function (field) {
+        field.classList.remove("is-invalid");
+    });
+
+    let phoneField = document.getElementById("phone");
+    let phoneValue = phoneField.value;
+    if (!/^(\d{10})$/.test(phoneValue)) { 
+        phoneField.classList.add("is-invalid");
+        isValid = false;
+        alert("Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại đúng.");
+    }
+
+    let emailField = document.getElementById("email");
+    let emailValue = emailField.value;
+    let emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(emailValue)) {
+        emailField.classList.add("is-invalid");
+        isValid = false;
+        alert("Email không hợp lệ. Vui lòng nhập email đúng định dạng.");
+    }
+
+    let addressField = document.getElementById("address");
+    let addressValue = addressField.value;
+    if (addressValue.trim() === "") {
+        addressField.classList.add("is-invalid");
+        isValid = false;
+        alert("Địa chỉ không được để trống.");
+    }
+
+    if (isValid) {
+        let formData = new URLSearchParams(new FormData(this));
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "addSupplier", true);
+
+        // Xử lý phản hồi từ server
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                let result = xhr.responseText;
+                console.log("Server response:", result);
+                if (result === "success") {
+                    alert("Thêm nhà cung cấp thành công!");
+                    location.reload(); 
+                } else {
+                    alert("Có lỗi xảy ra: " + result);
+                }
+            } else {
+                alert("Lỗi kết nối: " + xhr.status);
+            }
+        };
+        xhr.send(formData);
+    }
+});
+
+        </script>
+
 
         <!-- latest js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
