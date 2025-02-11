@@ -227,10 +227,10 @@
                                             </li>
 
                                             <li>
-                                                <a href="import_good.jsp">Nhập hàng</a>
+                                                <a href="/Gr1_Warehouse/importGood">Nhập hàng</a>
                                             </li>
                                             <li>
-                                                <a href="${pageContext.request.contextPath}/supplier">Nhà cung cấp</a>
+                                                <a href="/Gr1_Warehouse/supplier">Nhà cung cấp</a>
                                             </li>
                                             <li>
                                                 <a href="add-new-product.html">Trả hàng</a>

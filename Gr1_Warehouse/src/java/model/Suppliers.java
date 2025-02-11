@@ -15,17 +15,19 @@ public class Suppliers {
     private String phone;
     private String email;
     private String address;
+    private String status;
 
     public Suppliers() {
     }
 
-    public Suppliers(int supplierId, String supplierName, String supplierCode, String phone, String email, String address) {
+    public Suppliers(int supplierId, String supplierName, String supplierCode, String phone, String email, String address, String status) {
         this.supplierId = supplierId;
         this.supplierName = supplierName;
         this.supplierCode = supplierCode;
         this.phone = phone;
         this.email = email;
         this.address = address;
+        this.status = status;
     }
 
     public int getSupplierId() {
@@ -75,6 +77,17 @@ public class Suppliers {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+
+
     
      
 }

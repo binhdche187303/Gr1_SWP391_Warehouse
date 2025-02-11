@@ -105,10 +105,11 @@
                                             <table class="table all-package theme-table" id="table_id">
                                                 <thead>
                                                     <tr>
-                                                        <th>Name</th>
-                                                        <th>Phone</th>
-                                                        <th>Address</th>
-                                                        <th>Option</th>
+                                                        <th>Tên nhà cung cấp</th>
+                                                        <th>Số điện thoại</th>
+                                                        <th>Địa chỉ </th>
+                                                        <th>Trạng thái</th>
+                                                        <th>Tùy chọn</th>
                                                     </tr>
                                                 </thead>
 
@@ -121,10 +122,9 @@
                                                                     <span>${supplier.supplierName}</span>
                                                                 </div>
                                                             </td>
-
                                                             <td>${supplier.phone}</td>
-
                                                             <td>${supplier.address}</td>
+                                                            <td>${supplier.status}</td>
 
                                                             <td>
                                                                 <ul>
@@ -135,19 +135,16 @@
                                                                     </li>
 
                                                                     <li>
-                                                                        <a href="edit-supplier.jsp?supplierId=${supplier.supplierId}">
-                                                                            <i class="ri-pencil-line"></i>
-                                                                        </a>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                                           data-bs-target="#deleteModal${supplier.supplierId}">
-                                                                            <i class="ri-delete-bin-line"></i>
-                                                                        </a>
+                                                                        <form action="/Gr1_Warehouse/editSupplier" method="POST">
+                                                                            <input class="form-control" type="text" name="supplier_id" value="${supplier.supplierId}" readonly hidden="">
+                                                                            <button type="submit" style="background: none; border: none;">
+                                                                                <i class="ri-pencil-line"></i>
+                                                                            </button>
+                                                                        </form>
                                                                     </li>
                                                                 </ul>
                                                             </td>
+
                                                         </tr>
                                                     </c:forEach>
                                                 </tbody>
@@ -227,65 +224,65 @@
 //                    xhr.send(formData);
 //                }
 //            });
-document.getElementById("addSupplierForm").addEventListener("submit", function (event) {
-    event.preventDefault(); 
+            document.getElementById("addSupplierForm").addEventListener("submit", function (event) {
+                event.preventDefault();
 
-    let isValid = true; 
+                let isValid = true;
 
-    let invalidFields = this.querySelectorAll(".is-invalid");
-    invalidFields.forEach(function (field) {
-        field.classList.remove("is-invalid");
-    });
+                let invalidFields = this.querySelectorAll(".is-invalid");
+                invalidFields.forEach(function (field) {
+                    field.classList.remove("is-invalid");
+                });
 
-    let phoneField = document.getElementById("phone");
-    let phoneValue = phoneField.value;
-    if (!/^(\d{10})$/.test(phoneValue)) { 
-        phoneField.classList.add("is-invalid");
-        isValid = false;
-        alert("Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại đúng.");
-    }
-
-    let emailField = document.getElementById("email");
-    let emailValue = emailField.value;
-    let emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailPattern.test(emailValue)) {
-        emailField.classList.add("is-invalid");
-        isValid = false;
-        alert("Email không hợp lệ. Vui lòng nhập email đúng định dạng.");
-    }
-
-    let addressField = document.getElementById("address");
-    let addressValue = addressField.value;
-    if (addressValue.trim() === "") {
-        addressField.classList.add("is-invalid");
-        isValid = false;
-        alert("Địa chỉ không được để trống.");
-    }
-
-    if (isValid) {
-        let formData = new URLSearchParams(new FormData(this));
-
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", "addSupplier", true);
-
-        // Xử lý phản hồi từ server
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                let result = xhr.responseText;
-                console.log("Server response:", result);
-                if (result === "success") {
-                    alert("Thêm nhà cung cấp thành công!");
-                    location.reload(); 
-                } else {
-                    alert("Có lỗi xảy ra: " + result);
+                let phoneField = document.getElementById("phone");
+                let phoneValue = phoneField.value;
+                if (!/^(\d{10})$/.test(phoneValue)) {
+                    phoneField.classList.add("is-invalid");
+                    isValid = false;
+                    alert("Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại đúng.");
                 }
-            } else {
-                alert("Lỗi kết nối: " + xhr.status);
-            }
-        };
-        xhr.send(formData);
-    }
-});
+
+                let emailField = document.getElementById("email");
+                let emailValue = emailField.value;
+                let emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!emailPattern.test(emailValue)) {
+                    emailField.classList.add("is-invalid");
+                    isValid = false;
+                    alert("Email không hợp lệ. Vui lòng nhập email đúng định dạng.");
+                }
+
+                let addressField = document.getElementById("address");
+                let addressValue = addressField.value;
+                if (addressValue.trim() === "") {
+                    addressField.classList.add("is-invalid");
+                    isValid = false;
+                    alert("Địa chỉ không được để trống.");
+                }
+
+                if (isValid) {
+                    let formData = new URLSearchParams(new FormData(this));
+
+                    let xhr = new XMLHttpRequest();
+                    xhr.open("POST", "addSupplier", true);
+
+                    // Xử lý phản hồi từ server
+                    xhr.onload = function () {
+                        if (xhr.status === 200) {
+                            let result = xhr.responseText;
+                            console.log("Server response:", result);
+                            if (result === "success") {
+                                alert("Thêm nhà cung cấp thành công!");
+                                location.reload();
+                            } else {
+                                alert("Có lỗi xảy ra: " + result);
+                            }
+                        } else {
+                            alert("Lỗi kết nối: " + xhr.status);
+                        }
+                    };
+                    xhr.send(formData);
+                }
+            });
 
         </script>
 

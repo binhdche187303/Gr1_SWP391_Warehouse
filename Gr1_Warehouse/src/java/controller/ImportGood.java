@@ -18,13 +18,7 @@ import model.Suppliers;
  *
  * @author Dell
  */
-public class SupplierServlet extends HttpServlet {
-
-    private SupplierDAO supplierDAO;
-
-    public void init() {
-        supplierDAO = new SupplierDAO();
-    }
+public class ImportGood extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,10 +37,10 @@ public class SupplierServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SupplierServlet</title>");
+            out.println("<title>Servlet ImportGood</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet SupplierServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ImportGood at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -64,18 +58,10 @@ public class SupplierServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String action = request.getParameter("action");
-
-        if ("updateStatus".equals(action)) {
-            int supplierId = Integer.parseInt(request.getParameter("supplierId"));
-            String status = request.getParameter("status"); 
-            supplierDAO.updateSupplierStatus(supplierId, status);
-            response.sendRedirect("supplier");
-        } else {
-            List<Suppliers> suppliers = supplierDAO.getAllSuppliers();
-            request.setAttribute("suppliers", suppliers);
-            request.getRequestDispatcher("manager/suppliers.jsp").forward(request, response);
-        }
+        SupplierDAO supplierDAO = new SupplierDAO();
+        List<Suppliers> suppliers = supplierDAO.getAllSuppliers();
+        request.setAttribute("suppliers", suppliers);
+        request.getRequestDispatcher("/manager/import_good.jsp").forward(request, response);
     }
 
     /**
@@ -89,7 +75,7 @@ public class SupplierServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        request.getRequestDispatcher("/manager/import_good.jsp").forward(request, response);
     }
 
     /**
