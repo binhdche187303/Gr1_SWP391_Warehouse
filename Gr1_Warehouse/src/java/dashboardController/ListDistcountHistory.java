@@ -12,19 +12,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import model.Discounts;
+import model.DiscountHistory;
 
 /**
  *
  * @author admin
  */
-@WebServlet(name = "CouponList", urlPatterns = {"/couponlist"})
-public class CouponList extends HttpServlet {
+@WebServlet(name = "ListDistcountHistory", urlPatterns = {"/listdiscounthistory"})
+public class ListDistcountHistory extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,10 +39,10 @@ public class CouponList extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CouponList</title>");
+            out.println("<title>Servlet ListDistcountHistory</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CouponList at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ListDistcountHistory at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -64,10 +60,11 @@ public class CouponList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        DiscountDAO dd = new DiscountDAO();
-        List<Discounts> listDiscounts = dd.getAllDiscounts();
-        request.setAttribute("listDiscounts", listDiscounts);
+        String discount_id = request.getParameter("discount_id");
 
+        DiscountDAO dd = new DiscountDAO();
+        List<DiscountHistory> listDistcountHistory = dd.getDiscountHistoryByDiscountId(Integer.parseInt(discount_id));
+        request.setAttribute("listDistcountHistory", listDistcountHistory);
         request.getRequestDispatcher("/dashboard/coupon-list.jsp").forward(request, response);
     }
 
@@ -82,21 +79,7 @@ public class CouponList extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            int discountId = Integer.parseInt(request.getParameter("discount_id"));
-            String discountCode = request.getParameter("discount_code");
-            double discountPercentage = Double.parseDouble(request.getParameter("discount_percentage"));
-            int maxUsesStr = Integer.parseInt(request.getParameter("max_uses"));
-            String status = request.getParameter("status");
-
-            DiscountDAO discountDAO = new DiscountDAO();
-            discountDAO.updateDiscount(discountId, discountPercentage, status, maxUsesStr, 1);
-
-            response.sendRedirect(request.getContextPath() + "/couponlist");
-        } catch (SQLException ex) {
-            Logger.getLogger(CouponList.class.getName()).log(Level.SEVERE, null, ex);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
+        processRequest(request, response);
     }
 
     /**

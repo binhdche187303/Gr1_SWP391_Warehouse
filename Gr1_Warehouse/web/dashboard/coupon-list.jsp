@@ -75,7 +75,7 @@
                                             <div class="right-options">
                                                 <ul>
                                                     <li>
-                                                        <a class="btn btn-solid" href="add-new-product.html">Add Coupon</a>
+                                                        <a class="btn btn-solid" href="/Gr1_Warehouse/createcoupon">Add Coupon</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -101,7 +101,8 @@
                                                         <c:forEach items="${requestScope.listDiscounts}" var="ld">
                                                             <tr>
                                                                 <td class="theme-color">${ld.discount_code}</td>
-                                                                <td class="theme-color">${ld.discount_percentage}%</td>
+                                                                <td class="theme-color"><fmt:formatNumber value="${ld.discount_percentage}" type="number" pattern="0"/>%</td>
+
                                                                 <fmt:parseDate value="${ld.start_date}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedStartDate" />
                                                                 <fmt:parseDate value="${ld.end_date}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedEndDate" />
 
@@ -133,23 +134,35 @@
                                                                         <fmt:formatDate value="${parsedCreateDate}" pattern="dd/MM/yyyy"/>
                                                                     </span>
                                                                 </td>
-                                                                <td class="theme-color">${ld.status}</td>
+                                                                <td class="<c:choose>
+                                                                        <c:when test='${ld.status == "Active"}'>text-success</c:when>
+                                                                        <c:otherwise>text-danger</c:otherwise>
+                                                                    </c:choose>">
+                                                                    ${ld.status}
+                                                                </td>
+
                                                                 <td>
                                                                     <ul>
-                                                                        <a href="order-detail.html">
+                                                                        <a href="javascript:void(0)" 
+                                                                           class="view-discount-history" 
+                                                                           data-id="${ld.discount_id}">
                                                                             <i class="ri-eye-line"></i>
                                                                         </a>
-                                                                        <li>
-                                                                            <a href="javascript:void(0)">
-                                                                                <i class="ri-pencil-line"></i>
-                                                                            </a>
-                                                                        </li>
+
 
                                                                         <li>
-                                                                            <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                                               data-bs-target="#exampleModalToggle">
-                                                                                <i class="ri-delete-bin-line"></i>
+                                                                            <a href="javascript:void(0)" 
+                                                                               class="edit-discount-btn"
+                                                                               data-id="${ld.discount_id}" 
+                                                                               data-code="${ld.discount_code}" 
+                                                                               data-percentage="${ld.discount_percentage}" 
+                                                                               data-start="${ld.start_date}" 
+                                                                               data-end="${ld.end_date}" 
+                                                                               data-status="${ld.status}" 
+                                                                               data-max-uses="${ld.max_uses}">
+                                                                                <i class="ri-pencil-line"></i>
                                                                             </a>
+
                                                                         </li>
                                                                     </ul>
                                                                 </td>
@@ -173,58 +186,129 @@
         </div>
         <!-- page-wrapper End -->
 
-        <!-- Delete Modal Box Start -->
-        <div class="modal fade theme-modal remove-coupon" id="exampleModalToggle" aria-hidden="true" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header d-block text-center">
-                        <h5 class="modal-title w-100" id="exampleModalLabel22">Are You Sure ?</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fas fa-times"></i>
-                        </button>
+        <!-- Detail Discount Modal -->
+        <div class="modal fade theme-modal" id="detailDiscount" tabindex="-1" aria-labelledby="detailDiscountLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-sm-down">
+                <div class="modal-content" style="width: 120%">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="detailDiscountLabel">Discount Details</h5>
                     </div>
                     <div class="modal-body">
-                        <div class="remove-box">
-                            <p>The permission for the use/group, preview is inherited from the object, object will create a
-                                new permission for this object</p>
+                        <!-- Discount Details Table -->
+                        <div class="">
+                            <table class="table table-bordered" style="min-width: 1200px;">
+                                <thead>
+                                    <tr>
+                                        <th style="min-width: 150px;">Ngày thay đổi</th>
+                                        <th style="min-width: 120px;">% Giảm cũ</th>
+                                        <th style="min-width: 120px;">% Giảm mới</th>
+                                        <th style="min-width: 150px;">Trạng thái cũ</th>
+                                        <th style="min-width: 150px;">Trạng thái mới</th>
+                                        <th style="min-width: 130px;">Max Uses cũ</th>
+                                        <th style="min-width: 130px;">Max Uses mới</th>
+                                        <th style="min-width: 130px;">Người thay đổi</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach items="${requestScope.listDistcountHistory}" var="ldh">
+
+                                        <tr>
+                                            <fmt:parseDate value="${ldh.change_date}" pattern="yyyy-MM-dd'T'HH:mm" var="changeDate" />
+                                            <td id="detail_change_date">
+                                                <fmt:formatDate value="${changeDate}" pattern="dd/MM/yyyy"/>
+                                            </td>
+                                            <td id="detail_old_discount">${ldh.old_discount_percentage}</td>
+                                            <td id="detail_new_discount">${ldh.new_discount_percentage}</td>
+                                            <td id="detail_old_status">${ldh.old_status}</td>
+                                            <td id="detail_new_status">${ldh.new_status}</td>
+                                            <td id="detail_old_max_uses">${ldh.old_max_uses}</td>
+                                            <td id="detail_new_max_uses">${ldh.new_max_uses}</td>
+                                            <td id="detail_changed_by">${ldh.changed_by}</td>
+                                        </tr>
+                                    </c:forEach>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Modal Footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-animation btn-md fw-bold" data-bs-target="#exampleModalToggle2"
-                                data-bs-toggle="modal" data-bs-dismiss="modal">Yes</button>
+                </div>
+            </div>
+        </div>
+        <!-- Detail Profile Modal End -->
+
+
+        <!-- Edit Discount Modal -->
+        <div class="modal fade theme-modal" id="edit-discount" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Discount</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form action="couponlist" method="POST">
+                            <input type="hidden" name="discount_id" value="" />
+
+                            <!-- Discount Code -->
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="discount_code" name="discount_code" value="" readonly />
+                                <label for="discount_code">Coupon Code</label>
+                            </div>
+
+                            <!-- Discount % -->
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" id="discount_percentage" name="discount_percentage" min="1" max="99" value="" required/>
+                                <label for="discount_percentage">Discount (%)</label>
+                            </div>   
+
+                            <!-- Start Date & End Date cùng hàng -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="date" class="form-control" id="start_date" name="start_date" value="" required readonly />
+                                        <label for="start_date">Start Date</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="date" class="form-control" id="end_date" name="end_date" value="" required readonly />
+                                        <label for="end_date">End Date</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quantity -->
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" id="max_uses" name="max_uses" value="" required />
+                                <label for="max_uses">Quantity</label>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Status</label>
+                                <select id="status" name="status" class="form-select">
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                </select>
+                            </div>
+
+                            <!-- Modal Footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="modal fade theme-modal remove-coupon" id="exampleModalToggle2" aria-hidden="true" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title text-center" id="exampleModalLabel12">Done!</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="remove-box text-center">
-                            <div class="wrapper">
-                                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
-                                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
-                                </svg>
-                            </div>
-                            <h4 class="text-content">It's Removed.</h4>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Delete Modal Box End -->
+        <!-- Edit Profile Modal End -->
 
         <!-- latest js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
@@ -263,6 +347,90 @@
 
         <!-- Theme js -->
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                $(".edit-discount-btn").click(function () {
+                    var id = $(this).data("id");
+                    var code = $(this).data("code");
+                    var percentage = $(this).data("percentage");
+                    var start = $(this).data("start");
+                    var end = $(this).data("end");
+                    var maxUses = $(this).data("max-uses");
+                    var status = $(this).data("status");
+                    // Hàm định dạng ngày để không bị lệch múi giờ
+                    function formatDate(dateString) {
+                        if (!dateString)
+                            return "";
+                        var date = new Date(dateString);
+                        if (isNaN(date))
+                            return "";
+                        return date.getFullYear() + "-" +
+                                String(date.getMonth() + 1).padStart(2, '0') + "-" +
+                                String(date.getDate()).padStart(2, '0');
+                    }
+
+                    $("#edit-discount input[name='discount_id']").val(id);
+                    $("#edit-discount input[name='discount_code']").val(code);
+                    $("#edit-discount input[name='discount_percentage']").val(Math.round(percentage)); // Hiển thị số nguyên
+                    $("#edit-discount input[name='start_date']").val(formatDate(start));
+                    $("#edit-discount input[name='end_date']").val(formatDate(end));
+                    $("#edit-discount input[name='max_uses']").val(maxUses);
+                    $("#edit-discount select[name='status']").val(status);
+                    $("#edit-discount input[name='max_uses']").attr("min", maxUses);
+
+                    $("#edit-discount").modal("show");
+                });
+            });
+
+
+            document.addEventListener("DOMContentLoaded", function () {
+                document.querySelectorAll(".view-discount-history").forEach(item => {
+                    item.addEventListener("click", function () {
+                        let discountId = this.getAttribute("data-id");
+
+                        if (discountId) {
+                            let xhr = new XMLHttpRequest();
+                            xhr.open("GET", "/Gr1_Warehouse/listdiscounthistory?discount_id=" + discountId, true);
+
+                            xhr.onreadystatechange = function () {
+                                if (xhr.readyState === 4 && xhr.status === 200) {
+                                    // Parse response HTML
+                                    let parser = new DOMParser();
+                                    let doc = parser.parseFromString(xhr.responseText, "text/html");
+
+                                    // Lấy dữ liệu mới từ response
+                                    let newListHistory = doc.querySelectorAll("#detailDiscount tbody tr");
+
+                                    // Cập nhật tbody trong modal hiện tại
+                                    let modalTbody = document.querySelector("#detailDiscount tbody");
+                                    modalTbody.innerHTML = ''; // Xóa dữ liệu cũ
+
+                                    // Thêm dữ liệu mới
+                                    newListHistory.forEach(row => {
+                                        modalTbody.appendChild(row.cloneNode(true));
+                                    });
+
+                                    // Hiển thị modal
+                                    let detailModal = new bootstrap.Modal(document.getElementById("detailDiscount"));
+                                    detailModal.show();
+                                }
+                            };
+
+                            xhr.onerror = function () {
+                                console.error("An error occurred during the request");
+                            };
+
+                            xhr.send();
+                        }
+                    });
+                });
+            });
+
+        </script>
+
+
+
     </body>
 
 </html>

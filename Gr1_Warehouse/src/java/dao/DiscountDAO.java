@@ -4,12 +4,15 @@
  */
 package dao;
 
+import java.security.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import model.Discounts;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import model.DiscountHistory;
 
 /**
  *
@@ -20,7 +23,8 @@ public class DiscountDAO extends DBContext {
     public List<Discounts> getAllDiscounts() {
 
         List<Discounts> list = new ArrayList<>();
-        String sql = "SELECT * FROM dbo.Discounts";
+        String sql = "SELECT * FROM dbo.Discounts\n"
+                + "ORDER BY discount_id DESC";
 
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -71,16 +75,12 @@ public class DiscountDAO extends DBContext {
         return null;
     }
 
-    public boolean updateDiscountStatus(int discountId, double newPercentage, String newStatus, Integer newMaxUses, int userId) throws SQLException {
+    public boolean updateDiscount(int discountId, double newPercentage, String newStatus, Integer newMaxUses, int userId) throws SQLException {
         String updateDiscountSql = "UPDATE dbo.Discounts SET "
                 + "discount_percentage = ?, "
                 + "status = ?, "
                 + "max_uses = ? "
                 + "WHERE discount_id = ?";
-
-        String insertHistorySql = "INSERT INTO dbo.DiscountHistory "
-                + "(discount_id, old_discount_percentage, new_discount_percentage, changed_by) "
-                + "VALUES (?, ?, ?, ?)";
 
         connection.setAutoCommit(false);
         try {
@@ -95,7 +95,6 @@ public class DiscountDAO extends DBContext {
 
             if (rs.next()) {
                 oldPercentage = rs.getDouble("discount_percentage");
-                // Đọc giá trị max_uses hiện tại, có thể là null
                 Object maxUsesObj = rs.getObject("max_uses");
                 if (maxUsesObj != null) {
                     currentMaxUses = (Integer) maxUsesObj;
@@ -108,16 +107,12 @@ public class DiscountDAO extends DBContext {
             // Validate max_uses
             Integer finalMaxUses;
             if (currentMaxUses == null) {
-                // Nếu max_uses hiện tại là null, cho phép set giá trị mới
                 finalMaxUses = newMaxUses;
             } else if (newMaxUses == null) {
-                // Không cho phép set null nếu đã có giá trị
                 finalMaxUses = currentMaxUses;
             } else if (newMaxUses > currentMaxUses) {
-                // Chỉ cho phép tăng giá trị
                 finalMaxUses = newMaxUses;
             } else {
-                // Giữ nguyên giá trị cũ nếu giá trị mới nhỏ hơn hoặc bằng
                 finalMaxUses = currentMaxUses;
             }
 
@@ -134,16 +129,6 @@ public class DiscountDAO extends DBContext {
 
             int rowsAffected = updateSt.executeUpdate();
 
-            // If discount percentage has changed, record in history
-            if (oldPercentage != newPercentage) {
-                PreparedStatement historySt = connection.prepareStatement(insertHistorySql);
-                historySt.setInt(1, discountId);
-                historySt.setDouble(2, oldPercentage);
-                historySt.setDouble(3, newPercentage);
-                historySt.setInt(4, userId);
-                historySt.executeUpdate();
-            }
-
             connection.commit();
             return rowsAffected > 0;
 
@@ -155,14 +140,133 @@ public class DiscountDAO extends DBContext {
         }
     }
 
+    public Discounts createDiscount(
+            String discountCode,
+            double discountPercentage,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            Integer maxUses,
+            LocalDateTime createdAt,
+            String status,
+            int userId
+    ) throws SQLException {
+        String insertDiscountSql = "INSERT INTO dbo.Discounts "
+                + "(discount_code, discount_percentage, start_date, end_date, max_uses, created_at, status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        connection.setAutoCommit(false);
+        try {
+            // Check if discount code already exists
+            if (isDiscountCodeExists(discountCode)) {
+                return null;
+            }
+
+            PreparedStatement ps = connection.prepareStatement(insertDiscountSql, PreparedStatement.RETURN_GENERATED_KEYS);
+            ps.setString(1, discountCode);
+            ps.setDouble(2, discountPercentage);
+            ps.setObject(3, startDate);
+
+            if (endDate != null) {
+                ps.setObject(4, endDate);
+            } else {
+                ps.setNull(4, java.sql.Types.TIMESTAMP);
+            }
+
+            if (maxUses != null) {
+                ps.setInt(5, maxUses);
+            } else {
+                ps.setNull(5, java.sql.Types.INTEGER);
+            }
+
+            ps.setObject(6, createdAt);
+            ps.setString(7, status);
+
+            int affectedRows = ps.executeUpdate();
+
+            // Get the generated discount_id
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    int discountId = generatedKeys.getInt(1);
+
+                    // Create and return Discount object
+                    Discounts discount = new Discounts();
+                    discount.setDiscount_id(discountId);
+                    discount.setDiscount_code(discountCode);
+                    discount.setDiscount_percentage(discountPercentage);
+                    discount.setStart_date(startDate);
+                    discount.setEnd_date(endDate);
+                    discount.setMax_uses(maxUses);
+                    discount.setCreated_at(createdAt);
+                    discount.setStatus(status);
+
+                    connection.commit();
+                    return discount;
+                }
+            }
+
+            connection.rollback();
+            return null;
+
+        } catch (SQLException e) {
+            connection.rollback();
+            throw e;
+        } finally {
+            connection.setAutoCommit(true);
+        }
+    }
+
+    public boolean isDiscountCodeExists(String discountCode) throws SQLException {
+        String checkCodeSql = "SELECT COUNT(*) FROM dbo.Discounts WHERE discount_code = ?";
+        try (PreparedStatement ps = connection.prepareStatement(checkCodeSql)) {
+            ps.setString(1, discountCode);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+    public List<DiscountHistory> getDiscountHistoryByDiscountId(int discount_id) {
+        List<DiscountHistory> list = new ArrayList<>();
+        String sql = "SELECT * FROM dbo.DiscountHistory dh\n"
+                + "LEFT JOIN dbo.Users u ON u.user_id = dh.changed_by\n"
+                + "JOIN dbo.Roles r ON r.role_id = u.role_id\n"
+                + "WHERE dh.discount_id = ?\n"
+                + "ORDER BY dh.discount_history_id DESC";
+
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, discount_id);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                DiscountHistory history = new DiscountHistory();
+                history.setDiscount_history_id(rs.getInt("discount_history_id"));
+                history.setDiscount_id(rs.getInt("discount_id"));
+                history.setOld_discount_percentage(rs.getObject("old_discount_percentage", Double.class));
+                history.setNew_discount_percentage(rs.getDouble("new_discount_percentage"));
+                history.setOld_status(rs.getString("old_status"));
+                history.setNew_status(rs.getString("new_status"));
+                history.setOld_max_uses(rs.getObject("old_max_uses", Integer.class));
+                history.setNew_max_uses(rs.getObject("new_max_uses", Integer.class));
+                history.setChange_date(rs.getTimestamp("change_date").toLocalDateTime());
+                history.setChanged_by(rs.getString("role_name"));
+
+                list.add(history);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
     public static void main(String[] args) throws SQLException {
         DiscountDAO dd = new DiscountDAO();
-        try {
-            // Test updating with new max_uses
-            boolean success = dd.updateDiscountStatus(1, 25.0, "Active", 100, 1);
-            System.out.println("Update " + (success ? "successful" : "failed"));
-        } catch (SQLException e) {
-            System.out.println("Error updating discount: " + e.getMessage());
+        List<DiscountHistory> list = dd.getDiscountHistoryByDiscountId(50);
+        for (DiscountHistory discountHistory : list) {
+            System.out.println(discountHistory);
         }
     }
 }
