@@ -86,9 +86,27 @@
                                                                     <label
                                                                         class="col-lg-2 col-md-3 col-form-label form-label-title">Discount (%)</label>
                                                                     <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="number" name="discount_percentage" min="1" max="99"  value="${requestScope.discount_percentage}" required>
+                                                                        <input class="form-control" type="number" name="discount_percentage" min="0.1" max="99.9" step="0.1" 
+                                                                               value="${requestScope.discount_percentage}" required>
                                                                     </div>
                                                                 </div>
+
+                                                                <div class="mb-4 row align-items-center">
+                                                                    <label
+                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Min Quantity</label>
+                                                                    <div class="col-md-9 col-lg-10">
+                                                                        <input class="form-control" type="number" name="min_quantity" min="0"  value="${requestScope.min_quantity}" >
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="mb-4 row align-items-center">
+                                                                    <label
+                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Min Order Value</label>
+                                                                    <div class="col-md-9 col-lg-10">
+                                                                        <input class="form-control" type="number" name="min_order_value" min="0"  value="${requestScope.min_order_value}" >
+                                                                    </div>
+                                                                </div>
+
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label
                                                                         class="col-lg-2 col-md-3 col-form-label form-label-title">Start
