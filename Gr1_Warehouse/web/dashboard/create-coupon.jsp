@@ -129,7 +129,7 @@
                                                                     <label
                                                                         class="col-lg-2 col-md-3 col-form-label form-label-title">Quantity</label>
                                                                     <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="number" name="max_uses" min="0" value="${requestScope.max_uses}">
+                                                                        <input class="form-control" type="number" name="max_uses" min="1" value="${requestScope.max_uses}">
                                                                     </div>
                                                                 </div>
 

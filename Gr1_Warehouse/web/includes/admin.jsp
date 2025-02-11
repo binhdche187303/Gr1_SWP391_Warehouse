@@ -352,7 +352,7 @@
                                             </li>
 
                                             <li>
-                                                <a href="/Gr1_Warehouse/listdiscounthistory">History Coupon</a>
+                                                <a href="/Gr1_Warehouse/listdiscounthistory">History Coupon Detail</a>
                                             </li>
                                         </ul>
                                     </li>

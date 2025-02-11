@@ -105,6 +105,11 @@
                                     <div class="card-body">
                                         <div class="title-header option-title">
                                             <h5>Coupon</h5>
+                                            <ul>
+                                                <li>
+                                                    <a class="btn btn-solid" href="/Gr1_Warehouse/couponlist">View All Coupon</a>
+                                                </li>
+                                            </ul>
                                         </div>
                                         <div>
                                             <div class="table-responsive">
@@ -175,13 +180,13 @@
                                                                     <li>
                                                                         <a href="javascript:void(0)" 
                                                                            class="edit-discount-btn"
-                                                                           data-id="${ld.discount_id}" 
-                                                                           data-code="${ld.discount_code}" 
-                                                                           data-percentage="${ld.discount_percentage}" 
-                                                                           data-start="${ld.start_date}" 
-                                                                           data-end="${ld.end_date}" 
-                                                                           data-status="${ld.status}" 
-                                                                           data-max-uses="${ld.max_uses}">
+                                                                           data-id="${d.discount_id}" 
+                                                                           data-code="${d.discount_code}" 
+                                                                           data-percentage="${d.discount_percentage}" 
+                                                                           data-start="${d.start_date}" 
+                                                                           data-end="${d.end_date}" 
+                                                                           data-status="${d.status}" 
+                                                                           data-max-uses="${d.max_uses}">
                                                                             <i class="ri-pencil-line"></i>
                                                                         </a>
 
@@ -233,8 +238,18 @@
                                                                 </td>
                                                                 <td class="theme-color">${ldh.old_discount_percentage}</td>
                                                                 <td class="theme-color">${ldh.new_discount_percentage}</td>
-                                                                <td class="theme-color">${ldh.old_status}</td>
-                                                                <td class="theme-color">${ldh.new_status}</td>
+
+
+                                                                <td class=" <c:choose>
+                                                                        <c:when test='${ldh.old_status == "Active"}'>text-success</c:when>
+                                                                        <c:otherwise>text-danger</c:otherwise>
+                                                                    </c:choose>">${ldh.old_status}</td>
+
+                                                                <td class=" <c:choose>
+                                                                        <c:when test='${ldh.new_status == "Active"}'>text-success</c:when>
+                                                                        <c:otherwise>text-danger</c:otherwise>
+                                                                    </c:choose>">${ldh.new_status}</td>
+
                                                                 <td class="theme-color">${ldh.old_max_uses}</td>
                                                                 <td class="theme-color">${ldh.new_max_uses}</td>
                                                                 <td class="theme-color">${ldh.changed_by}</td>
@@ -266,7 +281,7 @@
                         <h5 class="modal-title" id="exampleModalLabel">Edit Discount</h5>
                     </div>
                     <div class="modal-body">
-                        <form action="couponlist" method="POST">
+                        <form action="listdiscounthistory" method="POST">
                             <input type="hidden" name="discount_id" value="" />
 
                             <!-- Discount Code -->
@@ -373,7 +388,49 @@
         <!-- Theme js -->
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
 
+        <script>
+            $(document).on("click", ".edit-discount-btn", function () {
+                var id = $(this).data("id");
+                var code = $(this).data("code");
+                var percentage = $(this).data("percentage");
+                var start = $(this).data("start");
+                var end = $(this).data("end");
+                var maxUses = $(this).data("max-uses");
+                var status = $(this).data("status");
 
+                function formatDate(dateString) {
+                    if (!dateString)
+                        return "";
+                    var date = new Date(dateString);
+                    if (isNaN(date))
+                        return "";
+                    return date.getFullYear() + "-" +
+                            String(date.getMonth() + 1).padStart(2, '0') + "-" +
+                            String(date.getDate()).padStart(2, '0');
+                }
+
+                $("#edit-discount input[name='discount_id']").val(id);
+                $("#edit-discount input[name='discount_code']").val(code);
+
+                // Kiểm tra nếu percentage không phải số, tránh lỗi
+                if (percentage !== undefined && !isNaN(percentage)) {
+                    $("#edit-discount input[name='discount_percentage']").val(parseFloat(percentage).toFixed(1));
+                } else {
+                    $("#edit-discount input[name='discount_percentage']").val("");
+                }
+
+                $("#edit-discount input[name='start_date']").val(formatDate(start));
+                $("#edit-discount input[name='end_date']").val(formatDate(end));
+                $("#edit-discount input[name='max_uses']").val(maxUses);
+                $("#edit-discount select[name='status']").val(status);
+                $("#edit-discount input[name='max_uses']").attr("min", maxUses);
+
+                $("#edit-discount").modal("show");
+            });
+
+
+
+        </script>
 
     </body>
 
