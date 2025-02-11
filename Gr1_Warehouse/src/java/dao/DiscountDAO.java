@@ -34,11 +34,16 @@ public class DiscountDAO extends DBContext {
                 discount.setDiscount_id(rs.getInt("discount_id"));
                 discount.setDiscount_code(rs.getString("discount_code"));
                 discount.setDiscount_percentage(rs.getDouble("discount_percentage"));
+                Integer min_quantity = rs.getObject("min_quantity", Integer.class);
+                discount.setMin_quantity(min_quantity);
+
+                Integer min_order_value = rs.getObject("min_order_value", Integer.class);
+                discount.setMin_order_value(min_order_value);
+
                 discount.setStart_date(rs.getTimestamp("start_date").toLocalDateTime());
                 discount.setEnd_date(rs.getTimestamp("end_date") != null ? rs.getTimestamp("end_date").toLocalDateTime() : null);
                 Integer maxUses = rs.getObject("max_uses", Integer.class);
                 discount.setMax_uses(maxUses);
-
                 discount.setCreated_at(rs.getTimestamp("created_at").toLocalDateTime());
                 discount.setStatus(rs.getString("status"));
                 list.add(discount);
@@ -61,6 +66,12 @@ public class DiscountDAO extends DBContext {
                 discount.setDiscount_id(rs.getInt("discount_id"));
                 discount.setDiscount_code(rs.getString("discount_code"));
                 discount.setDiscount_percentage(rs.getDouble("discount_percentage"));
+                Integer min_quantity = rs.getObject("min_quantity", Integer.class);
+                discount.setMin_quantity(min_quantity);
+
+                Integer min_order_value = rs.getObject("min_order_value", Integer.class);
+                discount.setMin_order_value(min_order_value);
+
                 discount.setStart_date(rs.getTimestamp("start_date").toLocalDateTime());
                 discount.setEnd_date(rs.getTimestamp("end_date") != null ? rs.getTimestamp("end_date").toLocalDateTime() : null);
                 Integer maxUses = rs.getObject("max_uses", Integer.class);
@@ -143,6 +154,8 @@ public class DiscountDAO extends DBContext {
     public Discounts createDiscount(
             String discountCode,
             double discountPercentage,
+            Integer minQuantity,
+            Integer minOrderValue,
             LocalDateTime startDate,
             LocalDateTime endDate,
             Integer maxUses,
@@ -151,56 +164,64 @@ public class DiscountDAO extends DBContext {
             int userId
     ) throws SQLException {
         String insertDiscountSql = "INSERT INTO dbo.Discounts "
-                + "(discount_code, discount_percentage, start_date, end_date, max_uses, created_at, status) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                + "(discount_code, discount_percentage, min_quantity, min_order_value, start_date, end_date, max_uses, created_at, status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         connection.setAutoCommit(false);
         try {
-            // Check if discount code already exists
+            // Kiểm tra mã giảm giá có tồn tại không
             if (isDiscountCodeExists(discountCode)) {
                 return null;
             }
 
-            PreparedStatement ps = connection.prepareStatement(insertDiscountSql, PreparedStatement.RETURN_GENERATED_KEYS);
-            ps.setString(1, discountCode);
-            ps.setDouble(2, discountPercentage);
-            ps.setObject(3, startDate);
+            try (PreparedStatement ps = connection.prepareStatement(insertDiscountSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                ps.setString(1, discountCode);
+                ps.setDouble(2, discountPercentage);
 
-            if (endDate != null) {
-                ps.setObject(4, endDate);
-            } else {
-                ps.setNull(4, java.sql.Types.TIMESTAMP);
-            }
+                if (minQuantity != null) {
+                    ps.setInt(3, minQuantity);
+                } else {
+                    ps.setNull(3, java.sql.Types.INTEGER);
+                }
 
-            if (maxUses != null) {
-                ps.setInt(5, maxUses);
-            } else {
-                ps.setNull(5, java.sql.Types.INTEGER);
-            }
+                if (minOrderValue != null) {
+                    ps.setInt(4, minOrderValue);
+                } else {
+                    ps.setNull(4, java.sql.Types.INTEGER);
+                }
 
-            ps.setObject(6, createdAt);
-            ps.setString(7, status);
+                ps.setObject(5, startDate);
 
-            int affectedRows = ps.executeUpdate();
+                if (endDate != null) {
+                    ps.setObject(6, endDate);
+                } else {
+                    ps.setNull(6, java.sql.Types.TIMESTAMP);
+                }
 
-            // Get the generated discount_id
-            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    int discountId = generatedKeys.getInt(1);
+                if (maxUses != null) {
+                    ps.setInt(7, maxUses);
+                } else {
+                    ps.setNull(7, java.sql.Types.INTEGER);
+                }
 
-                    // Create and return Discount object
-                    Discounts discount = new Discounts();
-                    discount.setDiscount_id(discountId);
-                    discount.setDiscount_code(discountCode);
-                    discount.setDiscount_percentage(discountPercentage);
-                    discount.setStart_date(startDate);
-                    discount.setEnd_date(endDate);
-                    discount.setMax_uses(maxUses);
-                    discount.setCreated_at(createdAt);
-                    discount.setStatus(status);
+                ps.setObject(8, createdAt);
+                ps.setString(9, status);
 
-                    connection.commit();
-                    return discount;
+                int affectedRows = ps.executeUpdate();
+
+                // Lấy discount_id vừa tạo
+                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        int discountId = generatedKeys.getInt(1);
+
+                        Discounts discount = new Discounts(
+                                discountId, discountCode, discountPercentage, minQuantity, minOrderValue,
+                                startDate, endDate, maxUses, createdAt, status
+                        );
+
+                        connection.commit();
+                        return discount;
+                    }
                 }
             }
 
@@ -264,9 +285,19 @@ public class DiscountDAO extends DBContext {
 
     public static void main(String[] args) throws SQLException {
         DiscountDAO dd = new DiscountDAO();
-        List<DiscountHistory> list = dd.getDiscountHistoryByDiscountId(50);
+        List<DiscountHistory> list = dd.getDiscountHistoryByDiscountId(10);
         for (DiscountHistory discountHistory : list) {
             System.out.println(discountHistory);
         }
+//
+//    List<Discounts> l= dd.getAllDiscounts();
+//        for (Discounts discounts : l) {
+//            System.out.println(discounts);
+//        }
+
+//        Discounts d = dd.getDiscountById(1);
+//        System.out.println(d);
+
+    
     }
 }

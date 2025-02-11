@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.DiscountHistory;
+import model.Discounts;
 
 /**
  *
@@ -60,12 +61,22 @@ public class ListDistcountHistory extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String discount_id = request.getParameter("discount_id");
 
-        DiscountDAO dd = new DiscountDAO();
-        List<DiscountHistory> listDistcountHistory = dd.getDiscountHistoryByDiscountId(Integer.parseInt(discount_id));
-        request.setAttribute("listDistcountHistory", listDistcountHistory);
-        request.getRequestDispatcher("/dashboard/coupon-list.jsp").forward(request, response);
+        try {
+            String discount_id = request.getParameter("discount_id");
+            if (discount_id == null || discount_id.isEmpty()) {
+                response.sendRedirect("couponlist"); // Redirect về trang danh sách nếu không có id
+                return;
+            }
+            DiscountDAO dd = new DiscountDAO();
+            List<DiscountHistory> listDistcountHistory = dd.getDiscountHistoryByDiscountId(Integer.parseInt(discount_id));
+            Discounts d = dd.getDiscountById(Integer.parseInt(discount_id));
+            request.setAttribute("discount", d);
+            request.setAttribute("listDistcountHistory", listDistcountHistory);
+            request.getRequestDispatcher("/dashboard/detail-discount.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            response.sendRedirect("couponlist");
+        }
     }
 
     /**
