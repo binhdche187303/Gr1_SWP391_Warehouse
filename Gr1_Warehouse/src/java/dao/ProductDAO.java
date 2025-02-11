@@ -14,6 +14,115 @@ import model.Images;
 import model.Sizes;
 
 public class ProductDAO extends DBContext {
+ public List<Products> getListProductsPaginated(List<Products> listProducts, int startProduct, int pageSize) {
+
+        List<Products> paginatedList = new ArrayList<>();
+
+        int startIndex = startProduct;
+        int endIndex = Math.min(startIndex + pageSize, listProducts.size());
+
+        for (int i = startIndex; i < endIndex; i++) {
+            paginatedList.add(listProducts.get(i));
+        }
+
+        return paginatedList;
+    }
+
+    
+    public List<Products> getProductsBySubname(String sub_name) {
+        List<Products> productsList = new ArrayList<>();
+        String query = "WITH ProductMinPrice AS (\n"
+                + "    SELECT \n"
+                + "        pv.product_id,\n"
+                + "        MIN(pv.price) AS min_price\n"
+                + "    FROM \n"
+                + "        ProductVariants pv\n"
+                + "    GROUP BY \n"
+                + "        pv.product_id\n"
+                + "),\n"
+                + "ProductFirstImage AS (\n"
+                + "    SELECT \n"
+                + "        i.product_id,\n"
+                + "        MIN(i.image_id) AS first_image_id\n"
+                + "    FROM \n"
+                + "        Images i\n"
+                + "    GROUP BY \n"
+                + "        i.product_id\n"
+                + ")\n"
+                + "SELECT \n"
+                + "    p.product_id,\n"
+                + "    p.product_name,\n"
+                + "    p.description,\n"
+                + "    s.size_name AS size_type,\n"
+                + "    pm.min_price AS current_price,\n"
+                + "    i.image_url,\n"
+                + "    c.category_name,\n"
+                + "    c.category_id\n"
+                + "FROM \n"
+                + "    Products p\n"
+                + "JOIN \n"
+                + "    Categories c ON p.category_id = c.category_id\n"
+                + "JOIN \n"
+                + "    ProductMinPrice pm ON p.product_id = pm.product_id\n"
+                + "JOIN \n"
+                + "    ProductVariants pv ON p.product_id = pv.product_id AND pv.price = pm.min_price\n"
+                + "JOIN \n"
+                + "    Sizes s ON pv.size_id = s.size_id\n"
+                + "JOIN \n"
+                + "    ProductFirstImage pi ON p.product_id = pi.product_id\n"
+                + "JOIN \n"
+                + "    Images i ON pi.first_image_id = i.image_id\n"
+                + " WHERE product_name LIKE ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, "%" + sub_name + "%");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int productId = rs.getInt("product_id");
+                String productName = rs.getString("product_name");
+                String description = rs.getString("description");
+                String sizeType = rs.getString("size_type");
+                double currentPrice = rs.getDouble("current_price");
+                String imageUrl = rs.getString("image_url");
+
+                // Create Product object
+                Products product = new Products();
+                product.setProductId(productId);
+                product.setProductName(productName);
+                product.setDescription(description);
+
+                Categories cate = new Categories();
+                cate.setCategory_id(rs.getInt("category_id"));
+                cate.setCategory_name(rs.getString("category_name"));
+                product.setCate(cate);
+
+                // Create ProductVariants and Sizes for each product
+                ProductVariants variant = new ProductVariants();
+                variant.setPrice(BigDecimal.valueOf(currentPrice));
+                Sizes size = new Sizes();
+                size.setSize_name(sizeType);
+                variant.setSize(size);
+                product.setVariants(new ArrayList<ProductVariants>());
+                product.getVariants().add(variant);
+
+                // Set Image URL for the product
+                Images image = new Images();
+                image.setImage_url(imageUrl);
+                product.setImages(new ArrayList<Images>());
+                product.getImages().add(image);
+
+                // Add the product to the list
+                productsList.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error fetching products: " + e.getMessage());
+        }
+
+        return productsList;
+    }
     
     public List<Brands> getBrandProductCounts() {
         List<Brands> brandCounts = new ArrayList<>();
@@ -35,7 +144,7 @@ public class ProductDAO extends DBContext {
 
         return brandCounts;
     }
-    public List<Products> getFilteredProducts(List<Integer> categoryIds, List<Integer> brandIds, Double minPrice, Double maxPrice) {
+    public List<Products> getFilteredProducts(List<Integer> categoryIds, List<Integer> brandIds, Double minPrice, Double maxPrice, String sortOrder) {
     List<Products> productsList = new ArrayList<>();
 
     String query = "WITH ProductMinPrice AS (\n"
@@ -74,6 +183,10 @@ public class ProductDAO extends DBContext {
         query += " AND pm.min_price <= ?";
     }
 
+    // Điều kiện sắp xếp (giá tăng/giảm dần)
+    if (sortOrder != null && (sortOrder.equalsIgnoreCase("asc") || sortOrder.equalsIgnoreCase("desc"))) {
+        query += " ORDER BY pm.min_price " + sortOrder;
+    }
     try {
         PreparedStatement ps = connection.prepareStatement(query);
 
@@ -134,234 +247,6 @@ public class ProductDAO extends DBContext {
 
     return productsList;
 }
-
-    
-//    public List<Products> getFilteredProducts(Integer categoryId, Integer brandId, Double minPrice, Double maxPrice) {
-//    List<Products> productsList = new ArrayList<>();
-//    String query = "WITH ProductMinPrice AS (\n"
-//            + "    SELECT \n"
-//            + "        pv.product_id,\n"
-//            + "        MIN(pv.price) AS min_price\n"
-//            + "    FROM \n"
-//            + "        ProductVariants pv\n"
-//            + "    GROUP BY \n"
-//            + "        pv.product_id\n"
-//            + "),\n"
-//            + "ProductFirstImage AS (\n"
-//            + "    SELECT \n"
-//            + "        i.product_id,\n"
-//            + "        MIN(i.image_id) AS first_image_id\n"
-//            + "    FROM \n"
-//            + "        Images i\n"
-//            + "    GROUP BY \n"
-//            + "        i.product_id\n"
-//            + ")\n"
-//            + "SELECT \n"
-//            + "    p.product_id,\n"
-//            + "    p.product_name,\n"
-//            + "    p.description,\n"
-//            + "    s.size_name AS size_type,\n"
-//            + "    pm.min_price AS current_price,\n"
-//            + "    i.image_url,\n"
-//            + "    c.category_name,\n"
-//            + "    c.category_id\n"
-//            + "FROM \n"
-//            + "    Products p\n"
-//            + "JOIN \n"
-//            + "    Categories c ON p.category_id = c.category_id\n"
-//            + "JOIN \n"
-//            + "    ProductMinPrice pm ON p.product_id = pm.product_id\n"
-//            + "JOIN \n"
-//            + "    ProductVariants pv ON p.product_id = pv.product_id AND pv.price = pm.min_price\n"
-//            + "JOIN \n"
-//            + "    Sizes s ON pv.size_id = s.size_id\n"
-//            + "JOIN \n"
-//            + "    ProductFirstImage pi ON p.product_id = pi.product_id\n"
-//            + "JOIN \n"
-//            + "    Images i ON pi.first_image_id = i.image_id\n"
-//            + "WHERE 1=1 ";
-//
-//    if (categoryId != null) {
-//        query += " AND p.category_id = ?";
-//    }
-//    if (brandId != null) {
-//        query += " AND p.brand_id = ?";
-//    }
-//    if (minPrice != null) {
-//        query += " AND pm.min_price >= ?";
-//    }
-//    if (maxPrice != null) {
-//        query += " AND pm.min_price <= ?";
-//    }
-//
-//    try {
-//        PreparedStatement ps = connection.prepareStatement(query);
-//        int index = 1;
-//        if (categoryId != null) {
-//            ps.setInt(index++, categoryId);
-//        }
-//        if (brandId != null) {
-//            ps.setInt(index++, brandId);
-//        }
-//        if (minPrice != null) {
-//            ps.setDouble(index++, minPrice);
-//        }
-//        if (maxPrice != null) {
-//            ps.setDouble(index++, maxPrice);
-//        }
-//
-//        ResultSet rs = ps.executeQuery();
-//        while (rs.next()) {
-//            int productId = rs.getInt("product_id");
-//            String productName = rs.getString("product_name");
-//            String description = rs.getString("description");
-//            String sizeType = rs.getString("size_type");
-//            double currentPrice = rs.getDouble("current_price");
-//            String imageUrl = rs.getString("image_url");
-//
-//            // Tạo đối tượng sản phẩm
-//            Products product = new Products();
-//            product.setProductId(productId);
-//            product.setProductName(productName);
-//            product.setDescription(description);
-//
-//            // Set danh mục
-//            Categories cate = new Categories();
-//            cate.setCategory_id(rs.getInt("category_id"));
-//            cate.setCategory_name(rs.getString("category_name"));
-//            product.setCate(cate);
-//
-//            // Tạo biến thể sản phẩm
-//            ProductVariants variant = new ProductVariants();
-//            variant.setPrice(BigDecimal.valueOf(currentPrice));
-//            Sizes size = new Sizes();
-//            size.setSize_name(sizeType);
-//            variant.setSize(size);
-//            product.setVariants(new ArrayList<ProductVariants>());
-//            product.getVariants().add(variant);
-//
-//            // Thêm ảnh sản phẩm
-//            Images image = new Images();
-//            image.setImage_url(imageUrl);
-//            product.setImages(new ArrayList<Images>());
-//            product.getImages().add(image);
-//
-//            productsList.add(product);
-//        }
-//    } catch (SQLException e) {
-//        e.printStackTrace();
-//        System.out.println("Error fetching filtered products: " + e.getMessage());
-//    }
-//
-//    return productsList;
-//}
-//
-
-    public List<Products> getAllProductsByCategories(String[] categoryIds) {
-    List<Products> productsList = new ArrayList<>();
-    
-    // Tạo chuỗi dấu '?' tương ứng với số lượng categoryId
-    String placeholders = String.join(",", Collections.nCopies(categoryIds.length, "?"));
-
-    String query = "WITH ProductMinPrice AS (\n"
-            + "    SELECT \n"
-            + "        pv.product_id,\n"
-            + "        MIN(pv.price) AS min_price\n"
-            + "    FROM \n"
-            + "        ProductVariants pv\n"
-            + "    GROUP BY \n"
-            + "        pv.product_id\n"
-            + "),\n"
-            + "ProductFirstImage AS (\n"
-            + "    SELECT \n"
-            + "        i.product_id,\n"
-            + "        MIN(i.image_id) AS first_image_id\n"
-            + "    FROM \n"
-            + "        Images i\n"
-            + "    GROUP BY \n"
-            + "        i.product_id\n"
-            + ")\n"
-            + "SELECT \n"
-            + "    p.product_id,\n"
-            + "    p.product_name,\n"
-            + "    p.description,\n"
-            + "    s.size_name AS size_type,\n"
-            + "    pm.min_price AS current_price,\n"
-            + "    i.image_url,\n"
-            + "    c.category_name,\n"
-            + "    c.category_id\n"
-            + "FROM \n"
-            + "    Products p\n"
-            + "JOIN \n"
-            + "    Categories c ON p.category_id = c.category_id\n"
-            + "JOIN \n"
-            + "    ProductMinPrice pm ON p.product_id = pm.product_id\n"
-            + "JOIN \n"
-            + "    ProductVariants pv ON p.product_id = pv.product_id AND pv.price = pm.min_price\n"
-            + "JOIN \n"
-            + "    Sizes s ON pv.size_id = s.size_id\n"
-            + "JOIN \n"
-            + "    ProductFirstImage pi ON p.product_id = pi.product_id\n"
-            + "JOIN \n"
-            + "    Images i ON pi.first_image_id = i.image_id\n"
-            + "WHERE c.category_id IN (" + placeholders + ")"; // Thay category_id bằng danh sách '?'
-
-    try {
-        PreparedStatement ps = connection.prepareStatement(query);
-
-        // Set giá trị cho từng tham số '?'
-        for (int i = 0; i < categoryIds.length; i++) {
-            ps.setInt(i + 1, Integer.parseInt(categoryIds[i]));
-        }
-
-        ResultSet rs = ps.executeQuery();
-
-        while (rs.next()) {
-            int productId = rs.getInt("product_id");
-            String productName = rs.getString("product_name");
-            String description = rs.getString("description");
-            String sizeType = rs.getString("size_type");
-            double currentPrice = rs.getDouble("current_price");
-            String imageUrl = rs.getString("image_url");
-
-            // Tạo Product object
-            Products product = new Products();
-            product.setProductId(productId);
-            product.setProductName(productName);
-            product.setDescription(description);
-
-            Categories cate = new Categories();
-            cate.setCategory_id(rs.getInt("category_id"));
-            cate.setCategory_name(rs.getString("category_name"));
-            product.setCate(cate);
-
-            // Tạo ProductVariants và Sizes
-            ProductVariants variant = new ProductVariants();
-            variant.setPrice(BigDecimal.valueOf(currentPrice));
-            Sizes size = new Sizes();
-            size.setSize_name(sizeType);
-            variant.setSize(size);
-            product.setVariants(new ArrayList<>());
-            product.getVariants().add(variant);
-
-            // Set Image URL cho sản phẩm
-            Images image = new Images();
-            image.setImage_url(imageUrl);
-            product.setImages(new ArrayList<>());
-            product.getImages().add(image);
-
-            // Thêm sản phẩm vào danh sách
-            productsList.add(product);
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-        System.out.println("Error fetching products: " + e.getMessage());
-    }
-
-    return productsList;
-}
-
-
 
     public List<Categories> getCategoryProductCounts() {
         List<Categories> categoryCounts = new ArrayList<>();

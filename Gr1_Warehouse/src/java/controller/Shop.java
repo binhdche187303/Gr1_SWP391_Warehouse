@@ -58,115 +58,165 @@ public class Shop extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    ProductDAO pdao = new ProductDAO();
-    List<Categories> cat = pdao.getCategoryProductCounts();
-    request.setAttribute("category", cat); 
-    List<Brands> brand = pdao.getBrandProductCounts();
-    request.setAttribute("brand", brand);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        ProductDAO pdao = new ProductDAO();
+        List<Categories> cat = pdao.getCategoryProductCounts();
+        request.setAttribute("category", cat);
+        List<Brands> brand = pdao.getBrandProductCounts();
+        request.setAttribute("brand", brand);
 
-    // Lấy tham số từ request
-    String[] categoryIdsParam = request.getParameterValues("category_id");
-    String[] brandIdsParam = request.getParameterValues("brand_id");
-    String priceRange = request.getParameter("price_range");
+        // Lấy tham số từ request
+        String[] categoryIdsParam = request.getParameterValues("category_id");
+        String[] brandIdsParam = request.getParameterValues("brand_id");
+        String priceRange = request.getParameter("price_range");
+        String subName = request.getParameter("subName");
+        String sortOrder = request.getParameter("sortOrder");
 
-    // Khai báo minPrice và maxPrice
-    Double minPrice = null;
-    Double maxPrice = null;
+        // Khai báo minPrice và maxPrice
+        Double minPrice = null;
+        Double maxPrice = null;
 
-    // Xử lý giá trị price_range nếu có
-    if (priceRange != null && !priceRange.isEmpty()) {
-        // Giả sử giá trị price_range có dạng "min_price-max_price"
-        String[] prices = priceRange.split(";");
-        if (prices.length == 2) {
+        // Xử lý giá trị price_range nếu có
+        if (priceRange != null && !priceRange.isEmpty()) {
+            // Giả sử giá trị price_range có dạng "min_price-max_price"
+            String[] prices = priceRange.split(";");
+            if (prices.length == 2) {
+                try {
+                    minPrice = Double.parseDouble(prices[0]);
+                    maxPrice = Double.parseDouble(prices[1]);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid price range format.");
+                }
+            }
+        }
+        request.setAttribute("minPrice", minPrice);
+        request.setAttribute("maxPrice", maxPrice);
+
+        // Chuyển đổi tham số category_ids và brand_ids từ mảng String[] thành List<Integer>
+        List<Integer> categoryIds = categoryIdsParam != null
+                ? Arrays.stream(categoryIdsParam).map(Integer::parseInt).collect(Collectors.toList()) : null;
+
+        List<Integer> brandIds = brandIdsParam != null
+                ? Arrays.stream(brandIdsParam).map(Integer::parseInt).collect(Collectors.toList()) : null;
+        request.setAttribute("selectedCategories", categoryIds);
+        request.setAttribute("selectedBrands", brandIds);
+
+        request.setAttribute("selectedCategories", categoryIds);
+        request.setAttribute("selectedBrands", brandIds);
+
+// Gọi DAO để lấy danh sách sản phẩm đã lọc
+        // Lấy danh sách sản phẩm đã lọc
+        List<Products> filteredProducts;
+        if (subName != null && !subName.trim().isEmpty()) {
+            filteredProducts = pdao.getProductsBySubname(subName);
+        } else {
+            filteredProducts = pdao.getFilteredProducts(categoryIds, brandIds, minPrice, maxPrice, sortOrder);
+        }
+
+// Phân trang
+        String page = request.getParameter("page") != null ? request.getParameter("page") : "1";
+        int pageSize = 9; // Mỗi trang hiển thị 9 sản phẩm
+        int currentPage = Integer.parseInt(page);
+        int startProduct = (currentPage - 1) * pageSize;
+        int totalProducts = filteredProducts.size(); // Đảm bảo là filteredProducts
+        System.out.println("Filtered Products Size: " + filteredProducts.size());
+
+        int maxPage = (int) Math.ceil((double) totalProducts / pageSize);
+        List<Products> paginatedList = pdao.getListProductsPaginated(filteredProducts, startProduct, pageSize);
+
+// Xây dựng danh sách trang cần hiển thị
+        List<Integer> paginationPages = new ArrayList<>();
+        if (currentPage <= 5) {
+            for (int i = 1; i <= Math.min(5, maxPage); i++) {
+                paginationPages.add(i);
+            }
+        } else {
+            paginationPages.add(1);
+            paginationPages.add(-1); // Dấu "..." 
+
+            // Thêm hai trang gần nhất với currentPage
+            if (currentPage - 1 > 1) {
+                paginationPages.add(currentPage - 1);
+            }
+            paginationPages.add(currentPage);
+            if (currentPage + 1 < maxPage) {
+                paginationPages.add(currentPage + 1);
+            }
+
+            // Thêm dấu "..." nếu cần và trang cuối
+            if (currentPage < maxPage - 1) {
+                paginationPages.add(-1); // Dấu "..."
+            }
+            paginationPages.add(maxPage);
+        }
+        System.out.println("Paginated List Size: " + paginatedList.size());
+        for (Products product : paginatedList) {
+            System.out.println("Product ID: " + product.getProductId() + ", Name: " + product.getProductName());
+        }
+        request.setAttribute("paginationPages", paginationPages); // Truyền trang cần hiển thị
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("maxPage", maxPage);
+
+// Đẩy dữ liệu lên JSP
+        request.setAttribute("p_list", paginatedList);
+        request.setAttribute("price_range", priceRange);
+
+        String productIdParam = request.getParameter("productId");
+        if (productIdParam != null && !productIdParam.trim().isEmpty()) {
             try {
-                minPrice = Double.parseDouble(prices[0]);
-                maxPrice = Double.parseDouble(prices[1]);
+                int productId = Integer.parseInt(productIdParam);
+                Products product = pdao.getProductById(productId);
+
+                if (product != null) {
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+                    PrintWriter out = response.getWriter();
+                    out.print("{");
+                    out.print("\"productId\": " + product.getProductId() + ",");
+                    out.print("\"productName\": \"" + product.getProductName() + "\",");
+                    out.print("\"brandName\": \"" + (product.getBrand() != null ? product.getBrand().getBrand_name() : "NULL") + "\",");
+                    out.print("\"sku\": \"" + (product.getSku() != null ? product.getSku() : "NULL") + "\",");
+                    out.print("\"description\": \"" + product.getDescription() + "\",");
+                    out.print("\"origin\": \"" + product.getOrigin() + "\",");
+                    out.print("\"firstImageUrl\": \"" + product.getImages().get(0).getImage_url() + "\",");
+
+                    // Include Category (cate) in JSON response
+                    out.print("\"category\": \"" + (product.getCate() != null && product.getCate().getCategory_name() != null ? product.getCate().getCategory_name() : "NULL") + "\",");
+
+                    out.print("\"variants\": [");
+                    for (int i = 0; i < product.getVariants().size(); i++) {
+                        if (i > 0) {
+                            out.print(",");
+                        }
+                        out.print("{\"sizeId\": " + product.getVariants().get(i).getSize().getSize_id()
+                                + ", \"sizeName\": \"" + product.getVariants().get(i).getSize().getSize_name() + "\""
+                                + ", \"price\": " + product.getVariants().get(i).getPrice() + "}");
+                    }
+                    out.print("],");
+
+                    // List images
+                    out.print("\"images\": [");
+                    for (int i = 0; i < product.getImages().size(); i++) {
+                        if (i > 0) {
+                            out.print(",");
+                        }
+                        out.print("{\"imageUrl\": \"" + product.getImages().get(i).getImage_url() + "\"}");
+                    }
+                    out.print("]");
+
+                    out.print("}");
+                    out.flush();
+                    return;
+                }
             } catch (NumberFormatException e) {
-                System.out.println("Invalid price range format.");
+                System.out.println("Invalid productId format: " + productIdParam);
             }
         }
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/shop.jsp");
+        dispatcher.forward(request, response);
     }
-    request.setAttribute("minPrice", minPrice);
-    request.setAttribute("maxPrice", maxPrice);
-    
-    // Chuyển đổi tham số category_ids và brand_ids từ mảng String[] thành List<Integer>
-    List<Integer> categoryIds = categoryIdsParam != null ? Arrays.asList(categoryIdsParam).stream().map(Integer::parseInt).collect(Collectors.toList()) : null;
-    List<Integer> brandIds = brandIdsParam != null ? Arrays.asList(brandIdsParam).stream().map(Integer::parseInt).collect(Collectors.toList()) : null;
-
-    // In ra thông tin các tham số đã nhận
-    System.out.println("Received Params - category_ids: " + categoryIds 
-            + ", brand_ids: " + brandIds 
-            + ", min_price: " + minPrice 
-            + ", price-range: " + priceRange 
-            + ", max_price: " + maxPrice);
-
-    // Gọi DAO để lấy danh sách sản phẩm đã lọc
-    List<Products> filteredProducts = pdao.getFilteredProducts(categoryIds, brandIds, minPrice, maxPrice);
-    System.out.println("Số lượng sản phẩm lọc được: " + filteredProducts.size());
-
-    // Đẩy dữ liệu lên JSP
-    request.setAttribute("p_list", filteredProducts);
-    request.setAttribute("price_range", priceRange); 
-    String productIdParam = request.getParameter("productId");
-    if (productIdParam != null && !productIdParam.trim().isEmpty()) {
-        try {
-            int productId = Integer.parseInt(productIdParam);
-            Products product = pdao.getProductById(productId);
-
-            if (product != null) {
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                PrintWriter out = response.getWriter();
-                out.print("{");
-                out.print("\"productId\": " + product.getProductId() + ",");
-                out.print("\"productName\": \"" + product.getProductName() + "\",");
-                out.print("\"brandName\": \"" + (product.getBrand() != null ? product.getBrand().getBrand_name() : "NULL") + "\",");
-                out.print("\"sku\": \"" + (product.getSku() != null ? product.getSku() : "NULL") + "\",");
-                out.print("\"description\": \"" + product.getDescription() + "\",");
-                out.print("\"origin\": \"" + product.getOrigin() + "\",");
-                out.print("\"firstImageUrl\": \"" + product.getImages().get(0).getImage_url() + "\",");
-
-                // Include Category (cate) in JSON response
-                out.print("\"category\": \"" + (product.getCate() != null && product.getCate().getCategory_name() != null ? product.getCate().getCategory_name() : "NULL") + "\",");
-
-                out.print("\"variants\": [");
-                for (int i = 0; i < product.getVariants().size(); i++) {
-                    if (i > 0) {
-                        out.print(",");
-                    }
-                    out.print("{\"sizeId\": " + product.getVariants().get(i).getSize().getSize_id()
-                            + ", \"sizeName\": \"" + product.getVariants().get(i).getSize().getSize_name() + "\""
-                            + ", \"price\": " + product.getVariants().get(i).getPrice() + "}");
-                }
-                out.print("],");
-
-                // List images
-                out.print("\"images\": [");
-                for (int i = 0; i < product.getImages().size(); i++) {
-                    if (i > 0) {
-                        out.print(",");
-                    }
-                    out.print("{\"imageUrl\": \"" + product.getImages().get(i).getImage_url() + "\"}");
-                }
-                out.print("]");
-
-                out.print("}");
-                out.flush();
-                return;
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid productId format: " + productIdParam);
-        }
-    }
-
-    RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/shop.jsp");
-    dispatcher.forward(request, response);
-}
-
-
-
 
     /**
      * Handles the HTTP <code>POST</code> method.

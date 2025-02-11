@@ -177,6 +177,7 @@
 
         <!-- Shop Section Start -->
         <section class="section-b-space shop-section">
+
             <div class="container-fluid-lg">
                 <div class="row">
                     <div class="col-custome-3">
@@ -187,13 +188,13 @@
                                 </div>
 
                                 <div class="accordion custome-accordion" id="accordionExample">
-                                    <form action="shop" method="get">
+                                    <form action="shop" method="get" id="shopform">
                                         <div class="accordion-item">
                                             <h2 class="accordion-header" id="headingOne">
                                                 <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                                         data-bs-target="#collapseOne" aria-expanded="true"
                                                         aria-controls="collapseOne">
-                                                    <span>Categories</span>
+                                                    <span>Danh mục</span>
                                                 </button>
                                             </h2>
                                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
@@ -204,7 +205,8 @@
                                                                 <div class="form-check ps-0 m-0 category-list-box">
                                                                     <input class="checkbox_animated" type="checkbox" name="category_id"
                                                                            value="${cat.category_id}" id="cat-${cat.category_id}"
-                                                                           ${selectedCategories.contains(cat.category_id) ? 'checked' : ''}>
+                                                                           ${selectedCategories.contains(cat.category_id) ? 'checked' : ''}
+                                                                           onchange="document.getElementById('shopform').submit()">
 
                                                                     <label class="form-check-label" for="cat-${cat.category_id}">
                                                                         <span class="name">${cat.category_name}</span>
@@ -224,7 +226,7 @@
                                                 <button class="accordion-button collapsed" type="button"
                                                         data-bs-toggle="collapse" data-bs-target="#collapseTwo"
                                                         aria-expanded="false" aria-controls="collapseTwo">
-                                                    <span>Brands</span>
+                                                    <span>Thương Hiệu</span>
                                                 </button>
                                             </h2>
                                             <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
@@ -235,7 +237,8 @@
                                                                 <div class="form-check ps-0 m-0 category-list-box">
                                                                     <input class="checkbox_animated" type="checkbox" name="brand_id"
                                                                            value="${brand.brand_id}" id="brand-${brand.brand_id}"
-                                                                           ${selectedBrands.contains(brand.brand_id) ? 'checked' : ''}>
+                                                                           ${selectedBrands.contains(brand.brand_id) ? 'checked' : ''}
+                                                                           onchange="document.getElementById('shopform').submit()">
 
                                                                     <label class="form-check-label" for="brand-${brand.brand_id}">
                                                                         <span class="name">${brand.brand_name}</span>
@@ -254,7 +257,7 @@
                                                 <button class="accordion-button collapsed" type="button"
                                                         data-bs-toggle="collapse" data-bs-target="#collapseThree"
                                                         aria-expanded="false" aria-controls="collapseThree">
-                                                    <span>Price</span>
+                                                    <span>Khoảng Giá</span>
                                                 </button>
                                             </h2>
                                             <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree">
@@ -265,14 +268,15 @@
                                                 </div>
                                             </div>
                                         </div>
-                                     
+
 
 
                                         <!-- Nút áp dụng filter -->
                                         <div class="text-center mt-3">
-                                            <button type="submit" class="btn btn-primary">Apply Filter</button>
+                                            <button type="submit" class="btn btn-primary">ÁP DỤNG</button>
                                         </div>
-                                    </form>
+                                    </form>  
+
                                 </div>
                             </div>
                         </div>
@@ -288,47 +292,30 @@
 
                             <div class="top-filter-menu">
                                 <div class="category-dropdown">
-                                    <h5 class="text-content">Sort By :</h5>
-                                    <div class="dropdown">
-                                        <button class="dropdown-toggle" type="button" id="dropdownMenuButton1"
-                                                data-bs-toggle="dropdown">
-                                            <span>Most Popular</span> <i class="fa-solid fa-angle-down"></i>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                            <li>
-                                                <a class="dropdown-item" id="pop" href="javascript:void(0)">Popularity</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" id="low" href="javascript:void(0)">Low - High
-                                                    Price</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" id="high" href="javascript:void(0)">High - Low
-                                                    Price</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" id="rating" href="javascript:void(0)">Average
-                                                    Rating</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" id="aToz" href="javascript:void(0)">A - Z Order</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" id="zToa" href="javascript:void(0)">Z - A Order</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" id="off" href="javascript:void(0)">% Off - Hight To
-                                                    Low</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
+                                    <form action="shop" method="get">
+                                        <!-- Giữ lại các giá trị của các tham số category_id, brand_id, price-range -->
+                                        <input type="hidden" name="category_id" value="${param.category_id}" />
+                                        <input type="hidden" name="brand_id" value="${param.brand_id}" />
+                                        <input type="hidden" name="price_range" value="${param['price_range']}" />
 
-                                <div class="grid-option d-none d-md-block">
-                                    <ul>
-                                        <li class="three-grid">
-                                            <a href="javascript:void(0)">
-                                                <img src="${pageContext.request.contextPath}/assets/svg/grid-3.svg" class="blur-up lazyload" alt="">
+                                        <div class="form-group">
+                                            <select name="sortOrder" class="form-select" onchange="this.form.submit()">
+                                                <option value="" disabled selected>Giá : </option>
+                                                <option value="asc" <c:if test="${param.sortOrder == 'asc'}">selected</c:if> >Giá: Thấp - Cao</option>
+                                                <option value="desc" <c:if test="${param.sortOrder == 'desc'}">selected</c:if> >Giá: Cao - Thấp</option>
+                                                </select>
+                                            </div>
+                                        </form>
+
+
+
+                                    </div>
+
+                                    <div class="grid-option d-none d-md-block">
+                                        <ul>
+                                            <li class="three-grid">
+                                                <a href="javascript:void(0)">
+                                                    <img src="${pageContext.request.contextPath}/assets/svg/grid-3.svg" class="blur-up lazyload" alt="">
                                             </a>
                                         </li>
                                         <li class="grid-btn d-xxl-inline-block d-none">
@@ -484,30 +471,7 @@
                             </c:forEach>
 
                         </div>
-
-                        <nav class="custome-pagination">
-                            <ul class="pagination justify-content-center">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="javascript:void(0)" tabindex="-1" aria-disabled="true">
-                                        <i class="fa-solid fa-angles-left"></i>
-                                    </a>
-                                </li>
-                                <li class="page-item active">
-                                    <a class="page-link" href="javascript:void(0)">1</a>
-                                </li>
-                                <li class="page-item" aria-current="page">
-                                    <a class="page-link" href="javascript:void(0)">2</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="javascript:void(0)">3</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="javascript:void(0)">
-                                        <i class="fa-solid fa-angles-right"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
+                        <%@ include file="/includes/paging.jsp" %>
                     </div>
                 </div>
             </div>
