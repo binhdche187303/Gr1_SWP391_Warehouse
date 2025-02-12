@@ -62,32 +62,6 @@
         </style>
     </head>
     <body>
-        <!--       <div class="pagination">
-            <ul>
-        <c:if test="${currentPage > 1}">
-            <li><a href="shop?page=${currentPage - 1}">«</a></li>
-        </c:if>
-
-        <c:forEach var="page" items="${paginationPages}">
-            <c:choose>
-                <c:when test="${page == -1}">
-                    <li><span>...</span></li>
-                </c:when>
-                <c:when test="${page == currentPage}">
-                    <li><span class="active">${page}</span></li>
-                </c:when>
-                <c:otherwise>
-                    <li><a href="shop?page=${page}">${page}</a></li>
-                </c:otherwise>
-            </c:choose>
-        </c:forEach>
-
-        <c:if test="${currentPage < maxPage}">
-            <li><a href="shop?page=${currentPage + 1}">»</a></li>
-        </c:if>
-    </ul>
-</div>-->
-
         <div class="pagination">
             <ul>
                 <!-- Previous Page -->
@@ -95,11 +69,15 @@
                     <li>
                         <c:url var="prevPageUrl" value="shop">
                             <c:param name="page" value="${currentPage - 1}" />
-                            <c:if test="${not empty param.category_id}">
-                                <c:param name="category_id" value="${param.category_id}" />
+                            <c:if test="${not empty paramValues.category_id}">
+                                <c:forEach var="catId" items="${paramValues.category_id}">
+                                    <c:param name="category_id" value="${catId}" />
+                                </c:forEach>
                             </c:if>
-                            <c:if test="${not empty param.brand_id}">
-                                <c:param name="brand_id" value="${param.brand_id}" />
+                            <c:if test="${not empty paramValues.brand_id}">
+                                <c:forEach var="brandId" items="${paramValues.brand_id}">
+                                    <c:param name="brand_id" value="${brandId}" />
+                                </c:forEach>
                             </c:if>
                             <c:if test="${not empty param.price_range}">
                                 <c:param name="price_range" value="${param.price_range}" />
@@ -128,11 +106,15 @@
                             <li>
                                 <c:url var="pageUrl" value="shop">
                                     <c:param name="page" value="${page}" />
-                                    <c:if test="${not empty param.category_id}">
-                                        <c:param name="category_id" value="${param.category_id}" />
+                                    <c:if test="${not empty paramValues.category_id}">
+                                        <c:forEach var="catId" items="${paramValues.category_id}">
+                                            <c:param name="category_id" value="${catId}" />
+                                        </c:forEach>
                                     </c:if>
-                                    <c:if test="${not empty param.brand_id}">
-                                        <c:param name="brand_id" value="${param.brand_id}" />
+                                    <c:if test="${not empty paramValues.brand_id}">
+                                        <c:forEach var="brandId" items="${paramValues.brand_id}">
+                                            <c:param name="brand_id" value="${brandId}" />
+                                        </c:forEach>
                                     </c:if>
                                     <c:if test="${not empty param.price_range}">
                                         <c:param name="price_range" value="${param.price_range}" />
@@ -155,11 +137,15 @@
                     <li>
                         <c:url var="nextPageUrl" value="shop">
                             <c:param name="page" value="${currentPage + 1}" />
-                            <c:if test="${not empty param.category_id}">
-                                <c:param name="category_id" value="${param.category_id}" />
+                            <c:if test="${not empty paramValues.category_id}">
+                                <c:forEach var="catId" items="${paramValues.category_id}">
+                                    <c:param name="category_id" value="${catId}" />
+                                </c:forEach>
                             </c:if>
-                            <c:if test="${not empty param.brand_id}">
-                                <c:param name="brand_id" value="${param.brand_id}" />
+                            <c:if test="${not empty paramValues.brand_id}">
+                                <c:forEach var="brandId" items="${paramValues.brand_id}">
+                                    <c:param name="brand_id" value="${brandId}" />
+                                </c:forEach>
                             </c:if>
                             <c:if test="${not empty param.price_range}">
                                 <c:param name="price_range" value="${param.price_range}" />
@@ -176,6 +162,7 @@
                 </c:if>
             </ul>
         </div>
+
 
 
     </body>

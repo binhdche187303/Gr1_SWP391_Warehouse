@@ -293,19 +293,34 @@
                             <div class="top-filter-menu">
                                 <div class="category-dropdown">
                                     <form action="shop" method="get">
-                                        <!-- Giữ lại các giá trị của các tham số category_id, brand_id, price-range -->
-                                        <input type="hidden" name="category_id" value="${param.category_id}" />
-                                        <input type="hidden" name="brand_id" value="${param.brand_id}" />
-                                        <input type="hidden" name="price_range" value="${param['price_range']}" />
+    <!-- Giữ lại các giá trị của các tham số category_id (dạng danh sách) -->
+    <c:if test="${not empty paramValues.category_id}">
+        <c:forEach var="catId" items="${paramValues.category_id}">
+            <input type="hidden" name="category_id" value="${catId}" />
+        </c:forEach>
+    </c:if>
 
-                                        <div class="form-group">
-                                            <select name="sortOrder" class="form-select" onchange="this.form.submit()">
-                                                <option value="" disabled selected>Giá : </option>
-                                                <option value="asc" <c:if test="${param.sortOrder == 'asc'}">selected</c:if> >Giá: Thấp - Cao</option>
-                                                <option value="desc" <c:if test="${param.sortOrder == 'desc'}">selected</c:if> >Giá: Cao - Thấp</option>
-                                                </select>
-                                            </div>
-                                        </form>
+    <!-- Giữ lại các giá trị của các tham số brand_id (dạng danh sách) -->
+    <c:if test="${not empty paramValues.brand_id}">
+        <c:forEach var="brandId" items="${paramValues.brand_id}">
+            <input type="hidden" name="brand_id" value="${brandId}" />
+        </c:forEach>
+    </c:if>
+
+    <!-- Giữ lại giá trị của price_range (nếu có) -->
+    <c:if test="${not empty param.price_range}">
+        <input type="hidden" name="price_range" value="${param['price_range']}" />
+    </c:if>
+
+    <div class="form-group">
+        <select name="sortOrder" class="form-select" onchange="this.form.submit()">
+            <option value="" disabled selected>Giá : </option>
+            <option value="asc" <c:if test="${param.sortOrder == 'asc'}">selected</c:if>>Giá: Thấp - Cao</option>
+            <option value="desc" <c:if test="${param.sortOrder == 'desc'}">selected</c:if>>Giá: Cao - Thấp</option>
+        </select>
+    </div>
+</form>
+
 
 
 
