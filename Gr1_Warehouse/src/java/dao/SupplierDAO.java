@@ -83,7 +83,7 @@ public class SupplierDAO extends DBContext {
             ps.setString(3, supplier.getPhone());
             ps.setString(4, supplier.getEmail());
             ps.setString(5, supplier.getAddress());
-            ps.setString(6, supplier.getStatus()); // Set giá trị status
+            ps.setString(6, supplier.getStatus());
             ps.setInt(7, supplier.getSupplierId());
 
             int rowsAffected = ps.executeUpdate();
@@ -119,7 +119,7 @@ public class SupplierDAO extends DBContext {
                     supplier.setPhone(rs.getString("phone"));
                     supplier.setEmail(rs.getString("email"));
                     supplier.setAddress(rs.getString("address"));
-                    supplier.setStatus(rs.getString("status")); // Lấy giá trị status
+                    supplier.setStatus(rs.getString("status"));
                     return supplier;
                 }
             }

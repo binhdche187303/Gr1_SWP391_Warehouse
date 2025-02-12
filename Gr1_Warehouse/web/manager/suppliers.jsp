@@ -114,7 +114,6 @@
                                                 </thead>
 
                                                 <tbody>
-                                                    <!-- Loop through the list of suppliers -->
                                                     <c:forEach var="supplier" items="${suppliers}">
                                                         <tr>
                                                             <td>
@@ -135,16 +134,16 @@
                                                                     </li>
 
                                                                     <li>
-                                                                        <form action="/Gr1_Warehouse/editSupplier" method="POST">
+                                                                        <form action="/Gr1_Warehouse/editSupplier" method="get">
                                                                             <input class="form-control" type="text" name="supplier_id" value="${supplier.supplierId}" readonly hidden="">
                                                                             <button type="submit" style="background: none; border: none;">
                                                                                 <i class="ri-pencil-line"></i>
                                                                             </button>
                                                                         </form>
                                                                     </li>
+                                                                    
                                                                 </ul>
                                                             </td>
-
                                                         </tr>
                                                     </c:forEach>
                                                 </tbody>

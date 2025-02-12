@@ -63,11 +63,12 @@
                                                 </div>                                             
                                                 <div class="tab-content" id="pills-tabContent">
                                                     <div class="tab-pane fade show active" id="pills-home" role="tabpanel">
-                                                        <form class="theme-form theme-form-2 mega-form">
+                                                        <form class="theme-form theme-form-2 mega-form" action="/Gr1_Warehouse/editSupplier" method="post">
+
+                                                            <input type="hidden" name="supplier_id" value="${supplier.supplierId}">
                                                             <div class="card-header-1">
                                                                 <h5>Chi tiết nhà cung cấp</h5>
                                                             </div>
-
                                                             <div class="row">
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label class="col-lg-2 col-md-3 col-form-label form-label-title">Tên nhà cung cấp</label>
@@ -75,35 +76,30 @@
                                                                         <input class="form-control" type="text" name="supplier_name" value="${supplier.supplierName}">
                                                                     </div>
                                                                 </div>
-
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label class="col-lg-2 col-md-3 col-form-label form-label-title">Mã nhà cung cấp (VD: A, B, C)</label>
                                                                     <div class="col-md-9 col-lg-10">
                                                                         <input class="form-control" type="text" name="supplier_code" value="${supplier.supplierCode}" readonly="">
                                                                     </div>
                                                                 </div>
-
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label class="col-lg-2 col-md-3 col-form-label form-label-title">Số điện thoại</label>
                                                                     <div class="col-md-9 col-lg-10">
                                                                         <input class="form-control" type="tel" name="phone" pattern="[0-9]{10}" value="${supplier.phone}">
                                                                     </div>
                                                                 </div>
-
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label class="col-lg-2 col-md-3 col-form-label form-label-title">Email</label>
                                                                     <div class="col-md-9 col-lg-10">
                                                                         <input class="form-control" type="email" name="email" value="${supplier.email}">
                                                                     </div>
                                                                 </div>
-
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label class="col-lg-2 col-md-3 col-form-label form-label-title">Địa chỉ</label>
                                                                     <div class="col-md-9 col-lg-10">
                                                                         <input class="form-control" type="text" name="address" value="${supplier.address}">
                                                                     </div>
                                                                 </div>
-
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label class="col-lg-2 col-md-3 col-form-label form-label-title">Trạng thái</label>
                                                                     <div class="col-md-9 col-lg-10">
@@ -114,13 +110,13 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-
                                                             <div class="row mt-4">
                                                                 <div class="col-md-9 col-lg-10 offset-md-3 offset-lg-2">
                                                                     <button type="submit" class="btn btn-primary">Lưu</button>
                                                                 </div>
                                                             </div>
-                                                        </form> <!-- Đóng form ở đây -->
+                                                        </form>
+                                                        <!-- Đóng form ở đây -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -134,6 +130,19 @@
                 <!-- Page Sidebar End -->
             </div>               
         </div>
+        <style>
+            /* Màu sắc cho trạng thái Active */
+            .status-close {
+                background-color: #28a745; /* Màu xanh (hoặc màu bạn muốn) */
+                color: white;
+            }
+
+            /* Màu sắc cho trạng thái Deactive */
+            .status-danger {
+                background-color: #dc3545; /* Màu đỏ (hoặc màu bạn muốn) */
+                color: white;
+            }
+        </style>
         <!-- latest js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
         <!-- Bootstrap js -->

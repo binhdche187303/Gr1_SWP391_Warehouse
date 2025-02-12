@@ -66,7 +66,6 @@ public class EditSupplier extends HttpServlet {
             response.sendRedirect("manager/suppliers.jsp");
             return;
         }
-
         try {
             int supplierId = Integer.parseInt(supplierIdStr);
             Suppliers supplier = supplierDAO.getSupplierById(supplierId);
@@ -75,11 +74,7 @@ public class EditSupplier extends HttpServlet {
                 response.sendRedirect("manager/suppliers.jsp");
                 return;
             }
-
-            // Đặt đối tượng supplier vào request
             request.setAttribute("supplier", supplier);
-
-            // Chuyển tiếp tới trang edit_supplier.jsp
             request.getRequestDispatcher("manager/edit_supplier.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             response.sendRedirect("manager/suppliers.jsp");
@@ -99,25 +94,31 @@ public class EditSupplier extends HttpServlet {
             throws ServletException, IOException {
         try {
             int supplierId = Integer.parseInt(request.getParameter("supplier_id"));
-            
-            Suppliers supplier = supplierDAO.getSupplierById(supplierId);
+            String supplierName = request.getParameter("supplier_name");  
+            String supplierCode = request.getParameter("supplier_code");  
+            String phone = request.getParameter("phone");  
+            String email = request.getParameter("email");  
+            String address = request.getParameter("address");  
+            String status = request.getParameter("status");  
 
+            if (supplierName == null || supplierName.isEmpty() || phone == null || phone.isEmpty()) {
+                request.setAttribute("errorMessage", "Vui lòng điền đầy đủ thông tin!");
+                request.getRequestDispatcher("manager/edit_supplier.jsp").forward(request, response);
+                return;
+            }
+
+            Suppliers supplier = new Suppliers(supplierId, supplierName, supplierCode, phone, email, address, status);
 
             boolean updated = supplierDAO.editSupplier(supplier);
 
             if (updated) {
-                System.out.println("Supplier with ID " + supplierId + " updated successfully.");
-                request.setAttribute("supplier", supplier);
-                request.getRequestDispatcher("manager/edit_supplier.jsp").forward(request, response);
+            response.sendRedirect("/Gr1_Warehouse/supplier");
             } else {
-                System.out.println("Failed to update supplier with ID: " + supplierId);
                 request.setAttribute("errorMessage", "Cập nhật thất bại!");
                 request.setAttribute("supplier", supplier);
                 request.getRequestDispatcher("manager/edit_supplier.jsp").forward(request, response);
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input data: " + e.getMessage());
-            e.printStackTrace(); // In case you want to log the exception details
             request.setAttribute("errorMessage", "Dữ liệu không hợp lệ!");
             request.getRequestDispatcher("manager/edit_supplier.jsp").forward(request, response);
         }
