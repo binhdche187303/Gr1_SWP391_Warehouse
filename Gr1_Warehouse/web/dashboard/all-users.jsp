@@ -160,7 +160,7 @@
                                                             <td>${lu.email}</td>
                                                             <td>${lu.address}</td>
                                                             <td>
-                                                                <form action="allusers" method="POST" style="margin: 0">
+                                                                <form action="allusers" method="POST" style="margin: 0; text-align: center">
                                                                     <input type="hidden" name="user_id" value="${lu.userId}">
                                                                     <div class="select-wrapper">
                                                                         <select name="status" onchange="confirmStatusChange(this)" data-original="${lu.status}">
