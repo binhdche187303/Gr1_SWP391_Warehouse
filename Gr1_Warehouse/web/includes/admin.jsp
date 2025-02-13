@@ -470,13 +470,10 @@
 
         <!-- Plugins JS -->
         <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
-        <<<<<<< HEAD
+
         <!--        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
                 <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
-        =======
-        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>
-        >>>>>>> origin/minhphuong
+
 
         <!-- Apexchar js -->
         <script src="${pageContext.request.contextPath}/assets2/js/chart/apex-chart/apex-chart1.js"></script>
