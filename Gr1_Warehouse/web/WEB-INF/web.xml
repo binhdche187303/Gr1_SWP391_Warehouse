@@ -36,6 +36,29 @@
         <servlet-name>Shop</servlet-name>
         <servlet-class>controller.Shop</servlet-class>
     </servlet>
+<<<<<<< HEAD
+=======
+    <servlet>
+        <servlet-name>SupplierServlet</servlet-name>
+        <servlet-class>controller.SupplierServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddSupplierServlet</servlet-name>
+        <servlet-class>controller.AddSupplierServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ImportGood</servlet-name>
+        <servlet-class>controller.ImportGood</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>HandleImport</servlet-name>
+        <servlet-class>controller.HandleImport</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EditSupplier</servlet-name>
+        <servlet-class>controller.EditSupplier</servlet-class>
+    </servlet>
+>>>>>>> binhdc1
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -72,5 +95,28 @@
         <servlet-name>Shop</servlet-name>
         <url-pattern>/shop</url-pattern>
     </servlet-mapping>
+<<<<<<< HEAD
     
+=======
+    <servlet-mapping>
+        <servlet-name>SupplierServlet</servlet-name>
+        <url-pattern>/supplier</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddSupplierServlet</servlet-name>
+        <url-pattern>/addSupplier</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImportGood</servlet-name>
+        <url-pattern>/importGood</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HandleImport</servlet-name>
+        <url-pattern>/handleImport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditSupplier</servlet-name>
+        <url-pattern>/editSupplier</url-pattern>
+    </servlet-mapping>
+>>>>>>> binhdc1
 </web-app>

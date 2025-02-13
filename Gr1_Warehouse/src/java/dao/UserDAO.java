@@ -19,17 +19,18 @@ import model.Role;
 public class UserDAO extends DBContext {
 
     // Phương thức login
-    public User login(String email, String password) {
+    public User login(String identifier, String password) {
         User user = null;
-        String sql = "SELECT u.user_id, u.username, u.password, u.fullname, u.phone, u.email, u.role_id, u.status, u.address, r.role_name "
+        String sql = "SELECT u.user_id, u.username, u.password, u.fullname, u.phone, u.email, "
+                + "u.role_id, u.status, u.address, r.role_name "
                 + "FROM Users u "
                 + "JOIN Roles r ON u.role_id = r.role_id "
-                + "WHERE u.email = ? AND u.password = ? AND u.status = 'Active'";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, email);
-            ps.setString(2, password);
+                + "WHERE (u.email = ? OR u.username = ?) AND u.password = ?";
 
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, identifier); // Dùng email hoặc username
+            ps.setString(2, identifier);
+            ps.setString(3, password);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -107,7 +108,6 @@ public class UserDAO extends DBContext {
                     user.setStatus(rs.getString("status"));
                     user.setAddress(rs.getString("address"));  // Lấy giá trị address từ DB
                     user.setPhone(rs.getString("phone"));
-
                     // Lấy Role từ database
                     Role role = new Role();
                     role.setRoleId(rs.getInt("role_id"));
@@ -338,14 +338,4 @@ public class UserDAO extends DBContext {
         }
     }
 
-    public static void main(String[] args) {
-        UserDAO uu = new UserDAO();
-        List<User> list = uu.getAllStaff();
-//        uu.updatePassword("1255", 7);
-//        uu.updateUser("HIHI", "11112499999", "DAAAAAAAA", 7);
-        for (User user : list) {
-            System.out.println(user);
-        }
-
-    }
 }
