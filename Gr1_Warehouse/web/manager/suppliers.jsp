@@ -123,8 +123,12 @@
                                                             </td>
                                                             <td>${supplier.phone}</td>
                                                             <td>${supplier.address}</td>
-                                                            <td>${supplier.status}</td>
-
+                                                            <td class="<c:choose>
+                                                                    <c:when test='${supplier.status == "Active"}'>text-success</c:when>
+                                                                    <c:otherwise>text-danger</c:otherwise>
+                                                                </c:choose>">
+                                                                ${supplier.status}
+                                                            </td>
                                                             <td>
                                                                 <ul>
                                                                     <li>
@@ -141,7 +145,7 @@
                                                                             </button>
                                                                         </form>
                                                                     </li>
-                                                                    
+
                                                                 </ul>
                                                             </td>
                                                         </tr>

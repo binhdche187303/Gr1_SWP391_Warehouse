@@ -8,6 +8,8 @@ import model.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import model.Role;
 
 /**
@@ -29,7 +31,6 @@ public class UserDAO extends DBContext {
             ps.setString(1, identifier); // Dùng email hoặc username
             ps.setString(2, identifier);
             ps.setString(3, password);
-
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -40,8 +41,7 @@ public class UserDAO extends DBContext {
                 user.setFullname(rs.getString("fullname"));
                 user.setPhone(rs.getString("phone"));
                 user.setEmail(rs.getString("email"));
-                user.setAddress(rs.getString("address"));
-
+                user.setAddress(rs.getString("address")); // Gán giá trị address
                 model.Role role = new model.Role();
                 role.setRoleId(rs.getInt("role_id"));
                 role.setRoleName(rs.getString("role_name"));
@@ -187,10 +187,10 @@ public class UserDAO extends DBContext {
         String sql = "UPDATE users SET password = ? WHERE email = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, password);
-            ps.setString(2, email);  
+            ps.setString(2, email);  // Sử dụng email để tìm người dùng
             ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();  
+            e.printStackTrace();  // Kiểm tra nếu có lỗi
         }
     }
 
@@ -256,12 +256,85 @@ public class UserDAO extends DBContext {
         }
     }
 
-    public static void main(String[] args) {
-        UserDAO uu = new UserDAO();
+    //Get all users
+    public List<User> getAllUser() {
 
-//        uu.updatePassword("1255", 7);
-//        uu.updateUser("HIHI", "11112499999", "DAAAAAAAA", 7);
-        User u = uu.getUserById(7);
-        System.out.println(u.toString());
+        List<User> list = new ArrayList<>();
+        String sql = "SELECT u.user_id, u.username, u.password,u.fullname,u.phone,u.email,u.address,r.role_id,u.status, r.role_name FROM dbo.Users u JOIN dbo.Roles r\n"
+                + "ON r.role_id = u.role_id\n"
+                + "WHERE r.role_name = N'Customer'";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("user_id"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setFullname(rs.getString("fullname"));
+                user.setPhone(rs.getString("phone"));
+                user.setEmail(rs.getString("email"));
+                user.setAddress(rs.getString("address"));
+                Role role = new Role();
+                role.setRoleId(rs.getInt("role_id"));
+                role.setRoleName(rs.getString("role_name"));
+                user.setRole(role);
+                user.setStatus(rs.getString("status"));
+                list.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
     }
+
+    //Get all staff
+    public List<User> getAllStaff() {
+
+        List<User> list = new ArrayList<>();
+        String sql = "SELECT u.user_id,u.username, u.password,u.fullname,u.phone,u.email,u.address,u.role_id,r.role_name,u.status FROM dbo.Users u\n"
+                + "JOIN dbo.Roles r ON r.role_id = u.role_id\n"
+                + "WHERE r.role_name NOT IN (N'Customer', N'Admin System');";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("user_id"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setFullname(rs.getString("fullname"));
+                user.setPhone(rs.getString("phone"));
+                user.setEmail(rs.getString("email"));
+                user.setAddress(rs.getString("address"));
+                Role role = new Role();
+                role.setRoleId(rs.getInt("role_id"));
+                role.setRoleName(rs.getString("role_name"));
+                user.setRole(role);
+                user.setStatus(rs.getString("status"));
+                list.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    //Update user status
+    public void updateStatus(String status, int user_id) {
+        String sql = "UPDATE dbo.Users SET status = ? WHERE user_id=?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, status);
+            st.setInt(2, user_id);
+            st.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
 }

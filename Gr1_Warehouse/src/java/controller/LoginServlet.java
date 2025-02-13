@@ -107,7 +107,7 @@ public class LoginServlet extends HttpServlet {
 
         switch (roleId) {
             case 1:  // Admin system
-                response.sendRedirect("dashboard");
+                response.sendRedirect("/Gr1_Warehouse/includes/admin.jsp");
                 break;
             case 2:  // Customer
                 response.sendRedirect(request.getContextPath() + "/pages/home.jsp");
@@ -230,7 +230,7 @@ public class LoginServlet extends HttpServlet {
 
         switch (roleId) {
             case 1:  // Admin system
-                response.sendRedirect("dashboard");
+                response.sendRedirect("/Gr1_Warehouse/includes/admin.jsp");
                 break;
             case 2:  // Customer
                 response.sendRedirect(request.getContextPath() + "/pages/home.jsp");
