@@ -723,6 +723,88 @@ CREATE TABLE Images (
     FOREIGN KEY (product_id) REFERENCES Products(product_id)
 );
 
+<<<<<<< HEAD
+=======
+--Bảng filter
+CREATE TABLE Filters (
+    filter_id INT PRIMARY KEY IDENTITY(1,1),
+    filter_name VARCHAR(255) NOT NULL UNIQUE  -- Tên tiêu chí lọc (Category, Brand, Price Range)
+);
+
+INSERT INTO Filters(filter_name) 
+VALUES 
+	 ('Category'),
+	 ('Brand'),
+	 ('Price Range')
+
+CREATE TABLE FilterOptions (
+    option_id INT PRIMARY KEY IDENTITY(1,1),
+    filter_id INT,
+    option_value VARCHAR(255) NOT NULL UNIQUE,  -- Giá trị của tiêu chí lọc
+    FOREIGN KEY (filter_id) REFERENCES Filters(filter_id)
+);
+
+CREATE TABLE ProductFilters (
+    product_id INT,
+    variant_id INT,  
+    option_id INT,
+    PRIMARY KEY (product_id, variant_id, option_id),  
+    FOREIGN KEY (product_id) REFERENCES Products(product_id),
+    FOREIGN KEY (variant_id) REFERENCES ProductVariants(variant_id),  
+    FOREIGN KEY (option_id) REFERENCES FilterOptions(option_id)
+);
+
+--SELECT p.product_id, p.product_name, pv.variant_id, pv.price, pv.stock
+--FROM Products p
+--JOIN ProductVariants pv ON p.product_id = pv.product_id
+--JOIN ProductFilters pf ON pv.variant_id = pf.variant_id
+--JOIN FilterOptions fo ON pf.option_id = fo.option_id
+--JOIN Filters f ON fo.filter_id = f.filter_id
+--WHERE f.filter_name = 'Price Range'
+--AND pv.price BETWEEN 50000 AND 300000;
+
+
+--select * from Filters
+--select * from FilterOptions
+--select * from ProductFilters
+
+
+ALTER TABLE Filters ADD min_value DECIMAL(10,2), max_value DECIMAL(10,2);
+UPDATE Filters 
+SET min_value = 0, max_value = 500000 
+WHERE filter_name = 'Price Range';
+
+
+DECLARE @CategoryFilterId INT, @BrandFilterId INT;
+
+SELECT @CategoryFilterId = filter_id FROM Filters WHERE filter_name = 'Category';
+SELECT @BrandFilterId = filter_id FROM Filters WHERE filter_name = 'Brand';
+
+-- Thêm các tùy chọn cho Category (Danh mục sản phẩm)
+INSERT INTO FilterOptions (filter_id, option_value)
+VALUES
+(@CategoryFilterId,N'Kẹo'),
+(@CategoryFilterId,N'Snack'),
+(@CategoryFilterId,N'Bánh mì'),
+(@CategoryFilterId,N'Bánh quy'),		 
+(@CategoryFilterId,N'Bánh bông lan'),	 
+(@CategoryFilterId,N'Bánh ngọt'),		 
+(@CategoryFilterId,N'Bánh gạo'),		 
+(@CategoryFilterId,N'Nước uống có ga'),
+(@CategoryFilterId,N'Nước uống đóng chai'),
+(@CategoryFilterId,N'Nước uống trái cây'),
+(@CategoryFilterId,N'Nước tăng lực'),
+(@CategoryFilterId,N'Nước bù điện giải'),
+(@CategoryFilterId,N'Trà và cà phê'),
+(@CategoryFilterId,N'Sữa và sản phẩm từ sữa');
+
+INSERT INTO FilterOptions (filter_id, option_value)
+VALUES
+(@BrandFilterId, N'Orion'),
+(@BrandFilterId, N'Phạm Nguyên'),
+(@BrandFilterId, N'Pepsico'),
+(@BrandFilterId, N'Kinh Đô');
+>>>>>>> origin/minhphuong
 
 -- Bảng Suppliers (Nhà cung cấp)
 CREATE TABLE Suppliers (
@@ -732,6 +814,7 @@ CREATE TABLE Suppliers (
     phone NVARCHAR(20), 
     email NVARCHAR(255), 
     address NVARCHAR(255)
+<<<<<<< HEAD
 	status NVARCHAR(10) NOT NULL DEFAULT 'Active' CHECK (status IN ('Active', 'Deactive')) 
 );
 
@@ -746,6 +829,19 @@ CREATE TABLE Discounts (
 	max_uses INT NULL CHECK (max_uses > 0), 
     created_at DATETIME DEFAULT GETDATE(),
 	status NVARCHAR(10) NOT NULL DEFAULT 'Active' CHECK (status IN ('Active', 'Inactive'))
+=======
+);
+
+
+CREATE TABLE Discounts (
+    discount_id INT IDENTITY(1,1) PRIMARY KEY,  -- Mã giảm giá
+    min_quantity INT,  -- Số lượng tối thiểu để áp dụng giảm giá
+    discount_percentage DECIMAL(5, 2),  -- Tỷ lệ giảm giá (ví dụ: 7% là 7.00)
+    start_date DATETIME,  -- Ngày bắt đầu áp dụng
+    end_date DATETIME,  -- Ngày kết thúc áp dụng (nếu có)
+    created_at DATETIME DEFAULT GETDATE()
+    
+>>>>>>> origin/minhphuong
 );
 
 CREATE TABLE DiscountHistory (
@@ -1269,6 +1365,7 @@ CREATE TABLE TokenForgetPassword (
     user_id INT NOT NULL,                  -- Liên kết tới bảng Users
     FOREIGN KEY (user_id) REFERENCES Users(user_id) -- Khóa ngoại liên kết bảng Users
 );
+<<<<<<< HEAD
  
 
  CREATE TRIGGER trg_AfterDiscountUpdate
@@ -1307,3 +1404,19 @@ BEGIN
     FROM Discounts
     JOIN inserted ON Discounts.discount_id = inserted.discount_id;
 END;
+=======
+DECLARE @category_id INT = NULL;  
+DECLARE @brand_id INT = NULL;  
+DECLARE @min_price DECIMAL(18,2) = 100000;  
+DECLARE @max_price DECIMAL(18,2) = 200000;  
+
+SELECT DISTINCT p.product_id, p.product_name, pv.price, pv.stock, b.brand_name, c.category_name
+FROM Products p
+JOIN Brands b ON p.brand_id = b.brand_id
+JOIN Categories c ON p.category_id = c.category_id
+JOIN ProductVariants pv ON p.product_id = pv.product_id
+WHERE 
+    (@category_id IS NULL OR p.category_id = @category_id) 
+    AND (@brand_id IS NULL OR p.brand_id = @brand_id)
+    AND (pv.price BETWEEN @min_price AND @max_price);
+>>>>>>> origin/minhphuong

@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+=======
+>>>>>>> origin/minhphuong
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
@@ -17,7 +20,11 @@
 
         <!-- Google font-->
         <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+<<<<<<< HEAD
               rel="stylesheet">
+=======
+            rel="stylesheet">
+>>>>>>> origin/minhphuong
         <!-- Linear Icon css -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets2/css/linearicon.css">
         <!-- fontawesome css -->
@@ -44,6 +51,15 @@
     </head>
 
     <body>
+<<<<<<< HEAD
+=======
+        <!-- tap on top start -->
+        <div class="tap-top">
+            <span class="lnr lnr-chevron-up"></span>
+        </div>
+        <!-- tap on tap end -->
+
+>>>>>>> origin/minhphuong
         <!-- page-wrapper Start-->
         <div class="page-wrapper compact-wrapper" id="pageWrapper">
             <!-- Page Header Start-->
@@ -126,18 +142,35 @@
                                 </ul>
                             </li>
 
+<<<<<<< HEAD
 
                             <li class="profile-nav onhover-dropdown pe-0 me-0">
                                 <div class="media profile-media">
 
                                     <div class="user-name-hide media-body">
                                         <span>${sessionScope.acc.username}</span>
+=======
+                            <li>
+                                <div class="mode">
+                                    <i class="ri-moon-line"></i>
+                                </div>
+                            </li>
+                            <li class="profile-nav onhover-dropdown pe-0 me-0">
+                                <div class="media profile-media">
+                                    <img class="user-profile rounded-circle" src="assets/images/users/4.jpg" alt="">
+                                    <div class="user-name-hide media-body">
+                                        <span>Emay Walter</span>
+>>>>>>> origin/minhphuong
                                         <p class="mb-0 font-roboto">Admin<i class="middle ri-arrow-down-s-line"></i></p>
                                     </div>
                                 </div>
                                 <ul class="profile-dropdown onhover-show-div">
                                     <li>
+<<<<<<< HEAD
                                         <a href="allusers">
+=======
+                                        <a href="all-users.html">
+>>>>>>> origin/minhphuong
                                             <i data-feather="users"></i>
                                             <span>Users</span>
                                         </a>
@@ -151,11 +184,19 @@
                                     <li>
                                         <a href="support-ticket.html">
                                             <i data-feather="phone"></i>
+<<<<<<< HEAD
                                             <span>Sports Tickets</span>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="/Gr1_Warehouse/profilesettingadmin">
+=======
+                                            <span>Spports Tickets</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="profile-setting.html">
+>>>>>>> origin/minhphuong
                                             <i data-feather="settings"></i>
                                             <span>Settings</span>
                                         </a>
@@ -270,10 +311,14 @@
                                         </a>
                                         <ul class="sidebar-submenu">
                                             <li>
+<<<<<<< HEAD
                                                 <a href="/Gr1_Warehouse/allusers">All users</a>
                                             </li>
                                             <li>
                                                 <a href="/Gr1_Warehouse/allstaff">All staff</a>
+=======
+                                                <a href="all-users.html">All users</a>
+>>>>>>> origin/minhphuong
                                             </li>
                                             <li>
                                                 <a href="add-new-user.html">Add new user</a>
@@ -288,7 +333,11 @@
                                         </a>
                                         <ul class="sidebar-submenu">
                                             <li>
+<<<<<<< HEAD
                                                 <a href="/Gr1_Warehouse/role">All roles</a>
+=======
+                                                <a href="role.html">All roles</a>
+>>>>>>> origin/minhphuong
                                             </li>
                                             <li>
                                                 <a href="create-role.html">Create Role</a>
@@ -344,6 +393,7 @@
                                         </a>
                                         <ul class="sidebar-submenu">
                                             <li>
+<<<<<<< HEAD
                                                 <a href="/Gr1_Warehouse/couponlist">Coupon List</a>
                                             </li>
 
@@ -353,6 +403,13 @@
 
                                             <li>
                                                 <a href="/Gr1_Warehouse/listdiscounthistory">History Coupon Detail</a>
+=======
+                                                <a href="coupon-list.html">Coupon List</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="create-coupon.html">Create Coupon</a>
+>>>>>>> origin/minhphuong
                                             </li>
                                         </ul>
                                     </li>
@@ -385,7 +442,11 @@
                                         </a>
                                         <ul class="sidebar-submenu">
                                             <li>
+<<<<<<< HEAD
                                                 <a href="/Gr1_Warehouse/profilesettingadmin">Profile Setting</a>
+=======
+                                                <a href="profile-setting.html">Profile Setting</a>
+>>>>>>> origin/minhphuong
                                             </li>
                                         </ul>
                                     </li>
@@ -413,6 +474,7 @@
                     </div>
                 </div>
                 <!-- Page Sidebar Ends-->
+<<<<<<< HEAD
             </div>
             <!-- Page Body End -->
 
@@ -428,13 +490,40 @@
                                 <button type="button" class="btn btn--no" data-bs-dismiss="modal">No</button>
                                 <a href="<%= request.getContextPath() %>/logout" class="btn btn--yes btn-primary">Yes</a>
                             </div>
+=======
+
+
+
+            </div>
+            <!-- Page Body End -->
+        </div>
+        <!-- page-wrapper End-->
+
+        <!-- Modal Start -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+             aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog  modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h5 class="modal-title" id="staticBackdropLabel">Logging Out</h5>
+                        <p>Are you sure you want to log out?</p>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="button-box">
+                            <button type="button" class="btn btn--no" data-bs-dismiss="modal">No</button>
+                            <button type="button" class="btn  btn--yes btn-primary">Yes</button>
+>>>>>>> origin/minhphuong
                         </div>
                     </div>
                 </div>
             </div>
+<<<<<<< HEAD
             <!-- Modal End -->
         </div>
         <!-- page-wrapper End-->
+=======
+        </div>
+        <!-- Modal End -->
+>>>>>>> origin/minhphuong
 
         <!-- latest js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
@@ -458,8 +547,13 @@
 
         <!-- Plugins JS -->
         <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
+<<<<<<< HEAD
 <!--        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
+=======
+        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
+        <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>
+>>>>>>> origin/minhphuong
 
         <!-- Apexchar js -->
         <script src="${pageContext.request.contextPath}/assets2/js/chart/apex-chart/apex-chart1.js"></script>

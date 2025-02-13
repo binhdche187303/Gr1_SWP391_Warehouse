@@ -7,6 +7,11 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<<<<<<< HEAD
+=======
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
+>>>>>>> origin/minhphuong
 
 <!DOCTYPE html>
 <html lang="en">
@@ -175,6 +180,10 @@
 
         <!-- Shop Section Start -->
         <section class="section-b-space shop-section">
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/minhphuong
             <div class="container-fluid-lg">
                 <div class="row">
                     <div class="col-custome-3">
@@ -184,6 +193,7 @@
                                     <h3><i class="fa-solid fa-arrow-left"></i> Back</h3>
                                 </div>
 
+<<<<<<< HEAD
                                 <div class="filter-category">
                                     <div class="filter-title">
                                         <h2>Filters</h2>
@@ -875,6 +885,98 @@
                                             </div>
                                         </div>
                                     </div>
+=======
+                                <div class="accordion custome-accordion" id="accordionExample">
+                                    <form action="shop" method="get" id="shopform">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="headingOne">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                        data-bs-target="#collapseOne" aria-expanded="true"
+                                                        aria-controls="collapseOne">
+                                                    <span>Danh mục</span>
+                                                </button>
+                                            </h2>
+                                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
+                                                <div class="accordion-body">
+                                                    <ul class="category-list custom-padding custom-height">
+                                                        <c:forEach var="cat" items="${requestScope.category}">
+                                                            <li>
+                                                                <div class="form-check ps-0 m-0 category-list-box">
+                                                                    <input class="checkbox_animated" type="checkbox" name="category_id"
+                                                                           value="${cat.category_id}" id="cat-${cat.category_id}"
+                                                                           ${selectedCategories.contains(cat.category_id) ? 'checked' : ''}
+                                                                           onchange="document.getElementById('shopform').submit()">
+
+                                                                    <label class="form-check-label" for="cat-${cat.category_id}">
+                                                                        <span class="name">${cat.category_name}</span>
+                                                                        <span class="number">(${cat.totalProducts})</span>
+                                                                    </label>
+                                                                </div>
+                                                            </li>
+                                                        </c:forEach>
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="headingTwo">
+                                                <button class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                                                        aria-expanded="false" aria-controls="collapseTwo">
+                                                    <span>Thương Hiệu</span>
+                                                </button>
+                                            </h2>
+                                            <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
+                                                <div class="accordion-body">
+                                                    <ul class="category-list custom-padding">
+                                                        <c:forEach var="brand" items="${requestScope.brand}">
+                                                            <li>
+                                                                <div class="form-check ps-0 m-0 category-list-box">
+                                                                    <input class="checkbox_animated" type="checkbox" name="brand_id"
+                                                                           value="${brand.brand_id}" id="brand-${brand.brand_id}"
+                                                                           ${selectedBrands.contains(brand.brand_id) ? 'checked' : ''}
+                                                                           onchange="document.getElementById('shopform').submit()">
+
+                                                                    <label class="form-check-label" for="brand-${brand.brand_id}">
+                                                                        <span class="name">${brand.brand_name}</span>
+                                                                        <span class="number">(${brand.totalProducts})</span>
+                                                                    </label>
+                                                                </div>
+                                                            </li>
+                                                        </c:forEach>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="headingThree">
+                                                <button class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#collapseThree"
+                                                        aria-expanded="false" aria-controls="collapseThree">
+                                                    <span>Khoảng Giá</span>
+                                                </button>
+                                            </h2>
+                                            <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree">
+                                                <div class="accordion-body">
+                                                    <div class="range-slider">
+                                                        <input type="text" class="js-range-slider" name="price_range" value="${price_range}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <!-- Nút áp dụng filter -->
+                                        <div class="text-center mt-3">
+                                            <button type="submit" class="btn btn-primary">ÁP DỤNG</button>
+                                        </div>
+                                    </form>  
+
+>>>>>>> origin/minhphuong
                                 </div>
                             </div>
                         </div>
@@ -890,6 +992,7 @@
 
                             <div class="top-filter-menu">
                                 <div class="category-dropdown">
+<<<<<<< HEAD
                                     <h5 class="text-content">Sort By :</h5>
                                     <div class="dropdown">
                                         <button class="dropdown-toggle" type="button" id="dropdownMenuButton1"
@@ -931,6 +1034,47 @@
                                         <li class="three-grid">
                                             <a href="javascript:void(0)">
                                                 <img src="${pageContext.request.contextPath}/assets/svg/grid-3.svg" class="blur-up lazyload" alt="">
+=======
+                                    <form action="shop" method="get">
+    <!-- Giữ lại các giá trị của các tham số category_id (dạng danh sách) -->
+    <c:if test="${not empty paramValues.category_id}">
+        <c:forEach var="catId" items="${paramValues.category_id}">
+            <input type="hidden" name="category_id" value="${catId}" />
+        </c:forEach>
+    </c:if>
+
+    <!-- Giữ lại các giá trị của các tham số brand_id (dạng danh sách) -->
+    <c:if test="${not empty paramValues.brand_id}">
+        <c:forEach var="brandId" items="${paramValues.brand_id}">
+            <input type="hidden" name="brand_id" value="${brandId}" />
+        </c:forEach>
+    </c:if>
+
+    <!-- Giữ lại giá trị của price_range (nếu có) -->
+    <c:if test="${not empty param.price_range}">
+        <input type="hidden" name="price_range" value="${param['price_range']}" />
+    </c:if>
+
+    <div class="form-group">
+        <select name="sortOrder" class="form-select" onchange="this.form.submit()">
+            <option value="" disabled selected>Giá : </option>
+            <option value="asc" <c:if test="${param.sortOrder == 'asc'}">selected</c:if>>Giá: Thấp - Cao</option>
+            <option value="desc" <c:if test="${param.sortOrder == 'desc'}">selected</c:if>>Giá: Cao - Thấp</option>
+        </select>
+    </div>
+</form>
+
+
+
+
+                                    </div>
+
+                                    <div class="grid-option d-none d-md-block">
+                                        <ul>
+                                            <li class="three-grid">
+                                                <a href="javascript:void(0)">
+                                                    <img src="${pageContext.request.contextPath}/assets/svg/grid-3.svg" class="blur-up lazyload" alt="">
+>>>>>>> origin/minhphuong
                                             </a>
                                         </li>
                                         <li class="grid-btn d-xxl-inline-block d-none">
@@ -1086,6 +1230,7 @@
                             </c:forEach>
 
                         </div>
+<<<<<<< HEAD
 
                         <nav class="custome-pagination">
                             <ul class="pagination justify-content-center">
@@ -1110,6 +1255,9 @@
                                 </li>
                             </ul>
                         </nav>
+=======
+                        <%@ include file="/includes/paging.jsp" %>
+>>>>>>> origin/minhphuong
                     </div>
                 </div>
             </div>
@@ -1433,6 +1581,7 @@
         <div class="bg-overlay"></div>
         <!-- Bg overlay End -->
 
+<<<<<<< HEAD
 <script>
 function viewProduct(productId) {
     fetch(`/Gr1_Warehouse/shop?productId=` + productId)
@@ -1488,6 +1637,63 @@ document.getElementById('modal-product-image').style.width = '300px'; // Adjust 
         .catch(error => console.error('Lỗi khi lấy dữ liệu:', error));
 }
 </script>
+=======
+        <script>
+            function viewProduct(productId) {
+                fetch(`/Gr1_Warehouse/shop?productId=` + productId)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.error) {
+                                console.error('Lỗi:', data.error);
+                                return;
+                            }
+
+                            // Cập nhật thông tin sản phẩm
+                            document.getElementById('modal-product-name').textContent = data.productName;
+                            document.getElementById('modal-product-brand').textContent = data.brandName || "N/A";
+                            document.getElementById('modal-product-code').textContent = data.sku || "N/A";
+                            document.getElementById('modal-product-description').textContent = data.description;
+                            document.getElementById('modal-product-price').textContent =
+                                    new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(data.variants[0].price);
+
+                            // Cập nhật danh sách size (without price)
+                            let sizeSelect = document.getElementById('modal-product-size');
+                            sizeSelect.innerHTML = ''; // Xóa size cũ
+                            data.variants.forEach(variant => {
+                                let option = document.createElement('option');
+                                option.value = variant.sizeId;
+                                option.textContent = variant.sizeName; // Only size name here
+                                sizeSelect.appendChild(option);
+                            });
+
+                            // Cập nhật hình ảnh chính
+                            document.getElementById('modal-product-image').src = data.firstImageUrl;
+                            document.getElementById('modal-product-image').style.width = '300px'; // Adjust the width as needed
+
+                            // Cập nhật danh sách thumbnail
+                            let thumbnailContainer = document.getElementById('modal-thumbnails');
+                            thumbnailContainer.innerHTML = ''; // Xóa ảnh cũ
+                            data.images.forEach(img => {
+                                let imgElement = document.createElement('img');
+                                imgElement.src = img.imageUrl;
+                                imgElement.classList.add('img-thumbnail', 'me-2');
+                                imgElement.style.width = "50px";
+                                imgElement.onclick = () => {
+                                    document.getElementById('modal-product-image').src = img.imageUrl;
+                                };
+                                thumbnailContainer.appendChild(imgElement);
+                            });
+
+                            // Cập nhật link "View More Details"
+                            document.getElementById('modal-view-more').setAttribute('onclick', `location.href='product-detail.jsp?productId=${data.productId}'`);
+
+                            // Mở modal
+                            new bootstrap.Modal(document.getElementById('quickViewModal')).show();
+                        })
+                        .catch(error => console.error('Lỗi khi lấy dữ liệu:', error));
+            }
+        </script>
+>>>>>>> origin/minhphuong
 
 
 

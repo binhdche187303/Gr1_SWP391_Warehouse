@@ -11,14 +11,16 @@ package model;
 public class Categories {
     private int category_id, parent_id;
     private String category_name;
-
+    private int totalProducts;
+    
     public Categories() {
     }
 
-    public Categories(int category_id, int parent_id, String category_name) {
+    public Categories(int category_id, int parent_id, String category_name, int totalProducts) {
         this.category_id = category_id;
         this.parent_id = parent_id;
         this.category_name = category_name;
+        this.totalProducts = totalProducts;
     }
 
     public int getCategory_id() {
@@ -43,6 +45,14 @@ public class Categories {
 
     public void setCategory_name(String category_name) {
         this.category_name = category_name;
+    }
+
+    public int getTotalProducts() {
+        return totalProducts;
+    }
+
+    public void setTotalProducts(int totalProducts) {
+        this.totalProducts = totalProducts;
     }
     
     

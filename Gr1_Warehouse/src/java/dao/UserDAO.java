@@ -42,7 +42,6 @@ public class UserDAO extends DBContext {
                 user.setPhone(rs.getString("phone"));
                 user.setEmail(rs.getString("email"));
                 user.setAddress(rs.getString("address")); // Gán giá trị address
-
                 model.Role role = new model.Role();
                 role.setRoleId(rs.getInt("role_id"));
                 role.setRoleName(rs.getString("role_name"));
