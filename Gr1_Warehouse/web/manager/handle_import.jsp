@@ -15,6 +15,12 @@
         <link rel="icon" href="assets/images/favicon.png" type="image/x-icon">
         <link rel="shortcut icon" href="assets/images/favicon.png" type="image/x-icon">
         <title>Fastkart - Dashboard</title>
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Bootstrap JS và Popper.js -->
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
         <!-- Google font-->
         <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
@@ -75,28 +81,39 @@
                                                             <p class="text-gray-600">Địa chỉ : </p>
                                                             <p class="mt-2">Còn nợ <span class="font-bold"></span></p>
                                                             <!-- Sử dụng button thay vì link -->
-                                                            <button type="button" class="btn btn-info" onclick="showSupplierDetails('${supplier.supplierName}', '${supplier.phone}', '${supplier.email}', '${supplier.address}')">
+                                                            <button type="button" class="btn btn-info" 
+                                                                    data-supplier-name="${supplier.supplierName}" 
+                                                                    data-phone="${supplier.phone}" 
+                                                                    data-email="${supplier.email}" 
+                                                                    data-address="${supplier.address}"
+                                                                    onclick="showSupplierDetails(this)">
                                                                 Xem chi tiết
                                                             </button>
                                                         </div>
                                                         <div>
-                                                            <!-- Modal để chọn nhà cung cấp -->
-                                                            <!-- Modal -->
-                                                            <div class="modal" id="supplierModal" tabindex="-1" aria-labelledby="supplierModalLabel" aria-hidden="true">
-                                                                <div class="modal-dialog">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header">
-                                                                            <h5 class="modal-title" id="supplierModalLabel">Chọn nhà cung cấp</h5>
-                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                        </div>
-                                                                        <div class="modal-body">
-                                                                            <p><strong>Tên nhà cung cấp:</strong> <span id="supplierName"></span></p>
-                                                                            <p><strong>Số điện thoại:</strong> <span id="supplierPhone"></span></p>
-                                                                            <p><strong>Email:</strong> <span id="supplierEmail"></span></p>
-                                                                            <p><strong>Địa chỉ:</strong> <span id="supplierAddress"></span></p>
-                                                                        </div>
-                                                                        <div class="modal-footer">
-                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                            <!-- Modal để chọn nhà cung cấp -->                                                            <div class="modal fade" id="supplierModal" tabindex="-1" aria-labelledby="supplierModalLabel" aria-hidden="true">
+                                                                <!-- Modal để chọn nhà cung cấp -->
+                                                                <div class="modal fade" id="supplierModal" tabindex="-1" aria-labelledby="supplierModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title" id="supplierModalLabel">Chi tiết nhà cung cấp</h5>
+                                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <!-- Thông tin chi tiết nhà cung cấp -->
+                                                                                <div>
+                                                                                    <p><strong>Tên nhà cung cấp: </strong><span id="supplierName"></span></p>
+                                                                                    <p><strong>Địa chỉ: </strong><span id="supplierAddress"></span></p>
+                                                                                    <p><strong>Điện thoại: </strong><span id="supplierPhone"></span></p>
+                                                                                    <p><strong>Email: </strong><span id="supplierEmail"></span></p>
+                                                                                </div>
+
+                                                                                <!-- Danh sách nhà cung cấp -->
+                                                                                <ul id="supplierList">
+                                                                                    <!-- Dữ liệu sẽ được chèn vào đây -->
+                                                                                </ul>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -242,25 +259,71 @@
         </div>
 
         <script>
-            // Kiểm tra nếu dữ liệu supplier tồn tại
-            var supplierName = "${supplier != null ? supplier.supplierName : ''}";
-            var supplierPhone = "${supplier != null ? supplier.phone : ''}";
-            var supplierEmail = "${supplier != null ? supplier.email : ''}";
-            var supplierAddress = "${supplier != null ? supplier.address : ''}";
+            // Hàm hiển thị modal và cập nhật thông tin chi tiết nhà cung cấp
+            function showSupplierDetails(button) {
+                // Lấy dữ liệu từ các thuộc tính data-* của nút bấm
+                var supplierName = button.getAttribute('data-supplier-name');
+                var phone = button.getAttribute('data-phone');
+                var email = button.getAttribute('data-email');
+                var address = button.getAttribute('data-address');
 
-            // Hàm hiển thị chi tiết nhà cung cấp
-            function showSupplierDetails() {
-                // Cập nhật nội dung modal
+                // Cập nhật thông tin nhà cung cấp vào modal
                 document.getElementById('supplierName').innerText = supplierName;
-                document.getElementById('supplierPhone').innerText = supplierPhone;
-                document.getElementById('supplierEmail').innerText = supplierEmail;
-                document.getElementById('supplierAddress').innerText = supplierAddress;
+                document.getElementById('supplierAddress').innerText = address;
+                document.getElementById('supplierPhone').innerText = phone;
+                document.getElementById('supplierEmail').innerText = email;
 
-                // Mở modal
-                var myModal = new bootstrap.Modal(document.getElementById('supplierModal'));
-                myModal.show();
+                // Gửi yêu cầu AJAX để lấy dữ liệu nhà cung cấp từ server
+                fetch('/Gr1_Warehouse/getSuppliers')
+                        .then(response => response.json())
+                        .then(suppliers => {
+                            // Gọi hàm hiển thị danh sách nhà cung cấp trong modal
+                            displaySuppliers(suppliers);
+                        })
+                        .catch(error => console.error('Lỗi khi lấy dữ liệu nhà cung cấp:', error));
+
+                // Hiển thị modal
+                document.getElementById('supplierModal').style.display = 'block';
             }
+
+// Hàm hiển thị danh sách nhà cung cấp
+            function displaySuppliers(suppliers) {
+                const supplierList = document.getElementById('supplierList');
+                supplierList.innerHTML = ''; // Xóa danh sách cũ
+
+                suppliers.forEach(supplier => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = supplier.supplierName;
+                    listItem.onclick = () => {
+                        showSupplierDetailsFromList(supplier);
+                    };
+                    supplierList.appendChild(listItem);
+                });
+            }
+
+// Hiển thị chi tiết nhà cung cấp khi click vào tên nhà cung cấp trong danh sách
+            function showSupplierDetailsFromList(supplier) {
+                document.getElementById('supplierName').innerText = supplier.supplierName;
+                document.getElementById('supplierAddress').innerText = supplier.address;
+                document.getElementById('supplierPhone').innerText = supplier.phone;
+                document.getElementById('supplierEmail').innerText = supplier.email;
+            }
+
+// Đóng modal khi nhấn vào biểu tượng đóng (x)
+            document.querySelector('.btn-close').onclick = () => {
+                document.getElementById('supplierModal').style.display = 'none';
+            };
+
+// Đóng modal khi nhấn ra ngoài modal
+            window.onclick = function (event) {
+                const modal = document.getElementById('supplierModal');
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            };
+
         </script>
+
 
         <!-- latest js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
