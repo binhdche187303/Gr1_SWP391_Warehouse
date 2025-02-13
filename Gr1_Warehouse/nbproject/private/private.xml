@@ -3,7 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Huy%20Nam/Desktop/demo/Gr1_SWP391_Warehouse/Gr1_Warehouse/src/java/controller/Shop.java</file>
+            <file>file:/D:/SWP/Gr1_Warehouse/src/java/dao/DBContext.java</file>
+            <file>file:/D:/SWP/Gr1_Warehouse/src/java/dashboardController/CreateCoupon.java</file>
+            <file>file:/D:/SWP/Gr1_Warehouse/src/java/dashboardController/CouponList.java</file>
         </group>
     </open-files>
 </project-private>
