@@ -165,18 +165,7 @@
                                             <i class="fa-solid fa-angle-down"></i>
                                         </button>
                                     </div>
-
                                     <div class="search-box">
-<<<<<<< HEAD
-                                        <div class="input-group">
-                                            <input type="search" class="form-control" placeholder="I'm searching for..."
-                                                   aria-label="Recipient's username" aria-describedby="button-addon2">
-                                            <button class="btn" type="button" id="button-addon2">
-                                                <i data-feather="search"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-=======
                                         <div class="input-group d-flex align-items-center">
                                             <form action="shop" method="get" class="d-flex w-100">
                                                 <input type="text" class="form-control" placeholder="I'm searching for..."
@@ -188,8 +177,6 @@
                                             </form>
                                         </div>
                                     </div>
-
->>>>>>> origin/minhphuong
                                 </div>
 
                                 <div class="rightside-box">
@@ -803,37 +790,6 @@
                                                                                 </li>
 
                                                                                 <li class="nav-item dropdown">
-<<<<<<< HEAD
-                                                                                <a class="nav-link dropdown-toggle" href="${pageContext.request.contextPath}/shop">Shop</a>
-<!--                                                                                    <ul class="dropdown-menu">
-                                                                                        <li>
-                                                                                            <a class="dropdown-item" href="shop-category-slider.html">Shop
-                                                                                                Category Slider</a>
-                                                                                        </li>
-                                                                                        <li>
-                                                                                            <a class="dropdown-item" href="shop-category.html">Shop
-                                                                                                Category Sidebar</a>
-                                                                                        </li>
-                                                                                        <li>
-                                                                                            <a class="dropdown-item" href="shop-banner.html">Shop Banner</a>
-                                                                                        </li>
-                                                                                        <li>
-                                                                                            <a class="dropdown-item" href="shop-left-sidebar.html">Shop Left
-                                                                                                Sidebar</a>
-                                                                                        </li>
-                                                                                        <li>
-                                                                                            <a class="dropdown-item" href="shop-list.html">Shop List</a>
-                                                                                        </li>
-                                                                                        <li>
-                                                                                            <a class="dropdown-item" href="shop-right-sidebar.html">Shop
-                                                                                                Right Sidebar</a>
-                                                                                        </li>
-                                                                                        <li>
-                                                                                            <a class="dropdown-item" href="shop-top-filter.html">Shop Top
-                                                                                                Filter</a>
-                                                                                        </li>
-                                                                                    </ul>-->
-=======
                                                                                     <a class="nav-link dropdown-toggle" href="${pageContext.request.contextPath}/shop">Shop</a>
                                                                                     <!--                                                                                    <ul class="dropdown-menu">
                                                                                                                                                                             <li>
@@ -863,7 +819,6 @@
                                                                                                                                                                                     Filter</a>
                                                                                                                                                                             </li>
                                                                                                                                                                         </ul>-->
->>>>>>> origin/minhphuong
                                                                                 </li>
 
                                                                                 <li class="nav-item dropdown">
