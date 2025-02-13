@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import model.Discounts;
 
 /**
@@ -75,23 +76,36 @@ public class CreateCoupon extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            // Lấy dữ liệu từ form
+            // Get form data
             String discountCode = request.getParameter("discount_code");
             String discountPercentageStr = request.getParameter("discount_percentage");
+            String minQuantityStr = request.getParameter("min_quantity");
+            String minOrderValueStr = request.getParameter("min_order_value");
             String startDateStr = request.getParameter("start_date");
             String endDateStr = request.getParameter("end_date");
             String maxUsesStr = request.getParameter("max_uses");
             String status = request.getParameter("status");
 
-            // Gán lại dữ liệu để hiển thị nếu có lỗi
+            // Preserve form data for redisplay if needed
             request.setAttribute("discount_code", discountCode);
             request.setAttribute("discount_percentage", discountPercentageStr);
+            request.setAttribute("min_quantity", minQuantityStr);
+            request.setAttribute("min_order_value", minOrderValueStr);
             request.setAttribute("start_date", startDateStr);
             request.setAttribute("end_date", endDateStr);
             request.setAttribute("max_uses", maxUsesStr);
             request.setAttribute("status", status);
 
-            // Kiểm tra mã giảm giá đã tồn tại chưa
+            // Validate required fields
+            if (discountCode == null || discountCode.trim().isEmpty()
+                    || discountPercentageStr == null || discountPercentageStr.trim().isEmpty()
+                    || startDateStr == null || startDateStr.trim().isEmpty()) {
+                request.setAttribute("message", "Required fields cannot be empty.");
+                request.getRequestDispatcher("/dashboard/create-coupon.jsp").forward(request, response);
+                return;
+            }
+
+            // Check if discount code exists
             DiscountDAO discountDAO = new DiscountDAO();
             if (discountDAO.isDiscountCodeExists(discountCode)) {
                 request.setAttribute("message", "Discount code already exists! Please use another code.");
@@ -99,28 +113,47 @@ public class CreateCoupon extends HttpServlet {
                 return;
             }
 
-            // Chuyển đổi dữ liệu
+            // Parse and validate numeric values
             double discountPercentage = Double.parseDouble(discountPercentageStr);
-            LocalDateTime startDate = (startDateStr != null && !startDateStr.isEmpty())
-                    ? LocalDateTime.parse(startDateStr + "T00:00:00")
-                    : LocalDateTime.now();
-            LocalDateTime endDate = (endDateStr != null && !endDateStr.isEmpty())
+            Integer minQuantity = (minQuantityStr != null && !minQuantityStr.trim().isEmpty())
+                    ? Integer.parseInt(minQuantityStr) : null;
+            Integer minOrderValue = (minOrderValueStr != null && !minOrderValueStr.trim().isEmpty())
+                    ? Integer.parseInt(minOrderValueStr) : null;
+            Integer maxUses = (maxUsesStr != null && !maxUsesStr.trim().isEmpty())
+                    ? Integer.parseInt(maxUsesStr) : null;
+
+            // Validate discount percentage range
+            if (discountPercentage <= 0 || discountPercentage >= 100) {
+                request.setAttribute("message", "Discount percentage must be between 0 and 100.");
+                request.getRequestDispatcher("/dashboard/create-coupon.jsp").forward(request, response);
+                return;
+            }
+
+            // Parse dates
+            LocalDateTime startDate = LocalDateTime.parse(startDateStr + "T00:00:00");
+            LocalDateTime endDate = (endDateStr != null && !endDateStr.trim().isEmpty())
                     ? LocalDateTime.parse(endDateStr + "T00:00:00")
                     : null;
-            Integer maxUses = (maxUsesStr != null && !maxUsesStr.isEmpty())
-                    ? Integer.parseInt(maxUsesStr)
-                    : null;
 
-            // Kiểm tra ngày start và end
+            // Validate date range
             if (endDate != null && startDate.isAfter(endDate)) {
                 request.setAttribute("message", "Start date cannot be after end date.");
                 request.getRequestDispatcher("/dashboard/create-coupon.jsp").forward(request, response);
                 return;
             }
 
-            // Tạo mới mã giảm giá
+            // Create new discount
             Discounts newDiscount = discountDAO.createDiscount(
-                    discountCode, discountPercentage, startDate, endDate, maxUses, LocalDateTime.now(), status, 1
+                    discountCode,
+                    discountPercentage,
+                    minQuantity,
+                    minOrderValue,
+                    startDate,
+                    endDate,
+                    maxUses,
+                    LocalDateTime.now(),
+                    status,
+                    1 // userId
             );
 
             if (newDiscount != null) {
@@ -130,8 +163,13 @@ public class CreateCoupon extends HttpServlet {
                 request.getRequestDispatcher("/dashboard/create-coupon.jsp").forward(request, response);
             }
 
+        } catch (NumberFormatException e) {
+            request.setAttribute("message", "Invalid number format. Please check your input.");
+            request.getRequestDispatcher("/dashboard/create-coupon.jsp").forward(request, response);
+        } catch (DateTimeParseException e) {
+            request.setAttribute("message", "Invalid date format. Please use the correct date format.");
+            request.getRequestDispatcher("/dashboard/create-coupon.jsp").forward(request, response);
         } catch (Exception e) {
-            e.printStackTrace();
             request.setAttribute("message", "Error: " + e.getMessage());
             request.getRequestDispatcher("/dashboard/create-coupon.jsp").forward(request, response);
         }

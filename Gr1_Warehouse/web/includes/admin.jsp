@@ -350,6 +350,10 @@
                                             <li>
                                                 <a href="/Gr1_Warehouse/createcoupon">Create Coupon</a>
                                             </li>
+
+                                            <li>
+                                                <a href="/Gr1_Warehouse/listdiscounthistory">History Coupon Detail</a>
+                                            </li>
                                         </ul>
                                     </li>
 

@@ -161,7 +161,7 @@
                                                             <td>${ls.email}</td>
                                                             <td>${ls.address}</td>
                                                             <td>
-                                                                <form action="allstaff" method="POST" style="margin: 0">
+                                                                <form action="allstaff" method="POST" style="margin: 0; text-align: center">
                                                                     <input type="hidden" name="user_id" value="${ls.userId}">
                                                                     <div class="select-wrapper">
                                                                         <select name="status" onchange="confirmStatusChange(this)" data-original="${ls.status}">
@@ -170,8 +170,6 @@
                                                                         </select>
                                                                     </div>
                                                                 </form>
-
-
                                                             </td>
                                                         </tr>
                                                     </c:forEach >

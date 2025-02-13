@@ -12,8 +12,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.SQLException;
 import java.util.List;
 import model.DiscountHistory;
+import model.Discounts;
 
 /**
  *
@@ -60,12 +62,22 @@ public class ListDistcountHistory extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String discount_id = request.getParameter("discount_id");
 
-        DiscountDAO dd = new DiscountDAO();
-        List<DiscountHistory> listDistcountHistory = dd.getDiscountHistoryByDiscountId(Integer.parseInt(discount_id));
-        request.setAttribute("listDistcountHistory", listDistcountHistory);
-        request.getRequestDispatcher("/dashboard/coupon-list.jsp").forward(request, response);
+        try {
+            String discount_id = request.getParameter("discount_id");
+            if (discount_id == null || discount_id.isEmpty()) {
+                response.sendRedirect("couponlist"); // Redirect về trang danh sách nếu không có id
+                return;
+            }
+            DiscountDAO dd = new DiscountDAO();
+            List<DiscountHistory> listDistcountHistory = dd.getDiscountHistoryByDiscountId(Integer.parseInt(discount_id));
+            Discounts d = dd.getDiscountById(Integer.parseInt(discount_id));
+            request.setAttribute("discount", d);
+            request.setAttribute("listDistcountHistory", listDistcountHistory);
+            request.getRequestDispatcher("/dashboard/detail-discount.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            response.sendRedirect("couponlist");
+        }
     }
 
     /**
@@ -79,7 +91,43 @@ public class ListDistcountHistory extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            // Lấy các tham số từ form
+            int discountId = Integer.parseInt(request.getParameter("discount_id"));
+            double discountPercentage = Double.parseDouble(request.getParameter("discount_percentage"));
+            String status = request.getParameter("status");
+
+            // Xử lý tham số max_uses có thể null
+            String maxUsesStr = request.getParameter("max_uses");
+            Integer maxUses = null;
+            if (maxUsesStr != null && !maxUsesStr.trim().isEmpty()) {
+                maxUses = Integer.parseInt(maxUsesStr);
+            }
+            // Tạo đối tượng DiscountDAO và cập nhật
+            DiscountDAO discountDAO = new DiscountDAO();
+            boolean updated = discountDAO.updateDiscount(discountId, discountPercentage, status, maxUses, 1);
+
+            if (updated) {
+                // Nếu cập nhật thành công, chuyển hướng về trang danh sách
+                response.sendRedirect("listdiscounthistory?discount_id="+discountId);
+            } else {
+                // Nếu thất bại, đặt thông báo lỗi và hiển thị lại trang
+                request.setAttribute("errorMessage", "Không thể cập nhật mã giảm giá. Mã có thể không tồn tại hoặc đã bị thay đổi.");
+                doGet(request, response);
+            }
+        } catch (NumberFormatException e) {
+            // Xử lý lỗi định dạng số
+            request.setAttribute("errorMessage", "Định dạng đầu vào không hợp lệ. Vui lòng kiểm tra lại các giá trị.");
+            doGet(request, response);
+        } catch (SQLException e) {
+            // Xử lý lỗi SQL
+            request.setAttribute("errorMessage", "Lỗi cơ sở dữ liệu: " + e.getMessage());
+            doGet(request, response);
+        } catch (Exception e) {
+            // Xử lý các lỗi khác
+            request.setAttribute("errorMessage", "Đã xảy ra lỗi không mong muốn: " + e.getMessage());
+            doGet(request, response);
+        }
     }
 
     /**

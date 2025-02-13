@@ -83,19 +83,41 @@ public class CouponList extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            // Lấy các tham số từ form
             int discountId = Integer.parseInt(request.getParameter("discount_id"));
-            String discountCode = request.getParameter("discount_code");
             double discountPercentage = Double.parseDouble(request.getParameter("discount_percentage"));
-            int maxUsesStr = Integer.parseInt(request.getParameter("max_uses"));
             String status = request.getParameter("status");
 
+            // Xử lý tham số max_uses có thể null
+            String maxUsesStr = request.getParameter("max_uses");
+            Integer maxUses = null;
+            if (maxUsesStr != null && !maxUsesStr.trim().isEmpty()) {
+                maxUses = Integer.parseInt(maxUsesStr);
+            }
+            // Tạo đối tượng DiscountDAO và cập nhật
             DiscountDAO discountDAO = new DiscountDAO();
-            discountDAO.updateDiscount(discountId, discountPercentage, status, maxUsesStr, 1);
+            boolean updated = discountDAO.updateDiscount(discountId, discountPercentage, status, maxUses, 1);
 
-            response.sendRedirect(request.getContextPath() + "/couponlist");
-        } catch (SQLException ex) {
-            Logger.getLogger(CouponList.class.getName()).log(Level.SEVERE, null, ex);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            if (updated) {
+                // Nếu cập nhật thành công, chuyển hướng về trang danh sách
+                response.sendRedirect("couponlist");
+            } else {
+                // Nếu thất bại, đặt thông báo lỗi và hiển thị lại trang
+                request.setAttribute("errorMessage", "Không thể cập nhật mã giảm giá. Mã có thể không tồn tại hoặc đã bị thay đổi.");
+                doGet(request, response);
+            }
+        } catch (NumberFormatException e) {
+            // Xử lý lỗi định dạng số
+            request.setAttribute("errorMessage", "Định dạng đầu vào không hợp lệ. Vui lòng kiểm tra lại các giá trị.");
+            doGet(request, response);
+        } catch (SQLException e) {
+            // Xử lý lỗi SQL
+            request.setAttribute("errorMessage", "Lỗi cơ sở dữ liệu: " + e.getMessage());
+            doGet(request, response);
+        } catch (Exception e) {
+            // Xử lý các lỗi khác
+            request.setAttribute("errorMessage", "Đã xảy ra lỗi không mong muốn: " + e.getMessage());
+            doGet(request, response);
         }
     }
 
