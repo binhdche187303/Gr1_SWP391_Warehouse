@@ -7,6 +7,8 @@ package dao;
 import java.util.Arrays;
 import java.util.List;
 import model.Categories;
+import model.Images;
+import model.ProductVariants;
 import model.Products;
 
 /**
@@ -15,33 +17,52 @@ import model.Products;
  */
 public class test {
     public static void main(String[] args) {
-        ProductDAO productDAO = new ProductDAO();
-
         ProductDAO pdao = new ProductDAO();
-List<Integer> categoryIds = Arrays.asList(1); // Thay đổi ID theo DB thực tế
-        List<Integer> brandIds = Arrays.asList(1); // Thay đổi ID theo DB thực tế
-        Double minPrice = 10000.0;
-        Double maxPrice = 50000.0;
-        String sortOrder = "asc"; // "desc" nếu muốn giảm dần
+// Nhập productId để test
+        int productId = 1; // Thay đổi ID theo dữ liệu trong database
 
-        // Gọi phương thức getFilteredProducts để lấy danh sách sản phẩm theo bộ lọc
-        List<Products> products = pdao.getFilteredProducts(categoryIds, brandIds, minPrice, maxPrice, sortOrder);
+        // Gọi hàm getDetails
+        Products product = pdao.getDetails(productId);
 
-        // In kết quả ra console
-        if (products.isEmpty()) {
-            System.out.println("Không có sản phẩm nào phù hợp với bộ lọc.");
-        } else {
-            System.out.println("Danh sách sản phẩm lọc được:");
-            for (Products p : products) {
-                System.out.println("ID: " + p.getProductId());
-                System.out.println("Tên: " + p.getProductName());
-                System.out.println("Mô tả: " + p.getDescription());
-                System.out.println("Danh mục: " + p.getCate().getCategory_name());
-                System.out.println("Giá thấp nhất: " + p.getVariants().get(0).getPrice());
-                System.out.println("Kích cỡ: " + p.getVariants().get(0).getSize().getSize_name());
-                System.out.println("Hình ảnh: " + p.getImages().get(0).getImage_url());
-                System.out.println("-----------------------------------");
+        // Kiểm tra sản phẩm có tồn tại hay không
+        if (product != null) {
+            System.out.println("===== CHI TIẾT SẢN PHẨM =====");
+            System.out.println("ID: " + product.getProductId());
+            System.out.println("Tên: " + product.getProductName());
+            System.out.println("SKU: " + product.getSku());
+            System.out.println("Xuất xứ: " + product.getOrigin());
+            System.out.println("Mô tả: " + product.getDescription());
+
+            // In danh mục sản phẩm
+            if (product.getCate() != null) {
+                System.out.println("Danh mục: " + product.getCate().getCategory_name());
             }
+
+            // In thương hiệu sản phẩm
+            if (product.getBrand() != null) {
+                System.out.println("Thương hiệu: " + product.getBrand().getBrand_name());
+            }
+
+            // In danh sách ảnh
+            System.out.println("\nHình ảnh sản phẩm:");
+            if (product.getImages() != null) {
+                for (Images img : product.getImages()) {
+                    System.out.println("- " + img.getImage_url());
+                }
+            }
+
+            // In danh sách biến thể (kích thước, giá, tồn kho)
+            System.out.println("\nCác biến thể của sản phẩm:");
+            if (product.getVariants() != null) {
+                for (ProductVariants variant : product.getVariants()) {
+                    System.out.println("- Size: " + variant.getSize().getSize_name() +
+                            " | Giá: " + variant.getPrice() +
+                            " | Tồn kho: " + variant.getStock());
+                }
+            }
+        } else {
+            System.out.println("Không tìm thấy sản phẩm với ID: " + productId);
+        
             }
     }
 }

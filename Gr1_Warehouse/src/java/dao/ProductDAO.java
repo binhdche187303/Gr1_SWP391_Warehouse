@@ -14,6 +14,181 @@ import model.Images;
 import model.Sizes;
 
 public class ProductDAO extends DBContext {
+    public Products getDetails(int productId) {
+    Products product = null;
+    String sqlProduct = "SELECT p.*, c.category_name, b.brand_name " +
+                    "FROM Products p " +
+                    "JOIN Categories c ON p.category_id = c.category_id " +
+                    "JOIN Brands b ON p.brand_id = b.brand_id " +
+                    "WHERE p.product_id = ?";
+
+    String sqlVariants = "SELECT pv.*, s.size_name FROM ProductVariants pv " +
+                         "JOIN Sizes s ON pv.size_id = s.size_id WHERE pv.product_id = ?";
+    String sqlImages = "SELECT * FROM Images WHERE product_id = ?";
+    
+    try (PreparedStatement pStmtProduct = connection.prepareStatement(sqlProduct);
+         PreparedStatement pStmtVariants = connection.prepareStatement(sqlVariants);
+         PreparedStatement pStmtImages = connection.prepareStatement(sqlImages)) {
+
+        // Lấy thông tin sản phẩm
+        pStmtProduct.setInt(1, productId);
+        try (ResultSet rsProduct = pStmtProduct.executeQuery()) {
+            if (rsProduct.next()) {
+                product = new Products();
+                product.setProductId(rsProduct.getInt("product_id"));
+                product.setProductName(rsProduct.getString("product_name"));
+                product.setSku(rsProduct.getString("SKU"));
+                product.setOrigin(rsProduct.getString("origin"));
+                product.setDescription(rsProduct.getString("description"));
+
+                // Gán danh mục sản phẩm
+                Categories category = new Categories();
+                category.setCategory_id(rsProduct.getInt("category_id"));
+                category.setCategory_name(rsProduct.getString("category_name"));
+                product.setCate(category);
+
+                // Gán thương hiệu sản phẩm
+                Brands brand = new Brands();
+                brand.setBrand_id(rsProduct.getInt("brand_id"));
+                brand.setBrand_name(rsProduct.getString("brand_name"));
+                product.setBrand(brand);
+            }
+        }
+
+        // Lấy danh sách các biến thể sản phẩm (size, giá, tồn kho)
+        pStmtVariants.setInt(1, productId);
+        List<ProductVariants> variantList = new ArrayList<>();
+        try (ResultSet rsVariants = pStmtVariants.executeQuery()) {
+            while (rsVariants.next()) {
+                ProductVariants variant = new ProductVariants();
+                variant.setVariantId(rsVariants.getInt("variant_id"));
+                variant.setProductId(rsVariants.getInt("product_id"));
+                variant.setSizeId(rsVariants.getInt("size_id"));
+                variant.setPrice(rsVariants.getBigDecimal("price"));
+                variant.setStock(rsVariants.getInt("stock"));
+
+                // Lấy thông tin kích thước
+                Sizes size = new Sizes();
+                size.setSize_id(rsVariants.getInt("size_id"));
+                size.setSize_name(rsVariants.getString("size_name"));
+                variant.setSize(size);
+
+                variantList.add(variant);
+            }
+        }
+        product.setVariants(variantList);
+
+        // Lấy danh sách hình ảnh sản phẩm
+        pStmtImages.setInt(1, productId);
+        List<Images> imageList = new ArrayList<>();
+        try (ResultSet rsImages = pStmtImages.executeQuery()) {
+            while (rsImages.next()) {
+                Images img = new Images();
+                img.setImage_id(rsImages.getInt("image_id"));
+                img.setImage_url(rsImages.getString("image_url"));
+                imageList.add(img);
+            }
+        }
+        product.setImages(imageList);
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return product;
+}
+
+    
+//   public Products getDetails(int productId) {
+//    Products product = new Products();
+//    
+//    // Lấy thông tin sản phẩm và ảnh
+//    String sqlProduct = "SELECT "
+//            + "    p.product_id, "
+//            + "    p.product_name, "
+//            + "    c.category_name, "
+//            + "    p.description, "
+//            + "    i.image_url "
+//            + "FROM "
+//            + "    Products p "
+//            + "JOIN "
+//            + "    Categories c ON p.category_id = c.category_id "
+//            + "LEFT JOIN "
+//            + "    Images i ON p.product_id = i.product_id "
+//            + "WHERE "
+//            + "    p.product_id = ?";
+//
+//    // Lấy danh sách biến thể sản phẩm (size, giá, tồn kho)
+//    String sqlVariants = "SELECT "
+//            + "    v.variant_id, "
+//            + "    s.size_name, "
+//            + "    v.size_id, "
+//            + "    v.price, "
+//            + "    v.stock "
+//            + "FROM "
+//            + "    ProductVariants v "
+//            + "JOIN "
+//            + "    Sizes s ON v.size_id = s.size_id "
+//            + "WHERE "
+//            + "    v.product_id = ?";
+//
+//    try (PreparedStatement pStmtProduct = connection.prepareStatement(sqlProduct)) {
+//        pStmtProduct.setInt(1, productId);
+//
+//        try (ResultSet rsProduct = pStmtProduct.executeQuery()) {
+//            List<Images> listImages = new ArrayList<>();
+//            Categories category = new Categories();
+//
+//            while (rsProduct.next()) {
+//                if (product.getProductName() == null) {
+//                    product.setProductId(rsProduct.getInt("product_id"));
+//                    product.setProductName(rsProduct.getString("product_name"));
+//                    product.setDescription(rsProduct.getString("description"));
+//
+//                    category.setCategory_name(rsProduct.getString("category_name"));
+//                    product.setCate(category);
+//                }
+//
+//                String imageUrl = rsProduct.getString("image_url");
+//                if (imageUrl != null && !imageUrl.isEmpty()) {
+//                    Images image = new Images();
+//                    image.setImage_url(imageUrl);
+//                    listImages.add(image);
+//                }
+//            }
+//
+//            product.setImages(listImages);
+//        }
+//    } catch (SQLException e) {
+//        e.printStackTrace();
+//    }
+//
+//    try (PreparedStatement pStmtVariants = connection.prepareStatement(sqlVariants)) {
+//        pStmtVariants.setInt(1, productId);
+//
+//        try (ResultSet rsVariants = pStmtVariants.executeQuery()) {
+//            List<Sizes> listSizes = new ArrayList<>();
+//
+//            while (rsVariants.next()) {
+//                Sizes size = new Sizes();
+//                size.setSize_id(rsVariants.getInt("size_id"));
+//                size.setSize_name(rsVariants.getString("size_name"));
+//                size.setPrice(rsVariants.getDouble("price"));
+//                size.setStock_quantity(rsVariants.getInt("stock"));
+//                listSizes.add(size);
+//            }
+//
+//            product.setSizes(listSizes);
+//        }
+//    } catch (SQLException e) {
+//        e.printStackTrace();
+//    }
+//
+//    return product;
+//}
+
+
+    
  public List<Products> getListProductsPaginated(List<Products> listProducts, int startProduct, int pageSize) {
 
         List<Products> paginatedList = new ArrayList<>();
