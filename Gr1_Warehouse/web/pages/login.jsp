@@ -101,7 +101,7 @@
                             <div class="log-in-button">
                                 <ul>
                                     <li>
-                                        <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:9999/Gr1_Warehouse/login&response_type=code&client_id=1072735184008-k7hvr7gtfkmbjlcndhptbudukl57bq51.apps.googleusercontent.com&approval_prompt=force" class="btn google-button w-100">
+                                        <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/Gr1_Warehouse/login&response_type=code&client_id=1072735184008-k7hvr7gtfkmbjlcndhptbudukl57bq51.apps.googleusercontent.com&approval_prompt=force" class="btn google-button w-100">
                                             <img src="${pageContext.request.contextPath}/assets/images/inner-page/google.png" class="blur-up lazyload" alt=""> Log In with Google
 
 
