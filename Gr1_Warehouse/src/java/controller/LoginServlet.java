@@ -83,7 +83,7 @@ public class LoginServlet extends HttpServlet {
 
             Role role = new Role();
             role.setRoleId(2);  // Role id 2 là Customer
-            user.setRole(role);  // Gán role cho user
+            user.setRole(role); 
             user.setStatus("Active");
 
             try {

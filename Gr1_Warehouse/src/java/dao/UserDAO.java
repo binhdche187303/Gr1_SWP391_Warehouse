@@ -21,10 +21,10 @@ public class UserDAO extends DBContext {
 
     // Phương thức login
     public User login(String identifier, String password) {
-        String sql = "SELECT u.user_id, u.username, u.password, u.fullname, u.phone, u.email, u.role_id, u.status, u.address, r.role_name " +
-                     "FROM Users u " +
-                     "JOIN Roles r ON u.role_id = r.role_id " +
-                     "WHERE u.email = ? OR u.username = ?";
+        String sql = "SELECT u.user_id, u.username, u.password, u.fullname, u.phone, u.email, u.role_id, u.status, u.address, r.role_name "
+                + "FROM Users u "
+                + "JOIN Roles r ON u.role_id = r.role_id "
+                + "WHERE u.email = ? OR u.username = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, identifier);
@@ -65,7 +65,7 @@ public class UserDAO extends DBContext {
         }
         return null;
     }
-    
+
     // Kiểm tra email đã tồn tại chưa
     public boolean isEmailExist(String email) {
         String sql = "SELECT COUNT(*) FROM Users WHERE email = ?";
@@ -90,10 +90,10 @@ public class UserDAO extends DBContext {
         }
 
         String sql = "INSERT INTO Users (username, password, fullname, phone, email, role_id, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        
+
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, username);
-            ps.setString(2, hashedPassword); 
+            ps.setString(2, hashedPassword);
             ps.setString(3, fullname);
             ps.setString(4, phone);
             ps.setString(5, email);
@@ -114,7 +114,7 @@ public class UserDAO extends DBContext {
             return false;
         }
     }
-    
+
     public User findByEmail(String email) {
         String sql = "SELECT user_id, username, fullname, email, password, phone, role_id, status, address FROM users WHERE email = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -151,7 +151,7 @@ public class UserDAO extends DBContext {
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getFullname());
             ps.setString(3, user.getEmail());
-            ps.setString(4, "123");  // Đặt mật khẩu mặc định là "123"
+            ps.setString(4, MD5Hash.hash("123"));  // Mã hóa mật khẩu mặc định "123"
             ps.setInt(5, user.getRole().getRoleId());
             ps.setString(6, user.getStatus());
 
@@ -207,13 +207,15 @@ public class UserDAO extends DBContext {
     }
 
     public void updatePassword(String email, String password) {
+        String hashedPassword = MD5Hash.hash(password);
+
         String sql = "UPDATE users SET password = ? WHERE email = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, password);
-            ps.setString(2, email);  // Sử dụng email để tìm người dùng
+            ps.setString(1, hashedPassword);
+            ps.setString(2, email);
             ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();  // Kiểm tra nếu có lỗi
+            e.printStackTrace();
         }
     }
 
@@ -266,16 +268,14 @@ public class UserDAO extends DBContext {
         }
     }
 
-    //Change password
-    public void updatePassword(String password, int user_id) {
+    public void updatePassword(String hashedPassword, int user_id) {
         String sql = "UPDATE dbo.Users SET password=? WHERE user_id=?";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setString(1, password);
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setString(1, hashedPassword);
             st.setInt(2, user_id);
             st.executeUpdate();
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 

@@ -100,7 +100,7 @@
                             <div class="footer-logo">
                                 <div class="theme-logo">
                                     <a href="index.jsp">
-                                        <img src="../assets/images/logo/1.png" class="blur-up lazyload" alt="">
+                                        <img src="${pageContext.request.contextPath}/assets/images/logo/1.png" class="blur-up lazyload" alt="">
                                     </a>
                                 </div>
 
@@ -238,13 +238,13 @@
                                         <ul>
                                             <li class="mb-0">
                                                 <a href="https://play.google.com/store/apps" target="_blank">
-                                                    <img src="../assets/images/playstore.svg" class="blur-up lazyload"
+                                                    <img src="${pageContext.request.contextPath}/assets/images/playstore.svg" class="blur-up lazyload"
                                                          alt="">
                                                 </a>
                                             </li>
                                             <li class="mb-0">
                                                 <a href="https://www.apple.com/in/app-store/" target="_blank">
-                                                    <img src="../assets/images/appstore.svg" class="blur-up lazyload"
+                                                    <img src="${pageContext.request.contextPath}/assets/images/appstore.svg" class="blur-up lazyload"
                                                          alt="">
                                                 </a>
                                             </li>

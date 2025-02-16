@@ -37,16 +37,14 @@ public class resetPassword extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        String token = request.getParameter("token");
-            // In tất cả các tham số trong URL ra console
-    Enumeration<String> parameterNames = request.getParameterNames();
-    while (parameterNames.hasMoreElements()) {
-        String paramName = parameterNames.nextElement();
-        System.out.println(paramName + " = " + request.getParameter(paramName));
-    }
 
-        // Loại bỏ khoảng trắng đầu và cuối của token
+        String token = request.getParameter("token");
+        Enumeration<String> parameterNames = request.getParameterNames();
+        while (parameterNames.hasMoreElements()) {
+            String paramName = parameterNames.nextElement();
+            System.out.println(paramName + " = " + request.getParameter(paramName));
+        }
+
         if (token != null) {
             token = token.trim();
         }
@@ -89,7 +87,6 @@ public class resetPassword extends HttpServlet {
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirm_password");
 
-        // Kiểm tra mật khẩu xác nhận
         if (!password.equals(confirmPassword)) {
             request.setAttribute("mess", "Xác nhận mật khẩu phải giống mật khẩu.");
             request.setAttribute("email", email);
@@ -117,14 +114,11 @@ public class resetPassword extends HttpServlet {
             return;
         }
 
-        // Cập nhật mật khẩu
         UserDAO.updatePassword(email, password);
 
-        // Cập nhật trạng thái token
         tokenForgetPassword.setIsUsed(true);
         DAOToken.updateStatus(tokenForgetPassword);
 
-        // Đưa người dùng đến trang chủ hoặc trang login
         response.sendRedirect("login");
     }
 
