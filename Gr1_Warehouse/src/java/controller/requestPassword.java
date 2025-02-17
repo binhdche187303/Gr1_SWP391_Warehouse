@@ -99,6 +99,7 @@ public class requestPassword extends HttpServlet {
             request.setAttribute("mess", "An error occurred on the server");
             request.getRequestDispatcher("/pages/forgot.jsp").forward(request, response);
             return;
+            
         }
         try {
             boolean isSent = service.sendEmail(email, linkReset, user.getUsername());
