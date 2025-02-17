@@ -123,15 +123,6 @@
                             <div class="col-sm-12">
                                 <div class="card card-table">
                                     <div class="card-body">
-                                        <div class="title-header option-title">
-                                            <h5>All Users</h5>
-                                            <form class="d-inline-flex">
-                                                <a href="add-new-user.html" class="align-items-center btn btn-theme d-flex">
-                                                    <i data-feather="plus"></i>Add New
-                                                </a>
-                                            </form>
-                                        </div>
-
                                         <div class="table-responsive table-product">
                                             <table class="table all-package theme-table" id="table_id">
                                                 <thead>

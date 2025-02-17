@@ -122,6 +122,14 @@
                             <div class="col-sm-12">
                                 <div class="card card-table">
                                     <div class="card-body">
+                                        <div class="title-header option-title">
+                                            <h5>All Users</h5>
+                                            <form class="d-inline-flex">
+                                                <a href="add-new-user.html" class="align-items-center btn btn-theme d-flex">
+                                                    <i data-feather="plus"></i>Thêm nhân viên
+                                                </a>
+                                            </form>
+                                        </div>
                                         <div class="table-responsive table-product">
                                             <table class="table all-package theme-table" id="table_id">
                                                 <thead>
@@ -133,6 +141,7 @@
                                                         <th>Email</th>
                                                         <th>Address</th>
                                                         <th>Status</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
 
@@ -151,17 +160,31 @@
                                                             <td>${ls.phone}</td>
                                                             <td>${ls.email}</td>
                                                             <td>${ls.address}</td>
-                                                            <td>
-                                                                <form action="allstaff" method="POST" style="margin: 0; text-align: center">
-                                                                    <input type="hidden" name="user_id" value="${ls.userId}">
-                                                                    <div class="select-wrapper">
-                                                                        <select name="status" onchange="confirmStatusChange(this)" data-original="${ls.status}">
-                                                                            <option value="Active" ${ls.status == 'Active' ? 'selected' : ''}>Active</option>
-                                                                            <option value="Deactive" ${ls.status == 'Deactive' ? 'selected' : ''}>Deactive</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </form>
+                                                            <td class="<c:choose>
+                                                                    <c:when test='${ls.status == "Active"}'>text-success</c:when>
+                                                                    <c:otherwise>text-danger</c:otherwise>
+                                                                </c:choose>">
+                                                                ${ls.status}
                                                             </td>
+                                                            <td>  
+                                                                <ul>
+                                                                    <li>
+                                                                        <a href="javascript:void(0)" 
+                                                                           class="edit-staff"
+                                                                           data-id="${ld.discount_id}" 
+                                                                           data-code="${ld.discount_code}" 
+                                                                           data-percentage="${ld.discount_percentage}" 
+                                                                           data-start="${ld.start_date}" 
+                                                                           data-end="${ld.end_date}" 
+                                                                           data-status="${ld.status}" 
+                                                                           data-max-uses="${ld.max_uses}">
+                                                                            <i class="ri-pencil-line"></i>
+                                                                        </a>
+
+                                                                    </li>
+                                                                </ul>
+                                                            </td>
+
                                                         </tr>
                                                     </c:forEach >
                                                 </tbody>
@@ -172,13 +195,95 @@
                             </div>
                         </div>
                     </div>
+
+                    <form class="d-inline-flex">
+                        <a href="add-new-user.html" class="align-items-center btn btn-theme d-flex">
+                            <i data-feather="plus"></i>Xuất file nhân viên
+                        </a>
+                    </form>
                     <!-- All User Table Ends-->
                 </div>
+
                 <!-- Container-fluid end -->
             </div>
             <!-- Page Body End -->
         </div>
 
+        <!-- Edit Staff Modal -->
+        <div class="modal fade theme-modal" id="edit-staff" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="edit-staff">Edit Discount</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form action="couponlist" method="POST">
+                            <input type="hidden" name="discount_id" value="" />
+
+                            <!-- Discount Code -->
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="discount_code" name="discount_code" value="" readonly />
+                                <label for="discount_code">Coupon Code</label>
+                            </div>
+
+                            <!-- Discount % -->
+                            <div class="form-floating mb-3">
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="discount_percentage" 
+                                       name="discount_percentage" 
+                                       min="0.1" 
+                                       max="99.9" 
+                                       step="0.1" 
+                                       value="" 
+                                       required/>
+                                <label for="discount_percentage">Discount (%)</label>
+                            </div>  
+
+                            <!-- Start Date & End Date cùng hàng -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="date" class="form-control" id="start_date" name="start_date" value="" required readonly />
+                                        <label for="start_date">Start Date</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="date" class="form-control" id="end_date" name="end_date" value="" required readonly />
+                                        <label for="end_date">End Date</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quantity -->
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" id="max_uses" name="max_uses" value="" />
+                                <label for="max_uses">Quantity</label>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Status</label>
+                                <select id="status" name="status" class="form-select">
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                </select>
+                            </div>
+
+                            <!-- Modal Footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Staff Modal End -->
 
 
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
@@ -200,13 +305,45 @@
 
 
         <script>
-                                                                            function confirmStatusChange(selectElement) {
-                                                                                if (confirm('Bạn có chắc chắn muốn thay đổi trạng thái của nhân viên?')) {
-                                                                                    selectElement.form.submit();
-                                                                                } else {
-                                                                                    selectElement.value = selectElement.getAttribute('data-original');
-                                                                                }
-                                                                            }
+
+            $(document).on("click", ".edit-staff", function () {
+                var id = $(this).data("id");
+                var code = $(this).data("code");
+                var percentage = $(this).data("percentage");
+                var start = $(this).data("start");
+                var end = $(this).data("end");
+                var maxUses = $(this).data("max-uses");
+                var status = $(this).data("status");
+
+                function formatDate(dateString) {
+                    if (!dateString)
+                        return "";
+                    var date = new Date(dateString);
+                    if (isNaN(date))
+                        return "";
+                    return date.getFullYear() + "-" +
+                            String(date.getMonth() + 1).padStart(2, '0') + "-" +
+                            String(date.getDate()).padStart(2, '0');
+                }
+
+                $("#edit-discount input[name='discount_id']").val(id);
+                $("#edit-discount input[name='discount_code']").val(code);
+
+                // Kiểm tra nếu percentage không phải số, tránh lỗi
+                if (percentage !== undefined && !isNaN(percentage)) {
+                    $("#edit-discount input[name='discount_percentage']").val(parseFloat(percentage).toFixed(1));
+                } else {
+                    $("#edit-discount input[name='discount_percentage']").val("");
+                }
+
+                $("#edit-discount input[name='start_date']").val(formatDate(start));
+                $("#edit-discount input[name='end_date']").val(formatDate(end));
+                $("#edit-discount input[name='max_uses']").val(maxUses);
+                $("#edit-discount select[name='status']").val(status);
+                $("#edit-discount input[name='max_uses']").attr("min", maxUses);
+
+                $("#edit-staff").modal("show");
+            });
         </script>
     </body>
 

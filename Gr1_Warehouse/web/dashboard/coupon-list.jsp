@@ -375,8 +375,6 @@
                 $("#edit-discount").modal("show");
             });
 
-
-
         </script>
 
 
