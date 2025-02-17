@@ -122,15 +122,6 @@
                             <div class="col-sm-12">
                                 <div class="card card-table">
                                     <div class="card-body">
-                                        <div class="title-header option-title">
-                                            <h5>All Staff</h5>
-                                            <form class="d-inline-flex">
-                                                <a href="add-new-user.html" class="align-items-center btn btn-theme d-flex">
-                                                    <i data-feather="plus"></i>Add New
-                                                </a>
-                                            </form>
-                                        </div>
-
                                         <div class="table-responsive table-product">
                                             <table class="table all-package theme-table" id="table_id">
                                                 <thead>
@@ -201,8 +192,8 @@
         <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
 <!--        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
-        <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>
+<!--        <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script>
+        <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>-->
         <script src="${pageContext.request.contextPath}/assets2/js/checkbox-all-check.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>

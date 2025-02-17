@@ -200,8 +200,8 @@
         <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
 <!--        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
-        <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>
+<!--        <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script>
+        <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>-->
         <script src="${pageContext.request.contextPath}/assets2/js/checkbox-all-check.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>

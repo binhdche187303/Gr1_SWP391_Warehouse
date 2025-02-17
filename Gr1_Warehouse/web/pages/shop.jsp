@@ -852,6 +852,47 @@
                         })
                         .catch(error => console.error('Lỗi khi lấy dữ liệu:', error));
             }
+
+            $(function () {
+                var $range = $(".js-range-slider"),
+                        $inputFrom = $(".js-input-from"),
+                        $inputTo = $(".js-input-to"),
+                        instance,
+                        min = 0,
+                        max = 1000000,
+                        from = localStorage.getItem("rangeFrom") ? parseInt(localStorage.getItem("rangeFrom")) : 0,
+                        to = localStorage.getItem("rangeTo") ? parseInt(localStorage.getItem("rangeTo")) : 500000;
+
+                $range.ionRangeSlider({
+                    type: "double",
+                    min: min,
+                    max: max,
+                    from: from, // Gán giá trị đã lưu
+                    to: to, // Gán giá trị đã lưu
+                    prefix: '$. ',
+                    onStart: updateInputs,
+                    onChange: updateInputs,
+                    onFinish: saveValues, // Lưu khi người dùng kết thúc thao tác
+                    step: 50000,
+                    prettify_enabled: true,
+                    prettify_separator: ".",
+                    values_separator: " - ",
+                    force_edges: true
+                });
+
+                instance = $range.data("ionRangeSlider");
+
+                function updateInputs(data) {
+                    $inputFrom.val(data.from);
+                    $inputTo.val(data.to);
+                }
+
+                function saveValues(data) {
+                    localStorage.setItem("rangeFrom", data.from);
+                    localStorage.setItem("rangeTo", data.to);
+                }
+            });
+
         </script>
 
 

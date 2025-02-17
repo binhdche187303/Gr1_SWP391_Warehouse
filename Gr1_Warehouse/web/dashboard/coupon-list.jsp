@@ -94,7 +94,6 @@
 
             <!-- Page Body Start-->
             <div class="page-body-wrapper">
-
                 <!-- Container-fluid starts-->
                 <!-- Coupon list table starts-->
                 <div class="page-body">
@@ -324,8 +323,8 @@
         <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
 
         <!-- Data table js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>
+<!--        <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script>
+        <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>-->
 
         <!-- all checkbox select js -->
         <script src="${pageContext.request.contextPath}/assets2/js/checkbox-all-check.js"></script>
