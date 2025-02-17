@@ -337,4 +337,23 @@ public class UserDAO extends DBContext {
         }
     }
 
+    //Update user staff
+    public void updateStaff(String status, int roleId, int user_id) {
+        String sql = "UPDATE dbo.Users SET status = ?, role_id = ? WHERE user_id=?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, status);
+            st.setInt(2, roleId);
+            st.setInt(3, user_id);
+            st.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public static void main(String[] args) {
+        UserDAO ud = new UserDAO();
+        ud.updateStaff("Deactive", 4, 5);
+    }
+
 }

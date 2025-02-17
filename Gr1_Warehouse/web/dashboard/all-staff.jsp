@@ -123,7 +123,7 @@
                                 <div class="card card-table">
                                     <div class="card-body">
                                         <div class="title-header option-title">
-                                            <h5>All Users</h5>
+                                            <h5>All Staff</h5>
                                             <form class="d-inline-flex">
                                                 <a href="add-new-user.html" class="align-items-center btn btn-theme d-flex">
                                                     <i data-feather="plus"></i>Thêm nhân viên
@@ -171,13 +171,15 @@
                                                                     <li>
                                                                         <a href="javascript:void(0)" 
                                                                            class="edit-staff"
-                                                                           data-id="${ld.discount_id}" 
-                                                                           data-code="${ld.discount_code}" 
-                                                                           data-percentage="${ld.discount_percentage}" 
-                                                                           data-start="${ld.start_date}" 
-                                                                           data-end="${ld.end_date}" 
-                                                                           data-status="${ld.status}" 
-                                                                           data-max-uses="${ld.max_uses}">
+                                                                           data-id="${ls.userId}" 
+                                                                           data-username=" ${ls.username}" 
+                                                                           data-fullname="${ls.fullname}" 
+                                                                           data-roleid="${ls.role.roleId}" 
+                                                                           data-rolename="${ls.role.roleName}" 
+                                                                           data-phone="${ls.phone}" 
+                                                                           data-email="${ls.email}" 
+                                                                           data-address="${ls.address}" 
+                                                                           data-status="${ls.status}">
                                                                             <i class="ri-pencil-line"></i>
                                                                         </a>
 
@@ -214,52 +216,51 @@
             <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="edit-staff">Edit Discount</h5>
+                        <h5 class="modal-title">Edit Staff</h5>
                     </div>
                     <div class="modal-body">
-                        <form action="couponlist" method="POST">
-                            <input type="hidden" name="discount_id" value="" />
-
-                            <!-- Discount Code -->
+                        <form action="allstaff" method="POST">
+                            <input type="hidden" id="user_id" name="user_id" />
+                            <!-- Username -->
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="discount_code" name="discount_code" value="" readonly />
-                                <label for="discount_code">Coupon Code</label>
+                                <input type="text" class="form-control" id="username" name="username" readonly />
+                                <label for="username">Username</label>
                             </div>
 
-                            <!-- Discount % -->
+                            <!-- Full Name -->
                             <div class="form-floating mb-3">
-                                <input type="number" 
-                                       class="form-control" 
-                                       id="discount_percentage" 
-                                       name="discount_percentage" 
-                                       min="0.1" 
-                                       max="99.9" 
-                                       step="0.1" 
-                                       value="" 
-                                       required/>
-                                <label for="discount_percentage">Discount (%)</label>
-                            </div>  
-
-                            <!-- Start Date & End Date cùng hàng -->
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <input type="date" class="form-control" id="start_date" name="start_date" value="" required readonly />
-                                        <label for="start_date">Start Date</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <input type="date" class="form-control" id="end_date" name="end_date" value="" required readonly />
-                                        <label for="end_date">End Date</label>
-                                    </div>
-                                </div>
+                                <input type="text" class="form-control" id="fullname" name="fullname" readonly required />
+                                <label for="fullname">Full Name</label>
                             </div>
 
-                            <!-- Quantity -->
+                            <!-- Role Name -->
+                            <div class="form-floating mb-3"> 
+                                <select id="rolename" name="rolename" class="form-select">
+                                    <c:forEach items="${requestScope.listRole}" var="lr">
+                                        <c:if test="${lr.roleId != 1 && lr.roleId != 2}">
+                                            <option value="${lr.roleId}">${lr.roleName}</option>
+                                        </c:if>
+                                    </c:forEach>
+                                </select>
+                                <label for="rolename">Role Name</label>
+                            </div>
+
+                            <!-- Phone -->
                             <div class="form-floating mb-3">
-                                <input type="number" class="form-control" id="max_uses" name="max_uses" value="" />
-                                <label for="max_uses">Quantity</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" readonly required />
+                                <label for="phone">Phone</label>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="email" name="email" readonly required />
+                                <label for="email">Email</label>
+                            </div>
+
+                            <!-- Address -->
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="address" name="address" readonly required />
+                                <label for="address">Address</label>
                             </div>
 
                             <!-- Status -->
@@ -267,7 +268,7 @@
                                 <label for="status" class="form-label">Status</label>
                                 <select id="status" name="status" class="form-select">
                                     <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
+                                    <option value="Deactive">Inactive</option>
                                 </select>
                             </div>
 
@@ -276,7 +277,6 @@
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Save Changes</button>
                             </div>
-
                         </form>
                     </div>
                 </div>
@@ -305,43 +305,30 @@
 
 
         <script>
-
             $(document).on("click", ".edit-staff", function () {
+                // Get data from clicked element
                 var id = $(this).data("id");
-                var code = $(this).data("code");
-                var percentage = $(this).data("percentage");
-                var start = $(this).data("start");
-                var end = $(this).data("end");
-                var maxUses = $(this).data("max-uses");
+                var username = $(this).data("username");
+                var fullname = $(this).data("fullname");
+                var roleid = $(this).data("roleid");
+                var rolename = $(this).data("rolename");
+                var phone = $(this).data("phone");
+                var email = $(this).data("email");
+                var address = $(this).data("address");
                 var status = $(this).data("status");
 
-                function formatDate(dateString) {
-                    if (!dateString)
-                        return "";
-                    var date = new Date(dateString);
-                    if (isNaN(date))
-                        return "";
-                    return date.getFullYear() + "-" +
-                            String(date.getMonth() + 1).padStart(2, '0') + "-" +
-                            String(date.getDate()).padStart(2, '0');
-                }
+                // Populate modal fields
+                $("#edit-staff input[name='user_id']").val(id);
+                $("#edit-staff input[name='username']").val(username);
+                $("#edit-staff input[name='fullname']").val(fullname);
+                $("#edit-staff select[name='rolename']").val(roleid);
+                $("#edit-staff input[name='rolename']").val(rolename);
+                $("#edit-staff input[name='phone']").val(phone);
+                $("#edit-staff input[name='email']").val(email);
+                $("#edit-staff input[name='address']").val(address);
+                $("#edit-staff select[name='status']").val(status);
 
-                $("#edit-discount input[name='discount_id']").val(id);
-                $("#edit-discount input[name='discount_code']").val(code);
-
-                // Kiểm tra nếu percentage không phải số, tránh lỗi
-                if (percentage !== undefined && !isNaN(percentage)) {
-                    $("#edit-discount input[name='discount_percentage']").val(parseFloat(percentage).toFixed(1));
-                } else {
-                    $("#edit-discount input[name='discount_percentage']").val("");
-                }
-
-                $("#edit-discount input[name='start_date']").val(formatDate(start));
-                $("#edit-discount input[name='end_date']").val(formatDate(end));
-                $("#edit-discount input[name='max_uses']").val(maxUses);
-                $("#edit-discount select[name='status']").val(status);
-                $("#edit-discount input[name='max_uses']").attr("min", maxUses);
-
+                // Show the modal
                 $("#edit-staff").modal("show");
             });
         </script>
