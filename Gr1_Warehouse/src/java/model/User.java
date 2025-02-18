@@ -22,6 +22,16 @@ public class User {
     public User() {
     }
 
+    public User(String username, String password, String fullname, String email, Role role) {
+        this.username = username;
+        this.password = password;
+        this.fullname = fullname;
+        this.email = email;
+        this.role = role;
+    }
+
+    
+    
     public User(int userId, String username, String password, String fullname, String phone, String email, Role role, String address, String status) {
         this.userId = userId;
         this.username = username;

@@ -85,14 +85,21 @@ public class AllStaff extends HttpServlet {
         UserDAO ud = new UserDAO();
         RoleDAO r = new RoleDAO();
         String status = request.getParameter("status");
-        String user_id = request.getParameter("user_id");
-        String roleId = request.getParameter("rolename");
-        ud.updateStaff(status, Integer.parseInt(roleId), Integer.parseInt(user_id));
-        List<User> listStaff = ud.getAllStaff();
-        List<Role> listRole = r.getAllRole();
-        request.setAttribute("listStaff", listStaff);
-        request.setAttribute("listRole", listRole);
-        request.getRequestDispatcher("/dashboard/all-staff.jsp").forward(request, response);
+        String user_id_raw = request.getParameter("user_id");
+        String roleId_raw = request.getParameter("rolename");
+        try {
+            int roleId = Integer.parseInt(roleId_raw);
+            int user_id = Integer.parseInt(user_id_raw);
+            ud.updateStaff(status, roleId, user_id);
+            List<User> listStaff = ud.getAllStaff();
+            List<Role> listRole = r.getAllRole();
+            request.setAttribute("listStaff", listStaff);
+            request.setAttribute("listRole", listRole);
+            request.getRequestDispatcher("/dashboard/all-staff.jsp").forward(request, response);
+        } catch (ServletException | IOException | NumberFormatException e) {
+            System.out.println(e);
+        }
+
     }
 
     /**

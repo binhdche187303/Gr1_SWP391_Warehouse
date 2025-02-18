@@ -351,9 +351,93 @@ public class UserDAO extends DBContext {
         }
     }
 
-    public static void main(String[] args) {
+    public int addUsers(List<User> userList) throws SQLException {
+        String sql = "INSERT INTO Users (username, password, fullname, email, role_id) VALUES (?, ?, ?, ?, ?)";
+        int addedCount = 0;
+        PreparedStatement stmt = null;
+        boolean originalAutoCommit = false;
+
+        try {
+
+            originalAutoCommit = connection.getAutoCommit();
+            connection.setAutoCommit(false);  // Start transaction
+
+            stmt = connection.prepareStatement(sql);
+
+            // Clear any existing batch
+            stmt.clearBatch();
+
+            for (User user : userList) {
+                stmt.setString(1, user.getUsername());
+                stmt.setString(2, user.getPassword());
+                stmt.setString(3, user.getFullname());
+                stmt.setString(4, user.getEmail());
+                stmt.setInt(5, user.getRole().getRoleId());
+                stmt.addBatch();
+
+                // Print debug information
+                System.out.println("Adding to batch: " + user.getUsername());
+            }
+
+            System.out.println("Executing batch for " + userList.size() + " users");
+
+            // Execute batch and get results
+            int[] results = stmt.executeBatch();
+
+            // Print batch results
+            System.out.println("Batch execution results:");
+            for (int i = 0; i < results.length; i++) {
+                System.out.println("Result for user " + userList.get(i).getUsername() + ": " + results[i]);
+                if (results[i] >= 0) {  // Check for successful insertion
+                    addedCount++;
+                }
+            }
+
+            // Commit the transaction
+            connection.commit();
+            System.out.println("Successfully committed " + addedCount + " users to database");
+
+        } catch (SQLException e) {
+            System.err.println("SQL Error occurred: " + e.getMessage());
+            if (connection != null) {
+                connection.rollback();
+                System.out.println("Transaction rolled back");
+            }
+        } catch (Exception e) {
+            System.err.println("General error: " + e.getMessage());
+        } finally {
+            try {
+                // Reset auto-commit to original state
+                if (connection != null) {
+                    connection.setAutoCommit(originalAutoCommit);
+                }
+                // Close resources
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("Error in cleanup: " + e.getMessage());
+            }
+        }
+
+        return addedCount;
+    }
+
+    public static void main(String[] args) throws SQLException {
+        // Create some User objects
+        List<User> userList = new ArrayList<>();
+        userList.add(new User("test11", "pass1", "Test User 1", "test11@example.com", new Role(4)));
+        userList.add(new User("test22", "pass2", "Test User 2", "test21@example.com", new Role(4)));
+        userList.add(new User("test33", "pass3", "Test User 3", "test31@example.com", new Role(4)));
+
+
+
+        // Call addUsers to add these users to the database
         UserDAO ud = new UserDAO();
-        ud.updateStaff("Deactive", 4, 5);
+        int addedCount = ud.addUsers(userList);
+
+        // Output the number of added users
+        System.out.println("Number of users added: " + addedCount);
     }
 
 }

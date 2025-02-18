@@ -1303,6 +1303,3 @@ BEGIN
     FROM Discounts
     JOIN inserted ON Discounts.discount_id = inserted.discount_id;
 END;
-
-
-
