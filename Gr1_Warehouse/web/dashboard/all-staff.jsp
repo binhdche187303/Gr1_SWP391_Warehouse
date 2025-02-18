@@ -206,7 +206,7 @@
                         </form>
                         <!-- Button xuất file nhân viên -->
                         <form class="d-inline-flex">
-                            <a href="add-new-user.html" class="align-items-center btn btn-theme d-flex">
+                            <a href="exportstaff" class="align-items-center btn btn-theme d-flex">
                                 <i data-feather="download"></i> Xuất file nhân viên
                             </a>
                         </form>
