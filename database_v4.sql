@@ -791,13 +791,14 @@ CREATE TABLE BatchEntryDetails (
 CREATE TABLE Cart (
     cart_id INT PRIMARY KEY IDENTITY(1,1),
     user_id INT NOT NULL, 
-    product_id INT NOT NULL, 
-    size_id INT NOT NULL, 
+    product_id INT NOT NULL,
+	size_id INT NOT NULL,
     quantity INT NOT NULL, 
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (product_id) REFERENCES Products(product_id),
-    FOREIGN KEY (size_id) REFERENCES Sizes(size_id)
+	FOREIGN KEY (size_id) REFERENCES Sizes(size_id),
 );
+	 drop table Cart
 
 -- Bảng Orders (Đơn hàng)
 CREATE TABLE Orders (
@@ -1312,3 +1313,14 @@ BEGIN
     FROM Discounts
     JOIN inserted ON Discounts.discount_id = inserted.discount_id;
 END;
+
+CREATE TABLE ProductVariants (
+    variant_id INT PRIMARY KEY IDENTITY(1,1),
+    product_id INT NOT NULL, 
+    size_id INT NOT NULL, 
+    price DECIMAL(18, 2) NOT NULL, 
+	stock INT NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES Products(product_id),
+    FOREIGN KEY (size_id) REFERENCES Sizes(size_id)
+);
+SELECT stock FROM ProductVariants WHERE v

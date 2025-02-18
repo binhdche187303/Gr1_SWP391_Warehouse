@@ -136,13 +136,13 @@
                                                         </td>
                                                         <td class="product-detail">
                                                             <div class="product border-0">
-                                                                <a href="product-left-thumbnail.html" class="product-image">
+                                                                <a href="shopDetails?productId=${item.productId}" class="product-image">
                                                                     <img src="./${item.image}" class="img-fluid blur-up lazyload" alt="">
                                                                 </a>
                                                                 <div class="product-detail">
                                                                     <ul>
                                                                         <li class="name">
-                                                                            <a href="product-left-thumbnail.html">${item.productName}</a>
+                                                                            <a href="shopDetails?productId=${item.productId}">${item.productName}</a>
                                                                         </li>
                                                                         <li>
                                                                             <select data-product-id="${item.productId}"

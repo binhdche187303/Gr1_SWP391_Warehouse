@@ -75,11 +75,13 @@ public class CartController extends HttpServlet {
         int sizeId = Integer.parseInt(request.getParameter("size"));
         int stock = productDao.getStockByProductIdAndSize(productId, sizeId);
         int quantity = Integer.parseInt(request.getParameter("quantity"));
+        System.out.println("Received - Product ID: " + productId + ", Size ID: " + sizeId + ", Quantity: " + quantity);
         if (quantity > stock) {
             response.sendRedirect("cart?type=outOfStock");
         } else {
             cartDAO.addToCart(userId, productId, sizeId, quantity);
             response.sendRedirect("cart");
+            
         }
     }
 
