@@ -14,6 +14,113 @@ import model.Images;
 import model.Sizes;
 
 public class ProductDAO extends DBContext {
+     public Products getProductByIdAndSizeId(int productId, int sizeId) {
+        Products product = null;
+        String query = "WITH FirstImage AS (\n"
+                + "    SELECT \n"
+                + "        p.product_id,\n"
+                + "        i.image_url,\n"
+                + "        ROW_NUMBER() OVER (PARTITION BY p.product_id ORDER BY i.image_id ASC) AS row_num\n"
+                + "    FROM \n"
+                + "        Products p\n"
+                + "    JOIN \n"
+                + "        Images i ON p.product_id = i.product_id\n"
+                + ")\n"
+                + "SELECT \n"
+                + "    p.product_id,\n"
+                + "    p.product_name,\n"
+                + "    p.description,\n"
+                + "    p.SKU,\n"
+                + "    b.brand_name,\n"
+                + "    c.category_name,\n"
+                + "    fi.image_url AS first_image_url,\n"
+                + "    s.size_name,\n"
+                + "    pv.price\n"
+                + "FROM \n"
+                + "    Products p\n"
+                + "JOIN \n"
+                + "    ProductVariants pv ON p.product_id = pv.product_id\n"
+                + "JOIN \n"
+                + "    Sizes s ON pv.size_id = s.size_id\n"
+                + "JOIN \n"
+                + "    Categories c ON p.category_id = c.category_id\n"
+                + "JOIN \n"
+                + "    Brands b ON p.brand_id = b.brand_id\n"
+                + "JOIN \n"
+                + "    FirstImage fi ON p.product_id = fi.product_id\n"
+                + "WHERE \n"
+                + "    p.product_id = ? \n"
+                + "    AND pv.size_id = ? \n"
+                + "    AND fi.row_num = 1";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, productId);
+            ps.setInt(2, sizeId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                product = new Products();
+                product.setProductId(rs.getInt("product_id"));
+                product.setProductName(rs.getString("product_name"));
+                product.setDescription(rs.getString("description"));
+                product.setSku(rs.getString("SKU"));
+
+                // Thêm thông tin thương hiệu và danh mục
+                Brands brand = new Brands();
+                brand.setBrand_name(rs.getString("brand_name"));
+                product.setBrand(brand);
+
+                Categories category = new Categories();
+                category.setCategory_name(rs.getString("category_name"));
+                product.setCate(category);
+
+                // Set Image URL cho sản phẩm
+                List<Images> images = new ArrayList<>();
+                Images firstImage = new Images();
+                firstImage.setImage_url(rs.getString("first_image_url"));
+                images.add(firstImage);
+                product.setImages(images);
+
+                // Thêm thông tin biến thể với size cụ thể
+                List<ProductVariants> variants = new ArrayList<>();
+                ProductVariants variant = new ProductVariants();
+                Sizes size = new Sizes();
+                size.setSize_name(rs.getString("size_name"));
+                variant.setSize(size);
+                variant.setPrice(rs.getBigDecimal("price"));
+                variants.add(variant);
+
+                product.setVariants(variants);
+
+                // Debugging logs
+                System.out.println("Product SKU: " + product.getSku());
+                System.out.println("Product Size: " + size.getSize_name());
+                System.out.println("Product Price: " + variant.getPrice());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error fetching product with ID " + productId + " and Size ID " + sizeId + ": " + e.getMessage());
+        }
+
+        return product;
+    }
+     
+    public int getStockByProductIdAndSize(int productId, int sizeId) {
+        String query = "SELECT stock FROM ProductVariants WHERE product_id = ? AND size_id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, productId);
+            ps.setInt(2, sizeId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("stock");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
     public Products getDetails(int productId) {
     Products product = null;
     String sqlProduct = "SELECT p.*, c.category_name, b.brand_name " +
@@ -97,96 +204,6 @@ public class ProductDAO extends DBContext {
 
     return product;
 }
-
-    
-//   public Products getDetails(int productId) {
-//    Products product = new Products();
-//    
-//    // Lấy thông tin sản phẩm và ảnh
-//    String sqlProduct = "SELECT "
-//            + "    p.product_id, "
-//            + "    p.product_name, "
-//            + "    c.category_name, "
-//            + "    p.description, "
-//            + "    i.image_url "
-//            + "FROM "
-//            + "    Products p "
-//            + "JOIN "
-//            + "    Categories c ON p.category_id = c.category_id "
-//            + "LEFT JOIN "
-//            + "    Images i ON p.product_id = i.product_id "
-//            + "WHERE "
-//            + "    p.product_id = ?";
-//
-//    // Lấy danh sách biến thể sản phẩm (size, giá, tồn kho)
-//    String sqlVariants = "SELECT "
-//            + "    v.variant_id, "
-//            + "    s.size_name, "
-//            + "    v.size_id, "
-//            + "    v.price, "
-//            + "    v.stock "
-//            + "FROM "
-//            + "    ProductVariants v "
-//            + "JOIN "
-//            + "    Sizes s ON v.size_id = s.size_id "
-//            + "WHERE "
-//            + "    v.product_id = ?";
-//
-//    try (PreparedStatement pStmtProduct = connection.prepareStatement(sqlProduct)) {
-//        pStmtProduct.setInt(1, productId);
-//
-//        try (ResultSet rsProduct = pStmtProduct.executeQuery()) {
-//            List<Images> listImages = new ArrayList<>();
-//            Categories category = new Categories();
-//
-//            while (rsProduct.next()) {
-//                if (product.getProductName() == null) {
-//                    product.setProductId(rsProduct.getInt("product_id"));
-//                    product.setProductName(rsProduct.getString("product_name"));
-//                    product.setDescription(rsProduct.getString("description"));
-//
-//                    category.setCategory_name(rsProduct.getString("category_name"));
-//                    product.setCate(category);
-//                }
-//
-//                String imageUrl = rsProduct.getString("image_url");
-//                if (imageUrl != null && !imageUrl.isEmpty()) {
-//                    Images image = new Images();
-//                    image.setImage_url(imageUrl);
-//                    listImages.add(image);
-//                }
-//            }
-//
-//            product.setImages(listImages);
-//        }
-//    } catch (SQLException e) {
-//        e.printStackTrace();
-//    }
-//
-//    try (PreparedStatement pStmtVariants = connection.prepareStatement(sqlVariants)) {
-//        pStmtVariants.setInt(1, productId);
-//
-//        try (ResultSet rsVariants = pStmtVariants.executeQuery()) {
-//            List<Sizes> listSizes = new ArrayList<>();
-//
-//            while (rsVariants.next()) {
-//                Sizes size = new Sizes();
-//                size.setSize_id(rsVariants.getInt("size_id"));
-//                size.setSize_name(rsVariants.getString("size_name"));
-//                size.setPrice(rsVariants.getDouble("price"));
-//                size.setStock_quantity(rsVariants.getInt("stock"));
-//                listSizes.add(size);
-//            }
-//
-//            product.setSizes(listSizes);
-//        }
-//    } catch (SQLException e) {
-//        e.printStackTrace();
-//    }
-//
-//    return product;
-//}
-
 
     
  public List<Products> getListProductsPaginated(List<Products> listProducts, int startProduct, int pageSize) {

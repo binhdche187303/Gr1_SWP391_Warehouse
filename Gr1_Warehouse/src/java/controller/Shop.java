@@ -119,8 +119,7 @@ public class Shop extends HttpServlet {
         int pageSize = 9; // Mỗi trang hiển thị 9 sản phẩm
         int currentPage = Integer.parseInt(page);
         int startProduct = (currentPage - 1) * pageSize;
-        int totalProducts = filteredProducts.size(); // Đảm bảo là filteredProducts
-        System.out.println("Filtered Products Size: " + filteredProducts.size());
+        int totalProducts = filteredProducts.size();
 
         int maxPage = (int) Math.ceil((double) totalProducts / pageSize);
         List<Products> paginatedList = pdao.getListProductsPaginated(filteredProducts, startProduct, pageSize);
@@ -150,10 +149,6 @@ public class Shop extends HttpServlet {
             }
             paginationPages.add(maxPage);
         }
-        System.out.println("Paginated List Size: " + paginatedList.size());
-        for (Products product : paginatedList) {
-            System.out.println("Product ID: " + product.getProductId() + ", Name: " + product.getProductName());
-        }
         request.setAttribute("paginationPages", paginationPages); // Truyền trang cần hiển thị
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("maxPage", maxPage);
@@ -164,6 +159,7 @@ public class Shop extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/shop.jsp");
         dispatcher.forward(request, response);
     }
+
     /**
      * Handles the HTTP <code>POST</code> method.
      *
