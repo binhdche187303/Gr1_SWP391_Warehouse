@@ -1303,3 +1303,66 @@ BEGIN
     FROM Discounts
     JOIN inserted ON Discounts.discount_id = inserted.discount_id;
 END;
+
+CREATE TABLE ProductQuantityDiscounts (
+    product_discount_id INT IDENTITY(1,1) PRIMARY KEY,
+    product_id INT NOT NULL,
+    min_quantity INT NOT NULL CHECK (min_quantity > 0), -- Đảm bảo số lượng tối thiểu > 0
+    discount_percentage DECIMAL(5,2) NOT NULL CHECK (discount_percentage > 0), -- Đảm bảo phần trăm giảm giá > 0
+    created_at DATETIME DEFAULT GETDATE(),
+    status NVARCHAR(10) NOT NULL DEFAULT 'Active' CHECK (status IN ('Active', 'Inactive')), -- Chỉ cho phép Active/Inctive
+    FOREIGN KEY (product_id) REFERENCES Products(product_id),
+    CONSTRAINT UQ_Product_MinQuantity UNIQUE (product_id, min_quantity) -- Tránh trùng min_quantity trên cùng một sản phẩm
+);
+
+CREATE TABLE ProductQuantityDiscountHistory (
+    product_discount_history_id INT IDENTITY(1,1) PRIMARY KEY, -- Mã lịch sử thay đổi
+    product_discount_id INT NOT NULL, -- Mã giảm giá sản phẩm
+    old_min_quantity INT, -- Số lượng tối thiểu trước khi thay đổi
+    new_min_quantity INT, -- Số lượng tối thiểu sau khi thay đổi
+    old_discount_percentage DECIMAL(5, 2), -- Tỷ lệ giảm giá trước khi thay đổi
+    new_discount_percentage DECIMAL(5, 2), -- Tỷ lệ giảm giá sau khi thay đổi
+    old_status NVARCHAR(10), -- Trạng thái cũ
+    new_status NVARCHAR(10), -- Trạng thái mới
+    change_date DATETIME DEFAULT GETDATE(), -- Thời điểm thay đổi
+    changed_by INT NULL, -- ID người thay đổi (nếu cần theo dõi ai thực hiện)
+    FOREIGN KEY (product_discount_id) REFERENCES ProductQuantityDiscounts(product_discount_id),
+    FOREIGN KEY (changed_by) REFERENCES Users(user_id) -- Liên kết với Users để theo dõi ai thay đổi
+);
+
+CREATE TRIGGER trg_AfterInsertOrUpdateProductQuantityDiscount
+ON ProductQuantityDiscounts
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO ProductQuantityDiscountHistory (
+        product_discount_id,
+        old_min_quantity,
+        new_min_quantity,
+        old_discount_percentage,
+        new_discount_percentage,
+        old_status,
+        new_status,
+        change_date,
+        changed_by
+    )
+    SELECT 
+        i.product_discount_id,
+        CASE WHEN d.product_discount_id IS NULL THEN NULL ELSE d.min_quantity END,  -- NULL nếu là INSERT
+        i.min_quantity,
+        CASE WHEN d.product_discount_id IS NULL THEN NULL ELSE d.discount_percentage END, 
+        i.discount_percentage,
+        CASE WHEN d.product_discount_id IS NULL THEN NULL ELSE d.status END,
+        i.status,
+        GETDATE(),
+        1  -- changed_by mặc định (có thể thay bằng ID người dùng thực hiện)
+    FROM inserted i
+    LEFT JOIN deleted d ON i.product_discount_id = d.product_discount_id
+    WHERE 
+        d.product_discount_id IS NULL  -- Nếu là INSERT, lưu lịch sử
+        OR i.min_quantity <> d.min_quantity 
+        OR i.discount_percentage <> d.discount_percentage
+        OR i.status <> d.status;
+END;
