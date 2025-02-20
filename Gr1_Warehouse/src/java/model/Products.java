@@ -26,6 +26,13 @@ public class Products {
     public Products() {
     }
 
+    public Products(int productId, String productName) {
+        this.productId = productId;
+        this.productName = productName;
+    }
+
+    
+    
     public Products(int productId, String productName, String sku, String origin, String description, Categories cate, Brands brand, List<Images> images, List<ProductVariants> variants) {
         this.productId = productId;
         this.productName = productName;

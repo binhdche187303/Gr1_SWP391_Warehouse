@@ -1337,6 +1337,14 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    -- Cập nhật created_at khi có UPDATE
+    UPDATE p
+    SET created_at = GETDATE()
+    FROM ProductQuantityDiscounts p
+    INNER JOIN inserted i ON p.product_discount_id = i.product_discount_id
+    INNER JOIN deleted d ON i.product_discount_id = d.product_discount_id;
+
+    -- Chèn lịch sử thay đổi vào ProductQuantityDiscountHistory
     INSERT INTO ProductQuantityDiscountHistory (
         product_discount_id,
         old_min_quantity,
@@ -1366,6 +1374,7 @@ BEGIN
         OR i.discount_percentage <> d.discount_percentage
         OR i.status <> d.status;
 END;
+
 
 INSERT INTO dbo.ProductQuantityDiscounts
 (product_id, min_quantity,discount_percentage,created_at,status)
@@ -1885,3 +1894,6 @@ VALUES
 (131, 50, 5, DEFAULT, DEFAULT),
 (131, 100, 10, DEFAULT, DEFAULT),
 (131, 150, 15, DEFAULT, DEFAULT);
+
+SELECT * FROM dbo.ProductQuantityDiscounts
+JOIN dbo.Products ON Products.product_id = ProductQuantityDiscounts.product_id

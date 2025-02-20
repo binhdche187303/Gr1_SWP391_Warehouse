@@ -103,11 +103,14 @@
                                 <div class="card card-table">
                                     <div class="card-body">
                                         <div class="title-header option-title">
-                                            <h5>Coupon List Order</h5>
+                                            <h5>Coupon Product List Order</h5>
                                             <div class="right-options">
                                                 <ul>
                                                     <li>
-                                                        <a class="btn btn-solid" href="/Gr1_Warehouse/createcoupon">Add Coupon Order</a>
+                                                        <input type="text" id="searchBox" class="form-control" placeholder="Tìm kiếm sản phẩm..." onkeyup="searchTable()">
+                                                    </li>
+                                                    <li>
+                                                        <a class="btn btn-solid" href="/Gr1_Warehouse/createcoupon">Add Coupon Product</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -117,87 +120,47 @@
                                                 <table class="table all-package coupon-list-table table-hover theme-table" id="table_id">
                                                     <thead>
                                                         <tr>
-                                                            <th>Code</th>
-                                                            <th>Discount</th>
-                                                            <th>Min Quantity</th>
-                                                            <th>Min Order Value</th>
-                                                            <th>Start Date</th>
-                                                            <th>End Date</th>
-                                                            <th>Quantity</th>
-                                                            <th>Last Updated</th>
-                                                            <th>Status</th>
-                                                            <th>Action</th>
+                                                            <th style="width: 30%;">Tên sản phẩm</th>
+                                                            <th style="width: 20%;">Số lượng tối thiểu</th>
+                                                            <th>% giảm </th>
+                                                            <th>Cập nhật lần cuối</th>
+                                                            <th>Trạng thái</th>
+                                                            <th>Hành động</th>
                                                         </tr>
                                                     </thead>
 
                                                     <tbody>
-                                                        <c:forEach items="${requestScope.listDiscounts}" var="ld">
+                                                        <c:forEach items="${requestScope.list}" var="l">
                                                             <tr>
-                                                                <td class="theme-color">${ld.discount_code}</td>
-                                                                <td class="theme-color"><fmt:formatNumber value="${ld.discount_percentage}" type="number" pattern="#,#0.0"/>%</td>
-                                                                <td class="theme-color">${ld.min_quantity}</td>
-                                                                <td class="theme-color">${ld.min_order_value}</td>
-
-                                                                <fmt:parseDate value="${ld.start_date}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedStartDate" />
-                                                                <fmt:parseDate value="${ld.end_date}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedEndDate" />
-
-                                                                <td class="menu-status">
-                                                                    <span class="success">
-                                                                        <fmt:formatDate value="${parsedStartDate}" pattern="dd/MM/yyyy"/>
-                                                                    </span>
-                                                                </td>
-                                                                <td class="menu-status">
-                                                                    <span class="danger">
-                                                                        <fmt:formatDate value="${parsedEndDate}" pattern="dd/MM/yyyy"/>
-                                                                    </span>
-                                                                </td>
-
-                                                                <td>
-                                                                    <c:choose>
-                                                                        <c:when test="${ld.max_uses == null}">
-                                                                            Infinity
-                                                                        </c:when>
-                                                                        <c:otherwise>
-                                                                            ${ld.max_uses}
-                                                                        </c:otherwise>
-                                                                    </c:choose>
-                                                                </td>
-
-                                                                <fmt:parseDate value="${ld.created_at}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedCreateDate" />
+                                                                <td class="theme-color">${l.product.productName}</td>
+                                                                <td class="theme-color"><fmt:formatNumber value="${l.discount_percentage}" type="number" pattern="#,#0.0"/>%</td>
+                                                                <td class="theme-color">${l.min_quantity}</td>
+                                                                <fmt:parseDate value="${l.created_at}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedCreateDate" />
                                                                 <td class="menu-status">
                                                                     <span class="danger">
                                                                         <fmt:formatDate value="${parsedCreateDate}" pattern="dd/MM/yyyy"/>
                                                                     </span>
                                                                 </td>
+
                                                                 <td class="<c:choose>
-                                                                        <c:when test='${ld.status == "Active"}'>text-success</c:when>
+                                                                        <c:when test='${l.status == "Active"}'>text-success</c:when>
                                                                         <c:otherwise>text-danger</c:otherwise>
                                                                     </c:choose>">
-                                                                    ${ld.status}
+                                                                    ${l.status}
                                                                 </td>
 
                                                                 <td>
                                                                     <ul>
-                                                                        <a href="listdiscounthistory?discount_id=${ld.discount_id}" 
+                                                                        <a href="" 
                                                                            class="view-discount-history" 
                                                                            >
                                                                             <i class="ri-eye-line"></i>
                                                                         </a>
 
-
                                                                         <li>
-                                                                            <a href="javascript:void(0)" 
-                                                                               class="edit-discount-btn"
-                                                                               data-id="${ld.discount_id}" 
-                                                                               data-code="${ld.discount_code}" 
-                                                                               data-percentage="${ld.discount_percentage}" 
-                                                                               data-start="${ld.start_date}" 
-                                                                               data-end="${ld.end_date}" 
-                                                                               data-status="${ld.status}" 
-                                                                               data-max-uses="${ld.max_uses}">
+                                                                            <a>
                                                                                 <i class="ri-pencil-line"></i>
                                                                             </a>
-
                                                                         </li>
                                                                     </ul>
                                                                 </td>
@@ -335,47 +298,47 @@
         <!-- Theme js -->
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
 
-        <script>
-            $(document).on("click", ".edit-discount-btn", function () {
-                var id = $(this).data("id");
-                var code = $(this).data("code");
-                var percentage = $(this).data("percentage");
-                var start = $(this).data("start");
-                var end = $(this).data("end");
-                var maxUses = $(this).data("max-uses");
-                var status = $(this).data("status");
-
-                function formatDate(dateString) {
-                    if (!dateString)
-                        return "";
-                    var date = new Date(dateString);
-                    if (isNaN(date))
-                        return "";
-                    return date.getFullYear() + "-" +
-                            String(date.getMonth() + 1).padStart(2, '0') + "-" +
-                            String(date.getDate()).padStart(2, '0');
-                }
-
-                $("#edit-discount input[name='discount_id']").val(id);
-                $("#edit-discount input[name='discount_code']").val(code);
-
-                // Kiểm tra nếu percentage không phải số, tránh lỗi
-                if (percentage !== undefined && !isNaN(percentage)) {
-                    $("#edit-discount input[name='discount_percentage']").val(parseFloat(percentage).toFixed(1));
-                } else {
-                    $("#edit-discount input[name='discount_percentage']").val("");
-                }
-
-                $("#edit-discount input[name='start_date']").val(formatDate(start));
-                $("#edit-discount input[name='end_date']").val(formatDate(end));
-                $("#edit-discount input[name='max_uses']").val(maxUses);
-                $("#edit-discount select[name='status']").val(status);
-                $("#edit-discount input[name='max_uses']").attr("min", maxUses);
-
-                $("#edit-discount").modal("show");
-            });
-
-        </script>
+        <!--        <script>
+                    $(document).on("click", ".edit-discount-btn", function () {
+                        var id = $(this).data("id");
+                        var code = $(this).data("code");
+                        var percentage = $(this).data("percentage");
+                        var start = $(this).data("start");
+                        var end = $(this).data("end");
+                        var maxUses = $(this).data("max-uses");
+                        var status = $(this).data("status");
+        
+                        function formatDate(dateString) {
+                            if (!dateString)
+                                return "";
+                            var date = new Date(dateString);
+                            if (isNaN(date))
+                                return "";
+                            return date.getFullYear() + "-" +
+                                    String(date.getMonth() + 1).padStart(2, '0') + "-" +
+                                    String(date.getDate()).padStart(2, '0');
+                        }
+        
+                        $("#edit-discount input[name='discount_id']").val(id);
+                        $("#edit-discount input[name='discount_code']").val(code);
+        
+                        // Kiểm tra nếu percentage không phải số, tránh lỗi
+                        if (percentage !== undefined && !isNaN(percentage)) {
+                            $("#edit-discount input[name='discount_percentage']").val(parseFloat(percentage).toFixed(1));
+                        } else {
+                            $("#edit-discount input[name='discount_percentage']").val("");
+                        }
+        
+                        $("#edit-discount input[name='start_date']").val(formatDate(start));
+                        $("#edit-discount input[name='end_date']").val(formatDate(end));
+                        $("#edit-discount input[name='max_uses']").val(maxUses);
+                        $("#edit-discount select[name='status']").val(status);
+                        $("#edit-discount input[name='max_uses']").attr("min", maxUses);
+        
+                        $("#edit-discount").modal("show");
+                    });
+        
+                </script>-->
 
 
 

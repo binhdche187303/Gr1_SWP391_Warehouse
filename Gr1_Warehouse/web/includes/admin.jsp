@@ -1,3 +1,4 @@
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -272,40 +273,22 @@
                                     <li class="sidebar-list">
                                         <a class="sidebar-link sidebar-title" href="javascript:void(0)">
                                             <i class="ri-user-3-line"></i>
-                                            <span>Users</span>
+                                            <span>Tài khoản</span>
                                         </a>
                                         <ul class="sidebar-submenu">
                                             <li>
-                                                <a href="/Gr1_Warehouse/allusers">All users</a>
+                                                <a href="/Gr1_Warehouse/allusers">Khách hàng</a>
                                             </li>
                                             <li>
-                                                <a href="/Gr1_Warehouse/allstaff">All staff</a>
-                                            </li>
-                                            <li>
-                                                <a href="add-new-user.html">Add new user</a>
+                                                <a href="/Gr1_Warehouse/allstaff">Nhân viên</a>
                                             </li>
                                         </ul>
                                     </li>
 
                                     <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-user-3-line"></i>
-                                            <span>Roles</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="/Gr1_Warehouse/role">All roles</a>
-                                            </li>
-                                            <li>
-                                                <a href="create-role.html">Create Role</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="media.html">
-                                            <i class="ri-price-tag-3-line"></i>
-                                            <span>Media</span>
+                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/role">
+                                            <i class="ri-star-line"></i>
+                                            <span>Vai trò</span>
                                         </a>
                                     </li>
 
@@ -329,16 +312,20 @@
 
                                     <li class="sidebar-list">
                                         <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-focus-3-line"></i>
-                                            <span>Localization</span>
+                                            <i class="ri-price-tag-3-line"></i>
+                                            <span>Giảm giá hóa đơn</span>
                                         </a>
                                         <ul class="sidebar-submenu">
                                             <li>
-                                                <a href="translation.html">Translation</a>
+                                                <a href="/Gr1_Warehouse/couponlist">Danh sách giảm giá</a>
                                             </li>
 
                                             <li>
-                                                <a href="currency-rates.html">Currency Rates</a>
+                                                <a href="/Gr1_Warehouse/createcoupon">Tạo mã giảm giá</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="/Gr1_Warehouse/listdiscounthistory">Lịch sử mã giảm giá</a>
                                             </li>
                                         </ul>
                                     </li>
@@ -346,69 +333,37 @@
                                     <li class="sidebar-list">
                                         <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
                                             <i class="ri-price-tag-3-line"></i>
-                                            <span>Coupons</span>
+                                            <span>Giảm giá sản phẩm</span>
                                         </a>
                                         <ul class="sidebar-submenu">
                                             <li>
-                                                <a href="/Gr1_Warehouse/couponlist">Coupon List</a>
+                                                <a href="/Gr1_Warehouse/couponproductlist">Danh sách giảm giá</a>
                                             </li>
 
                                             <li>
-                                                <a href="/Gr1_Warehouse/createcoupon">Create Coupon</a>
+                                                <a href="/Gr1_Warehouse/createproductcoupon">Tạo giảm giá</a>
                                             </li>
 
                                             <li>
-                                                <a href="/Gr1_Warehouse/listdiscounthistory">History Coupon Detail</a>
+                                                <a href="/Gr1_Warehouse/listdiscountproducthistory">Lịch sử giảm giá</a>
                                             </li>
                                         </ul>
                                     </li>
 
                                     <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="taxes.html">
-                                            <i class="ri-price-tag-3-line"></i>
-                                            <span>Tax</span>
+                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/profilesettingadmin">
+                                            <i class="ri-file-chart-line"></i>
+                                            <span>Cài đặt</span>
                                         </a>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="product-review.html">
-                                            <i class="ri-star-line"></i>
-                                            <span>Product Review</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="support-ticket.html">
-                                            <i class="ri-phone-line"></i>
-                                            <span>Support Ticket</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-settings-line"></i>
-                                            <span>Settings</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="/Gr1_Warehouse/profilesettingadmin">Profile Setting</a>
-                                            </li>
-                                        </ul>
-                                    </li>
+                                    </li>                                 
 
                                     <li class="sidebar-list">
                                         <a class="sidebar-link sidebar-title link-nav" href="/dashboard/report.jsp">
                                             <i class="ri-file-chart-line"></i>
-                                            <span>Reports</span>
+                                            <span>Báo cáo</span>
                                         </a>
                                     </li>
 
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="list-page.html">
-                                            <i class="ri-list-check"></i>
-                                            <span>List Page</span>
-                                        </a>
-                                    </li>
                                 </ul>
                             </div>
 
