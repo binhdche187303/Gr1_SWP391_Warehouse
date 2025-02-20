@@ -397,7 +397,7 @@
                                     </li>
 
                                     <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="report.jsp">
+                                        <a class="sidebar-link sidebar-title link-nav" href="/dashboard/report.jsp">
                                             <i class="ri-file-chart-line"></i>
                                             <span>Reports</span>
                                         </a>
