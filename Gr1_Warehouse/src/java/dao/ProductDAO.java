@@ -30,7 +30,7 @@ public class ProductDAO extends DBContext {
                 + "    p.product_id,\n"
                 + "    p.product_name,\n"
                 + "    p.description,\n"
-                + "    p.SKU,\n"
+               // + "    p.SKU,\n"
                 + "    b.brand_name,\n"
                 + "    c.category_name,\n"
                 + "    fi.image_url AS first_image_url,\n"
@@ -63,7 +63,7 @@ public class ProductDAO extends DBContext {
                 product.setProductId(rs.getInt("product_id"));
                 product.setProductName(rs.getString("product_name"));
                 product.setDescription(rs.getString("description"));
-                product.setSku(rs.getString("SKU"));
+               // product.setSku(rs.getString("SKU"));
 
                 // Thêm thông tin thương hiệu và danh mục
                 Brands brand = new Brands();
@@ -93,7 +93,7 @@ public class ProductDAO extends DBContext {
                 product.setVariants(variants);
 
                 // Debugging logs
-                System.out.println("Product SKU: " + product.getSku());
+               // System.out.println("Product SKU: " + product.getSku());
                 System.out.println("Product Size: " + size.getSize_name());
                 System.out.println("Product Price: " + variant.getPrice());
             }
@@ -144,7 +144,6 @@ public class ProductDAO extends DBContext {
                 product = new Products();
                 product.setProductId(rsProduct.getInt("product_id"));
                 product.setProductName(rsProduct.getString("product_name"));
-                product.setSku(rsProduct.getString("SKU"));
                 product.setOrigin(rsProduct.getString("origin"));
                 product.setDescription(rsProduct.getString("description"));
 
@@ -172,6 +171,7 @@ public class ProductDAO extends DBContext {
                 variant.setProductId(rsVariants.getInt("product_id"));
                 variant.setSizeId(rsVariants.getInt("size_id"));
                 variant.setPrice(rsVariants.getBigDecimal("price"));
+                variant.setSku(rsVariants.getString("sku"));
                 variant.setStock(rsVariants.getInt("stock"));
 
                 // Lấy thông tin kích thước
@@ -553,97 +553,97 @@ public class ProductDAO extends DBContext {
         return productsList;
     }
 
-    public Products getProductById(int productId) {
-        Products product = null;
-        String query = "WITH FirstImage AS (\n"
-                + "    SELECT \n"
-                + "        p.product_id,\n"
-                + "        i.image_url,\n"
-                + "        ROW_NUMBER() OVER (PARTITION BY p.product_id ORDER BY i.image_id ASC) AS row_num\n"
-                + "    FROM \n"
-                + "        Products p\n"
-                + "    JOIN \n"
-                + "        Images i ON p.product_id = i.product_id\n"
-                + ")\n"
-                + "SELECT \n"
-                + "    p.product_id,\n"
-                + "    p.product_name,\n"
-                + "    p.description,\n"
-                + "    p.SKU,\n"
-                + "    b.brand_name,\n"
-                + "    c.category_name,\n"
-                + "    fi.image_url AS first_image_url,\n"
-                + "    s.size_name,\n"
-                + "    pv.price\n"
-                + "FROM \n"
-                + "    Products p\n"
-                + "JOIN \n"
-                + "    ProductVariants pv ON p.product_id = pv.product_id\n"
-                + "JOIN \n"
-                + "    Sizes s ON pv.size_id = s.size_id\n"
-                + "JOIN \n"
-                + "    Categories c ON p.category_id = c.category_id\n"
-                + "JOIN \n"
-                + "    Brands b ON p.brand_id = b.brand_id\n"
-                + "JOIN \n"
-                + "    FirstImage fi ON p.product_id = fi.product_id\n"
-                + "WHERE \n"
-                + "    p.product_id = ? AND fi.row_num = 1";
-
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, productId);  // Thêm productId vào câu lệnh
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                product = new Products();
-                product.setProductId(rs.getInt("product_id"));
-                product.setProductName(rs.getString("product_name"));
-                product.setDescription(rs.getString("description"));
-                product.setSku(rs.getString("SKU"));
-
-                // Thêm thông tin thương hiệu và danh mục
-                Brands brand = new Brands();
-                brand.setBrand_name(rs.getString("brand_name"));
-                product.setBrand(brand);
-
-                Categories category = new Categories();
-                category.setCategory_name(rs.getString("category_name"));
-                product.setCate(category);
-
-                // Set Image URL for the product
-                List<Images> images = new ArrayList<>();
-                Images firstImage = new Images();
-                firstImage.setImage_url(rs.getString("first_image_url"));
-                images.add(firstImage);
-                product.setImages(images);
-
-                // Lấy tất cả các kích thước và giá
-                List<ProductVariants> variants = new ArrayList<>();
-                do {
-                    ProductVariants variant = new ProductVariants();
-                    Sizes size = new Sizes();
-                    size.setSize_name(rs.getString("size_name"));
-                    variant.setSize(size);
-                    variant.setPrice(rs.getBigDecimal("price"));
-                    variants.add(variant);
-                } while (rs.next());
-
-                product.setVariants(variants);  // Gán danh sách biến thể cho sản phẩm
-
-                // Debugging logs
-                System.out.println("Product SKU: " + product.getSku());
-                if (product.getBrand() != null) {
-                    System.out.println("Product Brand: " + product.getBrand().getBrand_name());
-                } else {
-                    System.out.println("Product Brand: No brand found");
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Error fetching product with ID " + productId + ": " + e.getMessage());
-        }
-
-        return product;
-    }
+//    public Products getProductById(int productId) {
+//        Products product = null;
+//        String query = "WITH FirstImage AS (\n"
+//                + "    SELECT \n"
+//                + "        p.product_id,\n"
+//                + "        i.image_url,\n"
+//                + "        ROW_NUMBER() OVER (PARTITION BY p.product_id ORDER BY i.image_id ASC) AS row_num\n"
+//                + "    FROM \n"
+//                + "        Products p\n"
+//                + "    JOIN \n"
+//                + "        Images i ON p.product_id = i.product_id\n"
+//                + ")\n"
+//                + "SELECT \n"
+//                + "    p.product_id,\n"
+//                + "    p.product_name,\n"
+//                + "    p.description,\n"
+//                //+ "    p.SKU,\n"
+//                + "    b.brand_name,\n"
+//                + "    c.category_name,\n"
+//                + "    fi.image_url AS first_image_url,\n"
+//                + "    s.size_name,\n"
+//                + "    pv.price\n"
+//                + "FROM \n"
+//                + "    Products p\n"
+//                + "JOIN \n"
+//                + "    ProductVariants pv ON p.product_id = pv.product_id\n"
+//                + "JOIN \n"
+//                + "    Sizes s ON pv.size_id = s.size_id\n"
+//                + "JOIN \n"
+//                + "    Categories c ON p.category_id = c.category_id\n"
+//                + "JOIN \n"
+//                + "    Brands b ON p.brand_id = b.brand_id\n"
+//                + "JOIN \n"
+//                + "    FirstImage fi ON p.product_id = fi.product_id\n"
+//                + "WHERE \n"
+//                + "    p.product_id = ? AND fi.row_num = 1";
+//
+//        try (PreparedStatement ps = connection.prepareStatement(query)) {
+//            ps.setInt(1, productId);  // Thêm productId vào câu lệnh
+//            ResultSet rs = ps.executeQuery();
+//
+//            if (rs.next()) {
+//                product = new Products();
+//                product.setProductId(rs.getInt("product_id"));
+//                product.setProductName(rs.getString("product_name"));
+//                product.setDescription(rs.getString("description"));
+//               // product.setSku(rs.getString("SKU"));
+//
+//                // Thêm thông tin thương hiệu và danh mục
+//                Brands brand = new Brands();
+//                brand.setBrand_name(rs.getString("brand_name"));
+//                product.setBrand(brand);
+//
+//                Categories category = new Categories();
+//                category.setCategory_name(rs.getString("category_name"));
+//                product.setCate(category);
+//
+//                // Set Image URL for the product
+//                List<Images> images = new ArrayList<>();
+//                Images firstImage = new Images();
+//                firstImage.setImage_url(rs.getString("first_image_url"));
+//                images.add(firstImage);
+//                product.setImages(images);
+//
+//                // Lấy tất cả các kích thước và giá
+//                List<ProductVariants> variants = new ArrayList<>();
+//                do {
+//                    ProductVariants variant = new ProductVariants();
+//                    Sizes size = new Sizes();
+//                    size.setSize_name(rs.getString("size_name"));
+//                    variant.setSize(size);
+//                    variant.setPrice(rs.getBigDecimal("price"));
+//                    variants.add(variant);
+//                } while (rs.next());
+//
+//                product.setVariants(variants);  // Gán danh sách biến thể cho sản phẩm
+//
+//                // Debugging logs
+//                //System.out.println("Product SKU: " + product.getSku());
+//                if (product.getBrand() != null) {
+//                    System.out.println("Product Brand: " + product.getBrand().getBrand_name());
+//                } else {
+//                    System.out.println("Product Brand: No brand found");
+//                }
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            System.out.println("Error fetching product with ID " + productId + ": " + e.getMessage());
+//        }
+//
+//        return product;
+//    }
 
 }

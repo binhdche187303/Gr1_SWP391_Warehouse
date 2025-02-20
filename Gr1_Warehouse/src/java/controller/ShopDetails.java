@@ -67,6 +67,36 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         try {
             int productId = Integer.parseInt(productIdParam);
             Products product = productDAO.getDetails(productId);
+            System.out.println("Product ID: " + product.getProductId());
+            System.out.println("Product Name: " + product.getProductName());
+            System.out.println("Origin: " + product.getOrigin());
+            System.out.println("Description: " + product.getDescription());
+
+            // In danh mục
+            if (product.getCate() != null) {
+                System.out.println("Category: " + product.getCate().getCategory_name());
+            }
+            
+            // In thương hiệu
+            if (product.getBrand() != null) {
+                System.out.println("Brand: " + product.getBrand().getBrand_name());
+            }
+
+            // In các biến thể sản phẩm
+            System.out.println("\nProduct Variants:");
+            for (ProductVariants variant : product.getVariants()) {
+                System.out.println("- Variant ID: " + variant.getVariantId());
+                System.out.println("  Size: " + variant.getSize().getSize_name());
+                System.out.println("  Price: " + variant.getPrice());
+                System.out.println("  SKU: " + variant.getSku());
+                System.out.println("  Stock: " + variant.getStock());
+            }
+
+            // In hình ảnh sản phẩm
+            System.out.println("\nProduct Images:");
+            for (Images image : product.getImages()) {
+                System.out.println("- Image URL: " + image.getImage_url());
+            }
             request.setAttribute("product", product);
             request.getRequestDispatcher("pages/productDetails.jsp").forward(request, response);
 
