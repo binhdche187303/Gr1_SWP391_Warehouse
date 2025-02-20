@@ -242,6 +242,21 @@
                                     </li>
 
                                     <li class="sidebar-list">
+                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
+                                            <i class="ri-store-3-line"></i>
+                                            <span>Quản lí thu chi</span>
+                                        </a>
+                                        <ul class="sidebar-submenu">
+                                            <li>
+                                                <a href="financial_management.jsp">Thu chi</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="debt.jsp">Công nợ</a>
+                                            </li> 
+                                        </ul>
+                                    </li>
+                                    <li class="sidebar-list">
                                         <a class="sidebar-link sidebar-title link-nav" href="reports.html">
                                             <i class="ri-file-chart-line"></i>
                                             <span>Reports</span>

@@ -262,7 +262,7 @@ public class UserDAO extends DBContext {
         List<User> list = new ArrayList<>();
         String sql = "SELECT u.user_id, u.username, u.password,u.fullname,u.phone,u.email,u.address,r.role_id,u.status, r.role_name FROM dbo.Users u JOIN dbo.Roles r\n"
                 + "ON r.role_id = u.role_id\n"
-                + "WHERE r.role_name = N'Customer'";
+                + "WHERE r.role_id = 2";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -296,7 +296,7 @@ public class UserDAO extends DBContext {
         List<User> list = new ArrayList<>();
         String sql = "SELECT u.user_id,u.username, u.password,u.fullname,u.phone,u.email,u.address,u.role_id,r.role_name,u.status FROM dbo.Users u\n"
                 + "JOIN dbo.Roles r ON r.role_id = u.role_id\n"
-                + "WHERE r.role_name NOT IN (N'Customer', N'Admin System');";
+                + "WHERE r.role_id NOT IN (1, 2);";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();

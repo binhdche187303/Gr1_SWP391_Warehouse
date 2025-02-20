@@ -4,6 +4,10 @@
         <servlet-name>ExportStaff</servlet-name>
         <servlet-class>dashboardController.ExportStaff</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Dashboard</servlet-name>
+        <servlet-class>dashboardController.Dashboard</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AddStaff</servlet-name>
         <url-pattern>/addstaff</url-pattern>
@@ -11,6 +15,10 @@
     <servlet-mapping>
         <servlet-name>ExportStaff</servlet-name>
         <url-pattern>/exportstaff</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Dashboard</servlet-name>
+        <url-pattern>/dashboardAdmin</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login</welcome-file>

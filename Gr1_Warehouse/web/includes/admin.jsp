@@ -215,7 +215,7 @@
                                     <li class="back-btn"></li>
 
                                     <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="index.html">
+                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/dashboardAdmin">
                                             <i class="ri-home-line"></i>
                                             <span>Dashboard</span>
                                         </a>
@@ -465,8 +465,8 @@
 
         <!-- Plugins JS -->
         <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
-        <!--        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
-                <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
+<!--        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
+        <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
 
         <!-- Apexchar js -->
         <script src="${pageContext.request.contextPath}/assets2/js/chart/apex-chart/apex-chart1.js"></script>
