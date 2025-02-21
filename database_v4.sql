@@ -1897,3 +1897,6 @@ VALUES
 
 SELECT * FROM dbo.ProductQuantityDiscounts
 JOIN dbo.Products ON Products.product_id = ProductQuantityDiscounts.product_id
+
+SELECT * FROM dbo.Products
+WHERE product_name LIKE '%p%'

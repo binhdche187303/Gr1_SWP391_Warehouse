@@ -12,6 +12,10 @@
         <servlet-name>CouponProductList</servlet-name>
         <servlet-class>dashboardController.CouponProductList</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DiscountProductDetail</servlet-name>
+        <servlet-class>dashboardController.DiscountProductDetail</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AddStaff</servlet-name>
         <url-pattern>/addstaff</url-pattern>
@@ -27,6 +31,10 @@
     <servlet-mapping>
         <servlet-name>CouponProductList</servlet-name>
         <url-pattern>/couponproductlist</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DiscountProductDetail</servlet-name>
+        <url-pattern>/discountproductdetail</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login</welcome-file>

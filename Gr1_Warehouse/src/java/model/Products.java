@@ -17,7 +17,6 @@ public class Products {
     private String sku;
     private String origin;
     private String description;
-
     private Categories cate;
     private Brands brand;
     private List<Images> images;

@@ -107,10 +107,12 @@
                                             <div class="right-options">
                                                 <ul>
                                                     <li>
-                                                        <input type="text" id="searchBox" class="form-control" placeholder="Tìm kiếm sản phẩm..." onkeyup="searchTable()">
-                                                    </li>
-                                                    <li>
-                                                        <a class="btn btn-solid" href="/Gr1_Warehouse/createcoupon">Add Coupon Product</a>
+                                                        <form action="couponproductlist" method="post">
+                                                            <input style="width: 300px" type="text" name="sub_name" id="searchBox" class="form-control" placeholder="Tìm kiếm sản phẩm giảm giá...">
+                                                            <input hidden type="submit">
+                                                        </form>
+                                                    <li>                  </li>
+                                                    <a class="btn btn-solid" href="/Gr1_Warehouse/createcoupon">Add Coupon Product</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -120,48 +122,22 @@
                                                 <table class="table all-package coupon-list-table table-hover theme-table" id="table_id">
                                                     <thead>
                                                         <tr>
-                                                            <th style="width: 30%;">Tên sản phẩm</th>
-                                                            <th style="width: 20%;">Số lượng tối thiểu</th>
-                                                            <th>% giảm </th>
-                                                            <th>Cập nhật lần cuối</th>
-                                                            <th>Trạng thái</th>
+                                                            <th>Tên sản phẩm</th>
                                                             <th>Hành động</th>
                                                         </tr>
                                                     </thead>
 
                                                     <tbody>
-                                                        <c:forEach items="${requestScope.list}" var="l">
+                                                        <c:forEach items="${requestScope.listProduct}" var="lp">
                                                             <tr>
-                                                                <td class="theme-color">${l.product.productName}</td>
-                                                                <td class="theme-color"><fmt:formatNumber value="${l.discount_percentage}" type="number" pattern="#,#0.0"/>%</td>
-                                                                <td class="theme-color">${l.min_quantity}</td>
-                                                                <fmt:parseDate value="${l.created_at}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedCreateDate" />
-                                                                <td class="menu-status">
-                                                                    <span class="danger">
-                                                                        <fmt:formatDate value="${parsedCreateDate}" pattern="dd/MM/yyyy"/>
-                                                                    </span>
-                                                                </td>
-
-                                                                <td class="<c:choose>
-                                                                        <c:when test='${l.status == "Active"}'>text-success</c:when>
-                                                                        <c:otherwise>text-danger</c:otherwise>
-                                                                    </c:choose>">
-                                                                    ${l.status}
-                                                                </td>
-
+                                                                <td class="theme-color">${lp.productName}</td>
                                                                 <td>
                                                                     <ul>
-                                                                        <a href="" 
+                                                                        <a href="discountproductdetail?product_id=${lp.productId}" 
                                                                            class="view-discount-history" 
                                                                            >
                                                                             <i class="ri-eye-line"></i>
                                                                         </a>
-
-                                                                        <li>
-                                                                            <a>
-                                                                                <i class="ri-pencil-line"></i>
-                                                                            </a>
-                                                                        </li>
                                                                     </ul>
                                                                 </td>
                                                             </tr>
@@ -340,7 +316,72 @@
         
                 </script>-->
 
+        <script>
+            $(document).ready(function () {
+                let timeoutId;
 
+                $('#searchBox').on('input', function () {
+                    clearTimeout(timeoutId);
+                    timeoutId = setTimeout(() => {
+                        const searchValue = $(this).val();
+
+                        $.ajax({
+                            url: 'couponproductlist',
+                            method: 'POST',
+                            data: {
+                                sub_name: searchValue
+                            },
+                            success: function (response) {
+                                // Log response for debugging
+                                console.log('Response:', response);
+
+                                // Parse JSON if response is a string
+                                const products = typeof response === 'string' ? JSON.parse(response) : response;
+
+                                // Get table body
+                                const tbody = $('#table_id tbody');
+                                tbody.empty();
+
+                                // Add new rows
+                                if (Array.isArray(products)) {
+                                    products.forEach(product => {
+                                        const row = document.createElement('tr');
+
+                                        // Product name cell
+                                        const nameCell = document.createElement('td');
+                                        nameCell.className = 'theme-color';
+                                        nameCell.textContent = product.productName;
+                                        row.appendChild(nameCell);
+
+                                        // Actions cell
+                                        const actionsCell = document.createElement('td');
+                                        actionsCell.innerHTML = `
+                                <ul>
+                                    <a href="" class="view-discount-history">
+                                        <i class="ri-eye-line"></i>
+                                    </a>
+                                </ul>
+                            `;
+                                        row.appendChild(actionsCell);
+
+                                        tbody.append(row);
+                                    });
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('Error:', error);
+                                console.log('Response:', xhr.responseText);
+                            }
+                        });
+                    }, 300);
+                });
+
+                // Prevent form submission
+                $('#searchBox').closest('form').on('submit', function (e) {
+                    e.preventDefault();
+                });
+            });
+        </script>
 
     </body>
 
