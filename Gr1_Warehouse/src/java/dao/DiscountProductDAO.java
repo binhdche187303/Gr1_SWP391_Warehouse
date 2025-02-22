@@ -4,6 +4,7 @@
  */
 package dao;
 
+import java.security.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.PreparedStatement;
@@ -57,7 +58,8 @@ public class DiscountProductDAO extends DBContext {
         List<DiscountProduct> list = new ArrayList<>();
         String sql = "SELECT * FROM dbo.ProductQuantityDiscounts pqd\n"
                 + "JOIN dbo.Products p ON p.product_id = pqd.product_id\n"
-                + "WHERE p.product_id = ?";
+                + "WHERE p.product_id = ?"
+                + "ORDER BY pqd.product_discount_id DESC";
 
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -182,6 +184,67 @@ public class DiscountProductDAO extends DBContext {
             return e.getMessage();
         } finally {
             connection.setAutoCommit(true);
+        }
+    }
+
+    public String createDiscountProduct(
+            int product_id,
+            double discount_percentage,
+            int min_quantity,
+            LocalDateTime createdAt,
+            String status
+    ) throws SQLException {
+        // Check for duplicate min_quantity
+        String checkDuplicateQuantitySql = "SELECT COUNT(*) FROM dbo.ProductQuantityDiscounts "
+                + "WHERE product_id = ? AND min_quantity = ? AND status = 'Active'";
+
+        // Check for duplicate discount_percentage
+        String checkDuplicatePercentageSql = "SELECT COUNT(*) FROM dbo.ProductQuantityDiscounts "
+                + "WHERE product_id = ? AND discount_percentage = ? AND status = 'Active'";
+
+        // Check duplicate min_quantity
+        try (PreparedStatement checkQuantityStmt = connection.prepareStatement(checkDuplicateQuantitySql)) {
+            checkQuantityStmt.setInt(1, product_id);
+            checkQuantityStmt.setInt(2, min_quantity);
+
+            try (ResultSet rs = checkQuantityStmt.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    return "Đã tồn tại mức giảm giá cho số lượng tối thiểu " + min_quantity;
+                }
+            }
+        }
+
+        // Check duplicate discount_percentage
+        try (PreparedStatement checkPercentageStmt = connection.prepareStatement(checkDuplicatePercentageSql)) {
+            checkPercentageStmt.setInt(1, product_id);
+            checkPercentageStmt.setDouble(2, discount_percentage);
+
+            try (ResultSet rs = checkPercentageStmt.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    return "Đã tồn tại mức giảm giá " + discount_percentage + "%";
+                }
+            }
+        }
+
+        // If no duplicates found, proceed with insertion
+        String insertDiscountSql = "INSERT INTO dbo.ProductQuantityDiscounts "
+                + "(product_id, min_quantity, discount_percentage, created_at, status) "
+                + "VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement insertStmt = connection.prepareStatement(insertDiscountSql)) {
+            insertStmt.setInt(1, product_id);
+            insertStmt.setInt(2, min_quantity);
+            insertStmt.setDouble(3, discount_percentage);
+            insertStmt.setObject(4, createdAt);
+            insertStmt.setString(5, status);
+
+            int rowsAffected = insertStmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                return "Tạo mức giảm giá thành công";
+            } else {
+                return "Không thể tạo mức giảm giá";
+            }
         }
     }
 

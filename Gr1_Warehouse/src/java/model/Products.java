@@ -25,13 +25,16 @@ public class Products {
     public Products() {
     }
 
+    public Products(int productId) {
+        this.productId = productId;
+    }
+
+
     public Products(int productId, String productName) {
         this.productId = productId;
         this.productName = productName;
     }
 
-    
-    
     public Products(int productId, String productName, String sku, String origin, String description, Categories cate, Brands brand, List<Images> images, List<ProductVariants> variants) {
         this.productId = productId;
         this.productName = productName;
@@ -120,9 +123,5 @@ public class Products {
     public String toString() {
         return "Products{" + "productId=" + productId + ", productName=" + productName + ", sku=" + sku + ", origin=" + origin + ", description=" + description + ", cate=" + cate + ", brand=" + brand + ", images=" + images + ", variants=" + variants + '}';
     }
-
-
-    
-
 
 }

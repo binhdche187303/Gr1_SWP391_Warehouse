@@ -68,15 +68,6 @@
                 display: block; /* Đảm bảo không bị tràn do inline */
             }
 
-            .coupon-list-table th:nth-child(1),
-            .coupon-list-table td:nth-child(1) {
-                width: 10%; /* Điều chỉnh độ rộng cột */
-            }
-
-            .coupon-list-table th:nth-child(2),
-            .coupon-list-table td:nth-child(2) {
-                width: 10%;
-            }
 
             .coupon-list-table th:nth-child(10),
             .coupon-list-table td:nth-child(10) {
@@ -111,8 +102,6 @@
                                                             <input style="width: 300px" type="text" name="sub_name" id="searchBox" class="form-control" placeholder="Tìm kiếm sản phẩm giảm giá...">
                                                             <input hidden type="submit">
                                                         </form>
-                                                    <li>                  </li>
-                                                    <a class="btn btn-solid" href="/Gr1_Warehouse/createcoupon">Add Coupon Product</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -137,6 +126,9 @@
                                                                            class="view-discount-history" 
                                                                            >
                                                                             <i class="ri-eye-line"></i>
+                                                                        </a>
+                                                                        <a href="createcouponproduct?product_id=${lp.productId}" class="view-discount-history">
+                                                                            <i class="ri-add-circle-line" style="color: rgb(116, 125, 198);"></i>
                                                                         </a>
                                                                     </ul>
                                                                 </td>
@@ -274,48 +266,6 @@
         <!-- Theme js -->
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
 
-        <!--        <script>
-                    $(document).on("click", ".edit-discount-btn", function () {
-                        var id = $(this).data("id");
-                        var code = $(this).data("code");
-                        var percentage = $(this).data("percentage");
-                        var start = $(this).data("start");
-                        var end = $(this).data("end");
-                        var maxUses = $(this).data("max-uses");
-                        var status = $(this).data("status");
-        
-                        function formatDate(dateString) {
-                            if (!dateString)
-                                return "";
-                            var date = new Date(dateString);
-                            if (isNaN(date))
-                                return "";
-                            return date.getFullYear() + "-" +
-                                    String(date.getMonth() + 1).padStart(2, '0') + "-" +
-                                    String(date.getDate()).padStart(2, '0');
-                        }
-        
-                        $("#edit-discount input[name='discount_id']").val(id);
-                        $("#edit-discount input[name='discount_code']").val(code);
-        
-                        // Kiểm tra nếu percentage không phải số, tránh lỗi
-                        if (percentage !== undefined && !isNaN(percentage)) {
-                            $("#edit-discount input[name='discount_percentage']").val(parseFloat(percentage).toFixed(1));
-                        } else {
-                            $("#edit-discount input[name='discount_percentage']").val("");
-                        }
-        
-                        $("#edit-discount input[name='start_date']").val(formatDate(start));
-                        $("#edit-discount input[name='end_date']").val(formatDate(end));
-                        $("#edit-discount input[name='max_uses']").val(maxUses);
-                        $("#edit-discount select[name='status']").val(status);
-                        $("#edit-discount input[name='max_uses']").attr("min", maxUses);
-        
-                        $("#edit-discount").modal("show");
-                    });
-        
-                </script>-->
-
         <script>
             $(document).ready(function () {
                 let timeoutId;
@@ -356,11 +306,16 @@
                                         // Actions cell
                                         const actionsCell = document.createElement('td');
                                         actionsCell.innerHTML = `
-                                <ul>
-                                    <a href="" class="view-discount-history">
-                                        <i class="ri-eye-line"></i>
-                                    </a>
-                                </ul>
+                                 <ul>
+                                                                        <a href="discountproductdetail?product_id=${lp.productId}" 
+                                                                           class="view-discount-history" 
+                                                                           >
+                                                                            <i class="ri-eye-line"></i>
+                                                                        </a>
+                                                                        <a href="createcouponproduct?product_id=${lp.productId}" class="view-discount-history">
+                                                                            <i class="ri-add-circle-line" style="color: rgb(116, 125, 198);"></i>
+                                                                        </a>
+                                                                    </ul>
                             `;
                                         row.appendChild(actionsCell);
 
