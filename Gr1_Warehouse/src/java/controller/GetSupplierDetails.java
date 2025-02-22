@@ -9,10 +9,10 @@ import dao.SupplierDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import model.Suppliers;
 
@@ -20,8 +20,7 @@ import model.Suppliers;
  *
  * @author Dell
  */
-@WebServlet(name = "GetWarehousesServlet", urlPatterns = {"/getSuppliers"})
-public class GetWarehousesServlet extends HttpServlet {
+public class GetSupplierDetails extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +39,10 @@ public class GetWarehousesServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet GetWarehousesServlet</title>");
+            out.println("<title>Servlet GetSupplierDetails</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet GetWarehousesServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet GetSupplierDetails at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,35 +60,39 @@ public class GetWarehousesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            SupplierDAO supplierDAO = new SupplierDAO();
-            List<Suppliers> suppliers = supplierDAO.getAllSuppliers();
+        String supplierCode = request.getParameter("supplierCode");
 
-            // Kiểm tra nếu không có nhà cung cấp nào
-            if (suppliers == null || suppliers.isEmpty()) {
-                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                response.getWriter().write("[]"); // Trả về mảng rỗng nếu không có dữ liệu
-                return;
-            }
+        // Debug: Kiểm tra supplierCode
+        System.out.println("📌 Supplier Code nhận được: " + supplierCode);
 
-            // Chuyển đổi danh sách nhà cung cấp thành mảng JSON
-            Gson gson = new Gson();
-            String json = gson.toJson(suppliers); // Đây sẽ là một chuỗi JSON của mảng
-
-            // Debug: kiểm tra dữ liệu JSON gửi đi
-            System.out.println("Dữ liệu JSON gửi đi: " + json);
-
-            // Đặt các header của response
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-
-            // Trả về mảng JSON
-            response.getWriter().write(json);
-        } catch (Exception e) {
-            // Trả về lỗi nếu gặp ngoại lệ
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"error\":\"" + e.getMessage() + "\"}");
+        if (supplierCode == null || supplierCode.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("{\"error\":\"Supplier code is required\"}");
+            return;
         }
+
+        SupplierDAO supplierDAO = new SupplierDAO();
+        Suppliers supplier = supplierDAO.getSupplierByCode(supplierCode);
+
+        // Debug: Kiểm tra supplier có null không
+        if (supplier == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.getWriter().write("[]"); // Trả về mảng rỗng nếu không tìm thấy nhà cung cấp
+            return;
+        }
+
+        List<Suppliers> supplierList = new ArrayList<>();
+        supplierList.add(supplier); // Chuyển object thành danh sách
+
+        Gson gson = new Gson();
+        String json = gson.toJson(supplierList);
+
+        // Debug: Kiểm tra dữ liệu JSON gửi đi
+        System.out.println("📡 Dữ liệu JSON gửi đi: " + json);
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(json);
     }
 
     /**

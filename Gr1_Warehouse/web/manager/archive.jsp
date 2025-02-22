@@ -58,94 +58,91 @@
                                 <div class="card card-table">
                                     <div class="card-body">
                                         <div class="title-header option-title">
-                                            <h5>All Suppliers</h5>
+                                            <h5>Tất cả kho lưu trữ</h5>
                                             <form class="d-inline-flex">
-                                                <button type="button" class="align-items-center btn btn-theme d-flex" data-bs-toggle="modal" data-bs-target="#addSupplierModal">
-                                                    <i data-feather="plus"></i>Add New Supplier
+                                                <button type="button" class="align-items-center btn btn-theme d-flex" data-bs-toggle="modal" data-bs-target="#addWarehouseModal">
+                                                    <i data-feather="plus"></i> Thêm mới kho lưu trữ
                                                 </button>
                                             </form>
                                         </div>
-
-
-                                        <!-- Modal -->
                                         <!-- Modal thêm nhà cung cấp -->
-                                        <div class="modal fade" id="addSupplierModal" tabindex="-1" aria-labelledby="addSupplierModalLabel" aria-hidden="true">
+                                        <div class="modal fade" id="addWarehouseModal" tabindex="-1" aria-labelledby="addWarehouseModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="addSupplierModalLabel">Thêm Nhà Cung Cấp</h5>
+                                                        <h5 class="modal-title" id="addWarehouseModalLabel">Thêm Kho lưu trữ</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form id="addSupplierForm">
+                                                        <form id="addWarehouseForm">
                                                             <div class="mb-3">
-                                                                <label for="supplierName" class="form-label">Tên Nhà Cung Cấp</label>
-                                                                <input type="text" class="form-control" id="supplierName" name="supplierName" required>
+                                                                <label for="warehouseName" class="form-label">Tên kho lưu trữ</label>
+                                                                <input type="text" class="form-control" id="warehouseName" name="warehouseName" required>
                                                             </div>
+
                                                             <div class="mb-3">
                                                                 <label for="phone" class="form-label">Số Điện Thoại</label>
-                                                                <input type="text" class="form-control" id="phone" name="phone" >
+                                                                <input type="text" class="form-control" id="phone" name="phone">
+                                                                <div class="invalid-feedback">Số điện thoại không hợp lệ (10 chữ số).</div>
                                                             </div>
-                                                            <div class="mb-3">
-                                                                <label for="email" class="form-label">Email</label>
-                                                                <input type="text" class="form-control" id="email" name="email" >
-                                                            </div>
+
                                                             <div class="mb-3">
                                                                 <label for="address" class="form-label">Địa Chỉ</label>
-                                                                <input type="text" class="form-control" id="address" name="address" >
+                                                                <input type="text" class="form-control" id="address" name="address">
+                                                                <div class="invalid-feedback">Địa chỉ không được để trống.</div>
                                                             </div>
+
                                                             <button type="submit" class="btn btn-primary">Thêm</button>
                                                         </form>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <!-- Hiển thị danh sách kho hàng -->
                                         <div class="table-responsive table-product">
                                             <table class="table all-package theme-table" id="table_id">
                                                 <thead>
                                                     <tr>
-                                                        <th>Tên nhà cung cấp</th>
+                                                        <th>Tên kho lưu trữ</th>
                                                         <th>Số điện thoại</th>
-                                                        <th>Địa chỉ </th>
+                                                        <th>Địa chỉ</th>
                                                         <th>Trạng thái</th>
                                                         <th>Tùy chọn</th>
                                                     </tr>
                                                 </thead>
 
                                                 <tbody>
-                                                    <c:forEach var="supplier" items="${suppliers}">
+                                                    <c:forEach var="warehouse" items="${warehouses}">
                                                         <tr>
                                                             <td>
                                                                 <div class="user-name">
-                                                                    <span>${supplier.supplierName}</span>
+                                                                    <span>${warehouse.warehouseName}</span>
                                                                 </div>
                                                             </td>
-                                                            <td>${supplier.phone}</td>
-                                                            <td>${supplier.address}</td>
+                                                            <td>${warehouse.phone}</td>
+                                                            <td>${warehouse.address}</td>
                                                             <td class="<c:choose>
-                                                                    <c:when test='${supplier.status == "Active"}'>text-success</c:when>
+                                                                    <c:when test='${warehouse.status == "Active"}'>text-success</c:when>
                                                                     <c:otherwise>text-danger</c:otherwise>
                                                                 </c:choose>">
-                                                                ${supplier.status}
+                                                                ${warehouse.status}
                                                             </td>
                                                             <td>
                                                                 <ul>
                                                                     <li>
-                                                                        <a href="order-detail.html">
+                                                                        <a href="/Gr1_Warehouse/warehouseDetail?warehouseId=${warehouse.warehouseId}">
                                                                             <i class="ri-eye-line"></i>
                                                                         </a>
                                                                     </li>
 
                                                                     <li>
-                                                                        <form action="/Gr1_Warehouse/editSupplier" method="get">
-                                                                            <input class="form-control" type="text" name="supplier_id" value="${supplier.supplierId}" readonly hidden="">
+                                                                        <form action="/Gr1_Warehouse/editWarehouse" method="get">
+                                                                            <input type="hidden" name="warehouse_id" value="${warehouse.warehouseId}">
                                                                             <button type="submit" style="background: none; border: none;">
                                                                                 <i class="ri-pencil-line"></i>
                                                                             </button>
                                                                         </form>
                                                                     </li>
-
                                                                 </ul>
                                                             </td>
                                                         </tr>
@@ -163,43 +160,8 @@
                 <!-- All User Table Ends-->
             </div>                
         </div>
-        <script>
-//            document.getElementById("addSupplierForm").addEventListener("submit", function (event) {
-//                if (!this.checkValidity()) {
-//                    event.preventDefault(); 
-//
-//                    let invalidFields = this.querySelectorAll(":invalid");
-//                    invalidFields.forEach(function (field) {
-//                        field.classList.add("is-invalid"); 
-//                    });
-//
-//                    alert("Vui lòng nhập đầy đủ và chính xác thông tin."); 
-//                } else {
-//                    event.preventDefault(); 
-//
-//                    let formData = new URLSearchParams(new FormData(this));
-//
-//                    let xhr = new XMLHttpRequest();
-//                    xhr.open("POST", "addSupplier", true);
-//
-//                    xhr.onload = function () {
-//                        if (xhr.status === 200) {
-//                            let result = xhr.responseText;
-//                            console.log("Server response:", result);
-//                            if (result === "success") {
-//                                alert("Thêm nhà cung cấp thành công!");
-//                                location.reload();
-//                            } else {
-//                                alert("Có lỗi xảy ra: " + result);
-//                            }
-//                        } else {
-//                            alert("Lỗi kết nối: " + xhr.status);
-//                        }
-//                    };
-//                    xhr.send(formData);
-//                }
-//            });
-            document.getElementById("addSupplierForm").addEventListener("submit", function (event) {
+            <script>
+            document.getElementById("addWarehouseForm").addEventListener("submit", function (event) {
                 event.preventDefault();
 
                 let isValid = true;
@@ -216,16 +178,6 @@
                     isValid = false;
                     alert("Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại đúng.");
                 }
-
-                let emailField = document.getElementById("email");
-                let emailValue = emailField.value;
-                let emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-                if (!emailPattern.test(emailValue)) {
-                    emailField.classList.add("is-invalid");
-                    isValid = false;
-                    alert("Email không hợp lệ. Vui lòng nhập email đúng định dạng.");
-                }
-
                 let addressField = document.getElementById("address");
                 let addressValue = addressField.value;
                 if (addressValue.trim() === "") {
@@ -238,7 +190,7 @@
                     let formData = new URLSearchParams(new FormData(this));
 
                     let xhr = new XMLHttpRequest();
-                    xhr.open("POST", "addSupplier", true);
+                    xhr.open("POST", "addWarehouse", true);
 
                     // Xử lý phản hồi từ server
                     xhr.onload = function () {
@@ -258,45 +210,44 @@
                     xhr.send(formData);
                 }
             });
-
         </script>
 
 
         <!-- latest js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
+            <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
 
-        <!-- Bootstrap js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/bootstrap/bootstrap.bundle.min.js"></script>
+                <!-- Bootstrap js -->
+                <script src="${pageContext.request.contextPath}/assets2/js/bootstrap/bootstrap.bundle.min.js"></script>
 
-        <!-- feather icon js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/icons/feather-icon/feather.min.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/icons/feather-icon/feather-icon.js"></script>
+                <!-- feather icon js -->
+                <script src="${pageContext.request.contextPath}/assets2/js/icons/feather-icon/feather.min.js"></script>
+                <script src="${pageContext.request.contextPath}/assets2/js/icons/feather-icon/feather-icon.js"></script>
 
-        <!-- scrollbar simplebar js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/simplebar.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/custom.js"></script>
+                <!-- scrollbar simplebar js -->
+                <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/simplebar.js"></script>
+                <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/custom.js"></script>
 
-        <!-- Sidebar jquery -->
-        <script src="${pageContext.request.contextPath}/assets2/js/config.js"></script>
+                <!-- Sidebar jquery -->
+                <script src="${pageContext.request.contextPath}/assets2/js/config.js"></script>
 
-        <!-- tooltip init js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/tooltip-init.js"></script>
+                <!-- tooltip init js -->
+                <script src="${pageContext.request.contextPath}/assets2/js/tooltip-init.js"></script>
 
-        <!-- Plugins JS -->
-        <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
+                <!-- Plugins JS -->
+                <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
 
-        <!-- customizer js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>
+                <!-- customizer js -->
+                <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>
 
-        <!-- ratio js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>
+                <!-- ratio js -->
+                <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>
 
-        <!-- sidebar effect -->
-        <script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>
+                <!-- sidebar effect -->
+                <script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>
 
-        <!-- Theme js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
+                <!-- Theme js -->
+                <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
 
-    </body>
+            </body>
 
-</html>
+        </html>

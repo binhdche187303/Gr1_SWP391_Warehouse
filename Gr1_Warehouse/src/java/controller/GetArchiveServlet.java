@@ -5,23 +5,21 @@
 package controller;
 
 import com.google.gson.Gson;
-import dao.SupplierDAO;
+import dao.WarehouseDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
-import model.Suppliers;
+import model.Warehouse;
 
 /**
  *
  * @author Dell
  */
-@WebServlet(name = "GetWarehousesServlet", urlPatterns = {"/getSuppliers"})
-public class GetWarehousesServlet extends HttpServlet {
+public class GetArchiveServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +38,10 @@ public class GetWarehousesServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet GetWarehousesServlet</title>");
+            out.println("<title>Servlet GetArchiveServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet GetWarehousesServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet GetArchiveServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -62,33 +60,26 @@ public class GetWarehousesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            SupplierDAO supplierDAO = new SupplierDAO();
-            List<Suppliers> suppliers = supplierDAO.getAllSuppliers();
+            WarehouseDAO warehouseDAO = new WarehouseDAO();
+            List<Warehouse> warehouse = warehouseDAO.getAllWarehouse();
 
-            // Kiểm tra nếu không có nhà cung cấp nào
-            if (suppliers == null || suppliers.isEmpty()) {
+            if (warehouse.isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                response.getWriter().write("[]"); // Trả về mảng rỗng nếu không có dữ liệu
+                response.getWriter().write("[]"); // Trả về JSON rỗng để tránh lỗi JS
                 return;
             }
 
-            // Chuyển đổi danh sách nhà cung cấp thành mảng JSON
             Gson gson = new Gson();
-            String json = gson.toJson(suppliers); // Đây sẽ là một chuỗi JSON của mảng
+            String json = gson.toJson(warehouse);
+            System.out.println("Dữ liệu JSON gửi đi: " + json); // Debug
 
-            // Debug: kiểm tra dữ liệu JSON gửi đi
-            System.out.println("Dữ liệu JSON gửi đi: " + json);
-
-            // Đặt các header của response
             response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-
-            // Trả về mảng JSON
+            response.setCharacterEncoding("UTF-8"); // Đảm bảo không lỗi font
             response.getWriter().write(json);
         } catch (Exception e) {
-            // Trả về lỗi nếu gặp ngoại lệ
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write("{\"error\":\"" + e.getMessage() + "\"}");
+            e.printStackTrace(); // In lỗi trong server log
         }
     }
 

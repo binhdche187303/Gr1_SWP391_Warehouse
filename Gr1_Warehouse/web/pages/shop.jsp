@@ -813,60 +813,47 @@
 
 
         <script>
-            function viewProduct(productId) {
-                fetch(`/Gr1_Warehouse/shop?productId=` + productId)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.error) {
-                                console.error('Lỗi:', data.error);
-                                return;
-                            }
+            $(function () {
+                var $range = $(".js-range-slider"),
+                        $inputFrom = $(".js-input-from"),
+                        $inputTo = $(".js-input-to"),
+                        instance,
+                        min = 0,
+                        max = 100000000, // Sửa max thành 100 triệu
+                        from = localStorage.getItem("rangeFrom") ? parseInt(localStorage.getItem("rangeFrom")) : 500000,
+                        to = localStorage.getItem("rangeTo") ? parseInt(localStorage.getItem("rangeTo")) : 100000000;
 
-                            // Cập nhật thông tin sản phẩm
-                            document.getElementById('modal-product-name').textContent = data.productName;
-                            document.getElementById('modal-product-brand').textContent = data.brandName || "N/A";
-                            document.getElementById('modal-product-code').textContent = data.sku || "N/A";
-                            document.getElementById('modal-product-description').textContent = data.description;
-                            document.getElementById('modal-product-price').textContent =
-                                    new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(data.variants[0].price);
+                $range.ionRangeSlider({
+                    type: "double",
+                    min: min,
+                    max: max,
+                    from: from,
+                    to: to,
+                    prefix: '$. ',
+                    onStart: updateInputs,
+                    onChange: updateInputs,
+                    onFinish: saveValues,
+                    step: 500000, // Tăng step phù hợp với khoảng giá lớn hơn
+                    prettify_enabled: true,
+                    prettify_separator: ".",
+                    values_separator: " - ",
+                    force_edges: true
+                });
 
-                            // Cập nhật danh sách size (without price)
-                            let sizeSelect = document.getElementById('modal-product-size');
-                            sizeSelect.innerHTML = ''; // Xóa size cũ
-                            data.variants.forEach(variant => {
-                                let option = document.createElement('option');
-                                option.value = variant.sizeId;
-                                option.textContent = variant.sizeName; // Only size name here
-                                sizeSelect.appendChild(option);
-                            });
+                instance = $range.data("ionRangeSlider");
 
-                            // Cập nhật hình ảnh chính
-                            document.getElementById('modal-product-image').src = data.firstImageUrl;
-                            document.getElementById('modal-product-image').style.width = '300px'; // Adjust the width as needed
+                function updateInputs(data) {
+                    $inputFrom.val(data.from);
+                    $inputTo.val(data.to);
+                }
 
-                            // Cập nhật danh sách thumbnail
-                            let thumbnailContainer = document.getElementById('modal-thumbnails');
-                            thumbnailContainer.innerHTML = ''; // Xóa ảnh cũ
-                            data.images.forEach(img => {
-                                let imgElement = document.createElement('img');
-                                imgElement.src = img.imageUrl;
-                                imgElement.classList.add('img-thumbnail', 'me-2');
-                                imgElement.style.width = "50px";
-                                imgElement.onclick = () => {
-                                    document.getElementById('modal-product-image').src = img.imageUrl;
-                                };
-                                thumbnailContainer.appendChild(imgElement);
-                            });
-
-                            // Cập nhật link "View More Details"
-                            document.getElementById('modal-view-more').setAttribute('onclick', `location.href='product-detail.jsp?productId=${data.productId}'`);
-
-                            // Mở modal
-                            new bootstrap.Modal(document.getElementById('quickViewModal')).show();
-                        })
-                        .catch(error => console.error('Lỗi khi lấy dữ liệu:', error));
-            }
+                function saveValues(data) {
+                    localStorage.setItem("rangeFrom", data.from);
+                    localStorage.setItem("rangeTo", data.to);
+                }
+            });
         </script>
+
 
 
 

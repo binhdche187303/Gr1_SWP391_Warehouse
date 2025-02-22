@@ -2,26 +2,26 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller;
+package dashboardController;
 
 import com.google.gson.Gson;
-import dao.SupplierDAO;
+import dao.ProductDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
-import model.Suppliers;
+import model.ProductDTO;
 
 /**
  *
  * @author Dell
  */
-@WebServlet(name = "GetWarehousesServlet", urlPatterns = {"/getSuppliers"})
-public class GetWarehousesServlet extends HttpServlet {
+public class ProductByBrand extends HttpServlet {
+
+    private ProductDAO productDAO = new ProductDAO();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +40,10 @@ public class GetWarehousesServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet GetWarehousesServlet</title>");
+            out.println("<title>Servlet ProductByBrand</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet GetWarehousesServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ProductByBrand at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,36 +59,24 @@ public class GetWarehousesServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        PrintWriter out = response.getWriter();
         try {
-            SupplierDAO supplierDAO = new SupplierDAO();
-            List<Suppliers> suppliers = supplierDAO.getAllSuppliers();
+            List<ProductDTO> products = productDAO.getProductsBySupplier(request.getParameter("supplierCode"));
 
-            // Kiểm tra nếu không có nhà cung cấp nào
-            if (suppliers == null || suppliers.isEmpty()) {
-                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                response.getWriter().write("[]"); // Trả về mảng rỗng nếu không có dữ liệu
-                return;
-            }
-
-            // Chuyển đổi danh sách nhà cung cấp thành mảng JSON
             Gson gson = new Gson();
-            String json = gson.toJson(suppliers); // Đây sẽ là một chuỗi JSON của mảng
+            String json = gson.toJson(products);
+            out.write(json);
 
-            // Debug: kiểm tra dữ liệu JSON gửi đi
-            System.out.println("Dữ liệu JSON gửi đi: " + json);
-
-            // Đặt các header của response
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-
-            // Trả về mảng JSON
-            response.getWriter().write(json);
+            response.flushBuffer(); // 🔥 Đảm bảo dữ liệu gửi xong trước khi đóng luồng
         } catch (Exception e) {
-            // Trả về lỗi nếu gặp ngoại lệ
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"error\":\"" + e.getMessage() + "\"}");
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi server khi lấy sản phẩm!");
+        } finally {
+            out.close(); // 🚀 Đóng luồng đúng cách
         }
     }
 

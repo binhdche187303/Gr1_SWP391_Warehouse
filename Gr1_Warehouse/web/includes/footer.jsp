@@ -257,51 +257,13 @@
                 </div>
 
                 <div class="sub-footer section-small-space">
-                    <div class="reserve">
-                        <h6 class="text-content">©2022 Fastkart All rights reserved</h6>
-                    </div>
-
                     <div class="payment">
                         <img src="../assets/images/payment/1.png" class="blur-up lazyload" alt="">
-                    </div>
-
-                    <div class="social-link">
-                        <h6 class="text-content">Stay connected :</h6>
-                        <ul>
-                            <li>
-                                <a href="https://www.facebook.com/" target="_blank">
-                                    <i class="fa-brands fa-facebook-f"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="https://twitter.com/" target="_blank">
-                                    <i class="fa-brands fa-twitter"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="https://www.instagram.com/" target="_blank">
-                                    <i class="fa-brands fa-instagram"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="https://in.pinterest.com/" target="_blank">
-                                    <i class="fa-brands fa-pinterest-p"></i>
-                                </a>
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </div>
         </footer>
         <!-- Footer Section End -->
-        <!-- Tap to top start -->
-        <div class="theme-option">
-            <div class="back-to-top">
-                <a id="back-to-top" href="#">
-                    <i class="fas fa-chevron-up"></i>
-                </a>
-            </div>
-        </div>
         <!-- Tap to top end -->
 
         <!-- Bg overlay Start -->

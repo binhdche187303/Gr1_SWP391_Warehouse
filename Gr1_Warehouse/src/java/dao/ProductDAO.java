@@ -11,10 +11,14 @@ import java.util.stream.Collectors;
 import model.Brands;
 import model.Categories;
 import model.Images;
+import model.ProductDTO;
 import model.Sizes;
+import model.SupplierBrand;
+import model.Suppliers;
 
 public class ProductDAO extends DBContext {
- public List<Products> getListProductsPaginated(List<Products> listProducts, int startProduct, int pageSize) {
+
+    public List<Products> getListProductsPaginated(List<Products> listProducts, int startProduct, int pageSize) {
 
         List<Products> paginatedList = new ArrayList<>();
 
@@ -28,7 +32,6 @@ public class ProductDAO extends DBContext {
         return paginatedList;
     }
 
-    
     public List<Products> getProductsBySubname(String sub_name) {
         List<Products> productsList = new ArrayList<>();
         String query = "WITH ProductMinPrice AS (\n"
@@ -123,7 +126,7 @@ public class ProductDAO extends DBContext {
 
         return productsList;
     }
-    
+
     public List<Brands> getBrandProductCounts() {
         List<Brands> brandCounts = new ArrayList<>();
         String sql = "SELECT c.brand_id, c.brand_name, COUNT(p.product_id) AS total_products \n"
@@ -144,109 +147,110 @@ public class ProductDAO extends DBContext {
 
         return brandCounts;
     }
+
     public List<Products> getFilteredProducts(List<Integer> categoryIds, List<Integer> brandIds, Double minPrice, Double maxPrice, String sortOrder) {
-    List<Products> productsList = new ArrayList<>();
+        List<Products> productsList = new ArrayList<>();
 
-    String query = "WITH ProductMinPrice AS (\n"
-            + "    SELECT pv.product_id, MIN(pv.price) AS min_price\n"
-            + "    FROM ProductVariants pv\n"
-            + "    GROUP BY pv.product_id\n"
-            + "),\n"
-            + "ProductFirstImage AS (\n"
-            + "    SELECT i.product_id, MIN(i.image_id) AS first_image_id\n"
-            + "    FROM Images i\n"
-            + "    GROUP BY i.product_id\n"
-            + ")\n"
-            + "SELECT p.product_id, p.product_name, p.description,\n"
-            + "       s.size_name AS size_type, pm.min_price AS current_price,\n"
-            + "       i.image_url, c.category_name, c.category_id\n"
-            + "FROM Products p\n"
-            + "JOIN Categories c ON p.category_id = c.category_id\n"
-            + "JOIN ProductMinPrice pm ON p.product_id = pm.product_id\n"
-            + "JOIN ProductVariants pv ON p.product_id = pv.product_id AND pv.price = pm.min_price\n"
-            + "JOIN Sizes s ON pv.size_id = s.size_id\n"
-            + "JOIN ProductFirstImage pi ON p.product_id = pi.product_id\n"
-            + "JOIN Images i ON pi.first_image_id = i.image_id\n"
-            + "WHERE 1=1";
+        String query = "WITH ProductMinPrice AS (\n"
+                + "    SELECT pv.product_id, MIN(pv.price) AS min_price\n"
+                + "    FROM ProductVariants pv\n"
+                + "    GROUP BY pv.product_id\n"
+                + "),\n"
+                + "ProductFirstImage AS (\n"
+                + "    SELECT i.product_id, MIN(i.image_id) AS first_image_id\n"
+                + "    FROM Images i\n"
+                + "    GROUP BY i.product_id\n"
+                + ")\n"
+                + "SELECT p.product_id, p.product_name, p.description,\n"
+                + "       s.size_name AS size_type, pm.min_price AS current_price,\n"
+                + "       i.image_url, c.category_name, c.category_id\n"
+                + "FROM Products p\n"
+                + "JOIN Categories c ON p.category_id = c.category_id\n"
+                + "JOIN ProductMinPrice pm ON p.product_id = pm.product_id\n"
+                + "JOIN ProductVariants pv ON p.product_id = pv.product_id AND pv.price = pm.min_price\n"
+                + "JOIN Sizes s ON pv.size_id = s.size_id\n"
+                + "JOIN ProductFirstImage pi ON p.product_id = pi.product_id\n"
+                + "JOIN Images i ON pi.first_image_id = i.image_id\n"
+                + "WHERE 1=1";
 
-    // Thêm điều kiện lọc
-    if (categoryIds != null && !categoryIds.isEmpty()) {
-        query += " AND p.category_id IN (" + categoryIds.stream().map(id -> "?").collect(Collectors.joining(",")) + ")";
-    }
-    if (brandIds != null && !brandIds.isEmpty()) {
-        query += " AND p.brand_id IN (" + brandIds.stream().map(id -> "?").collect(Collectors.joining(",")) + ")";
-    }
-    if (minPrice != null) {
-        query += " AND pm.min_price >= ?";
-    }
-    if (maxPrice != null) {
-        query += " AND pm.min_price <= ?";
-    }
-
-    // Điều kiện sắp xếp (giá tăng/giảm dần)
-    if (sortOrder != null && (sortOrder.equalsIgnoreCase("asc") || sortOrder.equalsIgnoreCase("desc"))) {
-        query += " ORDER BY pm.min_price " + sortOrder;
-    }
-    try {
-        PreparedStatement ps = connection.prepareStatement(query);
-
-        int index = 1;
-        if (categoryIds != null) {
-            for (Integer catId : categoryIds) {
-                ps.setInt(index++, catId);
-            }
+        // Thêm điều kiện lọc
+        if (categoryIds != null && !categoryIds.isEmpty()) {
+            query += " AND p.category_id IN (" + categoryIds.stream().map(id -> "?").collect(Collectors.joining(",")) + ")";
         }
-        if (brandIds != null) {
-            for (Integer brandId : brandIds) {
-                ps.setInt(index++, brandId);
-            }
+        if (brandIds != null && !brandIds.isEmpty()) {
+            query += " AND p.brand_id IN (" + brandIds.stream().map(id -> "?").collect(Collectors.joining(",")) + ")";
         }
         if (minPrice != null) {
-            ps.setDouble(index++, minPrice);
+            query += " AND pm.min_price >= ?";
         }
         if (maxPrice != null) {
-            ps.setDouble(index++, maxPrice);
+            query += " AND pm.min_price <= ?";
         }
 
-        System.out.println("Executing Query: " + ps.toString()); // Debug SQL
-        ResultSet rs = ps.executeQuery();
-
-        while (rs.next()) {
-            Products product = new Products();
-            product.setProductId(rs.getInt("product_id"));
-            product.setProductName(rs.getString("product_name"));
-            product.setDescription(rs.getString("description"));
-
-            // Set danh mục
-            Categories cate = new Categories();
-            cate.setCategory_id(rs.getInt("category_id"));
-            cate.setCategory_name(rs.getString("category_name"));
-            product.setCate(cate);
-
-            // Tạo biến thể sản phẩm
-            ProductVariants variant = new ProductVariants();
-            variant.setPrice(BigDecimal.valueOf(rs.getDouble("current_price")));
-            Sizes size = new Sizes();
-            size.setSize_name(rs.getString("size_type"));
-            variant.setSize(size);
-            product.setVariants(new ArrayList<>());
-            product.getVariants().add(variant);
-
-            // Thêm ảnh sản phẩm
-            Images image = new Images();
-            image.setImage_url(rs.getString("image_url"));
-            product.setImages(new ArrayList<>());
-            product.getImages().add(image);
-
-            productsList.add(product);
+        // Điều kiện sắp xếp (giá tăng/giảm dần)
+        if (sortOrder != null && (sortOrder.equalsIgnoreCase("asc") || sortOrder.equalsIgnoreCase("desc"))) {
+            query += " ORDER BY pm.min_price " + sortOrder;
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
-        System.out.println("Error fetching filtered products: " + e.getMessage());
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            int index = 1;
+            if (categoryIds != null) {
+                for (Integer catId : categoryIds) {
+                    ps.setInt(index++, catId);
+                }
+            }
+            if (brandIds != null) {
+                for (Integer brandId : brandIds) {
+                    ps.setInt(index++, brandId);
+                }
+            }
+            if (minPrice != null) {
+                ps.setDouble(index++, minPrice);
+            }
+            if (maxPrice != null) {
+                ps.setDouble(index++, maxPrice);
+            }
+
+            System.out.println("Executing Query: " + ps.toString()); // Debug SQL
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Products product = new Products();
+                product.setProductId(rs.getInt("product_id"));
+                product.setProductName(rs.getString("product_name"));
+                product.setDescription(rs.getString("description"));
+
+                // Set danh mục
+                Categories cate = new Categories();
+                cate.setCategory_id(rs.getInt("category_id"));
+                cate.setCategory_name(rs.getString("category_name"));
+                product.setCate(cate);
+
+                // Tạo biến thể sản phẩm
+                ProductVariants variant = new ProductVariants();
+                variant.setPrice(BigDecimal.valueOf(rs.getDouble("current_price")));
+                Sizes size = new Sizes();
+                size.setSize_name(rs.getString("size_type"));
+                variant.setSize(size);
+                product.setVariants(new ArrayList<>());
+                product.getVariants().add(variant);
+
+                // Thêm ảnh sản phẩm
+                Images image = new Images();
+                image.setImage_url(rs.getString("image_url"));
+                product.setImages(new ArrayList<>());
+                product.getImages().add(image);
+
+                productsList.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error fetching filtered products: " + e.getMessage());
+        }
+
+        return productsList;
     }
-
-    return productsList;
-}
 
     public List<Categories> getCategoryProductCounts() {
         List<Categories> categoryCounts = new ArrayList<>();
@@ -268,6 +272,7 @@ public class ProductDAO extends DBContext {
 
         return categoryCounts;
     }
+
     public List<Products> getAllProducts() {
         List<Products> productsList = new ArrayList<>();
         String query = "WITH ProductMinPrice AS (\n"
@@ -454,4 +459,34 @@ public class ProductDAO extends DBContext {
         return product;
     }
 
+
+    public List<ProductDTO> getProductsBySupplier(String supplierCode) {
+        List<ProductDTO> products = new ArrayList<>();
+        String sql = "SELECT p.product_name, pv.sku, pv.stock " +
+                     "FROM Products p " +
+                     "JOIN ProductVariants pv ON p.product_id = pv.product_id " +
+                     "JOIN Brands b ON p.brand_id = b.brand_id " +
+                     "JOIN SupplierBrand sb ON b.brand_id = sb.brand_id " +
+                     "JOIN Suppliers s ON sb.supplier_id = s.supplier_id " +
+                     "WHERE s.supplier_code = ? " +
+                     "GROUP BY p.product_id, p.product_name, pv.sku, pv.stock";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) { 
+            ps.setString(1, supplierCode);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ProductDTO product = new ProductDTO(
+                        rs.getString("product_name"),
+                        rs.getString("sku"),
+                        rs.getInt("stock")
+                );
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return products;
+    }
 }

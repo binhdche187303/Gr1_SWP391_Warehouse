@@ -59,53 +59,40 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <div class="title-header option-title">
-                                                    <h5>Chỉnh sửa nhà cung cấp</h5>
+                                                    <h5>Chỉnh sửa kho lưu trữ</h5>
                                                 </div>                                             
                                                 <div class="tab-content" id="pills-tabContent">
                                                     <div class="tab-pane fade show active" id="pills-home" role="tabpanel">
-                                                        <form class="theme-form theme-form-2 mega-form" action="/Gr1_Warehouse/editSupplier" method="post">
-
-                                                            <input type="hidden" name="supplier_id" value="${supplier.supplierId}">
+                                                        <form class="theme-form theme-form-2 mega-form" action="/Gr1_Warehouse/editWarehouse" method="post">
+                                                            <input type="hidden" name="warehouse_id" value="${warehouse.warehouseId}">
                                                             <div class="card-header-1">
-                                                                <h5>Chi tiết nhà cung cấp</h5>
+                                                                <h5>Chi tiết kho lưu trữ</h5>
                                                             </div>
                                                             <div class="row">
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label class="col-lg-2 col-md-3 col-form-label form-label-title">Tên nhà cung cấp</label>
                                                                     <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="text" name="supplier_name" value="${supplier.supplierName}">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="mb-4 row align-items-center">
-                                                                    <label class="col-lg-2 col-md-3 col-form-label form-label-title">Mã nhà cung cấp (VD: A, B, C)</label>
-                                                                    <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="text" name="supplier_code" value="${supplier.supplierCode}" readonly="">
+                                                                        <input class="form-control" type="text" name="warehouse_name" value="${warehouse.warehouseName}">
                                                                     </div>
                                                                 </div>
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label class="col-lg-2 col-md-3 col-form-label form-label-title">Số điện thoại</label>
                                                                     <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="tel" name="phone" pattern="[0-9]{10}" value="${supplier.phone}">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="mb-4 row align-items-center">
-                                                                    <label class="col-lg-2 col-md-3 col-form-label form-label-title">Email</label>
-                                                                    <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="email" name="email" value="${supplier.email}">
+                                                                        <input class="form-control" type="tel" name="phone" pattern="[0-9]{10}" value="${warehouse.phone}">
                                                                     </div>
                                                                 </div>
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label class="col-lg-2 col-md-3 col-form-label form-label-title">Địa chỉ</label>
                                                                     <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="text" name="address" value="${supplier.address}">
+                                                                        <input class="form-control" type="text" name="address" value="${warehouse.address}">
                                                                     </div>
                                                                 </div>
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label class="col-lg-2 col-md-3 col-form-label form-label-title">Trạng thái</label>
                                                                     <div class="col-md-9 col-lg-10">
                                                                         <select class="form-control" name="status">
-                                                                            <option value="Active" ${supplier.status == 'Active' ? 'selected' : ''}>Active</option>
-                                                                            <option value="Deactive" ${supplier.status == 'Deactive' ? 'selected' : ''}>Deactive</option>
+                                                                            <option value="Active" ${warehouse.status == 'Active' ? 'selected' : ''}>Active</option>
+                                                                            <option value="Deactive" ${warehouse.status == 'Deactive' ? 'selected' : ''}>Deactive</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>

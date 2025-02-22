@@ -122,15 +122,9 @@
                             <div class="col-sm-12">
                                 <div class="card card-table">
                                     <div class="card-body">
-                                        <div class="title-header option-title">
+                                        <div class="title-header option-title d-flex justify-content-between align-items-center">
                                             <h5>All Staff</h5>
-                                            <form class="d-inline-flex">
-                                                <a href="add-new-user.html" class="align-items-center btn btn-theme d-flex">
-                                                    <i data-feather="plus"></i>Add New
-                                                </a>
-                                            </form>
                                         </div>
-
                                         <div class="table-responsive table-product">
                                             <table class="table all-package theme-table" id="table_id">
                                                 <thead>
@@ -142,6 +136,7 @@
                                                         <th>Email</th>
                                                         <th>Address</th>
                                                         <th>Status</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
 
@@ -160,17 +155,33 @@
                                                             <td>${ls.phone}</td>
                                                             <td>${ls.email}</td>
                                                             <td>${ls.address}</td>
-                                                            <td>
-                                                                <form action="allstaff" method="POST" style="margin: 0; text-align: center">
-                                                                    <input type="hidden" name="user_id" value="${ls.userId}">
-                                                                    <div class="select-wrapper">
-                                                                        <select name="status" onchange="confirmStatusChange(this)" data-original="${ls.status}">
-                                                                            <option value="Active" ${ls.status == 'Active' ? 'selected' : ''}>Active</option>
-                                                                            <option value="Deactive" ${ls.status == 'Deactive' ? 'selected' : ''}>Deactive</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </form>
+                                                            <td class="<c:choose>
+                                                                    <c:when test='${ls.status == "Active"}'>text-success</c:when>
+                                                                    <c:otherwise>text-danger</c:otherwise>
+                                                                </c:choose>">
+                                                                ${ls.status}
                                                             </td>
+                                                            <td>  
+                                                                <ul>
+                                                                    <li>
+                                                                        <a href="javascript:void(0)" 
+                                                                           class="edit-staff"
+                                                                           data-id="${ls.userId}" 
+                                                                           data-username=" ${ls.username}" 
+                                                                           data-fullname="${ls.fullname}" 
+                                                                           data-roleid="${ls.role.roleId}" 
+                                                                           data-rolename="${ls.role.roleName}" 
+                                                                           data-phone="${ls.phone}" 
+                                                                           data-email="${ls.email}" 
+                                                                           data-address="${ls.address}" 
+                                                                           data-status="${ls.status}">
+                                                                            <i class="ri-pencil-line"></i>
+                                                                        </a>
+
+                                                                    </li>
+                                                                </ul>
+                                                            </td>
+
                                                         </tr>
                                                     </c:forEach >
                                                 </tbody>
@@ -181,13 +192,97 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Bọc hai form trong một div có class d-flex justify-content-end -->
+                    <div class="d-flex justify-content-end gap-3 mt-3">
+                        <!-- Button xuất file nhân viên -->
+                        <form class="d-inline-flex">
+                            <a href="manageUser?Service=export" class="align-items-center btn btn-theme d-flex">
+                                <i data-feather="download"></i> Xuất file nhân viên
+                            </a>
+                        </form>
+                    </div>
+
                     <!-- All User Table Ends-->
                 </div>
+
                 <!-- Container-fluid end -->
             </div>
             <!-- Page Body End -->
         </div>
 
+        <!-- Edit Staff Modal -->
+        <div class="modal fade theme-modal" id="edit-staff" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Staff</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form action="allstaff" method="POST">
+                            <input type="hidden" id="user_id" name="user_id" />
+                            <!-- Username -->
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="username" name="username" readonly />
+                                <label for="username">Username</label>
+                            </div>
+
+                            <!-- Full Name -->
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="fullname" name="fullname" readonly required />
+                                <label for="fullname">Full Name</label>
+                            </div>
+
+                            <!-- Role Name -->
+                            <div class="form-floating mb-3"> 
+                                <select id="rolename" name="rolename" class="form-select">
+                                    <c:forEach items="${requestScope.listRole}" var="lr">
+                                        <c:if test="${lr.roleId != 1 && lr.roleId != 2}">
+                                            <option value="${lr.roleId}">${lr.roleName}</option>
+                                        </c:if>
+                                    </c:forEach>
+                                </select>
+                                <label for="rolename">Role Name</label>
+                            </div>
+
+                            <!-- Phone -->
+                            <div class="form-floating mb-3">
+                                <input type="tel" class="form-control" id="phone" name="phone" readonly required />
+                                <label for="phone">Phone</label>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="email" name="email" readonly required />
+                                <label for="email">Email</label>
+                            </div>
+
+                            <!-- Address -->
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="address" name="address" readonly required />
+                                <label for="address">Address</label>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Status</label>
+                                <select id="status" name="status" class="form-select">
+                                    <option value="Active">Active</option>
+                                    <option value="Deactive">Inactive</option>
+                                </select>
+                            </div>
+
+                            <!-- Modal Footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Staff Modal End -->
 
 
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
@@ -201,21 +296,40 @@
         <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
 <!--        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
-        <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>
+<!--        <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script>
+        <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>-->
         <script src="${pageContext.request.contextPath}/assets2/js/checkbox-all-check.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
 
 
         <script>
-                                                                            function confirmStatusChange(selectElement) {
-                                                                                if (confirm('Bạn có chắc chắn muốn thay đổi trạng thái của nhân viên?')) {
-                                                                                    selectElement.form.submit();
-                                                                                } else {
-                                                                                    selectElement.value = selectElement.getAttribute('data-original');
-                                                                                }
-                                                                            }
+            $(document).on("click", ".edit-staff", function () {
+                // Get data from clicked element
+                var id = $(this).data("id");
+                var username = $(this).data("username");
+                var fullname = $(this).data("fullname");
+                var roleid = $(this).data("roleid");
+                var rolename = $(this).data("rolename");
+                var phone = $(this).data("phone");
+                var email = $(this).data("email");
+                var address = $(this).data("address");
+                var status = $(this).data("status");
+
+                // Populate modal fields
+                $("#edit-staff input[name='user_id']").val(id);
+                $("#edit-staff input[name='username']").val(username);
+                $("#edit-staff input[name='fullname']").val(fullname);
+                $("#edit-staff select[name='rolename']").val(roleid);
+                $("#edit-staff input[name='rolename']").val(rolename);
+                $("#edit-staff input[name='phone']").val(phone);
+                $("#edit-staff input[name='email']").val(email);
+                $("#edit-staff input[name='address']").val(address);
+                $("#edit-staff select[name='status']").val(status);
+
+                // Show the modal
+                $("#edit-staff").modal("show");
+            });
         </script>
     </body>
 

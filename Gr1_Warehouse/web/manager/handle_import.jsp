@@ -76,49 +76,21 @@
                                                         <div class="border-bottom pb-2 mb-2">
                                                             <h4 class="text-lg font-semibold">Nhà cung cấp</h4>
                                                         </div>
-                                                        <div>
-                                                            <p class="font-medium">Tên : </p>
-                                                            <p class="text-gray-600">Địa chỉ : </p>
-                                                            <p class="mt-2">Còn nợ <span class="font-bold"></span></p>
-                                                            <!-- Sử dụng button thay vì link -->
-                                                            <button type="button" class="btn btn-info" 
-                                                                    data-supplier-name="${supplier.supplierName}" 
-                                                                    data-phone="${supplier.phone}" 
-                                                                    data-email="${supplier.email}" 
-                                                                    data-address="${supplier.address}"
-                                                                    onclick="showSupplierDetails(this)">
-                                                                Xem chi tiết
-                                                            </button>
-                                                        </div>
-                                                        <div>
-                                                            <!-- Modal để chọn nhà cung cấp -->                                                            <div class="modal fade" id="supplierModal" tabindex="-1" aria-labelledby="supplierModalLabel" aria-hidden="true">
-                                                                <!-- Modal để chọn nhà cung cấp -->
-                                                                <div class="modal fade" id="supplierModal" tabindex="-1" aria-labelledby="supplierModalLabel" aria-hidden="true">
-                                                                    <div class="modal-dialog">
-                                                                        <div class="modal-content">
-                                                                            <div class="modal-header">
-                                                                                <h5 class="modal-title" id="supplierModalLabel">Chi tiết nhà cung cấp</h5>
-                                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                            </div>
-                                                                            <div class="modal-body">
-                                                                                <!-- Thông tin chi tiết nhà cung cấp -->
-                                                                                <div>
-                                                                                    <p><strong>Tên nhà cung cấp: </strong><span id="supplierName"></span></p>
-                                                                                    <p><strong>Địa chỉ: </strong><span id="supplierAddress"></span></p>
-                                                                                    <p><strong>Điện thoại: </strong><span id="supplierPhone"></span></p>
-                                                                                    <p><strong>Email: </strong><span id="supplierEmail"></span></p>
-                                                                                </div>
 
-                                                                                <!-- Danh sách nhà cung cấp -->
-                                                                                <ul id="supplierList">
-                                                                                    <!-- Dữ liệu sẽ được chèn vào đây -->
-                                                                                </ul>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                        <!-- Dropdown chọn nhà cung cấp -->
+                                                        <label for="supplierDropdown" class="font-medium">Chọn nhà cung cấp:</label>
+                                                        <select id="supplierDropdown" class="form-select" onchange="updateSupplierDetails(this)">
+                                                            <option value="" disabled selected>Chọn nhà cung cấp</option>
+                                                        </select>
 
+
+                                                        <!-- Thông tin chi tiết -->
+                                                        <div id="supplierDetails" class="mt-3">
+                                                            <p><strong>Tên nhà cung cấp:</strong> <span id="supplierName"></span></p>
+                                                            <p><strong>Địa chỉ:</strong> <span id="supplierAddress"></span></p>
+                                                            <p><strong>Điện thoại:</strong> <span id="supplierPhone"></span></p>
+                                                            <p><strong>Email:</strong> <span id="supplierEmail"></span></p>
+                                                            <p><strong>Mã nhà cung cấp:</strong> <span id="supplierCode"></span></p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -129,13 +101,22 @@
                                                 <div class="col-md-6">
                                                     <div class="border border-gray-300 rounded-lg shadow-md p-4 bg-white">
                                                         <div class="border-bottom pb-2 mb-2">
-                                                            <h4 class="text-lg font-semibold">Kho nhập</h4>
+                                                            <h4 class="text-lg font-semibold">Kho lưu trữ hàng</h4>
                                                         </div>
-                                                        <div>
-                                                            <p class="font-medium">Tên : </p>
-                                                            <p class="text-gray-600">Địa chỉ : </p>
-                                                            <p class="mt-2">Còn nợ <span class="font-bold"></span></p>
-                                                            <a href="#" class="text-blue-500">Xem chi tiết</a>
+
+                                                        <!-- Dropdown chọn kho lưu -->
+                                                        <label for="warehouseDropdown" class="font-medium">Chọn kho lưu trữ:</label>
+                                                        <select id="warehouseDropdown" class="form-select" onchange="updateWarehouseDetails(this)">
+                                                            <option value="" disabled selected>Chọn kho lưu trữ</option>
+                                                            <!-- Các option sẽ được thêm vào bằng JavaScript -->
+                                                        </select>
+
+                                                        <!-- Thông tin chi tiết -->
+                                                        <div class="mt-3">
+                                                            <p><strong>Tên kho lưu trữ:</strong> <span id="warehouseName"></span></p>
+                                                            <p><strong>Địa chỉ:</strong> <span id="warehouseAddress"></span></p>
+                                                            <p><strong>Điện thoại:</strong> <span id="warehousePhone"></span></p>
+                                                            <p><strong></strong> <span id=""></span></p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -155,7 +136,6 @@
                                                     <div class="input-group w-100">
                                                         <div class="input-group-prepend">
                                                             <select class="form-control">
-                                                                <option value="barcode">Quét Barcode</option>
                                                                 <option value="sku">Tìm kiếm SKU</option>
                                                             </select>
                                                         </div>
@@ -164,16 +144,54 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3 d-flex align-items-center">
-                                                    <button class="btn btn-outline-primary w-auto">Tìm kiếm</button>
+                                                    <!-- Button mở modal -->
+                                                    <button class="btn btn-outline-primary w-auto">
+                                                        Tìm kiếm
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="modal fade" id="searchProductModal" tabindex="-1" aria-labelledby="searchProductModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Tìm kiếm sản phẩm</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="input-group mb-3">
+                                                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                                            <input type="text" class="form-control" placeholder="Nhập tên sản phẩm..." id="searchInput">
+                                                        </div>
+
+                                                        <div class="table-responsive">
+                                                            <table class="table table-hover">
+                                                                <thead class="table-light">
+                                                                    <tr>
+                                                                        <th></th>
+                                                                        <td>Tên sản phẩm</td>
+                                                                        <td>SKU</td>
+                                                                        <td>Số tồn kho</td>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="productTable"></tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <span class="text-muted">0 sản phẩm đã được chọn</span>
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                        <button type="button" class="btn btn-primary">Hoàn tất chọn</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="text-center mt-4">
-                                            <div class="d-flex justify-content-center">
-                                                <button class="btn btn-outline-secondary px-4 py-2 mr-2">Tải file mẫu nhập sản phẩm</button>
-                                                <button class="btn btn-outline-primary px-4 py-2">Nhập vào hệ thống</button>
-                                            </div>
+                                            <button class="btn btn-outline-primary px-4 py-2" data-bs-toggle="modal" data-bs-target="#searchProductModal">
+                                                Danh sách sản phẩm theo nhà cung cấp
+                                            </button>
                                         </div>
 
                                     </div>
@@ -258,72 +276,134 @@
             <!-- Page Body End -->
         </div>
 
+
+
         <script>
-            // Hàm hiển thị modal và cập nhật thông tin chi tiết nhà cung cấp
-            function showSupplierDetails(button) {
-                // Lấy dữ liệu từ các thuộc tính data-* của nút bấm
-                var supplierName = button.getAttribute('data-supplier-name');
-                var phone = button.getAttribute('data-phone');
-                var email = button.getAttribute('data-email');
-                var address = button.getAttribute('data-address');
+            document.addEventListener("DOMContentLoaded", function () {
+                const dropdown = document.getElementById("supplierDropdown");
 
-                // Cập nhật thông tin nhà cung cấp vào modal
-                document.getElementById('supplierName').innerText = supplierName;
-                document.getElementById('supplierAddress').innerText = address;
-                document.getElementById('supplierPhone').innerText = phone;
-                document.getElementById('supplierEmail').innerText = email;
-
-                // Gửi yêu cầu AJAX để lấy dữ liệu nhà cung cấp từ server
+                // Gọi API lấy danh sách nhà cung cấp
                 fetch('/Gr1_Warehouse/getSuppliers')
                         .then(response => response.json())
                         .then(suppliers => {
-                            // Gọi hàm hiển thị danh sách nhà cung cấp trong modal
-                            displaySuppliers(suppliers);
+                            if (!Array.isArray(suppliers)) {
+                                console.error("❌ API không trả về một mảng:", suppliers);
+                                return;
+                            }
+
+                            suppliers.forEach(supplier => {
+                                console.log("🔹 Nhà cung cấp nhận được từ API:", supplier);
+
+                                const option = document.createElement("option");
+                                option.value = JSON.stringify(supplier); // Chuyển đối tượng nhà cung cấp thành chuỗi JSON
+                                option.textContent = supplier.supplierName;
+                                dropdown.appendChild(option);
+
+                                console.log("✅ Option Value:", option.value);
+                            });
                         })
-                        .catch(error => console.error('Lỗi khi lấy dữ liệu nhà cung cấp:', error));
+                        .catch(error => console.error("❌ Lỗi khi lấy danh sách nhà cung cấp:", error));
 
-                // Hiển thị modal
-                document.getElementById('supplierModal').style.display = 'block';
-            }
-
-// Hàm hiển thị danh sách nhà cung cấp
-            function displaySuppliers(suppliers) {
-                const supplierList = document.getElementById('supplierList');
-                supplierList.innerHTML = ''; // Xóa danh sách cũ
-
-                suppliers.forEach(supplier => {
-                    const listItem = document.createElement('li');
-                    listItem.textContent = supplier.supplierName;
-                    listItem.onclick = () => {
-                        showSupplierDetailsFromList(supplier);
-                    };
-                    supplierList.appendChild(listItem);
+                // Thêm sự kiện `change` cho dropdown
+                dropdown.addEventListener("change", function () {
+                    updateSupplierDetails(this);
                 });
-            }
+            });
 
-// Hiển thị chi tiết nhà cung cấp khi click vào tên nhà cung cấp trong danh sách
-            function showSupplierDetailsFromList(supplier) {
-                document.getElementById('supplierName').innerText = supplier.supplierName;
-                document.getElementById('supplierAddress').innerText = supplier.address;
-                document.getElementById('supplierPhone').innerText = supplier.phone;
-                document.getElementById('supplierEmail').innerText = supplier.email;
-            }
 
-// Đóng modal khi nhấn vào biểu tượng đóng (x)
-            document.querySelector('.btn-close').onclick = () => {
-                document.getElementById('supplierModal').style.display = 'none';
-            };
-
-// Đóng modal khi nhấn ra ngoài modal
-            window.onclick = function (event) {
-                const modal = document.getElementById('supplierModal');
-                if (event.target == modal) {
-                    modal.style.display = 'none';
+            function updateSupplierDetails(select) {
+                if (!select.value) {
+                    console.error("❌ Không có giá trị nào được chọn!");
+                    return;
                 }
-            };
+
+                let supplier;
+                try {
+                    supplier = JSON.parse(select.value);
+                } catch (e) {
+                    console.error("❌ Không thể parse giá trị nhà cung cấp:", select.value);
+                    return;
+                }
+
+                if (!supplier || !supplier.supplierCode) {
+                    console.error("❌ Nhà cung cấp không hợp lệ:", supplier);
+                    return;
+                }
+
+                console.log("ℹ️ Nhà cung cấp được chọn:", supplier);
+
+                // Cập nhật thông tin nhà cung cấp
+                document.getElementById("supplierName").textContent = supplier.supplierName || "N/A";
+                document.getElementById("supplierAddress").textContent = supplier.address || "N/A";
+                document.getElementById("supplierPhone").textContent = supplier.phone || "N/A";
+                document.getElementById("supplierEmail").textContent = supplier.email || "N/A";
+                document.getElementById("supplierCode").textContent = supplier.supplierCode || "N/A";
+
+                // ✅ Sử dụng biến thay vì useState
+                let selectedSupplierCode = supplier.supplierCode;
+                console.log("✅ Supplier Code được gán:", selectedSupplierCode);
+
+                const apiUrl = `/Gr1_Warehouse/productbrand?supplierCode=${selectedSupplierCode}`;
+                console.log("📡 Gọi API:", apiUrl);
+
+                // Gọi API lấy danh sách sản phẩm của nhà cung cấp
+                fetch(apiUrl)
+                        .then(response => {
+                            console.log("📡 Phản hồi từ API:", response);
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log("✅ Dữ liệu sản phẩm nhận được:", data);
+
+                            if (!Array.isArray(data)) {
+                                console.error("❌ API không trả về một mảng, dữ liệu nhận được:", data);
+                                return;
+                            }
+
+                            data.forEach(product => console.log("🔹 Sản phẩm:", product));
+                        })
+                        .catch(error => console.error("❌ Lỗi khi lấy danh sách sản phẩm:", error));
+            }
 
         </script>
+        
 
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                fetch('/Gr1_Warehouse/getArchive')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Lỗi khi lấy dữ liệu kho lưu trữ");
+                            }
+                            return response.json();
+                        })
+                        .then(warehouses => {
+                            const dropdown = document.getElementById('warehouseDropdown');
+
+                            // Xóa các option cũ (nếu có)
+                            dropdown.innerHTML = '<option value="" disabled selected>Chọn kho lưu trữ</option>';
+
+                            warehouses.forEach(warehouse => {
+                                let option = document.createElement('option');
+                                option.value = JSON.stringify(warehouse); // Lưu dữ liệu JSON trong value
+                                option.textContent = warehouse.warehouseName; // Đảm bảo có thuộc tính name
+                                dropdown.appendChild(option);
+                            });
+                        })
+                        .catch(error => console.error('Lỗi khi lấy dữ liệu kho lưu trữ:', error));
+            });
+
+            function updateWarehouseDetails(select) {
+                if (select.value) {
+                    let warehouse = JSON.parse(select.value); // Lấy dữ liệu từ value
+
+                    // Cập nhật thông tin chi tiết
+                    document.getElementById('warehouseName').textContent = warehouse.warehouseName;
+                    document.getElementById('warehouseAddress').textContent = warehouse.address;
+                    document.getElementById('warehousePhone').textContent = warehouse.phone;
+                }
+            }
+        </script>
 
         <!-- latest js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
