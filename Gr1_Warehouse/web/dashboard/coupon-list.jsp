@@ -178,13 +178,13 @@
 
                                                                 <td>
                                                                     <ul>
-                                                                        <a href="listdiscounthistory?discount_id=${ld.discount_id}" 
-                                                                           class="view-discount-history" 
-                                                                           >
-                                                                            <i class="ri-eye-line"></i>
-                                                                        </a>
-
-
+                                                                        <li>
+                                                                            <a href="listdiscounthistory?discount_id=${ld.discount_id}" 
+                                                                               class="view-discount-history" 
+                                                                               >
+                                                                                <i class="ri-eye-line"></i>
+                                                                            </a>
+                                                                        </li>
                                                                         <li>
                                                                             <a href="javascript:void(0)" 
                                                                                class="edit-discount-btn"
@@ -197,7 +197,6 @@
                                                                                data-max-uses="${ld.max_uses}">
                                                                                 <i class="ri-pencil-line"></i>
                                                                             </a>
-
                                                                         </li>
                                                                     </ul>
                                                                 </td>

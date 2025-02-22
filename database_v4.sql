@@ -1900,3 +1900,18 @@ JOIN dbo.Products ON Products.product_id = ProductQuantityDiscounts.product_id
 
 SELECT * FROM dbo.Products
 WHERE product_name LIKE '%p%'
+
+SELECT * FROM dbo.ProductQuantityDiscounts pqd
+JOIN dbo.Products p ON p.product_id = pqd.product_id
+WHERE p.product_id = 1
+
+UPDATE dbo.ProductQuantityDiscounts
+SET discount_percentage = 15,
+min_quantity =200
+WHERE product_discount_id =1
+
+SELECT * FROM dbo.ProductQuantityDiscountHistory pqdh
+JOIN dbo.ProductQuantityDiscounts pqd ON pqd.product_discount_id = pqdh.product_discount_id
+WHERE pqd.product_discount_id =1
+ORDER BY pqdh.product_discount_history_id DESC
+
