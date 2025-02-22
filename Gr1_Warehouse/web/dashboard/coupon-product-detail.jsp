@@ -123,11 +123,14 @@
                                                     ${product_name}
                                                 </span>
                                             </h5>
-                                            <ul>
-                                                <li>
-                                                    <a class="btn btn-solid" href="/Gr1_Warehouse/couponproductlist">View All Discount Product</a>
-                                                </li>
-                                            </ul>
+                                            <div style="display: flex; gap: 10px;">
+                                                <a class="btn btn-solid" href="createcouponproduct?product_id=${requestScope.product_id}">
+                                                    Tạo giảm giá sản phẩm
+                                                </a>
+
+                                                <a class="btn btn-solid" href="/Gr1_Warehouse/couponproductlist">View All Discount Product</a>
+                                            </div>
+
                                         </div>
                                         <div>
                                             <div class="table-responsive">

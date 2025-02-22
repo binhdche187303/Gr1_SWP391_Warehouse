@@ -68,6 +68,7 @@ public class DiscountProductDetail extends HttpServlet {
             int product_id = Integer.parseInt(product_id_raw);
             List<DiscountProduct> listDiscountProduct = dpd.getAllDiscountsProductById(product_id);
             String product_name = listDiscountProduct.get(0).getProduct().getProductName();
+            request.setAttribute("product_id", product_id);
             request.setAttribute("product_name", product_name);
             request.setAttribute("listDiscountProduct", listDiscountProduct);
             request.getRequestDispatcher("/dashboard/coupon-product-detail.jsp").forward(request, response);
