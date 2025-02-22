@@ -114,21 +114,53 @@ public class CartDAO extends DBContext {
         return cartList;
     }
 
-    public boolean updateCartQuantity(int productId, int quantity, int user_id, int sizeId) {
-        String updateQuery = "UPDATE Cart SET quantity = ?,  size_id=? WHERE product_Id = ? AND user_id=?";
-
-        try {
+     public boolean updateCartQuantity(int productId, int quantity, int userId, int sizeId) {
+    try {
+        // 1. Kiểm tra nếu size mới đã tồn tại trong giỏ hàng
+        String checkQuery = "SELECT quantity FROM Cart WHERE product_Id = ? AND user_id = ? AND size_id = ?";
+        PreparedStatement psCheck = connection.prepareStatement(checkQuery);
+        psCheck.setInt(1, productId);
+        psCheck.setInt(2, userId);
+        psCheck.setInt(3, sizeId);
+        ResultSet rsCheck = psCheck.executeQuery();
+        
+        if (rsCheck.next()) {
+            // 2. Nếu tồn tại thì cộng dồn số lượng
+            int currentQuantity = rsCheck.getInt("quantity");
+            int newQuantity = currentQuantity + quantity;
+            
+            String updateQuery = "UPDATE Cart SET quantity = ? WHERE product_Id = ? AND user_id = ? AND size_id = ?";
             PreparedStatement psUpdate = connection.prepareStatement(updateQuery);
-            psUpdate.setInt(1, quantity);
-            psUpdate.setInt(2, sizeId);
-            psUpdate.setInt(3, productId);
-            psUpdate.setInt(4, user_id);
-            return psUpdate.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
+            psUpdate.setInt(1, newQuantity);
+            psUpdate.setInt(2, productId);
+            psUpdate.setInt(3, userId);
+            psUpdate.setInt(4, sizeId);
+            psUpdate.executeUpdate();
+            
+            // 3. Xóa sản phẩm ở size cũ
+            String deleteQuery = "DELETE FROM Cart WHERE product_Id = ? AND user_id = ? AND size_id != ?";
+            PreparedStatement psDelete = connection.prepareStatement(deleteQuery);
+            psDelete.setInt(1, productId);
+            psDelete.setInt(2, userId);
+            psDelete.setInt(3, sizeId); // Giữ lại size mới
+            psDelete.executeUpdate();
+            
+            return true;
+        } else {
+            // 4. Nếu size mới chưa tồn tại thì thêm mới
+            String insertQuery = "INSERT INTO Cart (product_Id, quantity, user_id, size_id) VALUES (?, ?, ?, ?)";
+            PreparedStatement psInsert = connection.prepareStatement(insertQuery);
+            psInsert.setInt(1, productId);
+            psInsert.setInt(2, quantity);
+            psInsert.setInt(3, userId);
+            psInsert.setInt(4, sizeId);
+            return psInsert.executeUpdate() > 0;
         }
-        return false;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+    return false;
+}
 //    public boolean updateCartQuantity(int productId, int quantity, int userId, int sizeId) {
 //    // Lấy số lượng hiện tại của sản phẩm với productId và sizeId
 //    String selectQuery = "SELECT quantity FROM Cart WHERE product_Id = ? AND user_id = ? AND size_id = ?";

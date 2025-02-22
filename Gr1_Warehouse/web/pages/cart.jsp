@@ -150,7 +150,9 @@
                                                                                 <c:forEach var="variant" items="${sizeOptions[item.productId]}">
                                                                                     <option value="${variant.size.size_id}" data-price="${variant.price}" data-stock="${variant.stock}"
                                                                                             ${variant.size.size_id == item.sizeId ? 'selected' : ''}>
-                                                                                        ${variant.size.size_name} - ${variant.price}₫ (Còn: ${variant.stock})
+                                                                                        ${variant.size.size_name} - 
+                                                                                        <fmt:formatNumber value="${variant.price}" pattern="#,###" />₫  
+                                                                                        (Còn: ${variant.stock})
                                                                                     </option>
                                                                                 </c:forEach>
                                                                             </select>
@@ -161,11 +163,11 @@
                                                             </div>
                                                         </td>
                                                         <td class="price">
-                                                            <h4 class="table-title text-content">Price</h4>
-                                                            <h5>${item.price}₫</h5>
+                                                            <h4 class="table-title text-content">Giá</h4>
+                                                             <h5><fmt:formatNumber value="${item.price}" pattern="#,###" />₫ </h5>
                                                         </td>
                                                         <td class="quantity">
-                                                            <h4 class="table-title text-content">Qty</h4>
+                                                            <h4 class="table-title text-content">Số lượng</h4>
                                                             <div class="quantity-price">
                                                                 <div class="cart_qty">
                                                                     <div class="input-group">
@@ -190,7 +192,7 @@
                                                         </td>
                                                         <td class="subtotal">
                                                             <h4 class="table-title text-content">Total</h4>
-                                                            <h5>${item.price * item.quantity}₫</h5>
+                                                            <h5><fmt:formatNumber value="${item.price * item.quantity}" pattern="#,###" />₫ </h5>
                                                         </td>
                                                         <td class="save-remove">
                                                             <h4 class="table-title text-content">Action</h4>
