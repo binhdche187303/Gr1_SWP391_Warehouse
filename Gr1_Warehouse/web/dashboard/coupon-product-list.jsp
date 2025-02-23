@@ -307,12 +307,12 @@
                                         const actionsCell = document.createElement('td');
                                         actionsCell.innerHTML = `
                                  <ul>
-                                                                        <a href="discountproductdetail?product_id=${lp.productId}" 
+                                                                        <a href="discountproductdetail?product_id=${product.productId}" 
                                                                            class="view-discount-history" 
                                                                            >
                                                                             <i class="ri-eye-line"></i>
                                                                         </a>
-                                                                        <a href="createcouponproduct?product_id=${lp.productId}" class="view-discount-history">
+                                                                        <a href="createcouponproduct?product_id=${product.productId}" class="view-discount-history">
                                                                             <i class="ri-add-circle-line" style="color: rgb(116, 125, 198);"></i>
                                                                         </a>
                                                                     </ul>
