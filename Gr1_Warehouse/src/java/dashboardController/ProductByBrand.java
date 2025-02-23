@@ -71,7 +71,7 @@ public class ProductByBrand extends HttpServlet {
             String json = gson.toJson(products);
             out.write(json);
 
-            response.flushBuffer(); // 🔥 Đảm bảo dữ liệu gửi xong trước khi đóng luồng
+            response.flushBuffer();
         } catch (Exception e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi server khi lấy sản phẩm!");

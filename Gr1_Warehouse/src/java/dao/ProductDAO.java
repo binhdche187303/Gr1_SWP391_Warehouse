@@ -462,14 +462,14 @@ public class ProductDAO extends DBContext {
 
     public List<ProductDTO> getProductsBySupplier(String supplierCode) {
         List<ProductDTO> products = new ArrayList<>();
-        String sql = "SELECT p.product_name, pv.sku, pv.stock " +
+        String sql = "SELECT p.product_name, pv.sku " +
                      "FROM Products p " +
                      "JOIN ProductVariants pv ON p.product_id = pv.product_id " +
                      "JOIN Brands b ON p.brand_id = b.brand_id " +
                      "JOIN SupplierBrand sb ON b.brand_id = sb.brand_id " +
                      "JOIN Suppliers s ON sb.supplier_id = s.supplier_id " +
                      "WHERE s.supplier_code = ? " +
-                     "GROUP BY p.product_id, p.product_name, pv.sku, pv.stock";
+                     "GROUP BY p.product_id, p.product_name, pv.sku";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) { 
             ps.setString(1, supplierCode);
@@ -478,8 +478,7 @@ public class ProductDAO extends DBContext {
             while (rs.next()) {
                 ProductDTO product = new ProductDTO(
                         rs.getString("product_name"),
-                        rs.getString("sku"),
-                        rs.getInt("stock")
+                        rs.getString("sku")
                 );
                 products.add(product);
             }

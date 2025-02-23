@@ -11,15 +11,13 @@ package model;
 public class ProductDTO {
     private String productName;
     private String sku;
-    private int stock;
 
     public ProductDTO() {
     }
 
-    public ProductDTO(String productName, String sku, int stock) {
+    public ProductDTO(String productName, String sku) {
         this.productName = productName;
         this.sku = sku;
-        this.stock = stock;
     }
 
     public String getProductName() {
@@ -38,13 +36,7 @@ public class ProductDTO {
         this.sku = sku;
     }
 
-    public int getStock() {
-        return stock;
-    }
 
-    public void setStock(int stock) {
-        this.stock = stock;
-    }
     
     
 }
