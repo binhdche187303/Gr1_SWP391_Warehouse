@@ -1,3 +1,4 @@
+
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -132,13 +133,12 @@
                                     </li>
                                 </ul>
                             </li>
-
-
                             <li class="profile-nav onhover-dropdown pe-0 me-0">
                                 <div class="media profile-media">
 
                                     <div class="user-name-hide media-body">
                                         <span>${sessionScope.acc.username}</span>
+
                                         <p class="mb-0 font-roboto">Admin<i class="middle ri-arrow-down-s-line"></i></p>
                                     </div>
                                 </div>

@@ -44,6 +44,7 @@
         <servlet-name>CreateCouponProduct</servlet-name>
         <url-pattern>/createcouponproduct</url-pattern>
     </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>login</welcome-file>
         <!-- hoặc tên file jsp khác, ví dụ home.jsp -->
@@ -123,7 +124,7 @@
     <servlet-mapping>
         <servlet-name>requestPassword</servlet-name>
         <url-pattern>/request</url-pattern>
-    </servlet-mapping>
+        </servlet-mapping>
     <servlet-mapping>
         <servlet-name>resetPassword</servlet-name>
         <url-pattern>/reset</url-pattern>
@@ -144,4 +145,25 @@
         <servlet-name>Shop</servlet-name>
         <url-pattern>/shop</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SupplierServlet</servlet-name>
+        <url-pattern>/supplier</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddSupplierServlet</servlet-name>
+        <url-pattern>/addSupplier</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImportGood</servlet-name>
+        <url-pattern>/importGood</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HandleImport</servlet-name>
+        <url-pattern>/handleImport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditSupplier</servlet-name>
+        <url-pattern>/editSupplier</url-pattern>
+    </servlet-mapping>
 </web-app>
+

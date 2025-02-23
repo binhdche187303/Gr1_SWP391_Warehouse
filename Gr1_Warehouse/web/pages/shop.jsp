@@ -8,7 +8,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -295,6 +294,26 @@
                                                 <input type="hidden" name="category_id" value="${catId}" />
                                             </c:forEach>
                                         </c:if>
+                                        <!-- Giữ lại các giá trị của các tham số brand_id (dạng danh sách) -->
+                                        <c:if test="${not empty paramValues.brand_id}">
+                                            <c:forEach var="brandId" items="${paramValues.brand_id}">
+                                                <input type="hidden" name="brand_id" value="${brandId}" />
+                                            </c:forEach>
+                                        </c:if>
+
+                                        <!-- Giữ lại giá trị của price_range (nếu có) -->
+                                        <c:if test="${not empty param.price_range}">
+                                            <input type="hidden" name="price_range" value="${param['price_range']}" />
+                                        </c:if>
+
+                                        <div class="form-group">
+                                            <select name="sortOrder" class="form-select" onchange="this.form.submit()">
+                                                <option value="" disabled selected>Giá : </option>
+                                                <option value="asc" <c:if test="${param.sortOrder == 'asc'}">selected</c:if>>Giá: Thấp - Cao</option>
+                                                <option value="desc" <c:if test="${param.sortOrder == 'desc'}">selected</c:if>>Giá: Cao - Thấp</option>
+                                                </select>
+                                            </div>
+                                        </form>
 
                                         <!-- Giữ lại các giá trị của các tham số brand_id (dạng danh sách) -->
                                         <c:if test="${not empty paramValues.brand_id}">
@@ -484,112 +503,6 @@
         <!-- Footer Section Start -->
         <%@ include file="/includes/footer.jsp" %> <!-- Nhúng header -->
         <!-- Footer Section End -->
-
-        <!-- Quick View Modal Box Start -->
-        <!--        <div class="modal fade theme-modal view-modal" id="view" tabindex="-1" aria-labelledby="exampleModalLabel"
-                     aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-sm-down">
-                        <div class="modal-content">
-                            <div class="modal-header p-0">
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                    <i class="fa-solid fa-xmark"></i>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row g-sm-4 g-2">
-                                    <div class="col-lg-6">
-                                        <div class="slider-image">
-        <c:forEach var="image" items="${product.images}">
-            <img src="${pageContext.request.contextPath}/assets/images/img_products/${image.image_url.replaceFirst('^assets/images/img_products/', '')}" alt="${product.productName}" class="img-fluid blur-up lazyload">
-        </c:forEach>
-    </div>
-</div>
-
-<div class="col-lg-6">
-    <div class="right-sidebar-modal">
-        <h4 class="title-name">${product.productName}</h4>
-        <h4 class="price">$36.99</h4>
-        <div class="product-rating">
-            <ul class="rating">
-                <li>
-                    <i data-feather="star" class="fill"></i>
-                </li>
-                <li>
-                    <i data-feather="star" class="fill"></i>
-                </li>
-                <li>
-                    <i data-feather="star" class="fill"></i>
-                </li>
-                <li>
-                    <i data-feather="star" class="fill"></i>
-                </li>
-                <li>
-                    <i data-feather="star"></i>
-                </li>
-            </ul>
-            <span class="ms-2">8 Reviews</span>
-            <span class="ms-2 text-danger">6 sold in last 16 hours</span>
-        </div>
-
-        <div class="product-detail">
-            <h4>Product Details :</h4>
-            <p>Candy canes sugar plum tart cotton candy chupa chups sugar plum chocolate I love.
-                Caramels marshmallow icing dessert candy canes I love soufflé I love toffee.
-                Marshmallow pie sweet sweet roll sesame snaps tiramisu jelly bear claw. Bonbon
-                muffin I love carrot cake sugar plum dessert bonbon.</p>
-        </div>
-
-        <ul class="brand-list">
-            <li>
-                <div class="brand-box">
-                    <h5>Brand Name:</h5>
-                    <h6>Black Forest</h6>
-                </div>
-            </li>
-
-            <li>
-                <div class="brand-box">
-                    <h5>Product Code:</h5>
-                    <h6>W0690034</h6>
-                </div>
-            </li>
-
-            <li>
-                <div class="brand-box">
-                    <h5>Product Type:</h5>
-                    <h6>White Cream Cake</h6>
-                </div>
-            </li>
-        </ul>
-
-        <div class="select-size">
-            <h4>Cake Size :</h4>
-            <select class="form-select select-form-size">
-                <option selected>Select Size</option>
-                <option value="1.2">1/2 KG</option>
-                <option value="0">1 KG</option>
-                <option value="1.5">1/5 KG</option>
-                <option value="red">Red Roses</option>
-                <option value="pink">With Pink Roses</option>
-            </select>
-        </div>
-
-        <div class="modal-button">
-            <button onclick="location.href = 'cart.html';"
-                    class="btn btn-md add-cart-button icon">Add
-                To Cart</button>
-            <button onclick="location.href = 'product-left.html';"
-                    class="btn theme-bg-color view-button icon text-white fw-bold btn-md">
-                View More Details</button>
-        </div>
-    </div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>-->
-        <!-- Quick View Modal Box End -->
 
         <!-- Location Modal Start -->
         <div class="modal location-modal fade theme-modal" id="locationModal" tabindex="-1"
@@ -799,59 +712,6 @@
         <!-- Bg overlay End -->
 
         <script>
-            function viewProduct(productId) {
-                fetch(`/Gr1_Warehouse/shop?productId=` + productId)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.error) {
-                                console.error('Lỗi:', data.error);
-                                return;
-                            }
-
-                            // Cập nhật thông tin sản phẩm
-                            document.getElementById('modal-product-name').textContent = data.productName;
-                            document.getElementById('modal-product-brand').textContent = data.brandName || "N/A";
-                            document.getElementById('modal-product-code').textContent = data.sku || "N/A";
-                            document.getElementById('modal-product-description').textContent = data.description;
-                            document.getElementById('modal-product-price').textContent =
-                                    new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(data.variants[0].price);
-
-                            // Cập nhật danh sách size (without price)
-                            let sizeSelect = document.getElementById('modal-product-size');
-                            sizeSelect.innerHTML = ''; // Xóa size cũ
-                            data.variants.forEach(variant => {
-                                let option = document.createElement('option');
-                                option.value = variant.sizeId;
-                                option.textContent = variant.sizeName; // Only size name here
-                                sizeSelect.appendChild(option);
-                            });
-
-                            // Cập nhật hình ảnh chính
-                            document.getElementById('modal-product-image').src = data.firstImageUrl;
-                            document.getElementById('modal-product-image').style.width = '300px'; // Adjust the width as needed
-
-                            // Cập nhật danh sách thumbnail
-                            let thumbnailContainer = document.getElementById('modal-thumbnails');
-                            thumbnailContainer.innerHTML = ''; // Xóa ảnh cũ
-                            data.images.forEach(img => {
-                                let imgElement = document.createElement('img');
-                                imgElement.src = img.imageUrl;
-                                imgElement.classList.add('img-thumbnail', 'me-2');
-                                imgElement.style.width = "50px";
-                                imgElement.onclick = () => {
-                                    document.getElementById('modal-product-image').src = img.imageUrl;
-                                };
-                                thumbnailContainer.appendChild(imgElement);
-                            });
-
-                            // Cập nhật link "View More Details"
-                            document.getElementById('modal-view-more').setAttribute('onclick', `location.href='product-detail.jsp?productId=${data.productId}'`);
-
-                            // Mở modal
-                            new bootstrap.Modal(document.getElementById('quickViewModal')).show();
-                        })
-                        .catch(error => console.error('Lỗi khi lấy dữ liệu:', error));
-            }
 
             $(function () {
                 var $range = $(".js-range-slider"),
@@ -859,9 +719,9 @@
                         $inputTo = $(".js-input-to"),
                         instance,
                         min = 0,
-                        max = 1000000,
+                        max = 1000000000,
                         from = localStorage.getItem("rangeFrom") ? parseInt(localStorage.getItem("rangeFrom")) : 0,
-                        to = localStorage.getItem("rangeTo") ? parseInt(localStorage.getItem("rangeTo")) : 500000;
+                        to = localStorage.getItem("rangeTo") ? parseInt(localStorage.getItem("rangeTo")) : 5000000;
 
                 $range.ionRangeSlider({
                     type: "double",
