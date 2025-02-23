@@ -146,6 +146,7 @@
         <servlet-name>AddStaff</servlet-name>
         <servlet-class>dashboardController.AddStaff</servlet-class>
     </servlet>
+    <servlet>
         <servlet-name>ShopDetails</servlet-name>
         <servlet-class>controller.ShopDetails</servlet-class>
     </servlet>
@@ -229,4 +230,4 @@
         <servlet-name>EditSupplier</servlet-name>
         <url-pattern>/editSupplier</url-pattern>
     </servlet-mapping>
-</web-app>
+</web-app> 
