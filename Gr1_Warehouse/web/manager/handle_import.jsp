@@ -170,10 +170,13 @@
                                                             <tbody id="productTable"></tbody> <!-- JS sẽ render sản phẩm vào đây -->
                                                         </table>
                                                     </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                        <button type="button" class="btn btn-primary">Hoàn tất chọn</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="text-center mt-4">
                                             <button class="btn btn-outline-primary" id="openProductModal">
                                                 Xem danh sách sản phẩm
@@ -414,7 +417,7 @@
 
 
 
-
+        
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 fetch('/Gr1_Warehouse/getArchive')
