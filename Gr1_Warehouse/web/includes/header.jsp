@@ -1014,7 +1014,7 @@
                                                                                             <a class="dropdown-item" href="about-us.html">About Us</a>
                                                                                         </li>
                                                                                         <li>
-                                                                                            <a class="dropdown-item" href="cart.html">Cart</a>
+                                                                                            <a class="dropdown-item" href="cart">Cart</a>
                                                                                         </li>
                                                                                         <li>
                                                                                             <a class="dropdown-item" href="contact-us.html">Contact</a>

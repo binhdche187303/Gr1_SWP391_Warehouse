@@ -369,41 +369,19 @@
                                     <div class="product-box-3 h-100 wow fadeInUp">
                                         <div class="product-header">
                                             <div class="product-image">
-                                                <a href="product-left-thumbnail.html">
+                                                <a href="shopDetails?productId=${product.productId}">
                                                     <c:forEach var="image" items="${product.images}">
                                                         <img src="${pageContext.request.contextPath}/assets/images/img_products/${image.image_url.replaceFirst('^assets/images/img_products/', '')}" alt="${product.productName}" class="img-fluid blur-up lazyload">
                                                     </c:forEach>
                                                 </a>
 
-                                                <ul class="product-option">
-                                                    <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                                        <!-- Cập nhật data-bs-target để liên kết với modal của từng sản phẩm -->
-                                                        <a href="javascript:void(0);" onclick="viewProduct(${product.productId})" data-bs-toggle="modal" data-bs-target="#view-${product.productId}">
-                                                            <i class="fa fa-eye"></i>
-                                                        </a>
-
-
-
-                                                    </li>
-
-                                                    <li data-bs-toggle="tooltip" data-bs-placement="top" title="Compare">
-                                                        <a href="compare.html">
-                                                            <i data-feather="refresh-cw"></i>
-                                                        </a>
-                                                    </li>
-
-                                                    <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                                        <a href="wishlist.html" class="notifi-wishlist">
-                                                            <i data-feather="heart"></i>
-                                                        </a>
-                                                    </li>
-                                                </ul>
+                                   
                                             </div>
                                         </div>
                                         <div class="product-footer">
                                             <div class="product-detail">
                                                 <span class="span-name">${product.cate.category_name}</span>
-                                                <a href="product-left-thumbnail.html">
+                                                <a href="shopDetails?productId=${product.productId}">
                                                     <h5 class="name">${product.productName}</h5>
                                                 </a>
                                                 <p class="text-content mt-1 mb-2 product-content">${product.description}</p>
@@ -427,24 +405,7 @@
                                                             <fmt:formatNumber value="${variant.price}" type="currency" currencySymbol="₫" />
                                                         </c:forEach>
                                                     </span> <del>$15.15</del></h5>
-                                                <div class="add-to-cart-box bg-white">
-                                                    <button class="btn btn-add-cart addcart-button">Add
-                                                        <span class="add-icon bg-light-gray">
-                                                            <i class="fa-solid fa-plus"></i>
-                                                        </span>
-                                                    </button>
-                                                    <div class="cart_qty qty-box">
-                                                        <div class="input-group bg-white">
-                                                            <button type="button" class="qty-left-minus bg-gray" data-type="minus" data-field="">
-                                                                <i class="fa fa-minus" aria-hidden="true"></i>
-                                                            </button>
-                                                            <input class="form-control input-number qty-input" type="text" name="quantity" value="0">
-                                                            <button type="button" class="qty-right-plus bg-gray" data-type="plus" data-field="">
-                                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -796,6 +757,47 @@
         <!-- Script JS -->
         <script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
 
+        <script>
+            $(function () {
+                var $range = $(".js-range-slider"),
+                        $inputFrom = $(".js-input-from"),
+                        $inputTo = $(".js-input-to"),
+                        instance,
+                        min = 0,
+                        max = 1000000,
+                        from = localStorage.getItem("rangeFrom") ? parseInt(localStorage.getItem("rangeFrom")) : 0,
+                        to = localStorage.getItem("rangeTo") ? parseInt(localStorage.getItem("rangeTo")) : 500000;
+
+                $range.ionRangeSlider({
+                    type: "double",
+                    min: min,
+                    max: max,
+                    from: from, // Gán giá trị đã lưu
+                    to: to, // Gán giá trị đã lưu
+                    prefix: '$. ',
+                    onStart: updateInputs,
+                    onChange: updateInputs,
+                    onFinish: saveValues, // Lưu khi người dùng kết thúc thao tác
+                    step: 50000,
+                    prettify_enabled: true,
+                    prettify_separator: ".",
+                    values_separator: " - ",
+                    force_edges: true
+                });
+
+                instance = $range.data("ionRangeSlider");
+
+                function updateInputs(data) {
+                    $inputFrom.val(data.from);
+                    $inputTo.val(data.to);
+                }
+
+                function saveValues(data) {
+                    localStorage.setItem("rangeFrom", data.from);
+                    localStorage.setItem("rangeTo", data.to);
+                }
+            });
+        </script>
     </body>
 
 </html>

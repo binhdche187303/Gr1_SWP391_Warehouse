@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
+-->
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Inventory Check List
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+ </head>
+ <body class="bg-gray-100">
+  <div class="flex">
+   <!-- Sidebar -->
+   <div class="w-64 bg-blue-900 text-white min-h-screen">
+    <div class="p-4">
+     <img alt="Haravan logo" class="mb-4" height="50" src="https://storage.googleapis.com/a1aa/image/uQO0soO3_PxUWVXUdjGLTm33L2CWEuZbXTfdCyPiaHA.jpg" width="150"/>
+     <ul>
+      <li class="mb-2">
+       <i class="fas fa-tachometer-alt">
+       </i>
+       Tổng Quan
+      </li>
+      <li class="mb-2">
+       <i class="fas fa-shopping-cart">
+       </i>
+       Đơn Hàng
+       <span class="ml-2 bg-red-500 text-white rounded-full px-2">
+        1570
+       </span>
+      </li>
+      <li class="mb-2">
+       <i class="fas fa-shipping-fast">
+       </i>
+       Vận Chuyển
+      </li>
+      <li class="mb-2">
+       <i class="fas fa-box">
+       </i>
+       Sản Phẩm
+      </li>
+      <li class="mb-2">
+       <i class="fas fa-users">
+       </i>
+       Khách Hàng
+      </li>
+      <li class="mb-2">
+       <div class="flex items-center justify-between">
+        <span>
+         <i class="fas fa-warehouse">
+         </i>
+         Quản Lý Tồn Kho
+        </span>
+        <i class="fas fa-chevron-down">
+        </i>
+       </div>
+       <ul class="ml-4 mt-2">
+        <li class="mb-2">
+         Chi tiết tồn kho
+        </li>
+        <li class="mb-2">
+         Đặt hàng
+        </li>
+        <li class="mb-2">
+         Nhập hàng
+        </li>
+        <li class="mb-2">
+         Trả hàng nhập
+        </li>
+        <li class="mb-2">
+         Nhà cung cấp
+        </li>
+        <li class="mb-2 text-blue-300">
+         Kiểm kho
+        </li>
+        <li class="mb-2">
+         Điều chuyển
+        </li>
+        <li class="mb-2">
+         Lịch sử
+        </li>
+       </ul>
+      </li>
+      <li class="mb-2">
+       <i class="fas fa-book">
+       </i>
+       Sổ Quỹ
+      </li>
+      <li class="mb-2">
+       <i class="fas fa-tags">
+       </i>
+       Khuyến Mãi
+      </li>
+      <li class="mb-2">
+       <i class="fas fa-chart-line">
+       </i>
+       Báo Cáo
+      </li>
+      <li class="mb-2">
+       <i class="fas fa-cogs">
+       </i>
+       Ứng Dụng
+      </li>
+     </ul>
+    </div>
+   </div>
+   <!-- Main Content -->
+   <div class="flex-1 p-6">
+    <div class="flex justify-between items-center mb-4">
+     <h1 class="text-2xl font-bold">
+      Danh sách phiếu kiểm kho
+     </h1>
+     <div class="flex items-center space-x-4">
+      <button class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded shadow-sm">
+       <i class="fas fa-upload">
+       </i>
+       Xuất dữ liệu
+      </button>
+<!--      <button class="bg-blue-500 text-white px-4 py-2 rounded shadow-sm">
+       <i class="fas fa-plus">
+       </i>
+       Điều chỉnh nhanh
+      </button>
+      <button class="bg-blue-600 text-white px-4 py-2 rounded shadow-sm">
+       <i class="fas fa-plus">
+       </i>
+       Tạo phiếu kiểm
+      </button>-->
+     </div>
+    </div>
+    <div class="bg-white p-4 rounded shadow-sm">
+     <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center space-x-4">
+       <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded">
+        Tất cả
+       </button>
+       <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded">
+        Thêm điều kiện lọc
+       </button>
+      </div>
+      <input class="border border-gray-300 rounded px-4 py-2" placeholder="Tìm theo mã phiếu" type="text"/>
+     </div>
+     <table class="w-full text-left">
+      <thead>
+       <tr class="border-b">
+        <th class="py-2">
+         Mã phiếu
+        </th>
+        <th class="py-2">
+         Kho kiểm
+        </th>
+        <th class="py-2">
+         Trạng thái
+        </th>
+        <th class="py-2">
+         Ngày kiểm
+        </th>
+        <th class="py-2">
+         Ngày cân bằng
+        </th>
+        <th class="py-2">
+         Số lượng lệch
+        </th>
+        <th class="py-2">
+         Tổng giá trị hàng lệch
+        </th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr class="border-b">
+        <td class="py-2">
+         IA100903
+        </td>
+        <td class="py-2">
+         test
+        </td>
+        <td class="py-2">
+         <span class="bg-green-200 text-green-700 px-2 py-1 rounded">
+          Đã cân bằng
+         </span>
+        </td>
+        <td class="py-2">
+         Hôm qua 14:33 CH
+         <br/>
+         <span class="text-gray-500">
+          @NVNghi
+         </span>
+        </td>
+        <td class="py-2">
+         Hôm qua 14:33 CH
+         <br/>
+         <span class="text-gray-500">
+          @NVNghi
+         </span>
+        </td>
+        <td class="py-2">
+         0
+         <i class="fas fa-arrow-up text-green-500">
+         </i>
+         <br/>
+         -7
+         <i class="fas fa-arrow-down text-red-500">
+         </i>
+        </td>
+        <td class="py-2">
+         -3,958,019 ₫
+        </td>
+       </tr>
+       <tr class="border-b">
+        <td class="py-2">
+         IA100902
+        </td>
+        <td class="py-2">
+         kho test 123
+        </td>
+        <td class="py-2">
+         <span class="bg-green-200 text-green-700 px-2 py-1 rounded">
+          Đã cân bằng
+         </span>
+        </td>
+        <td class="py-2">
+         Hôm qua 14:18 CH
+         <br/>
+         <span class="text-gray-500">
+          @NVNghi
+         </span>
+        </td>
+        <td class="py-2">
+         Hôm qua 14:18 CH
+         <br/>
+         <span class="text-gray-500">
+          @NVNghi
+         </span>
+        </td>
+        <td class="py-2">
+         4
+         <i class="fas fa-arrow-up text-green-500">
+         </i>
+         <br/>
+         -6
+         <i class="fas fa-arrow-down text-red-500">
+         </i>
+        </td>
+        <td class="py-2">
+         -17,502 ₫
+        </td>
+       </tr>
+       <tr class="border-b">
+        <td class="py-2">
+         IA100901
+        </td>
+        <td class="py-2">
+         kho test 123
+        </td>
+        <td class="py-2">
+         <span class="bg-blue-200 text-blue-700 px-2 py-1 rounded">
+          Đã kiểm kho
+         </span>
+        </td>
+        <td class="py-2">
+         Hôm qua 14:13 CH
+         <br/>
+         <span class="text-gray-500">
+          @NVNghi
+         </span>
+        </td>
+        <td class="py-2">
+         -
+        </td>
+        <td class="py-2">
+         67
+         <i class="fas fa-arrow-up text-green-500">
+         </i>
+         <br/>
+         0
+         <i class="fas fa-arrow-down text-red-500">
+         </i>
+        </td>
+        <td class="py-2">
+         -60,304,396,651,156 ₫
+        </td>
+       </tr>
+       <tr class="border-b">
+        <td class="py-2">
+         IA100900
+        </td>
+        <td class="py-2">
+         kho test 123
+        </td>
+        <td class="py-2">
+         <span class="bg-green-200 text-green-700 px-2 py-1 rounded">
+          Đã cân bằng
+         </span>
+        </td>
+        <td class="py-2">
+         10/06/2022 11:06 SA
+         <br/>
+         <span class="text-gray-500">
+          @NVNghi
+         </span>
+        </td>
+        <td class="py-2">
+         10/06/2022 11:06 SA
+         <br/>
+         <span class="text-gray-500">
+          @NVNghi
+         </span>
+        </td>
+        <td class="py-2">
+         1
+         <i class="fas fa-arrow-up text-green-500">
+         </i>
+         <br/>
+         0
+         <i class="fas fa-arrow-down text-red-500">
+         </i>
+        </td>
+        <td class="py-2">
+         0 ₫
+        </td>
+       </tr>
+       <tr class="border-b">
+        <td class="py-2">
+         IA100899
+        </td>
+        <td class="py-2">
+         test
+        </td>
+        <td class="py-2">
+         <span class="bg-green-200 text-green-700 px-2 py-1 rounded">
+          Đã cân bằng
+         </span>
+        </td>
+        <td class="py-2">
+         10/06/2022 11:05 SA
+         <br/>
+         <span class="text-gray-500">
+          @NVNghi
+         </span>
+        </td>
+        <td class="py-2">
+         10/06/2022 11:05 SA
+         <br/>
+         <span class="text-gray-500">
+          @NVNghi
+         </span>
+        </td>
+        <td class="py-2">
+         1
+         <i class="fas fa-arrow-up text-green-500">
+         </i>
+         <br/>
+         0
+         <i class="fas fa-arrow-down text-red-500">
+         </i>
+        </td>
+        <td class="py-2">
+         0 ₫
+        </td>
+       </tr>
+       <tr class="border-b">
+        <td class="py-2">
+         IA100898
+        </td>
+        <td class="py-2">
+         test
+        </td>
+        <td class="py-2">
+         <span class="bg-blue-200 text-blue-700 px-2 py-1 rounded">
+          Đã kiểm kho
+         </span>
+        </td>
+        <td class="py-2">
+         09/06/2022 15:51 CH
+         <br/>
+         <span class="text-gray-500">
+          @Khanh Khanh
+         </span>
+        </td>
+        <td class="py-2">
+         -
+        </td>
+        <td class="py-2">
+         0
+         <i class="fas fa-arrow-up text-green-500">
+         </i>
+         <br/>
+         -6
+         <i class="fas fa-arrow-down text-red-500">
+         </i>
+        </td>
+        <td class="py-2">
+         -2,079,461,969,342 ₫
+        </td>
+       </tr>
+       <tr class="border-b">
+        <td class="py-2">
+         IA100897
+        </td>
+        <td class="py-2">
+         test
+        </td>
+        <td class="py-2">
+         <span class="bg-red-200 text-red-700 px-2 py-1 rounded">
+          Đã hủy
+         </span>
+        </td>
+        <td class="py-2">
+         09/06/2022 15:50 CH
+         <br/>
+         <span class="text-gray-500">
+          @Khanh Khanh
+         </span>
+        </td>
+        <td class="py-2">
+         -
+        </td>
+        <td class="py-2">
+         0
+         <i class="fas fa-arrow-up text-green-500">
+         </i>
+         <br/>
+         -107
+         <i class="fas fa-arrow-down text-red-500">
+         </i>
+        </td>
+        <td class="py-2">
+         222,502,430,710 ₫
+        </td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
+
