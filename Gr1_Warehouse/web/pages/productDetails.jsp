@@ -188,6 +188,7 @@
                                                     <a href="javascript:void(0)" class="${status.first ? 'active' : ''}" 
                                                        data-price="${variant.price}" 
                                                        data-variant-id="${variant.size.size_id}"
+                                                       data-stock="${variant.stock}" 
                                                        onclick="updatePriceAndVariant(this)">
                                                         ${variant.size.size_name}
                                                     </a>
@@ -231,7 +232,9 @@
                                             <ul class="product-info-list product-info-list-2">
                                                 <li>Thương hiệu : <a href="javascript:void(0)">${product.brand.brand_name}</a></li>
                                                 <li>MFG : <a href="javascript:void(0)">Jun 4, 2022</a></li>
-                                                <li>Số lượng tồn kho : <a href="javascript:void(0)"></a></li>
+                                                <li>Số lượng tồn kho: 
+                                                    <a><span id="current-stock">${product.variants[0].stock}</span></a>
+                                                </li>
                                                 <li>Danh mục : <a href="javascript:void(0)">${product.cate.category_name}</a></li>
                                             </ul>
                                         </div>
@@ -2025,16 +2028,22 @@
                                                 // Thêm class active cho phần tử được chọn
                                                 element.classList.add('active');
 
-                                                // Lấy dữ liệu từ thuộc tính data-variant-id và data-price
+                                                // Lấy dữ liệu từ thuộc tính data-variant-id, data-price và data-stock
                                                 let variantId = element.getAttribute('data-variant-id');
                                                 let price = element.getAttribute('data-price');
+                                                let stock = element.getAttribute('data-stock');
 
                                                 // Cập nhật giá trị của input hidden
                                                 document.getElementById('selected-variant-id').value = variantId;
 
                                                 // Cập nhật giá hiển thị
                                                 document.getElementById('current-price').innerText = price;
+
+                                                // Cập nhật tồn kho hiển thị
+                                                document.getElementById('current-stock').innerText = stock;
                                             }
+
+
 
 
                                             function changeQuantity(change) {

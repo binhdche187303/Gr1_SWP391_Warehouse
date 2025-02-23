@@ -76,6 +76,7 @@ public class CheckoutController extends HttpServlet {
         SizeDAO sizeDAO = new SizeDAO();
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acc");
+
         if (user == null) {
             response.sendRedirect("login");
             return;
@@ -88,14 +89,6 @@ public class CheckoutController extends HttpServlet {
         request.getRequestDispatcher("pages/checkout.jsp").forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -113,6 +106,7 @@ public class CheckoutController extends HttpServlet {
         for (JsonElement item : itemsArray) {
             items.add(item.getAsInt());
         }
+
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("acc");
 
@@ -126,21 +120,37 @@ public class CheckoutController extends HttpServlet {
         List<Cart> carts = new ArrayList<>();
 
         try {
+            // Nếu là từ giỏ hàng
+            // Nếu là từ giỏ hàng
             if (type.equals("cart")) {
                 List<Cart> cartOfUser = cartDAO.getCartByUserId(user.getUserId());
                 for (Cart cart : cartOfUser) {
                     for (Integer item : items) {
+                        // Kiểm tra theo cả productId và sizeId
                         if (item.intValue() == cart.getProductId()) {
-                            carts.add(cart);
+                            boolean isDuplicate = false;
+                            for (Cart c : carts) {
+                                // Kiểm tra trùng lặp cả productId và sizeId
+                                if (c.getProductId() == cart.getProductId() && c.getSizeId() == cart.getSizeId()) {
+                                    isDuplicate = true;
+                                    break;
+                                }
+                            }
+                            // Nếu không trùng thì thêm sản phẩm mới
+                            if (!isDuplicate) {
+                                carts.add(cart);
+                            }
                         }
                     }
                 }
-            } else {
+            } // Nếu là mua trực tiếp
+            else {
                 int productId = items.get(0).intValue();
-                int quantity = Integer.parseInt(request.getParameter("quantity"));
-                int sizeId = Integer.parseInt(request.getParameter("sizeId"));
+                int quantity = jsonData.get("quantity").getAsInt();
+                int sizeId = jsonData.get("sizeId").getAsInt();
                 int stock = productDao.getStockByProductIdAndSize(productId, sizeId);
 
+                // Kiểm tra tồn kho
                 if (stock < quantity) {
                     response.getWriter().write("{\"status\": \"error\", \"message\": \"Số lượng tồn kho không đủ\", \"stock\": " + stock + "}");
                     return;
@@ -157,11 +167,33 @@ public class CheckoutController extends HttpServlet {
                         }
                     }
 
+                    // Tạo đối tượng Cart
                     Cart cart = new Cart(0, productId, product.getProductName(), sizeId, sizeName, price, quantity, product.getImages().get(0).getImage_url());
-                    carts.add(cart);
+
+                    boolean isDuplicate = false;
+                    for (Cart c : carts) {
+                        // Chỉ cộng dồn nếu trùng cả productId và sizeId
+                        if (c.getProductId() == productId && c.getSizeId() == sizeId) {
+                            c.setQuantity(c.getQuantity() + quantity);
+                            isDuplicate = true;
+                            break;
+                        }
+                    }
+                    // Nếu không trùng thì thêm sản phẩm mới
+                    if (!isDuplicate) {
+                        carts.add(cart);
+                    }
                 }
             }
-            System.out.println(carts.size());
+
+            // Debug kiểm tra kết quả
+            System.out.println("Cart size: " + carts.size());
+            for (Cart cart : carts) {
+                System.out.println("Product ID: " + cart.getProductId() + ", Size ID: " + cart.getSizeId() + ", Quantity: " + cart.getQuantity());
+            }
+
+            // Xóa session cũ trước khi thêm mới
+            session.removeAttribute("cart_to_checkout");
             session.setAttribute("cart_to_checkout", carts);
             response.getWriter().write("{\"status\": \"success\"}");
 

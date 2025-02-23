@@ -8,7 +8,7 @@
 
     <head>
 
-        
+
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -164,7 +164,7 @@
                                                         </td>
                                                         <td class="price">
                                                             <h4 class="table-title text-content">Giá</h4>
-                                                             <h5><fmt:formatNumber value="${item.price}" pattern="#,###" />₫ </h5>
+                                                            <h5><fmt:formatNumber value="${item.price}" pattern="#,###" />₫ </h5>
                                                         </td>
                                                         <td class="quantity">
                                                             <h4 class="table-title text-content">Số lượng</h4>
@@ -342,8 +342,6 @@
                                 let inputField = document.querySelector(".qty-input[data-product-id='" + productId + "']");
                                 let currentQuantity = parseInt(inputField.value);
                                 let newQuantity = currentQuantity; // Giữ giá trị cũ phòng khi có lỗi
-
-                                // Gửi AJAX kiểm tra stock
                                 fetch("check-stock?productId=" + productId + "&sizeId=" + sizeId + "&newSize=" + typeSizeId)
                                         .then(response => response.json())
                                         .then(data => {
@@ -404,7 +402,6 @@
                                 let inputField = document.querySelector(".qty-input[data-product-id='" + productId + "']");
                                 let currentQuantity = parseInt(inputField.value);
                                 let newQuantity = currentQuantity; // Giữ giá trị cũ phòng khi có lỗi
-
                                 // Gửi AJAX kiểm tra stock
                                 fetch("check-stock?productId=" + productId + "&sizeId=" + sizeId + "&newSize=" + typeSizeId)
                                         .then(response => response.json())

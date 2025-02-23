@@ -21,33 +21,40 @@ import model.Sizes;
 public class SizeDAO extends DBContext {
     
     public List<ProductVariants> getSizesByProductId(int productId) {
-        List<ProductVariants> variants = new ArrayList<>();
-        try {
-            String query = "SELECT pv.variant_id, s.size_id, s.size_name, pv.price, pv.stock "
-                    + "FROM ProductVariants pv "
-                    + "JOIN Sizes s ON pv.size_id = s.size_id "
-                    + "WHERE pv.product_id = ?";
-            PreparedStatement stmt = connection.prepareStatement(query);
-            stmt.setInt(1, productId);
-            ResultSet rs = stmt.executeQuery();
-            
-            while (rs.next()) {
-                ProductVariants variant = new ProductVariants();
-                int varId = rs.getInt("variant_id");
-                int sizeId = rs.getInt("size_id");
-                String sizeName = rs.getString("size_name");
-                BigDecimal price = rs.getBigDecimal("price");
-                int stock = rs.getInt("stock");
-                Sizes size = new Sizes(sizeId, sizeName);
-                variant.setVariantId(varId);
-                variant.setStock(stock);
-                variant.setPrice(price);
-                variant.setSize(size);
-                variants.add(variant);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    List<ProductVariants> variants = new ArrayList<>();
+    String query = "SELECT pv.variant_id, s.size_id, s.size_name, pv.price, " +
+                   "COALESCE(SUM(ib.quantity), 0) AS stock " +
+                   "FROM ProductVariants pv " +
+                   "JOIN Sizes s ON pv.size_id = s.size_id " +
+                   "LEFT JOIN InventoryBatches ib ON pv.variant_id = ib.variant_id " +
+                   "AND ib.status = 'In Stock' " +
+                   "WHERE pv.product_id = ? " +
+                   "GROUP BY pv.variant_id, s.size_id, s.size_name, pv.price";
+
+    try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        stmt.setInt(1, productId);
+        ResultSet rs = stmt.executeQuery();
+        
+        while (rs.next()) {
+            ProductVariants variant = new ProductVariants();
+            int varId = rs.getInt("variant_id");
+            int sizeId = rs.getInt("size_id");
+            String sizeName = rs.getString("size_name");
+            BigDecimal price = rs.getBigDecimal("price");
+            int stock = rs.getInt("stock");
+
+            Sizes size = new Sizes(sizeId, sizeName);
+            variant.setVariantId(varId);
+            variant.setStock(stock);
+            variant.setPrice(price);
+            variant.setSize(size);
+
+            variants.add(variant);
         }
-        return variants;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return variants;
+}
+
 }

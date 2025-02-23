@@ -267,7 +267,7 @@
                             <div class="right-side-summery-box">
                                 <div class="summery-box-2">
                                     <div class="summery-header">
-                                        <h3>Order Summery</h3>
+                                        <h3>Tổng Hóa Đơn</h3>
                                     </div>
 
                                     <ul class="summery-contain">
@@ -278,15 +278,19 @@
                                                 <img src="./${item.image}"
                                                      class="img-fluid blur-up lazyloaded checkout-image" alt="">
                                                 <h4>${item.productName} <span>X ${item.quantity}</span></h4>
-                                                <h4 class="price">$${item.price}</h4>
+                                                <h4 class="price">
+                                                    <fmt:formatNumber value="${item.price}" pattern="#,###" />₫
+                                                </h4>
                                             </li>
                                         </c:forEach>
                                     </ul>
 
                                     <ul class="summery-total">
                                         <li>
-                                            <h4>Subtotal</h4>
-                                            <h4 class="price">$${totalAmount}</h4>
+                                            <h4>Tổng phụ: </h4>
+                                            <h4 class="price">
+                                                <fmt:formatNumber value="${totalAmount}" pattern="#,###" />₫
+                                            </h4>
                                         </li>
 
                                         <li>
@@ -295,8 +299,11 @@
                                         </li>
 
                                         <li class="list-total">
-                                            <h4>Total (USD)</h4>
-                                            <h4 class="price">$${totalAmount}</h4>
+                                            <h4>Tổng: </h4>
+                                            <h4 class="price">
+                                                <fmt:formatNumber value="${totalAmount}" pattern="#,###" />₫
+                                            </h4>
+
                                         </li>
                                     </ul>
                                 </div>

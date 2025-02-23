@@ -36,17 +36,22 @@ public class UpdateCartController extends HttpServlet {
             response.sendRedirect("login");
             return;
         }
-
+        String productIdPara = request.getParameter("productId");
         int userId = user.getUserId();
-        int productId = Integer.parseInt(request.getParameter("productId"));
-        int quantity = Integer.parseInt(request.getParameter("quantity"));
-        int sizeId = Integer.parseInt(request.getParameter("newSize"));
+        String quantityPara = request.getParameter("quantity");
+        String sizeIdPara = request.getParameter("newSize");
+        try {
+            int productId = Integer.parseInt(productIdPara);
+            int quantity = Integer.parseInt(quantityPara);
+            int sizeId = Integer.parseInt(sizeIdPara);
+            boolean updateSuccess = cartDAO.updateCartQuantity(productId, quantity, userId, sizeId);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"success\": " + updateSuccess + "}");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
 
-        boolean updateSuccess = cartDAO.updateCartQuantity(productId, quantity, userId, sizeId);
-
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("{\"success\": " + updateSuccess + "}");
     }
 
 }

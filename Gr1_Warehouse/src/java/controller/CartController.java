@@ -55,7 +55,6 @@ public class CartController extends HttpServlet {
         }
         request.setAttribute("cartItems", cartItems);
         request.setAttribute("sizeOptions", sizeOptions);
-        request.setAttribute("cartItems", cartItems);
         request.getRequestDispatcher("pages/cart.jsp").forward(request, response);
     }
 
