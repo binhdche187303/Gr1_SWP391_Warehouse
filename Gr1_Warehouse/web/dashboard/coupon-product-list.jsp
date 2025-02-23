@@ -303,20 +303,22 @@
                                         nameCell.textContent = product.productName;
                                         row.appendChild(nameCell);
 
+                                        // Define href variables
+                                        const hrefView = `discountproductdetail?product_id=${product.productId}`;
+                                        const hrefEdit = `createcouponproduct?product_id=${product.productId}`;
+
                                         // Actions cell
                                         const actionsCell = document.createElement('td');
                                         actionsCell.innerHTML = `
-                                 <ul>
-                                                                        <a href="discountproductdetail?product_id=${product.productId}" 
-                                                                           class="view-discount-history" 
-                                                                           >
-                                                                            <i class="ri-eye-line"></i>
-                                                                        </a>
-                                                                        <a href="createcouponproduct?product_id=${product.productId}" class="view-discount-history">
-                                                                            <i class="ri-add-circle-line" style="color: rgb(116, 125, 198);"></i>
-                                                                        </a>
-                                                                    </ul>
-                            `;
+                                            <ul>
+                                                <a href="${hrefView}" class="view-discount-history">
+                                                    <i class="ri-eye-line"></i>
+                                                </a>
+                                                <a href="${hrefEdit}" class="view-discount-history">
+                                                    <i class="ri-add-circle-line" style="color: rgb(116, 125, 198);"></i>
+                                                </a>
+                                            </ul>
+                                        `;
                                         row.appendChild(actionsCell);
 
                                         tbody.append(row);
@@ -337,6 +339,7 @@
                 });
             });
         </script>
+
 
     </body>
 
