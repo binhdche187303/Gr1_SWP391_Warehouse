@@ -704,12 +704,11 @@
                                                                         <div class="offcanvas-body">
                                                                             <ul class="navbar-nav">
                                                                                 <li class="nav-item dropdown">
-                                                                                    <a class="nav-link dropdown-toggle" href="javascript:void(0)"
-                                                                                       data-bs-toggle="dropdown" href="${pageContext.request.contextPath}/home">Home</a>
+                                                                                    <a class="nav-link " href="${pageContext.request.contextPath}/home">Home</a>
                                                                                 </li>
 
                                                                                 <li class="nav-item dropdown">
-                                                                                    <a class="nav-link dropdown-toggle" href="${pageContext.request.contextPath}/shop">Shop</a>
+                                                                                    <a class="nav-link " href="${pageContext.request.contextPath}/shop">Shop</a>
 
                                                                                 </li>                        
 

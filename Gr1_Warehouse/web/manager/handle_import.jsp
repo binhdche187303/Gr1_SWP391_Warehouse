@@ -79,9 +79,10 @@
 
                                                         <!-- Dropdown chọn nhà cung cấp -->
                                                         <label for="supplierDropdown" class="font-medium">Chọn nhà cung cấp:</label>
-                                                        <select id="supplierDropdown" class="form-control">
-                                                            <option value="">-- Chọn nhà cung cấp --</option>
+                                                        <select id="supplierDropdown" class="form-control font-medium">
+                                                            <option value="">Chọn nhà cung cấp</option>
                                                         </select>
+
 
 
 
@@ -151,6 +152,7 @@
 
                                             </div>
                                         </div>
+                                        <div id="selectedProductContainer" class="mt-3"></div>
                                         <div class="modal fade" id="searchProductModal" tabindex="-1">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
@@ -184,7 +186,7 @@
 
                                         </div>
 
-
+                                        <h4 id="totalAmount" class="text-end mt-2">Tổng cộng: 0 VND</h4>
                                     </div>
                                 </div>
 
@@ -196,15 +198,19 @@
                                             <div class="bg-white p-4 rounded-lg shadow-md border border-gray-300">
                                                 <div class="mb-4">
                                                     <label class="form-label">Nhân viên xử lý</label>
-                                                    <input type="text" value"" class="form-control">
+                                                    <input type="text" value="" class="form-control">
                                                 </div>
                                                 <div class="mb-4">
                                                     <label class="form-label">Mã tham chiếu</label>
                                                     <input type="text" value="" class="form-control">
                                                 </div>
-                                                <div>
+                                                <div class="mb-4">
                                                     <label class="form-label">Ghi chú</label>
                                                     <textarea class="form-control" placeholder="Nhập ghi chú"></textarea>
+                                                </div>
+                                                <div class="mb-4">
+                                                    <label class="form-label">Tải ảnh phiếu nhập hàng</label>
+                                                    <input type="file" class="form-control" accept=".png, .jpg, .jpeg, .pdf">
                                                 </div>
                                             </div>
                                         </div>
@@ -348,7 +354,7 @@
                     document.getElementById("supplierAddress").textContent = supplier.address || "N/A";
                     document.getElementById("supplierPhone").textContent = supplier.phone || "N/A";
                     document.getElementById("supplierEmail").textContent = supplier.email || "N/A";
-                    document.getElementById("supplierCode").textContent = supplier.supplierCode || "N/A";
+                    //document.getElementById("supplierCode").textContent = supplier.supplierCode || "N/A";
 
                     // ✅ Hiển thị nút "Xem danh sách sản phẩm"
                     openProductModalBtn.style.display = "inline-block";
@@ -416,8 +422,169 @@
 
 
 
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const completeSelectionBtn = document.querySelector(".modal-footer .btn-primary");
+                const selectedProductContainer = document.getElementById("selectedProductContainer");
+                const totalAmount = document.getElementById("totalAmount");
 
-        
+                if (!completeSelectionBtn || !selectedProductContainer || !totalAmount) {
+                    console.error("❌ Lỗi: Không tìm thấy phần tử cần thiết");
+                    return;
+                }
+
+                completeSelectionBtn.addEventListener("click", function () {
+                    console.log("✅ Nút Hoàn tất chọn đã được ấn!");
+
+                    const checkedProducts = document.querySelectorAll("#productTable input[type='checkbox']:checked");
+                    if (checkedProducts.length === 0) {
+                        alert("Vui lòng chọn ít nhất một sản phẩm!");
+                        return;
+                    }
+
+                    selectedProductContainer.innerHTML = ""; // Xóa danh sách cũ
+
+                    // 🟢 **Thêm header tiêu đề**
+                    const headerRow = document.createElement("div");
+                    headerRow.classList.add("row", "fw-bold", "border-bottom", "pb-2", "mb-2");
+                    headerRow.innerHTML = `
+                        <div class="col-3">Tên sản phẩm</div>
+                        <div class="col-2">SKU</div>
+                        <div class="col-2">Giá</div>
+                        <div class="col-2">Số lượng</div>
+                        <div class="col-2">Tổng</div>
+                        <div class="col-1 text-center"></div>
+                    `;
+                    selectedProductContainer.appendChild(headerRow);
+
+                    checkedProducts.forEach(checkbox => {
+                        const row = checkbox.closest("tr");
+
+                        if (!row || row.children.length < 3) {
+                            console.error("⚠️ Lỗi: Không tìm thấy hàng hoặc số cột không đủ!");
+                            return;
+                        }
+
+                        const productName = row.children[1]?.textContent.trim() || "Không có tên";
+                        const sku = row.children[2]?.textContent.trim() || "Không có SKU";
+                        if (!productName || !sku) {
+                            console.error("⚠️ Lỗi: Dữ liệu sản phẩm rỗng!");
+                            return;
+                        }
+
+                        console.log("📌 Dữ liệu trước khi thêm vào UI:", {productName, sku});
+
+                        // ✅ Tạo sản phẩm hiển thị đúng
+                        const productRow = document.createElement("div");
+                        productRow.classList.add("selected-product", "row", "align-items-center", "mb-2");
+
+                        // Cột: Tên sản phẩm
+                        const nameCol = document.createElement("div");
+                        nameCol.classList.add("col-3");
+                        nameCol.textContent = productName;
+
+                        // Cột: SKU
+                        const skuCol = document.createElement("div");
+                        skuCol.classList.add("col-2");
+                        skuCol.textContent = sku;
+
+                        // Cột: Giá
+                        const priceCol = document.createElement("div");
+                        priceCol.classList.add("col-2");
+                        const priceInput = document.createElement("input");
+                        priceInput.type = "number";
+                        priceInput.classList.add("form-control", "price");
+                        priceInput.placeholder = "Giá";
+                        priceInput.min = "1"; // Giá phải lớn hơn 0
+                        priceInput.value = "1";
+                        priceCol.appendChild(priceInput);
+
+                        // Cột: Số lượng
+                        const quantityCol = document.createElement("div");
+                        quantityCol.classList.add("col-2");
+                        const quantityInput = document.createElement("input");
+                        quantityInput.type = "number";
+                        quantityInput.classList.add("form-control", "quantity");
+                        quantityInput.placeholder = "Số lượng";
+                        quantityInput.min = "1"; // Số lượng phải lớn hơn 0
+                        quantityInput.value = "1";
+                        quantityCol.appendChild(quantityInput);
+
+                        // Cột: Tổng giá
+                        const totalPriceCol = document.createElement("div");
+                        totalPriceCol.classList.add("col-2");
+                        const totalPriceSpan = document.createElement("span");
+                        totalPriceSpan.classList.add("total-price");
+                        totalPriceSpan.textContent = "0 VND";
+                        totalPriceCol.appendChild(totalPriceSpan);
+
+                        // Cột: Nút xóa
+                        const removeCol = document.createElement("div");
+                        removeCol.classList.add("col-1", "text-center");
+                        const removeBtn = document.createElement("button");
+                        removeBtn.type = "button";
+                        removeBtn.classList.add("btn", "btn-danger", "btn-sm", "remove-product");
+                        removeBtn.textContent = "X";
+                        removeCol.appendChild(removeBtn);
+
+                        // 🛠️ Thêm tất cả vào `productRow`
+                        productRow.appendChild(nameCol);
+                        productRow.appendChild(skuCol);
+                        productRow.appendChild(priceCol);
+                        productRow.appendChild(quantityCol);
+                        productRow.appendChild(totalPriceCol);
+                        productRow.appendChild(removeCol);
+
+                        selectedProductContainer.appendChild(productRow);
+                        console.log("📌 Đã thêm sản phẩm vào selectedProductContainer!", selectedProductContainer);
+
+                        // 🟢 Thêm sự kiện cập nhật tổng tiền khi nhập số lượng hoặc giá
+                        priceInput.addEventListener("input", validateAndUpdateTotal);
+                        quantityInput.addEventListener("input", validateAndUpdateTotal);
+                        removeBtn.addEventListener("click", function () {
+                            productRow.remove();
+                            updateTotalPrice();
+                        });
+                    });
+
+                    // 🔹 Đóng modal sau khi chọn sản phẩm
+                    const modal = bootstrap.Modal.getInstance(document.getElementById("searchProductModal"));
+                    modal.hide();
+
+                    updateTotalPrice(); // Cập nhật tổng giá sau khi chọn xong
+                });
+
+                // 🔹 Hàm kiểm tra giá trị nhập vào phải lớn hơn 0 và cập nhật tổng giá
+                function validateAndUpdateTotal(event) {
+                    const input = event.target;
+                    if (parseFloat(input.value) <= 0 || isNaN(input.value)) {
+                        input.value = 1; // Nếu nhập sai, đặt về 1
+                    }
+                    updateTotalPrice();
+                }
+
+                // 🔹 Hàm cập nhật tổng giá từng sản phẩm và tổng cộng
+                function updateTotalPrice() {
+                    let totalAll = 0;
+                    document.querySelectorAll(".selected-product").forEach(productRow => {
+                        const quantity = parseFloat(productRow.querySelector(".quantity").value) || 0;
+                        const price = parseFloat(productRow.querySelector(".price").value) || 0;
+                        const totalPrice = quantity * price;
+
+                        productRow.querySelector(".total-price").textContent = totalPrice.toLocaleString("vi-VN") + " VND";
+                        totalAll += totalPrice;
+                    });
+
+                    totalAmount.textContent = "Tổng cộng: " + totalAll.toLocaleString("vi-VN") + " VND";
+                }
+            });
+        </script>
+
+
+
+
+
+
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 fetch('/Gr1_Warehouse/getArchive')
