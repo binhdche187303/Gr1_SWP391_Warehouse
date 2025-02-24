@@ -9,10 +9,12 @@ package model;
  * @author Huy Nam
  */
 public class Brands {
+
     private int brand_id;
     private String brand_name;
+
     private int totalProducts;
-    
+
     public Brands() {
     }
 
@@ -45,5 +47,5 @@ public class Brands {
     public void setTotalProducts(int totalProducts) {
         this.totalProducts = totalProducts;
     }
-         
+
 }

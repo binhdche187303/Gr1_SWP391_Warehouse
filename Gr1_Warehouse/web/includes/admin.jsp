@@ -1,4 +1,5 @@
 
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -45,13 +46,11 @@
     </head>
 
     <body>
-
         <!-- tap on top start -->
         <div class="tap-top">
             <span class="lnr lnr-chevron-up"></span>
         </div>
         <!-- tap on tap end -->
-
 
         <!-- page-wrapper Start-->
         <div class="page-wrapper compact-wrapper" id="pageWrapper">
@@ -134,7 +133,6 @@
                                     </li>
                                 </ul>
                             </li>
-
                             <li class="profile-nav onhover-dropdown pe-0 me-0">
                                 <div class="media profile-media">
 
@@ -147,7 +145,6 @@
                                 <ul class="profile-dropdown onhover-show-div">
                                     <li>
                                         <a href="allusers">
-
                                             <i data-feather="users"></i>
                                             <span>Users</span>
                                         </a>
@@ -219,7 +216,7 @@
                                     <li class="back-btn"></li>
 
                                     <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="index.html">
+                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/dashboardAdmin">
                                             <i class="ri-home-line"></i>
                                             <span>Dashboard</span>
                                         </a>
@@ -276,40 +273,22 @@
                                     <li class="sidebar-list">
                                         <a class="sidebar-link sidebar-title" href="javascript:void(0)">
                                             <i class="ri-user-3-line"></i>
-                                            <span>Users</span>
+                                            <span>Tài khoản</span>
                                         </a>
                                         <ul class="sidebar-submenu">
                                             <li>
-                                                <a href="/Gr1_Warehouse/allusers">All users</a>
+                                                <a href="/Gr1_Warehouse/allusers">Khách hàng</a>
                                             </li>
                                             <li>
-                                                <a href="/Gr1_Warehouse/allstaff">All staff</a>
-                                            </li>
-                                            <li>
-                                                <a href="add-new-user.html">Add new user</a>
+                                                <a href="/Gr1_Warehouse/allstaff">Nhân viên</a>
                                             </li>
                                         </ul>
                                     </li>
 
                                     <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-user-3-line"></i>
-                                            <span>Roles</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="/Gr1_Warehouse/role">All roles</a> 
-                                            </li>
-                                            <li>
-                                                <a href="create-role.html">Create Role</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="media.html">
-                                            <i class="ri-price-tag-3-line"></i>
-                                            <span>Media</span>
+                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/role">
+                                            <i class="ri-star-line"></i>
+                                            <span>Vai trò</span>
                                         </a>
                                     </li>
 
@@ -333,16 +312,20 @@
 
                                     <li class="sidebar-list">
                                         <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-focus-3-line"></i>
-                                            <span>Localization</span>
+                                            <i class="ri-price-tag-3-line"></i>
+                                            <span>Giảm giá hóa đơn</span>
                                         </a>
                                         <ul class="sidebar-submenu">
                                             <li>
-                                                <a href="translation.html">Translation</a>
+                                                <a href="/Gr1_Warehouse/couponlist">Danh sách giảm giá</a>
                                             </li>
 
                                             <li>
-                                                <a href="currency-rates.html">Currency Rates</a>
+                                                <a href="/Gr1_Warehouse/createcoupon">Tạo mã giảm giá</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="/Gr1_Warehouse/listdiscounthistory">Lịch sử mã giảm giá</a>
                                             </li>
                                         </ul>
                                     </li>
@@ -350,69 +333,37 @@
                                     <li class="sidebar-list">
                                         <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
                                             <i class="ri-price-tag-3-line"></i>
-                                            <span>Coupons</span>
+                                            <span>Giảm giá sản phẩm</span>
                                         </a>
                                         <ul class="sidebar-submenu">
                                             <li>
-                                                <a href="/Gr1_Warehouse/couponlist">Coupon List</a>
+                                                <a href="/Gr1_Warehouse/couponproductlist">Danh sách giảm giá</a>
                                             </li>
 
                                             <li>
-                                                <a href="/Gr1_Warehouse/createcoupon">Create Coupon</a>
+                                                <a href="/Gr1_Warehouse/createproductcoupon">Tạo giảm giá</a>
                                             </li>
 
                                             <li>
-                                                <a href="/Gr1_Warehouse/listdiscounthistory">History Coupon Detail</a>
+                                                <a href="/Gr1_Warehouse/listdiscountproducthistory">Lịch sử giảm giá</a>
                                             </li>
                                         </ul>
                                     </li>
 
                                     <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="taxes.html">
-                                            <i class="ri-price-tag-3-line"></i>
-                                            <span>Tax</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="product-review.html">
-                                            <i class="ri-star-line"></i>
-                                            <span>Product Review</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="support-ticket.html">
-                                            <i class="ri-phone-line"></i>
-                                            <span>Support Ticket</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-settings-line"></i>
-                                            <span>Settings</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="/Gr1_Warehouse/profilesettingadmin">Profile Setting</a>  
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="reports.html">
+                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/profilesettingadmin">
                                             <i class="ri-file-chart-line"></i>
-                                            <span>Reports</span>
+                                            <span>Cài đặt</span>
+                                        </a>
+                                    </li>                                 
+
+                                    <li class="sidebar-list">
+                                        <a class="sidebar-link sidebar-title link-nav" href="/dashboard/report.jsp">
+                                            <i class="ri-file-chart-line"></i>
+                                            <span>Báo cáo</span>
                                         </a>
                                     </li>
 
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="list-page.html">
-                                            <i class="ri-list-check"></i>
-                                            <span>List Page</span>
-                                        </a>
-                                    </li>
                                 </ul>
                             </div>
 
@@ -438,7 +389,6 @@
                                 <button type="button" class="btn btn--no" data-bs-dismiss="modal">No</button>
                                 <a href="<%= request.getContextPath() %>/logout" class="btn btn--yes btn-primary">Yes</a>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -470,10 +420,8 @@
 
         <!-- Plugins JS -->
         <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
-
-        <!--        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
-                <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
-
+<!--        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
+        <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
 
         <!-- Apexchar js -->
         <script src="${pageContext.request.contextPath}/assets2/js/chart/apex-chart/apex-chart1.js"></script>

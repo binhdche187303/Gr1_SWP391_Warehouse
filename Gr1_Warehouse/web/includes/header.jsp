@@ -165,7 +165,6 @@
                                             <i class="fa-solid fa-angle-down"></i>
                                         </button>
                                     </div>
-
                                     <div class="search-box">
                                         <div class="input-group d-flex align-items-center">
                                             <form action="shop" method="get" class="d-flex w-100">
@@ -709,7 +708,6 @@
 
                                                                                 <li class="nav-item dropdown">
                                                                                     <a class="nav-link " href="${pageContext.request.contextPath}/shop">Shop</a>
-
                                                                                 </li>                        
 
                                                                                 <li class="nav-item dropdown">

@@ -94,6 +94,7 @@ public class DiscountDAO extends DBContext {
                 + "WHERE discount_id = ?";
 
         connection.setAutoCommit(false);
+        double oldPercentage = 0;
         try {
             // Get current discount information
             String getCurrentSql = "SELECT discount_percentage, max_uses FROM dbo.Discounts WHERE discount_id = ?";
@@ -101,7 +102,6 @@ public class DiscountDAO extends DBContext {
             getCurrentSt.setInt(1, discountId);
             ResultSet rs = getCurrentSt.executeQuery();
 
-            double oldPercentage = 0;
             Integer currentMaxUses = null;
 
             if (rs.next()) {
@@ -297,7 +297,5 @@ public class DiscountDAO extends DBContext {
 
 //        Discounts d = dd.getDiscountById(1);
 //        System.out.println(d);
-
-    
     }
 }
