@@ -19,6 +19,7 @@ import ulti.MD5Hash;
  */
 public class UserDAO extends DBContext {
 
+    
     // Phương thức login
     public User login(String identifier, String password) {
         String sql = "SELECT u.user_id, u.username, u.password, u.fullname, u.phone, u.email, u.role_id, u.status, u.address, r.role_name "
