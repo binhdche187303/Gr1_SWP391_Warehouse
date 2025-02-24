@@ -100,6 +100,16 @@ public class Products {
         this.variants = variants;
     }
 
+    public Products(int productId) {
+        this.productId = productId;
+    }
+
+
+    public Products(int productId, String productName) {
+        this.productId = productId;
+        this.productName = productName;
+    }
+    
     @Override
     public String toString() {
         return "Products{" + "productId=" + productId + ", productName=" + productName + ", origin=" + origin + ", description=" + description + ", cate=" + cate + ", brand=" + brand + ", images=" + images + ", variants=" + variants + '}';

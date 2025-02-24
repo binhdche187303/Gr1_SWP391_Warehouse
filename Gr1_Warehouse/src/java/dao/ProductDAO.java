@@ -108,26 +108,25 @@ public class ProductDAO extends DBContext {
     }
 
     public int getStockByProductIdAndSize(int productId, int sizeId) {
-    String query = "SELECT COALESCE(SUM(ib.quantity), 0) AS stock " +
-                   "FROM ProductVariants pv " +
-                   "LEFT JOIN InventoryBatches ib ON pv.variant_id = ib.variant_id " +
-                   "AND ib.status = 'In Stock' " +
-                   "WHERE pv.product_id = ? AND pv.size_id = ? " +
-                   "GROUP BY pv.product_id, pv.size_id";
+        String query = "SELECT COALESCE(SUM(ib.quantity), 0) AS stock "
+                + "FROM ProductVariants pv "
+                + "LEFT JOIN InventoryBatches ib ON pv.variant_id = ib.variant_id "
+                + "AND ib.status = 'In Stock' "
+                + "WHERE pv.product_id = ? AND pv.size_id = ? "
+                + "GROUP BY pv.product_id, pv.size_id";
 
-    try (PreparedStatement ps = connection.prepareStatement(query)) {
-        ps.setInt(1, productId);
-        ps.setInt(2, sizeId);
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            return rs.getInt("stock");
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, productId);
+            ps.setInt(2, sizeId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("stock");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return 0;
     }
-    return 0;
-}
-
 
     public Products getDetails(int productId) {
         Products product = null;
@@ -565,18 +564,19 @@ public class ProductDAO extends DBContext {
 
         return productsList;
     }
+
     public List<ProductDTO> getProductsBySupplier(String supplierCode) {
         List<ProductDTO> products = new ArrayList<>();
-        String sql = "SELECT p.product_name, pv.sku " +
-                     "FROM Products p " +
-                     "JOIN ProductVariants pv ON p.product_id = pv.product_id " +
-                     "JOIN Brands b ON p.brand_id = b.brand_id " +
-                     "JOIN SupplierBrand sb ON b.brand_id = sb.brand_id " +
-                     "JOIN Suppliers s ON sb.supplier_id = s.supplier_id " +
-                     "WHERE s.supplier_code = ? " +
-                     "GROUP BY p.product_id, p.product_name, pv.sku";
+        String sql = "SELECT p.product_name, pv.sku "
+                + "FROM Products p "
+                + "JOIN ProductVariants pv ON p.product_id = pv.product_id "
+                + "JOIN Brands b ON p.brand_id = b.brand_id "
+                + "JOIN SupplierBrand sb ON b.brand_id = sb.brand_id "
+                + "JOIN Suppliers s ON sb.supplier_id = s.supplier_id "
+                + "WHERE s.supplier_code = ? "
+                + "GROUP BY p.product_id, p.product_name, pv.sku";
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) { 
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, supplierCode);
             ResultSet rs = ps.executeQuery();
 
@@ -592,5 +592,30 @@ public class ProductDAO extends DBContext {
         }
 
         return products;
+    }
+
+    //Get product by subName--Tuan
+    public List<Products> getProductsByName(String sub_name) {
+        List<Products> list = new ArrayList<>();
+        String query = "SELECT * FROM dbo.Products\n"
+                + "WHERE product_name LIKE ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, "%" + sub_name + "%");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Products p = new Products();
+                p.setProductId(rs.getInt("product_id"));
+                p.setProductName(rs.getString("product_name"));
+                list.add(p);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error fetching products: " + e.getMessage());
+        }
+
+        return list;
     }
 }
