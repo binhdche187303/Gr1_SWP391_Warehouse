@@ -119,7 +119,8 @@ public class Shop extends HttpServlet {
         int pageSize = 9; // Mỗi trang hiển thị 9 sản phẩm
         int currentPage = Integer.parseInt(page);
         int startProduct = (currentPage - 1) * pageSize;
-        int totalProducts = filteredProducts.size();
+        int totalProducts = filteredProducts.size(); // Đảm bảo là filteredProducts
+        System.out.println("Filtered Products Size: " + filteredProducts.size());
 
         int maxPage = (int) Math.ceil((double) totalProducts / pageSize);
         List<Products> paginatedList = pdao.getListProductsPaginated(filteredProducts, startProduct, pageSize);
@@ -149,6 +150,10 @@ public class Shop extends HttpServlet {
             }
             paginationPages.add(maxPage);
         }
+        System.out.println("Paginated List Size: " + paginatedList.size());
+        for (Products product : paginatedList) {
+            System.out.println("Product ID: " + product.getProductId() + ", Name: " + product.getProductName());
+        }
         request.setAttribute("paginationPages", paginationPages); // Truyền trang cần hiển thị
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("maxPage", maxPage);
@@ -156,10 +161,62 @@ public class Shop extends HttpServlet {
 // Đẩy dữ liệu lên JSP
         request.setAttribute("p_list", paginatedList);
         request.setAttribute("price_range", priceRange);
+
+        String productIdParam = request.getParameter("productId");
+        if (productIdParam != null && !productIdParam.trim().isEmpty()) {
+            try {
+                int productId = Integer.parseInt(productIdParam);
+                Products product = pdao.getProductById(productId);
+
+                if (product != null) {
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+                    PrintWriter out = response.getWriter();
+                    out.print("{");
+                    out.print("\"productId\": " + product.getProductId() + ",");
+                    out.print("\"productName\": \"" + product.getProductName() + "\",");
+                    out.print("\"brandName\": \"" + (product.getBrand() != null ? product.getBrand().getBrand_name() : "NULL") + "\",");
+                    out.print("\"sku\": \"" + (product.getSku() != null ? product.getSku() : "NULL") + "\",");
+                    out.print("\"description\": \"" + product.getDescription() + "\",");
+                    out.print("\"origin\": \"" + product.getOrigin() + "\",");
+                    out.print("\"firstImageUrl\": \"" + product.getImages().get(0).getImage_url() + "\",");
+
+                    // Include Category (cate) in JSON response
+                    out.print("\"category\": \"" + (product.getCate() != null && product.getCate().getCategory_name() != null ? product.getCate().getCategory_name() : "NULL") + "\",");
+
+                    out.print("\"variants\": [");
+                    for (int i = 0; i < product.getVariants().size(); i++) {
+                        if (i > 0) {
+                            out.print(",");
+                        }
+                        out.print("{\"sizeId\": " + product.getVariants().get(i).getSize().getSize_id()
+                                + ", \"sizeName\": \"" + product.getVariants().get(i).getSize().getSize_name() + "\""
+                                + ", \"price\": " + product.getVariants().get(i).getPrice() + "}");
+                    }
+                    out.print("],");
+
+                    // List images
+                    out.print("\"images\": [");
+                    for (int i = 0; i < product.getImages().size(); i++) {
+                        if (i > 0) {
+                            out.print(",");
+                        }
+                        out.print("{\"imageUrl\": \"" + product.getImages().get(i).getImage_url() + "\"}");
+                    }
+                    out.print("]");
+
+                    out.print("}");
+                    out.flush();
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid productId format: " + productIdParam);
+            }
+        }
+
         RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/shop.jsp");
         dispatcher.forward(request, response);
     }
-
     /**
      * Handles the HTTP <code>POST</code> method.
      *

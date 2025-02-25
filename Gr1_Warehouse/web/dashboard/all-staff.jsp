@@ -124,11 +124,6 @@
                                     <div class="card-body">
                                         <div class="title-header option-title d-flex justify-content-between align-items-center">
                                             <h5>All Staff</h5>
-                                            <form class="d-inline-flex">
-                                                <a href="add-new-user.html" class="align-items-center btn btn-theme d-flex">
-                                                    <i data-feather="plus"></i>Thêm nhân viên
-                                                </a>
-                                            </form>
                                         </div>
                                         <div class="table-responsive table-product">
                                             <table class="table all-package theme-table" id="table_id">
@@ -199,7 +194,7 @@
                     </div>
                     <!-- Bọc hai form trong một div có class d-flex justify-content-end -->
                     <div class="d-flex justify-content-end gap-3 mt-3">
-                        <!-- Button xuất file nhân viên -->
+                        <!-- Form upload file Excel -->
                         <form action="addstaff" method="post" enctype="multipart/form-data" 
                               class="d-flex align-items-center bg-light p-2 rounded shadow-sm" style="max-width: 400px;">
                             <div class="input-group">

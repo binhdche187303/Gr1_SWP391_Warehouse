@@ -72,7 +72,7 @@
                 <div class="row">
                     <div class="col-xxl-6 col-xl-5 col-lg-6 d-lg-block d-none ms-auto">
                         <div class="image-contain">
-                            <img src="${pageContext.request.contextPath}/assets/images/inner-page/forgot.png" class="img-fluid" alt=""/>
+                            <img src="../assets/images/inner-page/forgot.png" class="img-fluid" alt=""/>
                         </div>
                     </div>
 

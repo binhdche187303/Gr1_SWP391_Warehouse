@@ -14,9 +14,9 @@ public class Products {
 
     private int productId;
     private String productName;
+    private String sku;
     private String origin;
     private String description;
-
     private Categories cate;
     private Brands brand;
     private List<Images> images;
@@ -25,9 +25,20 @@ public class Products {
     public Products() {
     }
 
-    public Products(int productId, String productName, String origin, String description, Categories cate, Brands brand, List<Images> images, List<ProductVariants> variants) {
+    public Products(int productId) {
+        this.productId = productId;
+    }
+
+
+    public Products(int productId, String productName) {
         this.productId = productId;
         this.productName = productName;
+    }
+
+    public Products(int productId, String productName, String sku, String origin, String description, Categories cate, Brands brand, List<Images> images, List<ProductVariants> variants) {
+        this.productId = productId;
+        this.productName = productName;
+        this.sku = sku;
         this.origin = origin;
         this.description = description;
         this.cate = cate;
@@ -50,6 +61,14 @@ public class Products {
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 
     public String getOrigin() {
@@ -100,23 +119,9 @@ public class Products {
         this.variants = variants;
     }
 
-    public Products(int productId) {
-        this.productId = productId;
-    }
-
-
-    public Products(int productId, String productName) {
-        this.productId = productId;
-        this.productName = productName;
-    }
-    
     @Override
     public String toString() {
-        return "Products{" + "productId=" + productId + ", productName=" + productName + ", origin=" + origin + ", description=" + description + ", cate=" + cate + ", brand=" + brand + ", images=" + images + ", variants=" + variants + '}';
+        return "Products{" + "productId=" + productId + ", productName=" + productName + ", sku=" + sku + ", origin=" + origin + ", description=" + description + ", cate=" + cate + ", brand=" + brand + ", images=" + images + ", variants=" + variants + '}';
     }
-
-
-    
-
 
 }

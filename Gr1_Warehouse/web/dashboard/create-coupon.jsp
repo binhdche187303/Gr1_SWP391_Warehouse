@@ -66,7 +66,7 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <div class="title-header option-title">
-                                                    <h5>Create Coupon</h5>
+                                                    <h5>Create Coupon Order</h5>
                                                 </div>
                                                 <div class="tab-content" id="pills-tabContent">
                                                     <div class="tab-pane fade show active" id="pills-home" role="tabpanel">

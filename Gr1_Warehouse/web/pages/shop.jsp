@@ -7,10 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -290,7 +287,6 @@
 
                             <div class="top-filter-menu">
                                 <div class="category-dropdown">
-
                                     <form action="shop" method="get">
                                         <!-- Giữ lại các giá trị của các tham số category_id (dạng danh sách) -->
                                         <c:if test="${not empty paramValues.category_id}">
@@ -298,7 +294,6 @@
                                                 <input type="hidden" name="category_id" value="${catId}" />
                                             </c:forEach>
                                         </c:if>
-
                                         <!-- Giữ lại các giá trị của các tham số brand_id (dạng danh sách) -->
                                         <c:if test="${not empty paramValues.brand_id}">
                                             <c:forEach var="brandId" items="${paramValues.brand_id}">
@@ -320,9 +315,26 @@
                                             </div>
                                         </form>
 
+                                        <!-- Giữ lại các giá trị của các tham số brand_id (dạng danh sách) -->
+                                        <c:if test="${not empty paramValues.brand_id}">
+                                            <c:forEach var="brandId" items="${paramValues.brand_id}">
+                                                <input type="hidden" name="brand_id" value="${brandId}" />
+                                            </c:forEach>
+                                        </c:if>
 
+                                        <!-- Giữ lại giá trị của price_range (nếu có) -->
+                                        <c:if test="${not empty param.price_range}">
+                                            <input type="hidden" name="price_range" value="${param['price_range']}" />
+                                        </c:if>
 
-
+                                        <div class="form-group">
+                                            <select name="sortOrder" class="form-select" onchange="this.form.submit()">
+                                                <option value="" disabled selected>Giá : </option>
+                                                <option value="asc" <c:if test="${param.sortOrder == 'asc'}">selected</c:if>>Giá: Thấp - Cao</option>
+                                                <option value="desc" <c:if test="${param.sortOrder == 'desc'}">selected</c:if>>Giá: Cao - Thấp</option>
+                                                </select>
+                                            </div>
+                                        </form>
                                     </div>
 
                                     <div class="grid-option d-none d-md-block">
@@ -357,19 +369,41 @@
                                     <div class="product-box-3 h-100 wow fadeInUp">
                                         <div class="product-header">
                                             <div class="product-image">
-                                                <a href="shopDetails?productId=${product.productId}">
+                                                <a href="product-left-thumbnail.html">
                                                     <c:forEach var="image" items="${product.images}">
                                                         <img src="${pageContext.request.contextPath}/assets/images/img_products/${image.image_url.replaceFirst('^assets/images/img_products/', '')}" alt="${product.productName}" class="img-fluid blur-up lazyload">
                                                     </c:forEach>
                                                 </a>
 
-                                   
+                                                <ul class="product-option">
+                                                    <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
+                                                        <!-- Cập nhật data-bs-target để liên kết với modal của từng sản phẩm -->
+                                                        <a href="javascript:void(0);" onclick="viewProduct(${product.productId})" data-bs-toggle="modal" data-bs-target="#view-${product.productId}">
+                                                            <i class="fa fa-eye"></i>
+                                                        </a>
+
+
+
+                                                    </li>
+
+                                                    <li data-bs-toggle="tooltip" data-bs-placement="top" title="Compare">
+                                                        <a href="compare.html">
+                                                            <i data-feather="refresh-cw"></i>
+                                                        </a>
+                                                    </li>
+
+                                                    <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
+                                                        <a href="wishlist.html" class="notifi-wishlist">
+                                                            <i data-feather="heart"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
                                             </div>
                                         </div>
                                         <div class="product-footer">
                                             <div class="product-detail">
                                                 <span class="span-name">${product.cate.category_name}</span>
-                                                <a href="shopDetails?productId=${product.productId}">
+                                                <a href="product-left-thumbnail.html">
                                                     <h5 class="name">${product.productName}</h5>
                                                 </a>
                                                 <p class="text-content mt-1 mb-2 product-content">${product.description}</p>
@@ -393,7 +427,24 @@
                                                             <fmt:formatNumber value="${variant.price}" type="currency" currencySymbol="₫" />
                                                         </c:forEach>
                                                     </span> <del>$15.15</del></h5>
-
+                                                <div class="add-to-cart-box bg-white">
+                                                    <button class="btn btn-add-cart addcart-button">Add
+                                                        <span class="add-icon bg-light-gray">
+                                                            <i class="fa-solid fa-plus"></i>
+                                                        </span>
+                                                    </button>
+                                                    <div class="cart_qty qty-box">
+                                                        <div class="input-group bg-white">
+                                                            <button type="button" class="qty-left-minus bg-gray" data-type="minus" data-field="">
+                                                                <i class="fa fa-minus" aria-hidden="true"></i>
+                                                            </button>
+                                                            <input class="form-control input-number qty-input" type="text" name="quantity" value="0">
+                                                            <button type="button" class="qty-right-plus bg-gray" data-type="plus" data-field="">
+                                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -439,14 +490,8 @@
                                         </div>
                                     </div>
                                 </div>
-
-
-
-
                             </c:forEach>
-
                         </div>
-
                         <%@ include file="/includes/paging.jsp" %>
 
                     </div>
@@ -666,61 +711,48 @@
         <div class="bg-overlay"></div>
         <!-- Bg overlay End -->
 
-
         <script>
-            function viewProduct(productId) {
-                fetch(`/Gr1_Warehouse/shop?productId=` + productId)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.error) {
-                                console.error('Lỗi:', data.error);
-                                return;
-                            }
 
-                            // Cập nhật thông tin sản phẩm
-                            document.getElementById('modal-product-name').textContent = data.productName;
-                            document.getElementById('modal-product-brand').textContent = data.brandName || "N/A";
-                            document.getElementById('modal-product-code').textContent = data.sku || "N/A";
-                            document.getElementById('modal-product-description').textContent = data.description;
-                            document.getElementById('modal-product-price').textContent =
-                                    new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(data.variants[0].price);
+            $(function () {
+                var $range = $(".js-range-slider"),
+                        $inputFrom = $(".js-input-from"),
+                        $inputTo = $(".js-input-to"),
+                        instance,
+                        min = 0,
+                        max = 1000000000,
+                        from = localStorage.getItem("rangeFrom") ? parseInt(localStorage.getItem("rangeFrom")) : 0,
+                        to = localStorage.getItem("rangeTo") ? parseInt(localStorage.getItem("rangeTo")) : 5000000;
 
-                            // Cập nhật danh sách size (without price)
-                            let sizeSelect = document.getElementById('modal-product-size');
-                            sizeSelect.innerHTML = ''; // Xóa size cũ
-                            data.variants.forEach(variant => {
-                                let option = document.createElement('option');
-                                option.value = variant.sizeId;
-                                option.textContent = variant.sizeName; // Only size name here
-                                sizeSelect.appendChild(option);
-                            });
+                $range.ionRangeSlider({
+                    type: "double",
+                    min: min,
+                    max: max,
+                    from: from, // Gán giá trị đã lưu
+                    to: to, // Gán giá trị đã lưu
+                    prefix: '$. ',
+                    onStart: updateInputs,
+                    onChange: updateInputs,
+                    onFinish: saveValues, // Lưu khi người dùng kết thúc thao tác
+                    step: 50000,
+                    prettify_enabled: true,
+                    prettify_separator: ".",
+                    values_separator: " - ",
+                    force_edges: true
+                });
 
-                            // Cập nhật hình ảnh chính
-                            document.getElementById('modal-product-image').src = data.firstImageUrl;
-                            document.getElementById('modal-product-image').style.width = '300px'; // Adjust the width as needed
+                instance = $range.data("ionRangeSlider");
 
-                            // Cập nhật danh sách thumbnail
-                            let thumbnailContainer = document.getElementById('modal-thumbnails');
-                            thumbnailContainer.innerHTML = ''; // Xóa ảnh cũ
-                            data.images.forEach(img => {
-                                let imgElement = document.createElement('img');
-                                imgElement.src = img.imageUrl;
-                                imgElement.classList.add('img-thumbnail', 'me-2');
-                                imgElement.style.width = "50px";
-                                imgElement.onclick = () => {
-                                    document.getElementById('modal-product-image').src = img.imageUrl;
-                                };
-                                thumbnailContainer.appendChild(imgElement);
-                            });
+                function updateInputs(data) {
+                    $inputFrom.val(data.from);
+                    $inputTo.val(data.to);
+                }
 
-                            // Cập nhật link "View More Details"
-                            document.getElementById('modal-view-more').setAttribute('onclick', `location.href='product-detail.jsp?productId=${data.productId}'`);
+                function saveValues(data) {
+                    localStorage.setItem("rangeFrom", data.from);
+                    localStorage.setItem("rangeTo", data.to);
+                }
+            });
 
-                            // Mở modal
-                            new bootstrap.Modal(document.getElementById('quickViewModal')).show();
-                        })
-                        .catch(error => console.error('Lỗi khi lấy dữ liệu:', error));
-            }
         </script>
 
 
@@ -764,47 +796,6 @@
         <!-- Script JS -->
         <script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
 
-        <script>
-            $(function () {
-                var $range = $(".js-range-slider"),
-                        $inputFrom = $(".js-input-from"),
-                        $inputTo = $(".js-input-to"),
-                        instance,
-                        min = 0,
-                        max = 1000000,
-                        from = localStorage.getItem("rangeFrom") ? parseInt(localStorage.getItem("rangeFrom")) : 0,
-                        to = localStorage.getItem("rangeTo") ? parseInt(localStorage.getItem("rangeTo")) : 500000;
-
-                $range.ionRangeSlider({
-                    type: "double",
-                    min: min,
-                    max: max,
-                    from: from, // Gán giá trị đã lưu
-                    to: to, // Gán giá trị đã lưu
-                    prefix: '$. ',
-                    onStart: updateInputs,
-                    onChange: updateInputs,
-                    onFinish: saveValues, // Lưu khi người dùng kết thúc thao tác
-                    step: 50000,
-                    prettify_enabled: true,
-                    prettify_separator: ".",
-                    values_separator: " - ",
-                    force_edges: true
-                });
-
-                instance = $range.data("ionRangeSlider");
-
-                function updateInputs(data) {
-                    $inputFrom.val(data.from);
-                    $inputTo.val(data.to);
-                }
-
-                function saveValues(data) {
-                    localStorage.setItem("rangeFrom", data.from);
-                    localStorage.setItem("rangeTo", data.to);
-                }
-            });
-        </script>
     </body>
 
 </html>

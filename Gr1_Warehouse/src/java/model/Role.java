@@ -9,6 +9,7 @@ package model;
  * @author Dell
  */
 public class Role {
+
     private int roleId;
     private String roleName;
 
@@ -18,7 +19,7 @@ public class Role {
     public Role(int roleId) {
         this.roleId = roleId;
     }
-    
+
     public Role(int roleId, String roleName) {
         this.roleId = roleId;
         this.roleName = roleName;
@@ -39,9 +40,5 @@ public class Role {
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
-    
-    
-    
-    
-    
+
 }

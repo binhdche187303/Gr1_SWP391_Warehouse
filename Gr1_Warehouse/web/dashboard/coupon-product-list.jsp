@@ -73,6 +73,34 @@
             .coupon-list-table td:nth-child(10) {
                 width: 12%; /* Đảm bảo cột Action không bị chồng lên */
             }
+
+            /* Pagination Styling */
+            .pagination-container {
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+
+            .pagination .page-item.active .page-link {
+                background-color: #0da487;
+                border-color: #0da487;
+            }
+
+            .pagination .page-link {
+                color: #0da487;
+            }
+
+            .pagination .page-link:hover {
+                background-color: #e9ecef;
+                border-color: #dee2e6;
+                color: #0da487;
+            }
+
+            .pagination .page-item.disabled .page-link {
+                color: #6c757d;
+                pointer-events: none;
+                background-color: #fff;
+                border-color: #dee2e6;
+            }
         </style>
 
     </head>
@@ -267,76 +295,242 @@
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
 
         <script>
-            $(document).ready(function () {
-                let timeoutId;
 
-                $('#searchBox').on('input', function () {
-                    clearTimeout(timeoutId);
-                    timeoutId = setTimeout(() => {
-                        const searchValue = $(this).val();
+            /**
+             * Product List Pagination Implementation
+             * - Adds pagination to the product list table with exactly 10 products per page
+             * - Fixed pagination calculation and display
+             */
 
-                        $.ajax({
-                            url: 'couponproductlist',
-                            method: 'POST',
-                            data: {
-                                sub_name: searchValue
-                            },
-                            success: function (response) {
-                                // Log response for debugging
-                                console.log('Response:', response);
+            document.addEventListener('DOMContentLoaded', function () {
+                // Pagination configuration
+                const itemsPerPage = 10;
+                let currentPage = 1;
+                let allProducts = [];
 
-                                // Parse JSON if response is a string
-                                const products = typeof response === 'string' ? JSON.parse(response) : response;
+                // Initial load - fetch all products and implement pagination
+                function initializePagination() {
+                    // Get initial list of products from the table
+                    allProducts = [];
+                    const rows = document.querySelectorAll('#table_id tbody tr');
 
-                                // Get table body
-                                const tbody = $('#table_id tbody');
-                                tbody.empty();
+                    rows.forEach(function (row) {
+                        const productName = row.querySelector('td:first-child').textContent;
+                        const link = row.querySelector('a:first-child');
+                        const href = link.getAttribute('href');
+                        const productId = href.split('product_id=')[1];
 
-                                // Add new rows
-                                if (Array.isArray(products)) {
-                                    products.forEach(product => {
-                                        const row = document.createElement('tr');
+                        allProducts.push({
+                            productName: productName,
+                            productId: productId
+                        });
+                    });
 
-                                        // Product name cell
-                                        const nameCell = document.createElement('td');
-                                        nameCell.className = 'theme-color';
-                                        nameCell.textContent = product.productName;
-                                        row.appendChild(nameCell);
+                    // Render the pagination
+                    renderPagination();
+                    showPage(1);
+                }
 
-                                        // Define href variables
-                                        const hrefView = `discountproductdetail?product_id=${product.productId}`;
-                                        const hrefEdit = `createcouponproduct?product_id=${product.productId}`;
+                // Render pagination controls
+                function renderPagination() {
+                    const pageCount = Math.ceil(allProducts.length / itemsPerPage);
 
-                                        // Actions cell
-                                        const actionsCell = document.createElement('td');
-                                        actionsCell.innerHTML = `
-                                            <ul>
-                                                <a href="${hrefView}" class="view-discount-history">
-                                                    <i class="ri-eye-line"></i>
-                                                </a>
-                                                <a href="${hrefEdit}" class="view-discount-history">
-                                                    <i class="ri-add-circle-line" style="color: rgb(116, 125, 198);"></i>
-                                                </a>
-                                            </ul>
-                                        `;
-                                        row.appendChild(actionsCell);
+                    // Clear existing pagination if any
+                    const existingPagination = document.querySelector('.pagination-container');
+                    if (existingPagination) {
+                        existingPagination.remove();
+                    }
 
-                                        tbody.append(row);
-                                    });
+                    // Don't show pagination if only one page or no products
+                    if (pageCount <= 1) {
+                        return;
+                    }
+
+                    // Create pagination container
+                    const paginationContainer = document.createElement('div');
+                    paginationContainer.className = 'pagination-container mt-4 d-flex justify-content-center';
+
+                    let paginationHTML = '<ul class="pagination">';
+                    paginationHTML += '<li class="page-item" id="prevPage">';
+                    paginationHTML += '<a class="page-link" href="#" aria-label="Previous">';
+                    paginationHTML += '<span aria-hidden="true">&laquo;</span>';
+                    paginationHTML += '</a></li>';
+
+                    // Add page numbers
+                    for (let i = 1; i <= pageCount; i++) {
+                        paginationHTML += '<li class="page-item" data-page="' + i + '">';
+                        paginationHTML += '<a class="page-link" href="#">' + i + '</a>';
+                        paginationHTML += '</li>';
+                    }
+
+                    paginationHTML += '<li class="page-item" id="nextPage">';
+                    paginationHTML += '<a class="page-link" href="#" aria-label="Next">';
+                    paginationHTML += '<span aria-hidden="true">&raquo;</span>';
+                    paginationHTML += '</a></li>';
+                    paginationHTML += '</ul>';
+
+                    paginationContainer.innerHTML = paginationHTML;
+
+                    // Append pagination controls after the table
+                    const table = document.getElementById('table_id');
+                    table.parentNode.insertBefore(paginationContainer, table.nextSibling);
+
+                    // Add event listeners to pagination controls
+                    const pageItems = document.querySelectorAll('.page-item');
+                    pageItems.forEach(function (item) {
+                        item.addEventListener('click', function (e) {
+                            e.preventDefault();
+
+                            if (this.id === 'prevPage') {
+                                if (currentPage > 1) {
+                                    showPage(currentPage - 1);
                                 }
-                            },
-                            error: function (xhr, status, error) {
-                                console.error('Error:', error);
-                                console.log('Response:', xhr.responseText);
+                            } else if (this.id === 'nextPage') {
+                                if (currentPage < pageCount) {
+                                    showPage(currentPage + 1);
+                                }
+                            } else {
+                                const page = parseInt(this.getAttribute('data-page'));
+                                showPage(page);
                             }
                         });
-                    }, 300);
-                });
+                    });
+                }
+
+                // Show specific page of products with exactly 10 items per page
+                function showPage(page) {
+                    currentPage = page;
+
+                    // Calculate start and end indices for this page
+                    const startIndex = (page - 1) * itemsPerPage;
+                    const endIndex = Math.min(startIndex + itemsPerPage, allProducts.length);
+
+                    // Only show items for this specific page
+                    const productsForThisPage = allProducts.slice(startIndex, endIndex);
+
+                    // Clear the table
+                    const tbody = document.querySelector('#table_id tbody');
+                    tbody.innerHTML = '';
+
+                    // Add products for current page
+                    productsForThisPage.forEach(function (product) {
+                        const row = document.createElement('tr');
+
+                        // Product name cell
+                        const nameCell = document.createElement('td');
+                        nameCell.className = 'theme-color';
+                        nameCell.textContent = product.productName;
+                        row.appendChild(nameCell);
+
+                        // Define href variables
+                        const hrefView = "discountproductdetail?product_id=" + product.productId;
+                        const hrefEdit = "createcouponproduct?product_id=" + product.productId;
+
+                        // Actions cell
+                        const actionsCell = document.createElement("td");
+                        let actionsHTML = '<ul>';
+                        actionsHTML += '<a href="' + hrefView + '" class="view-discount-history">';
+                        actionsHTML += '<i class="ri-eye-line"></i>';
+                        actionsHTML += '</a>';
+                        actionsHTML += '<a href="' + hrefEdit + '" class="view-discount-history">';
+                        actionsHTML += '<i class="ri-add-circle-line" style="color: rgb(116, 125, 198);"></i>';
+                        actionsHTML += '</a>';
+                        actionsHTML += '</ul>';
+
+                        actionsCell.innerHTML = actionsHTML;
+                        row.appendChild(actionsCell);
+                        tbody.appendChild(row);
+                    });
+
+                    // Update active page
+                    const pageItems = document.querySelectorAll('.page-item');
+                    pageItems.forEach(function (item) {
+                        item.classList.remove('active');
+                        if (item.getAttribute('data-page') == page) {
+                            item.classList.add('active');
+                        }
+                    });
+
+                    // Update prev/next buttons
+                    const pageCount = Math.ceil(allProducts.length / itemsPerPage);
+                    const prevButton = document.getElementById('prevPage');
+                    const nextButton = document.getElementById('nextPage');
+
+                    if (prevButton) {
+                        if (page === 1) {
+                            prevButton.classList.add('disabled');
+                        } else {
+                            prevButton.classList.remove('disabled');
+                        }
+                    }
+
+                    if (nextButton) {
+                        if (page === pageCount) {
+                            nextButton.classList.add('disabled');
+                        } else {
+                            nextButton.classList.remove('disabled');
+                        }
+                    }
+                }
+
+                // Handle search with vanilla JavaScript
+                let timeoutId;
+                const searchBox = document.getElementById('searchBox');
+
+                if (searchBox) {
+                    searchBox.addEventListener('input', function () {
+                        clearTimeout(timeoutId);
+                        timeoutId = setTimeout(function () {
+                            const searchValue = searchBox.value;
+
+                            // Create XMLHttpRequest
+                            const xhr = new XMLHttpRequest();
+                            xhr.open('POST', 'couponproductlist', true);
+                            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+                            xhr.onload = function () {
+                                if (xhr.status === 200) {
+                                    console.log('Response:', xhr.responseText);
+
+                                    // Parse JSON response
+                                    try {
+                                        // Update the global products array
+                                        allProducts = JSON.parse(xhr.responseText);
+                                        console.log('Total products loaded:', allProducts.length);
+
+                                        // Reset to first page and re-render pagination
+                                        currentPage = 1;
+                                        renderPagination();
+                                        showPage(1);
+                                    } catch (e) {
+                                        console.error('Error parsing JSON:', e);
+                                    }
+                                } else {
+                                    console.error('Error:', xhr.statusText);
+                                }
+                            };
+
+                            xhr.onerror = function () {
+                                console.error('Network Error');
+                            };
+
+                            // Send request
+                            xhr.send('sub_name=' + encodeURIComponent(searchValue));
+                        }, 300);
+                    });
+                }
 
                 // Prevent form submission
-                $('#searchBox').closest('form').on('submit', function (e) {
-                    e.preventDefault();
-                });
+                const searchForm = searchBox ? searchBox.closest('form') : null;
+                if (searchForm) {
+                    searchForm.addEventListener('submit', function (e) {
+                        e.preventDefault();
+                    });
+                }
+
+                // Initialize pagination on page load
+                initializePagination();
             });
         </script>
 

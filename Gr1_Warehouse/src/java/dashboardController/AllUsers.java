@@ -80,7 +80,6 @@ public class AllUsers extends HttpServlet {
         UserDAO ud = new UserDAO();
         String status = request.getParameter("status");
         String user_id = request.getParameter("user_id");
-
         ud.updateStatus(status, Integer.parseInt(user_id));
         List<User> listUser = ud.getAllUser();
         request.setAttribute("listUser", listUser);

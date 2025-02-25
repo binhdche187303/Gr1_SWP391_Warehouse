@@ -129,27 +129,4 @@ public class SupplierDAO extends DBContext {
         return null;
     }
 
-    public Suppliers getSupplierByCode(String supplierCode) {
-        String sql = "SELECT * FROM Suppliers WHERE supplier_code = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, supplierCode);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                Suppliers supplier = new Suppliers();
-                supplier.setSupplierId(rs.getInt("supplier_id"));
-                supplier.setSupplierName(rs.getString("supplier_name"));
-                supplier.setSupplierCode(rs.getString("supplier_code"));
-                supplier.setPhone(rs.getString("phone"));
-                supplier.setEmail(rs.getString("email"));
-                supplier.setAddress(rs.getString("address"));
-                supplier.setStatus(rs.getString("status"));
-                return supplier;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
 }

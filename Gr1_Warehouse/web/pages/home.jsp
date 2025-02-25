@@ -14,7 +14,7 @@
   <meta name="description" content="Fastkart">
   <meta name="keywords" content="Fastkart">
   <meta name="author" content="Fastkart">
-  <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/1.png" type="image/x-icon">
+  <link rel="icon" href="../assets/images/favicon/1.png" type="image/x-icon">
   <title>On-demand last-mile delivery</title>
 
   <!-- Google font -->
@@ -29,27 +29,27 @@
     rel="stylesheet">
 
   <!-- bootstrap css -->
-  <link id="rtl-link" rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/vendors/bootstrap.css">
+  <link id="rtl-link" rel="stylesheet" type="text/css" href="../assets/css/vendors/bootstrap.css">
 
   <!-- wow css -->
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/animate.min.css" />
+  <link rel="stylesheet" href="../assets/css/animate.min.css" />
 
   <!-- font-awesome css -->
-  <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/vendors/font-awesome.css">
+  <link rel="stylesheet" type="text/css" href="../assets/css/vendors/font-awesome.css">
 
   <!-- feather icon css -->
-  <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/vendors/feather-icon.css">
+  <link rel="stylesheet" type="text/css" href="../assets/css/vendors/feather-icon.css">
 
   <!-- slick css -->
-  <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/vendors/slick/slick.css">
-  <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/vendors/slick/slick-theme.css">
+  <link rel="stylesheet" type="text/css" href="../assets/css/vendors/slick/slick.css">
+  <link rel="stylesheet" type="text/css" href="../assets/css/vendors/slick/slick-theme.css">
 
   <!-- Iconly css -->
-  <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/bulk-style.css">
-  <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/vendors/animate.css">
+  <link rel="stylesheet" type="text/css" href="../assets/css/bulk-style.css">
+  <link rel="stylesheet" type="text/css" href="../assets/css/vendors/animate.css">
 
   <!-- Template css -->
-  <link id="color-link" rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/style.css">
+  <link id="color-link" rel="stylesheet" type="text/css" href="../assets/css/style.css">
 </head>
     <body>
       <%@ include file="/includes/header.jsp" %> <!-- Nhúng header -->
@@ -61,7 +61,7 @@
         <div class="col-xl-8 ratio_65">
           <div class="home-contain h-100">
             <div class="h-100">
-              <img src="${pageContext.request.contextPath}/assets/images/vegetable/banner/1.jpg" class="bg-img blur-up lazyload" alt="">
+              <img src="../assets/images/vegetable/banner/1.jpg" class="bg-img blur-up lazyload" alt="">
             </div>
             <div class="home-detail p-center-left w-75">
               <div>
@@ -82,7 +82,7 @@
           <div class="row g-4">
             <div class="col-xl-12 col-md-6">
               <div class="home-contain">
-                <img src="${pageContext.request.contextPath}/assets/images/vegetable/banner/2.jpg" class="bg-img blur-up lazyload" alt="">
+                <img src="../assets/images/vegetable/banner/2.jpg" class="bg-img blur-up lazyload" alt="">
                 <div class="home-detail p-center-left home-p-sm w-75">
                   <div>
                     <h2 class="mt-0 text-danger">45% <span class="discount text-title">OFF</span>
@@ -98,7 +98,7 @@
 
             <div class="col-xl-12 col-md-6">
               <div class="home-contain">
-                <img src="${pageContext.request.contextPath}/assets/images/vegetable/banner/3.jpg" class="bg-img blur-up lazyload" alt="">
+                <img src="../assets/images/vegetable/banner/3.jpg" class="bg-img blur-up lazyload" alt="">
                 <div class="home-detail p-center-left home-p-sm w-75">
                   <div>
                     <h3 class="mt-0 theme-color fw-bold">Healthy Food</h3>
@@ -128,7 +128,7 @@
               <ul>
                 <li>
                   <div class="category-list">
-                    <img src="${pageContext.request.contextPath}/assets/svg/1/vegetable.svg" class="blur-up lazyload" alt="">
+                    <img src="../assets/svg/1/vegetable.svg" class="blur-up lazyload" alt="">
                     <h5>
                       <a href="shop-left-sidebar.html">Vegetables & Fruit</a>
                     </h5>
@@ -136,7 +136,7 @@
                 </li>
                 <li>
                   <div class="category-list">
-                    <img src="${pageContext.request.contextPath}/assets/svg/1/cup.svg" class="blur-up lazyload" alt="">
+                    <img src="../assets/svg/1/cup.svg" class="blur-up lazyload" alt="">
                     <h5>
                       <a href="shop-left-sidebar.html">Beverages</a>
                     </h5>
@@ -144,7 +144,7 @@
                 </li>
                 <li>
                   <div class="category-list">
-                    <img src="${pageContext.request.contextPath}/assets/svg/1/meats.svg" class="blur-up lazyload" alt="">
+                    <img src="../assets/svg/1/meats.svg" class="blur-up lazyload" alt="">
                     <h5>
                       <a href="shop-left-sidebar.html">Meats & Seafood</a>
                     </h5>
@@ -152,7 +152,7 @@
                 </li>
                 <li>
                   <div class="category-list">
-                    <img src="${pageContext.request.contextPath}/assets/svg/1/breakfast.svg" class="blur-up lazyload" alt="">
+                    <img src="../assets/svg/1/breakfast.svg" class="blur-up lazyload" alt="">
                     <h5>
                       <a href="shop-left-sidebar.html">Breakfast & Dairy</a>
                     </h5>
@@ -160,7 +160,7 @@
                 </li>
                 <li>
                   <div class="category-list">
-                    <img src="${pageContext.request.contextPath}/assets/svg/1/frozen.svg" class="blur-up lazyload" alt="">
+                    <img src="../assets/svg/1/frozen.svg" class="blur-up lazyload" alt="">
                     <h5>
                       <a href="shop-left-sidebar.html">Frozen Foods</a>
                     </h5>
@@ -168,7 +168,7 @@
                 </li>
                 <li>
                   <div class="category-list">
-                    <img src="${pageContext.request.contextPath}/assets/svg/1/biscuit.svg" class="blur-up lazyload" alt="">
+                    <img src="../assets/svg/1/biscuit.svg" class="blur-up lazyload" alt="">
                     <h5>
                       <a href="shop-left-sidebar.html">Biscuits & Snacks</a>
                     </h5>
@@ -176,7 +176,7 @@
                 </li>
                 <li>
                   <div class="category-list">
-                    <img src="${pageContext.request.contextPath}/assets/svg/1/grocery.svg" class="blur-up lazyload" alt="">
+                    <img src="../assets/svg/1/grocery.svg" class="blur-up lazyload" alt="">
                     <h5>
                       <a href="shop-left-sidebar.html">Grocery & Staples</a>
                     </h5>
@@ -184,7 +184,7 @@
                 </li>
                 <li>
                   <div class="category-list">
-                    <img src="${pageContext.request.contextPath}/assets/svg/1/drink.svg" class="blur-up lazyload" alt="">
+                    <img src="../assets/svg/1/drink.svg" class="blur-up lazyload" alt="">
                     <h5>
                       <a href="shop-left-sidebar.html">Wines & Alcohol Drinks</a>
                     </h5>
@@ -192,7 +192,7 @@
                 </li>
                 <li>
                   <div class="category-list">
-                    <img src="${pageContext.request.contextPath}/assets/svg/1/milk.svg" class="blur-up lazyload" alt="">
+                    <img src="../assets/svg/1/milk.svg" class="blur-up lazyload" alt="">
                     <h5>
                       <a href="shop-left-sidebar.html">Milk & Dairies</a>
                     </h5>
@@ -200,7 +200,7 @@
                 </li>
                 <li class="pb-30">
                   <div class="category-list">
-                    <img src="${pageContext.request.contextPath}/assets/svg/1/pet.svg" class="blur-up lazyload" alt="">
+                    <img src="../assets/svg/1/pet.svg" class="blur-up lazyload" alt="">
                     <h5>
                       <a href="shop-left-sidebar.html">Pet Foods</a>
                     </h5>
@@ -235,7 +235,7 @@
 
             <div class="ratio_156 section-t-space">
               <div class="home-contain hover-effect">
-                <img src="${pageContext.request.contextPath}/assets/images/vegetable/banner/8.jpg" class="bg-img blur-up lazyload" alt="">
+                <img src="../assets/images/vegetable/banner/8.jpg" class="bg-img blur-up lazyload" alt="">
                 <div class="home-detail p-top-left home-p-medium">
                   <div>
                     <h6 class="text-yellow home-banner">Seafood</h6>
@@ -251,7 +251,7 @@
 
             <div class="ratio_medium section-t-space">
               <div class="home-contain hover-effect">
-                <img src="${pageContext.request.contextPath}/assets/images/vegetable/banner/11.jpg" class="img-fluid blur-up lazyload" alt="">
+                <img src="../assets/images/vegetable/banner/11.jpg" class="img-fluid blur-up lazyload" alt="">
                 <div class="home-detail p-top-left home-p-medium">
                   <div>
                     <h4 class="text-yellow text-exo home-banner">Organic</h4>
@@ -274,7 +274,7 @@
                   <li>
                     <div class="offer-product">
                       <a href="product-left-thumbnail.html" class="offer-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/23.png" class="blur-up lazyload" alt="">
+                        <img src="../assets/images/vegetable/product/23.png" class="blur-up lazyload" alt="">
                       </a>
 
                       <div class="offer-detail">
@@ -292,7 +292,7 @@
                   <li>
                     <div class="offer-product">
                       <a href="product-left-thumbnail.html" class="offer-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/24.png" class="blur-up lazyload" alt="">
+                        <img src="../assets/images/vegetable/product/24.png" class="blur-up lazyload" alt="">
                       </a>
 
                       <div class="offer-detail">
@@ -310,7 +310,7 @@
                   <li>
                     <div class="offer-product">
                       <a href="product-left-thumbnail.html" class="offer-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/25.png" class="blur-up lazyload" alt="">
+                        <img src="../assets/images/vegetable/product/25.png" class="blur-up lazyload" alt="">
                       </a>
 
                       <div class="offer-detail">
@@ -328,7 +328,7 @@
                   <li class="mb-0">
                     <div class="offer-product">
                       <a href="product-left-thumbnail.html" class="offer-image">
-                        <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/26.png" class="blur-up lazyload" alt="">
+                        <img src="../assets/images/vegetable/product/26.png" class="blur-up lazyload" alt="">
                       </a>
 
                       <div class="offer-detail">
@@ -360,7 +360,7 @@
 
                   <div class="review-profile">
                     <div class="review-image">
-                      <img src="${pageContext.request.contextPath}/assets/images/vegetable/review/1.jpg" class="img-fluid blur-up lazyload" alt="">
+                      <img src="../assets/images/vegetable/review/1.jpg" class="img-fluid blur-up lazyload" alt="">
                     </div>
                     <div class="review-detail">
                       <h5>Tina Mcdonnale</h5>
@@ -379,7 +379,7 @@
               <h2>Top Save Today</h2>
               <span class="title-leaf">
                 <svg class="icon-width">
-                  <use xlink:href="${pageContext.request.contextPath}/assets/svg/leaf.svg#leaf"></use>
+                  <use xlink:href="../assets/svg/leaf.svg#leaf"></use>
                 </svg>
               </span>
               <p>Don't miss this opportunity at a special discount just for this week.</p>
@@ -433,7 +433,7 @@
                       <div class="product-box">
                         <div class="product-image">
                           <a href="product-left-thumbnail.html">
-                            <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/1.png" class="img-fluid blur-up lazyload"
+                            <img src="../assets/images/vegetable/product/1.png" class="img-fluid blur-up lazyload"
                               alt="">
                           </a>
                           <ul class="product-option">
@@ -515,7 +515,7 @@
                       <div class="product-box">
                         <div class="product-image">
                           <a href="product-left-thumbnail.html">
-                            <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/2.png" class="img-fluid blur-up lazyload"
+                            <img src="../assets/images/vegetable/product/2.png" class="img-fluid blur-up lazyload"
                               alt="">
                           </a>
                           <ul class="product-option">
@@ -601,7 +601,7 @@
                       <div class="product-box">
                         <div class="product-image">
                           <a href="product-left-thumbnail.html">
-                            <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/3.png" class="img-fluid blur-up lazyload"
+                            <img src="../assets/images/vegetable/product/3.png" class="img-fluid blur-up lazyload"
                               alt="">
                           </a>
                           <ul class="product-option">
@@ -687,7 +687,7 @@
                         </div>
                         <div class="product-image">
                           <a href="product-left-thumbnail.html">
-                            <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/4.png" class="img-fluid blur-up lazyload"
+                            <img src="../assets/images/vegetable/product/4.png" class="img-fluid blur-up lazyload"
                               alt="">
                           </a>
                           <ul class="product-option">
@@ -774,7 +774,7 @@
                       <div class="product-box">
                         <div class="product-image">
                           <a href="product-left-thumbnail.html">
-                            <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/5.png" class="img-fluid blur-up lazyload"
+                            <img src="../assets/images/vegetable/product/5.png" class="img-fluid blur-up lazyload"
                               alt="">
                           </a>
                           <ul class="product-option">
@@ -857,7 +857,7 @@
                       <div class="product-box">
                         <div class="product-image">
                           <a href="product-left-thumbnail.html">
-                            <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/6.png" class="img-fluid blur-up lazyload"
+                            <img src="../assets/images/vegetable/product/6.png" class="img-fluid blur-up lazyload"
                               alt="">
                           </a>
                           <ul class="product-option">
@@ -946,7 +946,7 @@
                         </div>
                         <div class="product-image">
                           <a href="product-left-thumbnail.html">
-                            <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/7.png" class="img-fluid blur-up lazyload"
+                            <img src="../assets/images/vegetable/product/7.png" class="img-fluid blur-up lazyload"
                               alt="">
                           </a>
                           <ul class="product-option">
@@ -1028,7 +1028,7 @@
                       <div class="product-box">
                         <div class="product-image">
                           <a href="product-left-thumbnail.html">
-                            <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/8.png" class="img-fluid blur-up lazyload"
+                            <img src="../assets/images/vegetable/product/8.png" class="img-fluid blur-up lazyload"
                               alt="">
                           </a>
                           <ul class="product-option">
@@ -1115,7 +1115,7 @@
                       <div class="product-box">
                         <div class="product-image">
                           <a href="product-left-thumbnail.html">
-                            <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/9.png" class="img-fluid blur-up lazyload"
+                            <img src="../assets/images/vegetable/product/9.png" class="img-fluid blur-up lazyload"
                               alt="">
                           </a>
                           <ul class="product-option">
@@ -1197,7 +1197,7 @@
                       <div class="product-box">
                         <div class="product-image">
                           <a href="product-left-thumbnail.html">
-                            <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/10.png" class="img-fluid blur-up lazyload"
+                            <img src="../assets/images/vegetable/product/10.png" class="img-fluid blur-up lazyload"
                               alt="">
                           </a>
                           <ul class="product-option">
@@ -1284,7 +1284,7 @@
                       <div class="product-box">
                         <div class="product-image">
                           <a href="product-left-thumbnail.html">
-                            <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/3.png" class="img-fluid blur-up lazyload"
+                            <img src="../assets/images/vegetable/product/3.png" class="img-fluid blur-up lazyload"
                               alt="">
                           </a>
                           <ul class="product-option">
@@ -1367,7 +1367,7 @@
                       <div class="product-box">
                         <div class="product-image">
                           <a href="product-left-thumbnail.html">
-                            <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/5.png" class="img-fluid blur-up lazyload"
+                            <img src="../assets/images/vegetable/product/5.png" class="img-fluid blur-up lazyload"
                               alt="">
                           </a>
                           <ul class="product-option">
@@ -1455,7 +1455,7 @@
             <h2>Bowse by Categories</h2>
             <span class="title-leaf">
               <svg class="icon-width">
-                <use xlink:href="${pageContext.request.contextPath}/assets/svg/leaf.svg#leaf"></use>
+                <use xlink:href="../assets/svg/leaf.svg#leaf"></use>
               </svg>
             </span>
             <p>Top Categories Of The Week</p>
@@ -1465,7 +1465,7 @@
             <div>
               <a href="shop-left-sidebar.html" class="category-box category-dark">
                 <div>
-                  <img src="${pageContext.request.contextPath}/assets/svg/1/vegetable.svg" class="blur-up lazyload" alt="">
+                  <img src="../assets/svg/1/vegetable.svg" class="blur-up lazyload" alt="">
                   <h5>Vegetables & Fruit</h5>
                 </div>
               </a>
@@ -1474,7 +1474,7 @@
             <div>
               <a href="shop-left-sidebar.html" class="category-box category-dark">
                 <div>
-                  <img src="${pageContext.request.contextPath}/assets/svg/1/cup.svg" class="blur-up lazyload" alt="">
+                  <img src="../assets/svg/1/cup.svg" class="blur-up lazyload" alt="">
                   <h5>Beverages</h5>
                 </div>
               </a>
@@ -1483,7 +1483,7 @@
             <div>
               <a href="shop-left-sidebar.html" class="category-box category-dark">
                 <div>
-                  <img src="${pageContext.request.contextPath}/assets/svg/1/meats.svg" class="blur-up lazyload" alt="">
+                  <img src="../assets/svg/1/meats.svg" class="blur-up lazyload" alt="">
                   <h5>Meats & Seafood</h5>
                 </div>
               </a>
@@ -1492,7 +1492,7 @@
             <div>
               <a href="shop-left-sidebar.html" class="category-box category-dark">
                 <div>
-                  <img src="${pageContext.request.contextPath}/assets/svg/1/breakfast.svg" class="blur-up lazyload" alt="">
+                  <img src="../assets/svg/1/breakfast.svg" class="blur-up lazyload" alt="">
                   <h5>Breakfast</h5>
                 </div>
               </a>
@@ -1501,7 +1501,7 @@
             <div>
               <a href="shop-left-sidebar.html" class="category-box category-dark">
                 <div>
-                  <img src="${pageContext.request.contextPath}/assets/svg/1/frozen.svg" class="blur-up lazyload" alt="">
+                  <img src="../assets/svg/1/frozen.svg" class="blur-up lazyload" alt="">
                   <h5>Frozen Foods</h5>
                 </div>
               </a>
@@ -1510,7 +1510,7 @@
             <div>
               <a href="shop-left-sidebar.html" class="category-box category-dark">
                 <div>
-                  <img src="${pageContext.request.contextPath}/assets/svg/1/milk.svg" class="blur-up lazyload" alt="">
+                  <img src="../assets/svg/1/milk.svg" class="blur-up lazyload" alt="">
                   <h5>Milk & Dairies</h5>
                 </div>
               </a>
@@ -1519,7 +1519,7 @@
             <div>
               <a href="shop-left-sidebar.html" class="category-box category-dark">
                 <div>
-                  <img src="${pageContext.request.contextPath}/assets/svg/1/pet.svg" class="blur-up lazyload" alt="">
+                  <img src="../assets/svg/1/pet.svg" class="blur-up lazyload" alt="">
                   <h5>Pet Food</h5>
                 </div>
               </a>
@@ -1530,7 +1530,7 @@
             <div class="row g-md-4 g-3">
               <div class="col-md-6">
                 <div class="banner-contain hover-effect">
-                  <img src="${pageContext.request.contextPath}/assets/images/vegetable/banner/9.jpg" class="bg-img blur-up lazyload" alt="">
+                  <img src="../assets/images/vegetable/banner/9.jpg" class="bg-img blur-up lazyload" alt="">
                   <div class="banner-details p-center-left p-4">
                     <div>
                       <h3 class="text-exo">50% offer</h3>
@@ -1544,7 +1544,7 @@
               </div>
               <div class="col-md-6">
                 <div class="banner-contain hover-effect">
-                  <img src="${pageContext.request.contextPath}/assets/images/vegetable/banner/10.jpg" class="bg-img blur-up lazyload" alt="">
+                  <img src="../assets/images/vegetable/banner/10.jpg" class="bg-img blur-up lazyload" alt="">
                   <div class="banner-details p-center-left p-4">
                     <div>
                       <h3 class="text-exo">50% offer</h3>
@@ -1563,7 +1563,7 @@
             <h2>Food Cupboard</h2>
             <span class="title-leaf">
               <svg class="icon-width">
-                <use xlink:href="${pageContext.request.contextPath}/assets/svg/leaf.svg#leaf"></use>
+                <use xlink:href="../assets/svg/leaf.svg#leaf"></use>
               </svg>
             </span>
             <p>A virtual assistant collects the products from your list</p>
@@ -1577,7 +1577,7 @@
                     <div class="product-box">
                       <div class="product-image">
                         <a href="product-left-thumbnail.html">
-                          <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/1.png" class="img-fluid blur-up lazyload" alt="">
+                          <img src="../assets/images/vegetable/product/1.png" class="img-fluid blur-up lazyload" alt="">
                         </a>
                         <ul class="product-option">
                           <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
@@ -1661,7 +1661,7 @@
                     <div class="product-box">
                       <div class="product-image">
                         <a href="product-left-thumbnail.html">
-                          <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/2.png" class="img-fluid blur-up lazyload" alt="">
+                          <img src="../assets/images/vegetable/product/2.png" class="img-fluid blur-up lazyload" alt="">
                         </a>
                         <ul class="product-option">
                           <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
@@ -1745,7 +1745,7 @@
                     <div class="product-box">
                       <div class="product-image">
                         <a href="product-left-thumbnail.html">
-                          <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/3.png" class="img-fluid blur-up lazyload" alt="">
+                          <img src="../assets/images/vegetable/product/3.png" class="img-fluid blur-up lazyload" alt="">
                         </a>
                         <ul class="product-option">
                           <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
@@ -1829,7 +1829,7 @@
                     <div class="product-box">
                       <div class="product-image">
                         <a href="product-left-thumbnail.html">
-                          <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/4.png" class="img-fluid blur-up lazyload" alt="">
+                          <img src="../assets/images/vegetable/product/4.png" class="img-fluid blur-up lazyload" alt="">
                         </a>
                         <ul class="product-option">
                           <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
@@ -1913,7 +1913,7 @@
                     <div class="product-box">
                       <div class="product-image">
                         <a href="product-left-thumbnail.html">
-                          <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/5.png" class="img-fluid blur-up lazyload" alt="">
+                          <img src="../assets/images/vegetable/product/5.png" class="img-fluid blur-up lazyload" alt="">
                         </a>
                         <ul class="product-option">
                           <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
@@ -1997,7 +1997,7 @@
                     <div class="product-box">
                       <div class="product-image">
                         <a href="product-left-thumbnail.html">
-                          <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/4.png" class="img-fluid blur-up lazyload" alt="">
+                          <img src="../assets/images/vegetable/product/4.png" class="img-fluid blur-up lazyload" alt="">
                         </a>
                         <ul class="product-option">
                           <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
@@ -2079,7 +2079,7 @@
 
           <div class="section-t-space">
             <div class="banner-contain">
-              <img src="${pageContext.request.contextPath}/assets/images/vegetable/banner/15.jpg" class="bg-img blur-up lazyload" alt="">
+              <img src="../assets/images/vegetable/banner/15.jpg" class="bg-img blur-up lazyload" alt="">
               <div class="banner-details p-center p-4 text-white text-center">
                 <div>
                   <h3 class="lh-base fw-bold offer-text">Get $3 Cashback! Min Order of $30</h3>
@@ -2093,7 +2093,7 @@
             <div class="row g-md-4 g-3">
               <div class="col-xxl-8 col-xl-12 col-md-7">
                 <div class="banner-contain hover-effect">
-                  <img src="${pageContext.request.contextPath}/assets/images/vegetable/banner/12.jpg" class="bg-img blur-up lazyload" alt="">
+                  <img src="../assets/images/vegetable/banner/12.jpg" class="bg-img blur-up lazyload" alt="">
                   <div class="banner-details p-center-left p-4">
                     <div>
                       <h2 class="text-kaushan fw-normal theme-color">Get Ready To</h2>
@@ -2110,7 +2110,7 @@
 
               <div class="col-xxl-4 col-xl-12 col-md-5">
                 <a href="shop-left-sidebar.html" class="banner-contain hover-effect h-100">
-                  <img src="${pageContext.request.contextPath}/assets/images/vegetable/banner/13.jpg" class="bg-img blur-up lazyload" alt="">
+                  <img src="../assets/images/vegetable/banner/13.jpg" class="bg-img blur-up lazyload" alt="">
                   <div class="banner-details p-center-left p-4 h-100">
                     <div>
                       <h2 class="text-kaushan fw-normal text-danger">20% Off</h2>
@@ -2128,7 +2128,7 @@
               <h2>Our best Seller</h2>
               <span class="title-leaf">
                 <svg class="icon-width">
-                  <use xlink:href="${pageContext.request.contextPath}/assets/svg/leaf.svg#leaf"></use>
+                  <use xlink:href="../assets/svg/leaf.svg#leaf"></use>
                 </svg>
               </span>
               <p>A virtual assistant collects the products from your list</p>
@@ -2141,7 +2141,7 @@
                 <li>
                   <div class="offer-product">
                     <a href="product-left-thumbnail.html" class="offer-image">
-                      <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/11.png" class="blur-up lazyload" alt="">
+                      <img src="../assets/images/vegetable/product/11.png" class="blur-up lazyload" alt="">
                     </a>
 
                     <div class="offer-detail">
@@ -2159,7 +2159,7 @@
                 <li>
                   <div class="offer-product">
                     <a href="product-left-thumbnail.html" class="offer-image">
-                      <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/12.png" class="blur-up lazyload" alt="">
+                      <img src="../assets/images/vegetable/product/12.png" class="blur-up lazyload" alt="">
                     </a>
 
                     <div class="offer-detail">
@@ -2177,7 +2177,7 @@
                 <li>
                   <div class="offer-product">
                     <a href="product-left-thumbnail.html" class="offer-image">
-                      <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/13.png" class="blur-up lazyload" alt="">
+                      <img src="../assets/images/vegetable/product/13.png" class="blur-up lazyload" alt="">
                     </a>
 
                     <div class="offer-detail">
@@ -2195,7 +2195,7 @@
                 <li>
                   <div class="offer-product">
                     <a href="product-left-thumbnail.html" class="offer-image">
-                      <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/14.png" class="blur-up lazyload" alt="">
+                      <img src="../assets/images/vegetable/product/14.png" class="blur-up lazyload" alt="">
                     </a>
 
                     <div class="offer-detail">
@@ -2217,7 +2217,7 @@
                 <li>
                   <div class="offer-product">
                     <a href="product-left-thumbnail.html" class="offer-image">
-                      <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/15.png" class="blur-up lazyload" alt="">
+                      <img src="../assets/images/vegetable/product/15.png" class="blur-up lazyload" alt="">
                     </a>
 
                     <div class="offer-detail">
@@ -2235,7 +2235,7 @@
                 <li>
                   <div class="offer-product">
                     <a href="product-left-thumbnail.html" class="offer-image">
-                      <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/16.png" class="blur-up lazyload" alt="">
+                      <img src="../assets/images/vegetable/product/16.png" class="blur-up lazyload" alt="">
                     </a>
 
                     <div class="offer-detail">
@@ -2253,7 +2253,7 @@
                 <li>
                   <div class="offer-product">
                     <a href="product-left-thumbnail.html" class="offer-image">
-                      <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/17.png" class="blur-up lazyload" alt="">
+                      <img src="../assets/images/vegetable/product/17.png" class="blur-up lazyload" alt="">
                     </a>
 
                     <div class="offer-detail">
@@ -2271,7 +2271,7 @@
                 <li>
                   <div class="offer-product">
                     <a href="product-left-thumbnail.html" class="offer-image">
-                      <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/18.png" class="blur-up lazyload" alt="">
+                      <img src="../assets/images/vegetable/product/18.png" class="blur-up lazyload" alt="">
                     </a>
 
                     <div class="offer-detail">
@@ -2293,7 +2293,7 @@
                 <li>
                   <div class="offer-product">
                     <a href="product-left-thumbnail.html" class="offer-image">
-                      <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/19.png" class="blur-up lazyload" alt="">
+                      <img src="../assets/images/vegetable/product/19.png" class="blur-up lazyload" alt="">
                     </a>
 
                     <div class="offer-detail">
@@ -2311,7 +2311,7 @@
                 <li>
                   <div class="offer-product">
                     <a href="product-left-thumbnail.html" class="offer-image">
-                      <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/20.png" class="blur-up lazyload" alt="">
+                      <img src="../assets/images/vegetable/product/20.png" class="blur-up lazyload" alt="">
                     </a>
 
                     <div class="offer-detail">
@@ -2329,7 +2329,7 @@
                 <li>
                   <div class="offer-product">
                     <a href="product-left-thumbnail.html" class="offer-image">
-                      <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/21.png" class="blur-up lazyload" alt="">
+                      <img src="../assets/images/vegetable/product/21.png" class="blur-up lazyload" alt="">
                     </a>
 
                     <div class="offer-detail">
@@ -2347,7 +2347,7 @@
                 <li>
                   <div class="offer-product">
                     <a href="product-left-thumbnail.html" class="offer-image">
-                      <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/22.png" class="blur-up lazyload" alt="">
+                      <img src="../assets/images/vegetable/product/22.png" class="blur-up lazyload" alt="">
                     </a>
 
                     <div class="offer-detail">
@@ -2367,7 +2367,7 @@
 
           <div class="section-t-space">
             <div class="banner-contain hover-effect">
-              <img src="${pageContext.request.contextPath}/assets/images/vegetable/banner/14.jpg" class="bg-img blur-up lazyload" alt="">
+              <img src="../assets/images/vegetable/banner/14.jpg" class="bg-img blur-up lazyload" alt="">
               <div class="banner-details p-center banner-b-space w-100 text-center">
                 <div>
                   <h6 class="ls-expanded theme-color mb-sm-3 mb-1">SUMMER</h6>
@@ -2385,7 +2385,7 @@
             <h2>Featured Blog</h2>
             <span class="title-leaf">
               <svg class="icon-width">
-                <use xlink:href="${pageContext.request.contextPath}/assets/svg/leaf.svg#leaf"></use>
+                <use xlink:href="../assets/svg/leaf.svg#leaf"></use>
               </svg>
             </span>
             <p>A virtual assistant collects the products from your list</p>
@@ -2396,7 +2396,7 @@
               <div class="blog-box">
                 <div class="blog-box-image">
                   <a href="blog-detail.html" class="blog-image">
-                    <img src="${pageContext.request.contextPath}/assets/images/vegetable/blog/1.jpg" class="bg-img blur-up lazyload" alt="">
+                    <img src="../assets/images/vegetable/blog/1.jpg" class="bg-img blur-up lazyload" alt="">
                   </a>
                 </div>
 
@@ -2411,7 +2411,7 @@
               <div class="blog-box">
                 <div class="blog-box-image">
                   <a href="blog-detail.html" class="blog-image">
-                    <img src="${pageContext.request.contextPath}/assets/images/vegetable/blog/2.jpg" class="bg-img blur-up lazyload" alt="">
+                    <img src="../assets/images/vegetable/blog/2.jpg" class="bg-img blur-up lazyload" alt="">
                   </a>
                 </div>
 
@@ -2426,7 +2426,7 @@
               <div class="blog-box">
                 <div class="blog-box-image">
                   <a href="blog-detail.html" class="blog-image">
-                    <img src="${pageContext.request.contextPath}/assets/images/vegetable/blog/3.jpg" class="bg-img blur-up lazyload" alt="">
+                    <img src="../assets/images/vegetable/blog/3.jpg" class="bg-img blur-up lazyload" alt="">
                   </a>
                 </div>
 
@@ -2441,7 +2441,7 @@
               <div class="blog-box">
                 <div class="blog-box-image">
                   <a href="blog-detail.html" class="blog-image">
-                    <img src="${pageContext.request.contextPath}/assets/images/vegetable/blog/1.jpg" class="bg-img blur-up lazyload" alt="">
+                    <img src="../assets/images/vegetable/blog/1.jpg" class="bg-img blur-up lazyload" alt="">
                   </a>
                 </div>
 
@@ -2501,7 +2501,7 @@
           <div class="row g-sm-4 g-2">
             <div class="col-lg-6">
               <div class="slider-image">
-                <img src="${pageContext.request.contextPath}/assets/images/product/category/1.jpg" class="img-fluid blur-up lazyload" alt="">
+                <img src="../assets/images/product/category/1.jpg" class="img-fluid blur-up lazyload" alt="">
               </div>
             </div>
 
@@ -2711,7 +2711,7 @@
               <li class="list-1">
                 <div class="deal-offer-contain">
                   <a href="shop-left-sidebar.html" class="deal-image">
-                    <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/10.png" class="blur-up lazyload" alt="">
+                    <img src="../assets/images/vegetable/product/10.png" class="blur-up lazyload" alt="">
                   </a>
 
                   <a href="shop-left-sidebar.html" class="deal-contain">
@@ -2724,7 +2724,7 @@
               <li class="list-2">
                 <div class="deal-offer-contain">
                   <a href="shop-left-sidebar.html" class="deal-image">
-                    <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/11.png" class="blur-up lazyload" alt="">
+                    <img src="../assets/images/vegetable/product/11.png" class="blur-up lazyload" alt="">
                   </a>
 
                   <a href="shop-left-sidebar.html" class="deal-contain">
@@ -2737,7 +2737,7 @@
               <li class="list-3">
                 <div class="deal-offer-contain">
                   <a href="shop-left-sidebar.html" class="deal-image">
-                    <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/12.png" class="blur-up lazyload" alt="">
+                    <img src="../assets/images/vegetable/product/12.png" class="blur-up lazyload" alt="">
                   </a>
 
                   <a href="shop-left-sidebar.html" class="deal-contain">
@@ -2750,7 +2750,7 @@
               <li class="list-1">
                 <div class="deal-offer-contain">
                   <a href="shop-left-sidebar.html" class="deal-image">
-                    <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/13.png" class="blur-up lazyload" alt="">
+                    <img src="../assets/images/vegetable/product/13.png" class="blur-up lazyload" alt="">
                   </a>
 
                   <a href="shop-left-sidebar.html" class="deal-contain">
@@ -2782,46 +2782,46 @@
   <!-- Bg overlay End -->
 
   <!-- latest jquery-->
-  <script src="${pageContext.request.contextPath}/assets/js/jquery-3.6.0.min.js"></script>
+  <script src="../assets/js/jquery-3.6.0.min.js"></script>
 
   <!-- jquery ui-->
-  <script src="${pageContext.request.contextPath}/assets/js/jquery-ui.min.js"></script>
+  <script src="../assets/js/jquery-ui.min.js"></script>
 
   <!-- Bootstrap js-->
-  <script src="${pageContext.request.contextPath}/assets/js/bootstrap/bootstrap.bundle.min.js"></script>
-  <script src="${pageContext.request.contextPath}/assets/js/bootstrap/bootstrap-notify.min.js"></script>
-  <script src="${pageContext.request.contextPath}/assets/js/bootstrap/popper.min.js"></script>
+  <script src="../assets/js/bootstrap/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/bootstrap/bootstrap-notify.min.js"></script>
+  <script src="../assets/js/bootstrap/popper.min.js"></script>
 
   <!-- feather icon js-->
-  <script src="${pageContext.request.contextPath}/assets/js/feather/feather.min.js"></script>
-  <script src="${pageContext.request.contextPath}/assets/js/feather/feather-icon.js"></script>
+  <script src="../assets/js/feather/feather.min.js"></script>
+  <script src="../assets/js/feather/feather-icon.js"></script>
 
   <!-- Lazyload Js -->
-  <script src="${pageContext.request.contextPath}/assets/js/lazysizes.min.js"></script>
+  <script src="../assets/js/lazysizes.min.js"></script>
 
   <!-- Slick js-->
-  <script src="${pageContext.request.contextPath}/assets/js/slick/slick.js"></script>
-  <script src="${pageContext.request.contextPath}/assets/js/slick/slick-animation.min.js"></script>
-  <script src="${pageContext.request.contextPath}/assets/js/slick/custom_slick.js"></script>
+  <script src="../assets/js/slick/slick.js"></script>
+  <script src="../assets/js/slick/slick-animation.min.js"></script>
+  <script src="../assets/js/slick/custom_slick.js"></script>
 
   <!-- Auto Height Js -->
-  <script src="${pageContext.request.contextPath}/assets/js/auto-height.js"></script>
+  <script src="../assets/js/auto-height.js"></script>
 
   <!-- Timer Js -->
-  <script src="${pageContext.request.contextPath}/assets/js/timer1.js"></script>
+  <script src="../assets/js/timer1.js"></script>
 
   <!-- Fly Cart Js -->
-  <script src="${pageContext.request.contextPath}/assets/js/fly-cart.js"></script>
+  <script src="../assets/js/fly-cart.js"></script>
 
   <!-- Quantity js -->
-  <script src="${pageContext.request.contextPath}/assets/js/quantity-2.js"></script>
+  <script src="../assets/js/quantity-2.js"></script>
 
   <!-- WOW js -->
-  <script src="${pageContext.request.contextPath}/assets/js/wow.min.js"></script>
-  <script src="${pageContext.request.contextPath}/assets/js/custom-wow.js"></script>
+  <script src="../assets/js/wow.min.js"></script>
+  <script src="../assets/js/custom-wow.js"></script>
 
   <!-- script js -->
-  <script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
+  <script src="../assets/js/script.js"></script>
     <%@ include file="/includes/footer.jsp" %> <!-- Nhúng header -->
   
     </body>

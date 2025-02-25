@@ -153,6 +153,34 @@
                                                 </tbody>
                                             </table>
                                         </div>
+
+                                        <!-- Modal Delete Confirmation -->
+                                        <c:forEach var="supplier" items="${suppliers}">
+                                            <div class="modal fade" id="deleteModal${supplier.supplierId}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Are you sure you want to delete supplier <strong>${supplier.supplierName}</strong>?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <!-- Form for deleting supplier -->
+                                                            <form action="supplier" method="get" class="d-flex ms-auto">
+                                                                <input type="hidden" name="action" value="delete">
+                                                                <input type="hidden" name="supplierId" value="${supplier.supplierId}">
+                                                                <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </c:forEach>
+
+
                                         </table>
                                     </div>
                                 </div>

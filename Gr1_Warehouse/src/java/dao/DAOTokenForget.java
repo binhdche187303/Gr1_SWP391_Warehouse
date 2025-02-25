@@ -1,11 +1,15 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package dao;
 
+import java.security.Timestamp;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import model.TokenForgetPassword;
-import ulti.MD5Hash;
 
 /**
  *
@@ -29,30 +33,31 @@ public class DAOTokenForget extends DBContext {
         }
     }
 
-    public TokenForgetPassword getTokenPassword(String token) {
-        String sql = "SELECT * FROM TokenForgetPassword WHERE token = ?";
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
-            st.setString(1, token);
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                System.out.println("Đã tìm thấy token trong cơ sở dữ liệu: " + token);
-                return new TokenForgetPassword(
-                        rs.getInt("user_id"),
-                        rs.getBoolean("isUsed"),
-                        rs.getString("token"),
-                        rs.getTimestamp("expireTime").toLocalDateTime()
-                );
-            } else {
-                System.out.println("Không tìm thấy token trong cơ sở dữ liệu: " + token);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+public TokenForgetPassword getTokenPassword(String token) {
+    String sql = "SELECT * FROM TokenForgetPassword WHERE token = ?";
+    try (PreparedStatement st = connection.prepareStatement(sql)) {
+        st.setString(1, token);
+        ResultSet rs = st.executeQuery();
+        if (rs.next()) {
+            System.out.println("Đã tìm thấy token trong cơ sở dữ liệu: " + token);
+            return new TokenForgetPassword(
+                    rs.getInt("user_id"),
+                    rs.getBoolean("isUsed"),
+                    rs.getString("token"),
+                    rs.getTimestamp("expireTime").toLocalDateTime()
+            );
+        } else {
+            System.out.println("Không tìm thấy token trong cơ sở dữ liệu: " + token);
         }
-        return null;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return null;
+}
+
 
     public void updateStatus(TokenForgetPassword token) {
-        String sql = "UPDATE TokenForgetPassword SET isUsed = ? WHERE token = ?";
+        String sql = "UPDATE [dbo].[tokenForgetPassword] SET [isUsed] = ? WHERE token = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setBoolean(1, token.isIsUsed());
@@ -60,17 +65,6 @@ public class DAOTokenForget extends DBContext {
             st.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace(); // Consider logging instead
-        }
-    }
-
-    public void updatePassword(String email, String password) {
-        String sql = "UPDATE users SET password = ? WHERE email = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, MD5Hash.hash(password));  // Gọi hàm hash từ ulti
-            ps.setString(2, email);  
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();  
         }
     }
 }
