@@ -164,7 +164,8 @@
                                                         </td>
                                                         <td class="price">
                                                             <h4 class="table-title text-content">Giá</h4>
-                                                             <h5><fmt:formatNumber value="${item.price}" pattern="#,###" />₫ </h5>                                                        </td>
+                                                            <h5><fmt:formatNumber value="${item.price}" pattern="#,###" />₫ </h5>
+                                                        </td>
                                                         <td class="quantity">
                                                             <h4 class="table-title text-content">Số lượng</h4>
                                                             <div class="quantity-price">
@@ -330,65 +331,132 @@
         <!-- jQuery UI -->
         <script src="${pageContext.request.contextPath}/assets/js/jquery-ui.min.js"></script>
         <script>
-                        document.querySelectorAll(".qty-left-minus, .qty-right-plus").forEach(button => {
+//                        document.querySelectorAll(".qty-left-minus, .qty-right-plus").forEach(button => {
+//                            button.addEventListener("click", function () {
+//
+//                                let productId = this.getAttribute("data-product-id");
+//                                let typeSizeSelect = document.querySelector("#typeSize-" + productId);
+//                                let selectedOption = typeSizeSelect.options[typeSizeSelect.selectedIndex];
+//                                let typeSizeId = selectedOption.value;
+//                                let sizeId = this.getAttribute("data-size-id");
+//                                let inputField = document.querySelector(".qty-input[data-product-id='" + productId + "']");
+//                                let currentQuantity = parseInt(inputField.value);
+//                                let newQuantity = currentQuantity; // Giữ giá trị cũ phòng khi có lỗi
+//                                fetch("check-stock?productId=" + productId + "&sizeId=" + sizeId + "&newSize=" + typeSizeId)
+//                                        .then(response => response.json())
+//                                        .then(data => {
+//                                            let stock = data.stock;
+//
+//                                            if (this.classList.contains("qty-left-minus") && currentQuantity > 1) {
+//                                                newQuantity = currentQuantity - 1;
+//                                            } else if (this.classList.contains("qty-right-plus")) {
+//                                                if (currentQuantity < stock) {
+//                                                    newQuantity = currentQuantity + 1;
+//                                                } else {
+//                                                    alert("Sản phẩm đã hết hàng!");
+//                                                    return;
+//                                                }
+//                                            }
+//
+//                                            // Cập nhật số lượng trong input ngay lập tức
+//                                            inputField.value = newQuantity;
+//
+//                                            // Gửi yêu cầu cập nhật giỏ hàng
+//                                            fetch("update-cart", {
+//                                                method: "POST",
+//                                                headers: {
+//                                                    "Content-Type": "application/x-www-form-urlencoded"
+//                                                },
+//                                                body: "productId=" + productId + "&quantity=" + newQuantity + "&newSize=" + typeSizeId
+//                                            })
+//                                                    .then(response => response.json())
+//                                                    .then(data => {
+//                                                        if (data.success) {
+//                                                            console.log("Cập nhật thành công!");
+//                                                            location.reload(); // Reload lại trang để cập nhật tổng giá và mọi thứ khác
+//                                                        } else {
+//                                                            alert("Có lỗi xảy ra khi cập nhật giỏ hàng!");
+//                                                            inputField.value = currentQuantity; // Nếu lỗi, khôi phục số lượng ban đầu
+//                                                        }
+//                                                    })
+//                                                    .catch(error => {
+//                                                        console.error("Lỗi khi gửi request cập nhật giỏ hàng:", error);
+//                                                        inputField.value = currentQuantity; // Nếu lỗi, khôi phục số lượng ban đầu
+//                                                    });
+//                                        })
+//                                        .catch(error => {
+//                                            console.error("Lỗi khi kiểm tra stock:", error);
+//                                            inputField.value = currentQuantity; // Nếu lỗi, khôi phục số lượng ban đầu
+//                                        });
+//                            });
+//                        });
+                 document.querySelectorAll(".qty-left-minus, .qty-right-plus").forEach(button => {
                             button.addEventListener("click", function () {
-
-                                let productId = this.getAttribute("data-product-id");
-                                let typeSizeSelect = document.querySelector("#typeSize-" + productId);
-                                let selectedOption = typeSizeSelect.options[typeSizeSelect.selectedIndex];
-                                let typeSizeId = selectedOption.value;
-                                let sizeId = this.getAttribute("data-size-id");
-                                let inputField = document.querySelector(".qty-input[data-product-id='" + productId + "']");
+                                let productId = this.dataset.productId;
+                                let sizeId = this.dataset.sizeId;
+                                let inputField = document.querySelector(".qty-input[data-product-id='" + productId + "'][data-size-id='" + sizeId + "']");
                                 let currentQuantity = parseInt(inputField.value);
-                                let newQuantity = currentQuantity; // Giữ giá trị cũ phòng khi có lỗi
-                                fetch("check-stock?productId=" + productId + "&sizeId=" + sizeId + "&newSize=" + typeSizeId)
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            let stock = data.stock;
+                                let newQuantity = currentQuantity;
 
-                                            if (this.classList.contains("qty-left-minus") && currentQuantity > 1) {
-                                                newQuantity = currentQuantity - 1;
-                                            } else if (this.classList.contains("qty-right-plus")) {
+                                // Kiểm tra loại nút (tăng hoặc giảm)
+                                if (this.classList.contains("qty-left-minus")) {
+                                    if (currentQuantity > 1) {
+                                        newQuantity = currentQuantity - 1;
+                                    } else {
+                                        return;
+                                    }
+                                } else if (this.classList.contains("qty-right-plus")) {
+                                    // Kiểm tra tồn kho trước khi tăng số lượng
+                                    fetch("check-stock?productId=" + productId + "&sizeId=" + sizeId)
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                let stock = data.stock;
                                                 if (currentQuantity < stock) {
                                                     newQuantity = currentQuantity + 1;
+                                                    updateQuantity(productId, sizeId, newQuantity, inputField);
                                                 } else {
                                                     alert("Sản phẩm đã hết hàng!");
-                                                    return;
                                                 }
-                                            }
-
-                                            // Cập nhật số lượng trong input ngay lập tức
-                                            inputField.value = newQuantity;
-
-                                            // Gửi yêu cầu cập nhật giỏ hàng
-                                            fetch("update-cart", {
-                                                method: "POST",
-                                                headers: {
-                                                    "Content-Type": "application/x-www-form-urlencoded"
-                                                },
-                                                body: "productId=" + productId + "&quantity=" + newQuantity + "&newSize=" + typeSizeId
                                             })
-                                                    .then(response => response.json())
-                                                    .then(data => {
-                                                        if (data.success) {
-                                                            console.log("Cập nhật thành công!");
-                                                            location.reload(); // Reload lại trang để cập nhật tổng giá và mọi thứ khác
-                                                        } else {
-                                                            alert("Có lỗi xảy ra khi cập nhật giỏ hàng!");
-                                                            inputField.value = currentQuantity; // Nếu lỗi, khôi phục số lượng ban đầu
-                                                        }
-                                                    })
-                                                    .catch(error => {
-                                                        console.error("Lỗi khi gửi request cập nhật giỏ hàng:", error);
-                                                        inputField.value = currentQuantity; // Nếu lỗi, khôi phục số lượng ban đầu
-                                                    });
-                                        })
-                                        .catch(error => {
-                                            console.error("Lỗi khi kiểm tra stock:", error);
-                                            inputField.value = currentQuantity; // Nếu lỗi, khôi phục số lượng ban đầu
-                                        });
+                                            .catch(error => {
+                                                console.error("Lỗi khi kiểm tra stock:", error);
+                                            });
+                                    return;
+                                }
+
+                                // Cập nhật số lượng nếu giảm
+                                updateQuantity(productId, sizeId, newQuantity, inputField);
                             });
                         });
+
+                        function updateQuantity(productId, sizeId, newQuantity, inputField) {
+                            fetch("update-cart", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                },
+                                body: "productId=" + productId + "&sizeId=" + sizeId + "&quantity=" + newQuantity
+                            })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            inputField.value = newQuantity;
+
+                                            // Cập nhật lại tổng tiền
+                                            let price = parseFloat(inputField.closest('tr').querySelector('.price h5').innerText.replace(/[^0-9.-]+/g, ""));
+                                            let newTotal = price * newQuantity;
+                                            inputField.closest('tr').querySelector('.subtotal h5').innerText = newTotal.toLocaleString() + "₫";
+
+                                            // Cập nhật tổng tiền của tất cả sản phẩm
+                                            updateTotal();
+                                        } else {
+                                            alert("Có lỗi xảy ra khi cập nhật giỏ hàng!");
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error("Lỗi khi gửi request cập nhật giỏ hàng:", error);
+                                    });
+                        }
 
                         document.querySelectorAll(".select-size").forEach(button => {
                             button.addEventListener("change", function () {
