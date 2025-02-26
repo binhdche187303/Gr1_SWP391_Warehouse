@@ -451,6 +451,24 @@ public class UserDAO extends DBContext {
         ud.updateStaff("Deactive", 4, 5);
     }
 
-    
+    public List<User> getStaffByRole(int roleId) {
+        List<User> staffList = new ArrayList<>();
+        String sql = "SELECT user_id, fullname FROM Users WHERE role_id = ? AND status = 'Active'";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, roleId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("user_id"));
+                user.setFullname(rs.getString("fullname"));
+                staffList.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return staffList;
+    }
     
 }

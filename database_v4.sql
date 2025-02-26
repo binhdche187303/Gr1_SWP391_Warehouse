@@ -214,11 +214,12 @@ CREATE TABLE PurchaseOrder (
     order_date DATETIME NOT NULL,
     supplier_id INT NOT NULL,
     total_amount DECIMAL(10,2) NOT NULL,
-	bill_img_url VARCHAR(255),
+	bill_img_url VARCHAR(255) NULL,
     status NVARCHAR(50) DEFAULT 'Pending' CHECK (status IN ('Pending', 'Confirmed', 'Cancelled')),
     notes NVARCHAR(MAX),
     warehouse_id INT NOT NULL,
     user_id INT NOT NULL,
+	reference_code NVARCHAR(50) UNIQUE NOT NULL,
     FOREIGN KEY (supplier_id) REFERENCES Suppliers(supplier_id),
     FOREIGN KEY (warehouse_id) REFERENCES Warehouses(warehouse_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
@@ -228,8 +229,7 @@ CREATE TABLE PurchaseOrder (
 CREATE TABLE PurchaseDetails (
     detail_id INT PRIMARY KEY IDENTITY(1,1),  -- ID chi tiết nhập hàng
     order_id INT NOT NULL,                     -- ID phiếu nhập hàng
-    variant_id INT NOT NULL,                   -- ID biến thể sản phẩm
-    sku NVARCHAR(50) NOT NULL,                  -- Mã SKU
+    variant_id INT NOT NULL,                  -- Mã SKU
     quantity INT NOT NULL,                     -- Số lượng nhập
     unit_price DECIMAL(10,2) NOT NULL,          -- Giá nhập mỗi đơn vị
     total_price AS (quantity * unit_price),    -- Tổng tiền (tự tính)
@@ -237,9 +237,9 @@ CREATE TABLE PurchaseDetails (
     warehouse_id INT NOT NULL,                 -- Kho lưu trữ
     batch_id INT,                             -- ID lô hàng (nếu đã có)
     FOREIGN KEY (order_id) REFERENCES PurchaseOrder(order_id),
-    FOREIGN KEY (variant_id) REFERENCES ProductVariants(variant_id),
     FOREIGN KEY (warehouse_id) REFERENCES Warehouses(warehouse_id),
-    FOREIGN KEY (batch_id) REFERENCES InventoryBatches(batch_id)
+    FOREIGN KEY (batch_id) REFERENCES InventoryBatches(batch_id),
+	FOREIGN KEY (variant_id) REFERENCES ProductVariants(variant_id)
 );
 
 --Bảng InventoryCheck (Phiếu kiểm kho)
@@ -1919,3 +1919,7 @@ VALUES	(1, 1), -- Nhà phân phối Kinh Đô bán thương hiệu Kinh Đô
 		(3, 3), -- Nhà phân phối Pepsico bán thương hiệu Pepsico
 		(4, 4); -- Công ty TNHH Orion bán thương hiệu Orion
 
+		select* from InventoryBatches 
+select* from  PurchaseOrder
+select* from PurchaseDetails
+drop table PurchaseOrder
