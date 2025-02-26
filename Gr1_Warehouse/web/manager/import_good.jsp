@@ -60,7 +60,6 @@
                                         <div class="title-header option-title">
                                             <h5>Danh sách phiếu nhập hàng</h5>
                                             <div class="d-inline-flex gap-2">
-<!--                                                <a href="#" class="btn btn-solid">Xuất dữ liệu</a>-->
                                                 <a href="/Gr1_Warehouse/handleImport" class="btn btn-solid">Tạo phiếu nhập kho</a>
                                             </div>
                                         </div>
@@ -86,7 +85,7 @@
                                                                 <td>${order.supplierId}</td>
                                                                 <td>${order.status}</td>
                                                                 <td>${order.formattedTotalAmount}</td>
-                                                                <td><a href="purchase_detail.jsp?order_id=${order.orderId}">Xem chi tiết</a></td>
+                                                                <td><a href="importGoodDetail?order_id=${order.orderId}">Xem chi tiết</a></td>
                                                             </tr>
                                                         </c:forEach>
                                                     </tbody>

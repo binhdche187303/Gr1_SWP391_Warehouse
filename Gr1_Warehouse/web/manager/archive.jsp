@@ -77,7 +77,7 @@
                                                     <div class="modal-body">
                                                         <form id="addWarehouseForm">
                                                             <div class="mb-3">
-                                                                <label for="warehouseName" class="form-label">Tên kho lưu trữ</label>
+                                                                <label for="warehouseName" class="form-label">Kho nhập</label>
                                                                 <input type="text" class="form-control" id="warehouseName" name="warehouseName" required>
                                                             </div>
 

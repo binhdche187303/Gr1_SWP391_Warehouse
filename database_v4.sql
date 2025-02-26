@@ -15,6 +15,9 @@
 --go
 
 
+
+
+
 -- Bảng Roles (Vai trò người dùng)
 CREATE TABLE Roles (
     role_id INT PRIMARY KEY IDENTITY(1,1),
@@ -192,6 +195,8 @@ CREATE TABLE TokenForgetPassword (
     FOREIGN KEY (user_id) REFERENCES Users(user_id) -- Khóa ngoại liên kết bảng Users
 );
 
+
+
 CREATE TABLE InventoryBatches (
     batch_id INT PRIMARY KEY IDENTITY(1,1),   
     sku NVARCHAR(255) NOT NULL,
@@ -207,9 +212,10 @@ CREATE TABLE InventoryBatches (
 );
 
 
---select* from InventoryBatches 
---select* from  PurchaseOrder
---select* from PurchaseDetails 
+select* from InventoryBatches 
+select* from  PurchaseOrder
+select* from PurchaseDetails 
+
 
 --Bảng PurchaseOrder (Phiếu nhập hàng)
 CREATE TABLE PurchaseOrder (
@@ -228,11 +234,14 @@ CREATE TABLE PurchaseOrder (
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
+
+EXEC sp_help 'PurchaseDetails';
+
 --Bảng PurchaseDetails (Phiếu nhập hàng chi tiết)
 CREATE TABLE PurchaseDetails (
     detail_id INT PRIMARY KEY IDENTITY(1,1),  -- ID chi tiết nhập hàng
     order_id INT NOT NULL,                     -- ID phiếu nhập hàng
-    sku NVARCHAR(50) NOT NULL,                  -- Mã SKU
+    variant_id INT NOT NULL,          
     quantity INT NOT NULL,                     -- Số lượng nhập
     unit_price DECIMAL(10,2) NOT NULL,          -- Giá nhập mỗi đơn vị
     total_price AS (quantity * unit_price),    -- Tổng tiền (tự tính)
@@ -241,7 +250,8 @@ CREATE TABLE PurchaseDetails (
     batch_id INT,                             -- ID lô hàng (nếu đã có)
     FOREIGN KEY (order_id) REFERENCES PurchaseOrder(order_id),
     FOREIGN KEY (warehouse_id) REFERENCES Warehouses(warehouse_id),
-    FOREIGN KEY (batch_id) REFERENCES InventoryBatches(batch_id)
+    FOREIGN KEY (batch_id) REFERENCES InventoryBatches(batch_id),
+	FOREIGN KEY (variant_id) REFERENCES ProductVariants(variant_id)
 );
 
 

@@ -72,6 +72,10 @@
         <servlet-name>PurchaseOrderServlet</servlet-name>
         <servlet-class>purchaseorder.PurchaseOrderServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ImportGoodDetail</servlet-name>
+        <servlet-class>controller.ImportGoodDetail</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ArchiveServlet</servlet-name>
         <url-pattern>/archive</url-pattern>
@@ -151,6 +155,10 @@
     <servlet-mapping>
         <servlet-name>PurchaseOrderServlet</servlet-name>
         <url-pattern>/purchaseOrderServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImportGoodDetail</servlet-name>
+        <url-pattern>/importGoodDetail</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login</welcome-file>
