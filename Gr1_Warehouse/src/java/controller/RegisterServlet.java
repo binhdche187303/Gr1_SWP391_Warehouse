@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Role;
 import model.User;
+import ulti.MD5Hash;
 
 /**
  *
@@ -60,50 +61,43 @@ public class RegisterServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher("/pages/signup.jsp").forward(request, response);
     }
-    
+
     @Override
-    // Handle POST requests to process the form data
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    // Lấy các tham số từ form đăng ký
-    String username = request.getParameter("username");
-    String password = request.getParameter("password");
-    String fullname = request.getParameter("fullname");
-    String phone = request.getParameter("phone");
-    String email = request.getParameter("email");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String fullname = request.getParameter("fullname");
+        String phone = request.getParameter("phone");
+        String email = request.getParameter("email");
 
-    // Tạo đối tượng UserDAO
-    UserDAO userDAO = new UserDAO();
+        try {
+            UserDAO userDAO = new UserDAO();
 
-    // Kiểm tra nếu email đã tồn tại trong hệ thống
-    if (userDAO.isEmailExist(email)) {
-        // Nếu email đã tồn tại, trả về thông báo lỗi và chuyển đến trang đăng ký
-        request.setAttribute("error", "Email đã tồn tại. Vui lòng chọn email khác.");
-        request.getRequestDispatcher("pages/signup.jsp").forward(request, response);
-        return;
+            if (userDAO.isEmailExist(email)) {
+                request.setAttribute("error", "Email đã tồn tại. Vui lòng chọn email khác.");
+                request.getRequestDispatcher("pages/signup.jsp").forward(request, response);
+                return;
+            }
+            boolean isSuccess = userDAO.register(username, password, fullname, phone, email, 2, "Active");
+
+            if (isSuccess) {
+                response.sendRedirect("pages/login.jsp");
+            } else {
+                request.setAttribute("error", "Đăng ký thất bại. Vui lòng thử lại.");
+                request.getRequestDispatcher("pages/signup.jsp").forward(request, response);
+            }
+        } catch (Exception e) {
+            request.setAttribute("error", "Lỗi hệ thống. Vui lòng thử lại sau.");
+            request.getRequestDispatcher("pages/signup.jsp").forward(request, response);
+        }
     }
-
-    // Đăng ký người dùng mới
-    boolean isSuccess = userDAO.register(username, password, fullname, phone, email, 2, "Active");
-
-    if (isSuccess) {
-        // Nếu đăng ký thành công, chuyển hướng người dùng đến trang đăng nhập
-        response.sendRedirect("pages/login.jsp");
-    } else {
-        // Nếu đăng ký thất bại, trả về thông báo lỗi và giữ lại trang đăng ký
-        request.setAttribute("error", "Đăng ký thất bại. Vui lòng thử lại.");
-        // Dùng forward thay vì redirect để giữ lại dữ liệu và lỗi trên trang đăng ký
-        request.getRequestDispatcher("pages/signup.jsp").forward(request, response);
-    }
-}
-    
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
+/**
+ * Returns a short description of the servlet.
+ *
+ * @return a String containing servlet description
+ */
+@Override
+public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
 

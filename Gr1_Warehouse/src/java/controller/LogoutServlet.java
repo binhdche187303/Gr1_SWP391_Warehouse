@@ -62,7 +62,7 @@ public class LogoutServlet extends HttpServlet {
         }
         
         // Chuyển hướng về trang login
-        response.sendRedirect(request.getContextPath() + "/pages/login.jsp");    
+        response.sendRedirect(request.getContextPath() + "/login");    
     } 
 
     /** 

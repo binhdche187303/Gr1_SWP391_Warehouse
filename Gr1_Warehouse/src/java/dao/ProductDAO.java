@@ -11,9 +11,211 @@ import java.util.stream.Collectors;
 import model.Brands;
 import model.Categories;
 import model.Images;
+import model.ProductDTO;
 import model.Sizes;
 
 public class ProductDAO extends DBContext {
+
+    public Products getProductByIdAndSizeId(int productId, int sizeId) {
+        Products product = null;
+        String query = "WITH FirstImage AS (\n"
+                + "    SELECT \n"
+                + "        p.product_id,\n"
+                + "        i.image_url,\n"
+                + "        ROW_NUMBER() OVER (PARTITION BY p.product_id ORDER BY i.image_id ASC) AS row_num\n"
+                + "    FROM \n"
+                + "        Products p\n"
+                + "    JOIN \n"
+                + "        Images i ON p.product_id = i.product_id\n"
+                + ")\n"
+                + "SELECT \n"
+                + "    p.product_id,\n"
+                + "    p.product_name,\n"
+                + "    p.description,\n"
+                // + "    p.SKU,\n"
+                + "    b.brand_name,\n"
+                + "    c.category_name,\n"
+                + "    fi.image_url AS first_image_url,\n"
+                + "    s.size_name,\n"
+                + "    pv.price\n"
+                + "FROM \n"
+                + "    Products p\n"
+                + "JOIN \n"
+                + "    ProductVariants pv ON p.product_id = pv.product_id\n"
+                + "JOIN \n"
+                + "    Sizes s ON pv.size_id = s.size_id\n"
+                + "JOIN \n"
+                + "    Categories c ON p.category_id = c.category_id\n"
+                + "JOIN \n"
+                + "    Brands b ON p.brand_id = b.brand_id\n"
+                + "JOIN \n"
+                + "    FirstImage fi ON p.product_id = fi.product_id\n"
+                + "WHERE \n"
+                + "    p.product_id = ? \n"
+                + "    AND pv.size_id = ? \n"
+                + "    AND fi.row_num = 1";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, productId);
+            ps.setInt(2, sizeId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                product = new Products();
+                product.setProductId(rs.getInt("product_id"));
+                product.setProductName(rs.getString("product_name"));
+                product.setDescription(rs.getString("description"));
+                // product.setSku(rs.getString("SKU"));
+
+                // Thêm thông tin thương hiệu và danh mục
+                Brands brand = new Brands();
+                brand.setBrand_name(rs.getString("brand_name"));
+                product.setBrand(brand);
+
+                Categories category = new Categories();
+                category.setCategory_name(rs.getString("category_name"));
+                product.setCate(category);
+
+                // Set Image URL cho sản phẩm
+                List<Images> images = new ArrayList<>();
+                Images firstImage = new Images();
+                firstImage.setImage_url(rs.getString("first_image_url"));
+                images.add(firstImage);
+                product.setImages(images);
+
+                // Thêm thông tin biến thể với size cụ thể
+                List<ProductVariants> variants = new ArrayList<>();
+                ProductVariants variant = new ProductVariants();
+                Sizes size = new Sizes();
+                size.setSize_name(rs.getString("size_name"));
+                variant.setSize(size);
+                variant.setPrice(rs.getBigDecimal("price"));
+                variants.add(variant);
+
+                product.setVariants(variants);
+
+                // Debugging logs
+                // System.out.println("Product SKU: " + product.getSku());
+                System.out.println("Product Size: " + size.getSize_name());
+                System.out.println("Product Price: " + variant.getPrice());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error fetching product with ID " + productId + " and Size ID " + sizeId + ": " + e.getMessage());
+        }
+
+        return product;
+    }
+
+    public int getStockByProductIdAndSize(int productId, int sizeId) {
+        String query = "SELECT COALESCE(SUM(ib.quantity), 0) AS stock "
+                + "FROM ProductVariants pv "
+                + "LEFT JOIN InventoryBatches ib ON pv.variant_id = ib.variant_id "
+                + "AND ib.status = 'In Stock' "
+                + "WHERE pv.product_id = ? AND pv.size_id = ? "
+                + "GROUP BY pv.product_id, pv.size_id";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, productId);
+            ps.setInt(2, sizeId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("stock");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public Products getDetails(int productId) {
+        Products product = null;
+        String sqlProduct = "SELECT p.*, c.category_name, b.brand_name "
+                + "FROM Products p "
+                + "JOIN Categories c ON p.category_id = c.category_id "
+                + "JOIN Brands b ON p.brand_id = b.brand_id "
+                + "WHERE p.product_id = ?";
+
+        String sqlVariants = "SELECT pv.*, s.size_name, "
+                + "COALESCE(SUM(ib.quantity), 0) AS stock "
+                + "FROM ProductVariants pv "
+                + "JOIN Sizes s ON pv.size_id = s.size_id "
+                + "LEFT JOIN InventoryBatches ib ON pv.variant_id = ib.variant_id "
+                + "AND ib.status = 'In Stock' "
+                + "WHERE pv.product_id = ? "
+                + "GROUP BY pv.variant_id, pv.product_id, pv.size_id, pv.price, pv.sku, s.size_name";
+
+        String sqlImages = "SELECT * FROM Images WHERE product_id = ?";
+
+        try (PreparedStatement pStmtProduct = connection.prepareStatement(sqlProduct); PreparedStatement pStmtVariants = connection.prepareStatement(sqlVariants); PreparedStatement pStmtImages = connection.prepareStatement(sqlImages)) {
+
+            // Lấy thông tin sản phẩm
+            pStmtProduct.setInt(1, productId);
+            try (ResultSet rsProduct = pStmtProduct.executeQuery()) {
+                if (rsProduct.next()) {
+                    product = new Products();
+                    product.setProductId(rsProduct.getInt("product_id"));
+                    product.setProductName(rsProduct.getString("product_name"));
+                    product.setOrigin(rsProduct.getString("origin"));
+                    product.setDescription(rsProduct.getString("description"));
+
+                    // Gán danh mục sản phẩm
+                    Categories category = new Categories();
+                    category.setCategory_id(rsProduct.getInt("category_id"));
+                    category.setCategory_name(rsProduct.getString("category_name"));
+                    product.setCate(category);
+
+                    // Gán thương hiệu sản phẩm
+                    Brands brand = new Brands();
+                    brand.setBrand_id(rsProduct.getInt("brand_id"));
+                    brand.setBrand_name(rsProduct.getString("brand_name"));
+                    product.setBrand(brand);
+                }
+            }
+
+            // Lấy danh sách các biến thể sản phẩm (size, giá, tồn kho)
+            pStmtVariants.setInt(1, productId);
+            List<ProductVariants> variantList = new ArrayList<>();
+            try (ResultSet rsVariants = pStmtVariants.executeQuery()) {
+                while (rsVariants.next()) {
+                    ProductVariants variant = new ProductVariants();
+                    variant.setVariantId(rsVariants.getInt("variant_id"));
+                    variant.setProductId(rsVariants.getInt("product_id"));
+                    variant.setSizeId(rsVariants.getInt("size_id"));
+                    variant.setPrice(rsVariants.getBigDecimal("price"));
+                    variant.setSku(rsVariants.getString("sku"));
+                    variant.setStock(rsVariants.getInt("stock")); // Tổng số hàng trong kho cho biến thể này
+
+                    // Lấy thông tin kích thước
+                    Sizes size = new Sizes();
+                    size.setSize_id(rsVariants.getInt("size_id"));
+                    size.setSize_name(rsVariants.getString("size_name"));
+                    variant.setSize(size);
+
+                    variantList.add(variant);
+                }
+            }
+            product.setVariants(variantList);
+
+            // Lấy danh sách hình ảnh sản phẩm
+            pStmtImages.setInt(1, productId);
+            List<Images> imageList = new ArrayList<>();
+            try (ResultSet rsImages = pStmtImages.executeQuery()) {
+                while (rsImages.next()) {
+                    Images img = new Images();
+                    img.setImage_id(rsImages.getInt("image_id"));
+                    img.setImage_url(rsImages.getString("image_url"));
+                    imageList.add(img);
+                }
+            }
+            product.setImages(imageList);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return product;
+    }
 
     public List<Products> getListProductsPaginated(List<Products> listProducts, int startProduct, int pageSize) {
 
@@ -363,119 +565,33 @@ public class ProductDAO extends DBContext {
         return productsList;
     }
 
-    public Products getProductById(int productId) {
-        Products product = null;
-        String query = "WITH FirstImage AS (\n"
-                + "    SELECT \n"
-                + "        p.product_id,\n"
-                + "        i.image_url,\n"
-                + "        ROW_NUMBER() OVER (PARTITION BY p.product_id ORDER BY i.image_id ASC) AS row_num\n"
-                + "    FROM \n"
-                + "        Products p\n"
-                + "    JOIN \n"
-                + "        Images i ON p.product_id = i.product_id\n"
-                + ")\n"
-                + "SELECT \n"
-                + "    p.product_id,\n"
-                + "    p.product_name,\n"
-                + "    p.description,\n"
-                + "    p.SKU,\n"
-                + "    b.brand_name,\n"
-                + "    c.category_name,\n"
-                + "    fi.image_url AS first_image_url,\n"
-                + "    s.size_name,\n"
-                + "    pv.price\n"
-                + "FROM \n"
-                + "    Products p\n"
-                + "JOIN \n"
-                + "    ProductVariants pv ON p.product_id = pv.product_id\n"
-                + "JOIN \n"
-                + "    Sizes s ON pv.size_id = s.size_id\n"
-                + "JOIN \n"
-                + "    Categories c ON p.category_id = c.category_id\n"
-                + "JOIN \n"
-                + "    Brands b ON p.brand_id = b.brand_id\n"
-                + "JOIN \n"
-                + "    FirstImage fi ON p.product_id = fi.product_id\n"
-                + "WHERE \n"
-                + "    p.product_id = ? AND fi.row_num = 1";
-
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, productId);  // Thêm productId vào câu lệnh
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                product = new Products();
-                product.setProductId(rs.getInt("product_id"));
-                product.setProductName(rs.getString("product_name"));
-                product.setDescription(rs.getString("description"));
-                product.setSku(rs.getString("SKU"));
-
-                // Thêm thông tin thương hiệu và danh mục
-                Brands brand = new Brands();
-                brand.setBrand_name(rs.getString("brand_name"));
-                product.setBrand(brand);
-
-                Categories category = new Categories();
-                category.setCategory_name(rs.getString("category_name"));
-                product.setCate(category);
-
-                // Set Image URL for the product
-                List<Images> images = new ArrayList<>();
-                Images firstImage = new Images();
-                firstImage.setImage_url(rs.getString("first_image_url"));
-                images.add(firstImage);
-                product.setImages(images);
-
-                // Lấy tất cả các kích thước và giá
-                List<ProductVariants> variants = new ArrayList<>();
-                do {
-                    ProductVariants variant = new ProductVariants();
-                    Sizes size = new Sizes();
-                    size.setSize_name(rs.getString("size_name"));
-                    variant.setSize(size);
-                    variant.setPrice(rs.getBigDecimal("price"));
-                    variants.add(variant);
-                } while (rs.next());
-
-                product.setVariants(variants);  // Gán danh sách biến thể cho sản phẩm
-
-                // Debugging logs
-                System.out.println("Product SKU: " + product.getSku());
-                if (product.getBrand() != null) {
-                    System.out.println("Product Brand: " + product.getBrand().getBrand_name());
-                } else {
-                    System.out.println("Product Brand: No brand found");
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Error fetching product with ID " + productId + ": " + e.getMessage());
-        }
-
-        return product;
-    }
-
-    //Get allProduct with id and name--Tuan
-    public List<Products> getAllproducts() {
-
-        List<Products> list = new ArrayList<>();
-        String sql = "SELECT * FROM dbo.Products";
+    public List<ProductDTO> getProductsBySupplier(String supplierCode) {
+        List<ProductDTO> products = new ArrayList<>();
+        String sql = "SELECT p.product_name, pv.sku "
+                + "FROM Products p "
+                + "JOIN ProductVariants pv ON p.product_id = pv.product_id "
+                + "JOIN Brands b ON p.brand_id = b.brand_id "
+                + "JOIN SupplierBrand sb ON b.brand_id = sb.brand_id "
+                + "JOIN Suppliers s ON sb.supplier_id = s.supplier_id "
+                + "WHERE s.supplier_code = ? "
+                + "GROUP BY p.product_id, p.product_name, pv.sku";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, supplierCode);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                Products p = new Products();
-                p.setProductId(rs.getInt("product_id"));
-                p.setProductName(rs.getString("product_name"));
-                list.add(p);
+                ProductDTO product = new ProductDTO(
+                        rs.getString("product_name"),
+                        rs.getString("sku")
+                );
+                products.add(product);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return list;
+        return products;
     }
 
     //Get product by subName--Tuan
@@ -501,13 +617,5 @@ public class ProductDAO extends DBContext {
         }
 
         return list;
-    }
-
-    public static void main(String[] args) {
-        ProductDAO pd = new ProductDAO();
-        List<Products> list = pd.getProductsByName("So");
-        for (Products products : list) {
-            System.out.println(products);
-        }
     }
 }

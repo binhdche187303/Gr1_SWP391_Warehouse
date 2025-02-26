@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.User;
+import ulti.MD5Hash;
 
 /**
  *
@@ -81,7 +82,9 @@ public class ChangePassword extends HttpServlet {
         UserDAO ud = new UserDAO();
         int user_id = u.getUserId();
 
-        if (!currentpassword.equals(u.getPassword())) {
+        String hashedCurrentPassword = MD5Hash.hash(currentpassword);
+
+        if (!hashedCurrentPassword.equals(u.getPassword())) {
             request.setAttribute("error", "Current password is incorrect!");
             request.getRequestDispatcher("/pages/profileSetting.jsp").forward(request, response);
             return;
@@ -93,9 +96,13 @@ public class ChangePassword extends HttpServlet {
             return;
         }
 
-        ud.updatePassword(newpassword, user_id);
-        User newUser = ud.getUserById(u.getUserId());
+        String hashedNewPassword = MD5Hash.hash(newpassword);
+
+        ud.updatePassword(hashedNewPassword, user_id);
+
+        User newUser = ud.getUserById(user_id);
         session.setAttribute("acc", newUser);
+
         request.setAttribute("success", "Change password successfully");
         request.getRequestDispatcher("/pages/profileSetting.jsp").forward(request, response);
     }

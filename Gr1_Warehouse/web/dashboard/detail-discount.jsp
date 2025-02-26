@@ -189,6 +189,7 @@
                                                                            data-max-uses="${d.max_uses}">
                                                                             <i class="ri-pencil-line"></i>
                                                                         </a>
+
                                                                     </li>
                                                                 </ul>
                                                             </td>

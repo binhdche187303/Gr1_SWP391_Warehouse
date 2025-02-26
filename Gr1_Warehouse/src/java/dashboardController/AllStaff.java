@@ -4,6 +4,7 @@
  */
 package dashboardController;
 
+import com.google.gson.Gson;
 import dao.RoleDAO;
 import dao.UserDAO;
 import java.io.IOException;
@@ -63,12 +64,35 @@ public class AllStaff extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         UserDAO ud = new UserDAO();
-        List<User> listStaff = ud.getAllStaff();
         RoleDAO r = new RoleDAO();
+
+        String roleParam = request.getParameter("role"); // Lấy role từ request
+
+        List<User> listStaff;
+        if (roleParam != null) {
+            try {
+                int roleId = Integer.parseInt(roleParam); // Chuyển roleParam thành role_id
+                listStaff = ud.getStaffByRole(roleId); // Lấy danh sách nhân viên theo role_id
+            } catch (NumberFormatException e) {
+                listStaff = ud.getAllStaff(); // Nếu roleParam không phải số, lấy tất cả nhân viên
+            }
+        } else {
+            listStaff = ud.getAllStaff(); // Nếu không có roleParam, lấy tất cả nhân viên
+        }
+
         List<Role> listRole = r.getAllRole();
+
         request.setAttribute("listStaff", listStaff);
         request.setAttribute("listRole", listRole);
-        request.getRequestDispatcher("/dashboard/all-staff.jsp").forward(request, response);
+
+        if ("4".equals(roleParam)) { // Nếu role_id là 4, trả JSON cho dropdown
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            Gson gson = new Gson();
+            response.getWriter().write(gson.toJson(listStaff));
+        } else { // Nếu không phải role_id = 4, chuyển hướng sang trang all-staff.jsp
+            request.getRequestDispatcher("/dashboard/all-staff.jsp").forward(request, response);
+        }
     }
 
     /**
@@ -85,21 +109,14 @@ public class AllStaff extends HttpServlet {
         UserDAO ud = new UserDAO();
         RoleDAO r = new RoleDAO();
         String status = request.getParameter("status");
-        String user_id_raw = request.getParameter("user_id");
-        String roleId_raw = request.getParameter("rolename");
-        try {
-            int roleId = Integer.parseInt(roleId_raw);
-            int user_id = Integer.parseInt(user_id_raw);
-            ud.updateStaff(status, roleId, user_id);
-            List<User> listStaff = ud.getAllStaff();
-            List<Role> listRole = r.getAllRole();
-            request.setAttribute("listStaff", listStaff);
-            request.setAttribute("listRole", listRole);
-            request.getRequestDispatcher("/dashboard/all-staff.jsp").forward(request, response);
-        } catch (ServletException | IOException | NumberFormatException e) {
-            System.out.println(e);
-        }
-
+        String user_id = request.getParameter("user_id");
+        String roleId = request.getParameter("rolename");
+        ud.updateStaff(status, Integer.parseInt(roleId), Integer.parseInt(user_id));
+        List<User> listStaff = ud.getAllStaff();
+        List<Role> listRole = r.getAllRole();
+        request.setAttribute("listStaff", listStaff);
+        request.setAttribute("listRole", listRole);
+        request.getRequestDispatcher("/dashboard/all-staff.jsp").forward(request, response);
     }
 
     /**

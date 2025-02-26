@@ -38,7 +38,27 @@
     </head>
     <body>
         <%@ include file="/includes/header.jsp" %> <!-- Nhúng header -->
-
+        <section class="breadscrumb-section pt-0">
+            <div class="container-fluid-lg">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="breadscrumb-contain">
+                            <h2 class="mb-2">Đăng kí</h2>
+                            <nav>
+                                <ol class="breadcrumb mb-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="index.html">
+                                            <i class="fa-solid fa-house"></i>
+                                        </a>
+                                    </li>
+                                    <li class="breadcrumb-item active">Đăng kí</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
         <!-- sign up section start -->
         <section class="log-in-section section-b-space">
             <div class="container-fluid-lg w-100">
@@ -53,7 +73,7 @@
                         <div class="log-in-box">
                             <div class="log-in-title">
                                 <h3>Welcome To Fastkart</h3>
-                                <h4>Create New Account</h4>
+                                <h4>Tạo tài khoản mới</h4>
                             </div>
 
                             <div class="input-box">
@@ -65,27 +85,27 @@
                                     </div>
 
                                     <div class="form-group mt-3">
-                                        <label for="username">Username</label>
+                                        <label for="username">Tên người dùng</label>
                                         <input type="text" class="form-control" id="username" name="username" required value="${param.username}">
                                     </div>
 
                                     <div class="form-group mt-3">
-                                        <label for="password">Password</label>
+                                        <label for="password">Mật khẩu</label>
                                         <input type="password" class="form-control" id="password" name="password" required>
                                     </div>
 
                                     <div class="form-group mt-3">
-                                        <label for="fullname">Full Name</label>
+                                        <label for="fullname">Tên đầy đủ</label>
                                         <input type="text" class="form-control" id="fullname" name="fullname" required value="${param.fullname}">
                                     </div>
 
                                     <div class="form-group mt-3">
-                                        <label for="phone">Phone Number</label>
+                                        <label for="phone">Số điện thoại</label>
                                         <input type="text" class="form-control" id="phone" name="phone" required value="${param.phone}">
                                     </div>
                                     <br><!-- comment -->
                                 <div class="col-12">
-                                    <button class="btn btn-animation w-100" type="submit">Sign Up</button>
+                                    <button class="btn btn-animation w-100" type="submit">Đăng kí</button>
                                 </div>                               
                                 </form>
 
@@ -102,21 +122,15 @@
                                            class="btn google-button w-100">
                                             <img src="${pageContext.request.contextPath}/assets/images/inner-page/google.png" class="blur-up lazyload"
                                                  alt="">
-                                            Sign up with Google
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="https://www.facebook.com/" class="btn google-button w-100">
-                                            <img src="${pageContext.request.contextPath}/assets/images/inner-page/facebook.png" class="blur-up lazyload"
-                                                 alt=""> Sign up with Facebook
+                                            Đăng ký với Google
                                         </a>
                                     </li>
                                 </ul>
                             </div>
 
                             <div class="sign-up-box">
-                                <h4>Already have an account?</h4>
-                                <a href="${pageContext.request.contextPath}/login">Log In</a>
+                                <h4>Bạn đã có tài khoản?</h4>
+                                <a href="${pageContext.request.contextPath}/login">Đăng nhập</a>
                             </div>
                         </div>
                     </div>

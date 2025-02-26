@@ -1,50 +1,157 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
     <servlet>
-        <servlet-name>ExportStaff</servlet-name>
-        <servlet-class>dashboardController.ExportStaff</servlet-class>
+        <servlet-name>EditWareHouse</servlet-name>
+        <servlet-class>controller.EditWareHouse</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>Dashboard</servlet-name>
-        <servlet-class>dashboardController.Dashboard</servlet-class>
+        <servlet-name>GetArchiveServlet</servlet-name>
+        <servlet-class>controller.GetArchiveServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProductByBrand</servlet-name>
+        <servlet-class>dashboardController.ProductByBrand</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GetSupplierDetails</servlet-name>
+        <servlet-class>controller.GetSupplierDetails</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CartController</servlet-name>
+        <servlet-class>controller.CartController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CheckStockController</servlet-name>
+        <servlet-class>controller.CheckStockController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CheckoutController</servlet-name>
+        <servlet-class>controller.CheckoutController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ConfirmOrderController</servlet-name>
+        <servlet-class>controller.ConfirmOrderController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RemoveCartController</servlet-name>
+        <servlet-class>controller.RemoveCartController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ShopDetails</servlet-name>
+        <servlet-class>controller.ShopDetails</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Home</servlet-name>
+        <servlet-class>controller.Home</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddStaff</servlet-name>
+        <servlet-class>dashboardController.AddStaff</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CouponProductList</servlet-name>
         <servlet-class>dashboardController.CouponProductList</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>CreateCouponProduct</servlet-name>
+        <servlet-class>dashboardController.CreateCouponProduct</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>DiscountProductDetail</servlet-name>
         <servlet-class>dashboardController.DiscountProductDetail</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>CreateCouponProduct</servlet-name>
-        <servlet-class>dashboardController.CreateCouponProduct</servlet-class>
+        <servlet-name>Dashboard</servlet-name>
+        <servlet-class>dashboardController.Dashboard</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ExportStaff</servlet-name>
+        <servlet-class>dashboardController.ExportStaff</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PurchaseOrderServlet</servlet-name>
+        <servlet-class>purchaseorder.PurchaseOrderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ArchiveServlet</servlet-name>
+        <url-pattern>/archive</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddWarehouseServlet</servlet-name>
+        <url-pattern>/addWarehouse</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditWareHouse</servlet-name>
+        <url-pattern>/editWarehouse</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetArchiveServlet</servlet-name>
+        <url-pattern>/getArchive</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductByBrand</servlet-name>
+        <url-pattern>/productbrand</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetSupplierDetails</servlet-name>
+        <url-pattern>/getSupplierDetails</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CartController</servlet-name>
+        <url-pattern>/cart</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CheckStockController</servlet-name>
+        <url-pattern>/check-stock</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CheckoutController</servlet-name>
+        <url-pattern>/checkout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ConfirmOrderController</servlet-name>
+        <url-pattern>/confirm-order</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveCartController</servlet-name>
+        <url-pattern>/remove-cart</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShopDetails</servlet-name>
+        <url-pattern>/shopDetails</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Home</servlet-name>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AddStaff</servlet-name>
         <url-pattern>/addstaff</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ExportStaff</servlet-name>
-        <url-pattern>/exportstaff</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Dashboard</servlet-name>
-        <url-pattern>/dashboardAdmin</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CouponProductList</servlet-name>
         <url-pattern>/couponproductlist</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>CreateCouponProduct</servlet-name>
+        <url-pattern>/createcouponproduct</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>DiscountProductDetail</servlet-name>
         <url-pattern>/discountproductdetail</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>CreateCouponProduct</servlet-name>
-        <url-pattern>/createcouponproduct</url-pattern>
+        <servlet-name>Dashboard</servlet-name>
+        <url-pattern>/dashboard</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>ExportStaff</servlet-name>
+        <url-pattern>/exportstaff</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PurchaseOrderServlet</servlet-name>
+        <url-pattern>/purchaseOrderServlet</url-pattern>
+    </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login</welcome-file>
         <!-- hoặc tên file jsp khác, ví dụ home.jsp -->
@@ -106,8 +213,12 @@
         <servlet-class>controller.EditSupplier</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>AddStaff</servlet-name>
-        <servlet-class>dashboardController.AddStaff</servlet-class>
+        <servlet-name>ArchiveServlet</servlet-name>
+        <servlet-class>controller.ArchiveServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddWarehouseServlet</servlet-name>
+        <servlet-class>controller.AddWarehouseServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -124,7 +235,7 @@
     <servlet-mapping>
         <servlet-name>requestPassword</servlet-name>
         <url-pattern>/request</url-pattern>
-        </servlet-mapping>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>resetPassword</servlet-name>
         <url-pattern>/reset</url-pattern>
@@ -166,4 +277,3 @@
         <url-pattern>/editSupplier</url-pattern>
     </servlet-mapping>
 </web-app>
-

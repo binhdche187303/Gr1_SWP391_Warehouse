@@ -103,11 +103,11 @@
                                 <div class="card card-table">
                                     <div class="card-body">
                                         <div class="title-header option-title">
-                                            <h5>Coupon List Order</h5>
+                                            <h5>Coupon List</h5>
                                             <div class="right-options">
                                                 <ul>
                                                     <li>
-                                                        <a class="btn btn-solid" href="/Gr1_Warehouse/createcoupon">Add Coupon Order</a>
+                                                        <a class="btn btn-solid" href="/Gr1_Warehouse/createcoupon">Add Coupon</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -178,13 +178,13 @@
 
                                                                 <td>
                                                                     <ul>
-                                                                        <li>
-                                                                            <a href="listdiscounthistory?discount_id=${ld.discount_id}" 
-                                                                               class="view-discount-history" 
-                                                                               >
-                                                                                <i class="ri-eye-line"></i>
-                                                                            </a>
-                                                                        </li>
+                                                                        <a href="listdiscounthistory?discount_id=${ld.discount_id}" 
+                                                                           class="view-discount-history" 
+                                                                           >
+                                                                            <i class="ri-eye-line"></i>
+                                                                        </a>
+
+
                                                                         <li>
                                                                             <a href="javascript:void(0)" 
                                                                                class="edit-discount-btn"
@@ -197,6 +197,7 @@
                                                                                data-max-uses="${ld.max_uses}">
                                                                                 <i class="ri-pencil-line"></i>
                                                                             </a>
+
                                                                         </li>
                                                                     </ul>
                                                                 </td>

@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.Role;
+import ulti.MD5Hash;
 
 /**
  *
@@ -20,40 +21,49 @@ public class UserDAO extends DBContext {
 
     // Phương thức login
     public User login(String identifier, String password) {
-        User user = null;
-        String sql = "SELECT u.user_id, u.username, u.password, u.fullname, u.phone, u.email, "
-                + "u.role_id, u.status, u.address, r.role_name "
+        String sql = "SELECT u.user_id, u.username, u.password, u.fullname, u.phone, u.email, u.role_id, u.status, u.address, r.role_name "
                 + "FROM Users u "
                 + "JOIN Roles r ON u.role_id = r.role_id "
-                + "WHERE (u.email = ? OR u.username = ?) AND u.password = ?";
+                + "WHERE u.email = ? OR u.username = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, identifier); // Dùng email hoặc username
+            ps.setString(1, identifier);
             ps.setString(2, identifier);
-            ps.setString(3, password);
             ResultSet rs = ps.executeQuery();
-
             if (rs.next()) {
-                user = new User();
-                user.setUserId(rs.getInt("user_id"));
-                user.setUsername(rs.getString("username"));
-                user.setPassword(rs.getString("password"));
-                user.setFullname(rs.getString("fullname"));
-                user.setPhone(rs.getString("phone"));
-                user.setEmail(rs.getString("email"));
-                user.setAddress(rs.getString("address")); // Gán giá trị address
-                model.Role role = new model.Role();
-                role.setRoleId(rs.getInt("role_id"));
-                role.setRoleName(rs.getString("role_name"));
-                user.setRole(role);
+                String storedHashedPassword = rs.getString("password");
+                String hashedInputPassword = MD5Hash.hash(password);
+                System.out.println("Hashed Input Password: " + hashedInputPassword);
+                System.out.println("Stored Hashed Password: " + storedHashedPassword);
+                if (hashedInputPassword.equals(storedHashedPassword)) {
+                    User user = new User();
+                    user.setUserId(rs.getInt("user_id"));
+                    user.setUsername(rs.getString("username"));
+                    user.setPassword(storedHashedPassword);
+                    user.setFullname(rs.getString("fullname"));
+                    user.setPhone(rs.getString("phone"));
+                    user.setEmail(rs.getString("email"));
+                    user.setAddress(rs.getString("address"));
 
-                user.setStatus(rs.getString("status"));
+                    Role role = new Role();
+                    role.setRoleId(rs.getInt("role_id"));
+                    role.setRoleName(rs.getString("role_name"));
+                    user.setRole(role);
+
+                    user.setStatus(rs.getString("status"));
+
+                    return user;
+                } else {
+                    System.out.println("Đăng nhập thất bại: Sai mật khẩu.");
+                }
+            } else {
+                System.out.println("Đăng nhập thất bại: Người dùng không tồn tại.");
             }
         } catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
             e.printStackTrace();
         }
-
-        return user;
+        return null;
     }
 
     // Kiểm tra email đã tồn tại chưa
@@ -73,10 +83,17 @@ public class UserDAO extends DBContext {
     }
 
     public boolean register(String username, String password, String fullname, String phone, String email, int roleId, String status) {
+        String hashedPassword = MD5Hash.hash(password);
+        if (hashedPassword == null) {
+            System.out.println("Lỗi khi hash mật khẩu!");
+            return false;
+        }
+
         String sql = "INSERT INTO Users (username, password, fullname, phone, email, role_id, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, username);
-            ps.setString(2, password);
+            ps.setString(2, hashedPassword);
             ps.setString(3, fullname);
             ps.setString(4, phone);
             ps.setString(5, email);
@@ -84,9 +101,15 @@ public class UserDAO extends DBContext {
             ps.setString(7, status);
 
             int rowsAffected = ps.executeUpdate();
-
-            return rowsAffected > 0;
+            if (rowsAffected > 0) {
+                System.out.println("Đăng ký thành công: " + username);
+                return true;
+            } else {
+                System.out.println("Đăng ký thất bại: " + username);
+                return false;
+            }
         } catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -128,7 +151,7 @@ public class UserDAO extends DBContext {
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getFullname());
             ps.setString(3, user.getEmail());
-            ps.setString(4, "123");  // Đặt mật khẩu mặc định là "123"
+            ps.setString(4, MD5Hash.hash("123"));  // Mã hóa mật khẩu mặc định "123"
             ps.setInt(5, user.getRole().getRoleId());
             ps.setString(6, user.getStatus());
 
@@ -184,13 +207,15 @@ public class UserDAO extends DBContext {
     }
 
     public void updatePassword(String email, String password) {
+        String hashedPassword = MD5Hash.hash(password);
+
         String sql = "UPDATE users SET password = ? WHERE email = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, password);
-            ps.setString(2, email);  // Sử dụng email để tìm người dùng
+            ps.setString(1, hashedPassword);
+            ps.setString(2, email);
             ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();  // Kiểm tra nếu có lỗi
+            e.printStackTrace();
         }
     }
 
@@ -243,16 +268,14 @@ public class UserDAO extends DBContext {
         }
     }
 
-    //Change password
-    public void updatePassword(String password, int user_id) {
+    public void updatePassword(String hashedPassword, int user_id) {
         String sql = "UPDATE dbo.Users SET password=? WHERE user_id=?";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setString(1, password);
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setString(1, hashedPassword);
             st.setInt(2, user_id);
             st.executeUpdate();
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
@@ -262,7 +285,7 @@ public class UserDAO extends DBContext {
         List<User> list = new ArrayList<>();
         String sql = "SELECT u.user_id, u.username, u.password,u.fullname,u.phone,u.email,u.address,r.role_id,u.status, r.role_name FROM dbo.Users u JOIN dbo.Roles r\n"
                 + "ON r.role_id = u.role_id\n"
-                + "WHERE r.role_id = 2";
+                + "WHERE r.role_name = N'Customer'";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -296,7 +319,7 @@ public class UserDAO extends DBContext {
         List<User> list = new ArrayList<>();
         String sql = "SELECT u.user_id,u.username, u.password,u.fullname,u.phone,u.email,u.address,u.role_id,r.role_name,u.status FROM dbo.Users u\n"
                 + "JOIN dbo.Roles r ON r.role_id = u.role_id\n"
-                + "WHERE r.role_id NOT IN (1, 2);";
+                + "WHERE r.role_name NOT IN (N'Customer', N'Admin System');";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -423,21 +446,24 @@ public class UserDAO extends DBContext {
         return addedCount;
     }
 
-    public static void main(String[] args) throws SQLException {
-        // Create some User objects
-        List<User> userList = new ArrayList<>();
-        userList.add(new User("test11", "pass1", "Test User 1", "test11@example.com", new Role(4)));
-        userList.add(new User("test22", "pass2", "Test User 2", "test21@example.com", new Role(4)));
-        userList.add(new User("test33", "pass3", "Test User 3", "test31@example.com", new Role(4)));
+    public List<User> getStaffByRole(int roleId) {
+        List<User> staffList = new ArrayList<>();
+        String sql = "SELECT user_id, fullname FROM Users WHERE role_id = ? AND status = 'Active'";
 
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, roleId);
+            ResultSet rs = ps.executeQuery();
 
-
-        // Call addUsers to add these users to the database
-        UserDAO ud = new UserDAO();
-        int addedCount = ud.addUsers(userList);
-
-        // Output the number of added users
-        System.out.println("Number of users added: " + addedCount);
+            while (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("user_id"));
+                user.setFullname(rs.getString("fullname"));
+                staffList.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return staffList;
     }
 
 }

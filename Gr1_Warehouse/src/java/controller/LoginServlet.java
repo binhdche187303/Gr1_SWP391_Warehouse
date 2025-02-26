@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 import java.util.Base64;
 import model.GoogleAccount;
 import model.Role;
+import ulti.MD5Hash;
 
 public class LoginServlet extends HttpServlet {
 
@@ -74,17 +75,15 @@ public class LoginServlet extends HttpServlet {
         User user = userDAO.findByEmail(googleAccount.getEmail());
 
         if (user == null) {
-            // Nếu user chưa tồn tại, tạo mới
             user = new User();
             user.setEmail(googleAccount.getEmail());
             user.setUsername(googleAccount.getName());
             user.setFullname(googleAccount.getName()); // Fullname giống username
             user.setPassword("123"); // Mật khẩu mặc định là 123
 
-            // Thiết lập Role mặc định
             Role role = new Role();
             role.setRoleId(2);  // Role id 2 là Customer
-            user.setRole(role);  // Gán role cho user
+            user.setRole(role); 
             user.setStatus("Active");
 
             try {
@@ -98,19 +97,17 @@ public class LoginServlet extends HttpServlet {
             }
         }
 
-        // Nếu user đã tồn tại hoặc vừa được tạo, tiến hành đăng nhập
         HttpSession session = request.getSession();
         session.setAttribute("acc", user);
 
-        // Xác định đường dẫn chuyển hướng theo role_id
         int roleId = user.getRole().getRoleId();
 
         switch (roleId) {
             case 1:  // Admin system
-                response.sendRedirect("/Gr1_Warehouse/dashboardAdmin");
+                response.sendRedirect("/Gr1_Warehouse/includes/admin.jsp");
                 break;
             case 2:  // Customer
-                response.sendRedirect(request.getContextPath() + "/pages/home.jsp");
+                response.sendRedirect("/Gr1_Warehouse/pages/home.jsp");
                 break;
             case 3:  // Warehouse manager
                 response.sendRedirect("warehouse/manager/dashboard");
@@ -129,12 +126,10 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Lấy thông tin từ form
-        String identifier = request.getParameter("identifier"); // Nhận email hoặc username
+        String identifier = request.getParameter("identifier");
         String password = request.getParameter("pass");
-        String savePass = request.getParameter("save-pass"); // Kiểm tra checkbox "Remember me"
+        String savePass = request.getParameter("save-pass");
 
-        // Kiểm tra nếu email và password trống
         if (identifier == null || identifier.trim().isEmpty()) {
             System.out.println("User is empty.");
             request.setAttribute("error", "Email or Username cannot be empty");
@@ -149,13 +144,10 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        // Loại bỏ khoảng trắng thừa
         identifier = identifier.trim();
         password = password.trim();
 
-        // Khởi tạo UserDAO để kiểm tra đăng nhập
         UserDAO userDAO = null;
-
         try {
             userDAO = new UserDAO();
             System.out.println("UserDAO instance created successfully.");
@@ -167,8 +159,18 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        User user = userDAO.login(identifier, password);
+        String hashedPassword = null;
+        try {
+            hashedPassword = MD5Hash.hash(password);
+        } catch (Exception e) {
+            System.out.println("Error hashing password: " + e.getMessage());
+            e.printStackTrace();
+            request.setAttribute("error", "Internal Server Error. Please try again later.");
+            request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
+            return;
+        }
 
+        User user = userDAO.login(identifier, password);
         if (user == null) {
             System.out.println("Login failed for identifier: " + identifier);
             request.setAttribute("identifier", identifier);
@@ -187,50 +189,51 @@ public class LoginServlet extends HttpServlet {
 
         System.out.println("Login successful for identifier: " + identifier);
 
-        // Đăng nhập thành công, lưu thông tin người dùng vào session
         HttpSession session = request.getSession();
         session.setAttribute("acc", user);
 
-        // Lưu email vào cookie nếu người dùng chọn "Remember me"
         if (savePass != null) {
-            // Lưu email vào cookie với thời gian tồn tại là 7 ngày
             Cookie emailCookie = new Cookie("identifier", identifier);
-            emailCookie.setMaxAge(7 * 24 * 60 * 60);  // Lưu cookie trong 7 ngày
-            emailCookie.setPath("/");  // Cookie có sẵn cho toàn bộ website
+            emailCookie.setMaxAge(7 * 24 * 60 * 60);
+            emailCookie.setPath("/");
             response.addCookie(emailCookie);
-            // Lưu password vào cookie (mã hóa trước khi lưu)
+
             String encodedPassword = Base64.getEncoder().encodeToString(password.getBytes());
             Cookie passwordCookie = new Cookie("password", encodedPassword);
-            passwordCookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
+            passwordCookie.setMaxAge(7 * 24 * 60 * 60);
             passwordCookie.setPath("/");
             response.addCookie(passwordCookie);
 
             System.out.println("Identifier and password saved in cookies for 7 days.");
         } else {
-            // Nếu không chọn "Remember me", xóa cookie email
             Cookie emailCookie = new Cookie("identifier", "");
-            emailCookie.setMaxAge(0);  // Xóa cookie ngay lập tức
-            emailCookie.setPath("/");  // Đảm bảo cookie bị xóa trên toàn bộ trang web
+            emailCookie.setMaxAge(0);
+            emailCookie.setPath("/");
             response.addCookie(emailCookie);
             System.out.println("Identifier cookie deleted.");
         }
 
-        // Kiểm tra vai trò của người dùng và chuyển hướng tới trang tương ứng
-        String roleName = user.getRole().getRoleName();
+        Role userRole = user.getRole();
+        if (userRole == null) {
+            System.out.println("User has no role assigned. Redirecting to error page.");
+            response.sendRedirect("error");
+            return;
+        }
+
+        int roleId = userRole.getRoleId();
+        String roleName = userRole.getRoleName();
 
         if (roleName == null || roleName.trim().isEmpty()) {
-            System.out.println("User role is invalid. Redirecting to error page.");
+            System.out.println("User role name is invalid. Redirecting to error page.");
             response.sendRedirect("error");
             return;
         }
 
         System.out.println("Redirecting user with role: " + roleName);
-        // Xác định đường dẫn chuyển hướng theo role_id
-        int roleId = user.getRole().getRoleId();
 
         switch (roleId) {
             case 1:  // Admin system
-                response.sendRedirect("/Gr1_Warehouse/dashboardAdmin");
+                response.sendRedirect("/Gr1_Warehouse/includes/admin.jsp");
                 break;
             case 2:  // Customer
                 response.sendRedirect(request.getContextPath() + "/pages/home.jsp");
@@ -245,6 +248,7 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect("packing/staff/dashboard");
                 break;
             default:
+                System.out.println("Unknown role ID: " + roleId + ". Redirecting to error page.");
                 response.sendRedirect("error");
         }
     }

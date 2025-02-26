@@ -36,7 +36,27 @@
     </head>
     <body>
         <%@ include file="/includes/header.jsp" %> <!-- Nhúng header -->
-
+        <section class="breadscrumb-section pt-0">
+            <div class="container-fluid-lg">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="breadscrumb-contain">
+                            <h2 class="mb-2">Đăng nhập</h2>
+                            <nav>
+                                <ol class="breadcrumb mb-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="index.html">
+                                            <i class="fa-solid fa-house"></i>
+                                        </a>
+                                    </li>
+                                    <li class="breadcrumb-item active">Đăng nhập</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
         <!-- log in section start -->
         <section class="log-in-section background-image-2 section-b-space">
             <div class="container-fluid-lg w-100">
@@ -54,7 +74,6 @@
                                 <h4>Log In Your Account</h4>
                             </div>
 
-                            <!-- Hiển thị thông báo lỗi nếu có -->
                             <% if(request.getAttribute("error") != null) { %>
                             <div class="alert alert-danger">
                                 <%= request.getAttribute("error") %>
@@ -66,14 +85,14 @@
                                     <div class="col-12">
                                         <div class="form-floating theme-form-floating log-in-form">
                                             <input type="text" class="form-control" id="identifier" name="identifier" placeholder="Email or Username" required>
-                                            <label for="identifier">Email or Username</label>
+                                            <label for="identifier">Email hoặc tên tài khoản</label>
                                         </div>
                                     </div>
 
                                     <div class="col-12">
                                         <div class="form-floating theme-form-floating log-in-form">
                                             <input type="password" class="form-control" id="password" name="pass" placeholder="Password" required>
-                                            <label for="password">Password</label>
+                                            <label for="password">Mật khẩu</label>
                                         </div>
                                     </div>
 
@@ -81,28 +100,28 @@
                                         <div class="forgot-box">
                                             <div class="form-check ps-0 m-0 remember-box">
                                                 <input class="checkbox_animated check-box" type="checkbox" id="flexCheckDefault" name="save-pass">
-                                                <label class="form-check-label" for="flexCheckDefault">Remember me</label>
+                                                <label class="form-check-label" for="flexCheckDefault">Ghi nhớ tài khoản</label>
                                             </div>
-                                            <a href="${pageContext.request.contextPath}/forgot" class="forgot-password">Forgot Password?</a>
+                                            <a href="${pageContext.request.contextPath}/request" class="forgot-password">Quên mật khẩu?</a>
                                         </div>
                                     </div>
 
                                     <div class="col-12">
-                                        <button class="btn btn-animation w-100 justify-content-center" type="submit">Log In</button>
+                                        <button class="btn btn-animation w-100 justify-content-center" type="submit">Đăng nhập</button>
                                     </div>
                                 </form>
 
                             </div>
 
                             <div class="other-log-in">
-                                <h6>or</h6>
+                                <h6>hoặc</h6>
                             </div>
 
                             <div class="log-in-button">
                                 <ul>
                                     <li>
-                                        <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:9999/Gr1_Warehouse/login&response_type=code&client_id=1072735184008-k7hvr7gtfkmbjlcndhptbudukl57bq51.apps.googleusercontent.com&approval_prompt=force" class="btn google-button w-100">
-                                            <img src="${pageContext.request.contextPath}/assets/images/inner-page/google.png" class="blur-up lazyload" alt=""> Log In with Google
+                                        <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/Gr1_Warehouse/login&response_type=code&client_id=1072735184008-k7hvr7gtfkmbjlcndhptbudukl57bq51.apps.googleusercontent.com&approval_prompt=force" class="btn google-button w-100">
+                                            <img src="${pageContext.request.contextPath}/assets/images/inner-page/google.png" class="blur-up lazyload" alt=""> Đăng nhập với google
 
 
                                         </a>
@@ -116,8 +135,8 @@
                             </div>
 
                             <div class="sign-up-box">
-                                <h4>Don't have an account?</h4>
-                                <a href="${pageContext.request.contextPath}/register">Sign Up</a>
+                                <h4>Bạn chưa có tài khoản?</h4>
+                                <a href="${pageContext.request.contextPath}/register">Đăng kí</a>
                             </div>
                         </div>
                     </div>
