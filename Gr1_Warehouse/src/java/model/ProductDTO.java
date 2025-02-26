@@ -11,13 +11,15 @@ package model;
 public class ProductDTO {
     private String productName;
     private String sku;
+    private String variantId;
 
     public ProductDTO() {
     }
 
-    public ProductDTO(String productName, String sku) {
+    public ProductDTO(String productName, String sku, String variantId) {
         this.productName = productName;
         this.sku = sku;
+        this.variantId = variantId;
     }
 
     public String getProductName() {
@@ -34,6 +36,14 @@ public class ProductDTO {
 
     public void setSku(String sku) {
         this.sku = sku;
+    }
+
+    public String getVariantId() {
+        return variantId;
+    }
+
+    public void setVariantId(String variantId) {
+        this.variantId = variantId;
     }
 
 

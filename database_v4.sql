@@ -192,21 +192,21 @@ CREATE TABLE TokenForgetPassword (
     FOREIGN KEY (user_id) REFERENCES Users(user_id) -- Khóa ngoại liên kết bảng Users
 );
 
-
-
---Bảng IventoryBatches (Lô hàng)
 CREATE TABLE InventoryBatches (
-    batch_id INT PRIMARY KEY IDENTITY(1,1),   -- ID của lô hàng
-    variant_id INT NOT NULL,                   -- ID biến thể sản phẩm
-    quantity INT NOT NULL,                     -- Số lượng tồn trong lô
-    unit_price DECIMAL(10,2) NOT NULL,          -- Giá nhập của lô hàng
-    expiration_date DATE,                      -- Ngày hết hạn (nếu có)
-    received_date DATETIME NOT NULL,            -- Ngày nhập kho
-    warehouse_id INT NOT NULL,                 -- Kho lưu trữ
-    status NVARCHAR(20) NOT NULL DEFAULT 'In Stock' CHECK (status IN ('In Stock', 'Sold Out', 'Expired')) -- Trạng thái lô hàng
-    FOREIGN KEY (variant_id) REFERENCES ProductVariants(variant_id),
+    batch_id INT PRIMARY KEY IDENTITY(1,1),   
+    sku NVARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,                    
+    unit_price DECIMAL(10,2) NOT NULL,        
+    expiration_date DATE,                     
+    received_date DATETIME NOT NULL,          
+    warehouse_id INT NOT NULL,                
+    status NVARCHAR(20) NOT NULL DEFAULT 'In Stock' 
+        CHECK (status IN ('In Stock', 'Sold Out', 'Expired')),  
+    FOREIGN KEY (sku) REFERENCES ProductVariants(sku),
     FOREIGN KEY (warehouse_id) REFERENCES Warehouses(warehouse_id)
 );
+
+
 --select* from InventoryBatches 
 --select* from  PurchaseOrder
 --select* from PurchaseDetails 
@@ -232,7 +232,6 @@ CREATE TABLE PurchaseOrder (
 CREATE TABLE PurchaseDetails (
     detail_id INT PRIMARY KEY IDENTITY(1,1),  -- ID chi tiết nhập hàng
     order_id INT NOT NULL,                     -- ID phiếu nhập hàng
-    variant_id INT NOT NULL,                   -- ID biến thể sản phẩm
     sku NVARCHAR(50) NOT NULL,                  -- Mã SKU
     quantity INT NOT NULL,                     -- Số lượng nhập
     unit_price DECIMAL(10,2) NOT NULL,          -- Giá nhập mỗi đơn vị
@@ -241,10 +240,11 @@ CREATE TABLE PurchaseDetails (
     warehouse_id INT NOT NULL,                 -- Kho lưu trữ
     batch_id INT,                             -- ID lô hàng (nếu đã có)
     FOREIGN KEY (order_id) REFERENCES PurchaseOrder(order_id),
-    FOREIGN KEY (variant_id) REFERENCES ProductVariants(variant_id),
     FOREIGN KEY (warehouse_id) REFERENCES Warehouses(warehouse_id),
     FOREIGN KEY (batch_id) REFERENCES InventoryBatches(batch_id)
 );
+
+
 
 --Bảng InventoryCheck (Phiếu kiểm kho)
 CREATE TABLE InventoryCheck (

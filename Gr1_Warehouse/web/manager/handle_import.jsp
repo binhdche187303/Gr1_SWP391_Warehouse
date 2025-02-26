@@ -165,6 +165,7 @@
                                                                         <td>Chọn</td>
                                                                         <td>Tên sản phẩm</td>
                                                                         <td>SKU</td>
+                                                                        <td>Phân loại</td>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody id="productTable"></tbody> <!-- JS sẽ render sản phẩm vào đây -->
@@ -367,9 +368,15 @@
                         const tdSku = document.createElement("td");
                         tdSku.textContent = product.sku || "N/A";
 
+
+                        const tdVariantId = document.createElement("td");
+                        tdVariantId.textContent = product.variantId || "N/A";
+
+
                         tr.appendChild(tdCheckbox);
                         tr.appendChild(tdName);
                         tr.appendChild(tdSku);
+                        tr.appendChild(tdVariantId); // 🆕 Thêm cột variant_id
                         productTableBody.appendChild(tr);
                     });
 
@@ -439,6 +446,7 @@
 
                         const productName = row.children[1]?.textContent.trim() || "Không có tên";
                         const sku = row.children[2]?.textContent.trim() || "Không có SKU";
+                        const variantId = row.children[3]?.textContent.trim() || ""; // Lấy variant_id từ cột thứ 4
 
                         // Kiểm tra sản phẩm đã tồn tại chưa
                         const existingProduct = [...document.querySelectorAll(".selected-product")]
@@ -455,6 +463,7 @@
                         const productRow = document.createElement("div");
                         productRow.classList.add("selected-product", "row", "align-items-center", "mb-2");
                         productRow.dataset.sku = sku; // Lưu SKU để kiểm tra trùng
+                        productRow.dataset.variantId = variantId; // Lưu variant_id vào dataset
 
                         // Cột: Tên sản phẩm
                         const nameCol = document.createElement("div");
@@ -464,8 +473,8 @@
                         // Cột: SKU
                         const skuCol = document.createElement("div");
                         skuCol.classList.add("col-2");
-                        skuCol.textContent = sku;
-
+                        skuCol.textContent = sku;              
+                        
                         // 🟢 Cột: Hạn sử dụng
                         const expiryCol = document.createElement("div");
                         expiryCol.classList.add("col-2");
@@ -618,76 +627,149 @@
             }
         </script>
 
-        <!--Xử lí nhập vào PurchaseOrder-->
+        <!--Xử lí nhập vào table-->
         <script>
-            document.getElementById("submitOrderBtn").addEventListener("click", function (event) {
+            document.getElementById("submitOrderBtn").addEventListener("click", async function (event) {
                 event.preventDefault();
+                console.log("===> Bắt đầu xử lý nhập hàng");
 
-                // Parse JSON values and extract IDs correctly
                 const supplierValue = document.getElementById("supplierDropdown").value;
-                const supplierObj = supplierValue ? JSON.parse(supplierValue) : null;
-                const supplierId = supplierObj ? supplierObj.supplierId : null;
+                const supplierId = supplierValue ? JSON.parse(supplierValue).supplierId : null;
+                console.log("Supplier ID:", supplierId);
 
                 const warehouseValue = document.getElementById("warehouseDropdown").value;
-                const warehouseObj = warehouseValue ? JSON.parse(warehouseValue) : null;
-                const warehouseId = warehouseObj ? warehouseObj.warehouseId : null;
+                const warehouseId = warehouseValue ? JSON.parse(warehouseValue).warehouseId : null;
+                console.log("Warehouse ID:", warehouseId);
 
                 const warehouseStaffId = document.getElementById("warehouseStaffDropdown").value;
-                const totalAmount = document.getElementById("totalAmount").textContent.replace(" VND", "").replace(/\./g, "").trim();
-                const totalQuantity = document.getElementById("totalQuantity").textContent.trim();
+                console.log("Warehouse Staff ID:", warehouseStaffId);
+
+                let totalAmount = document.getElementById("totalAmount").textContent.replace(" VND", "").replace(/\./g, "").trim();
+                let totalQuantity = document.getElementById("totalQuantity").textContent.trim();
                 const notes = document.querySelector("textarea").value;
                 const billImgFile = document.getElementById("billImgUrl").files[0];
 
-                // Validate fields
-                if (!supplierId || !warehouseId || !warehouseStaffId || !totalAmount || !totalQuantity) {
-                    alert("Vui lòng điền đầy đủ thông tin.");
+                // Kiểm tra tổng số tiền và số lượng hợp lệ
+                totalAmount = parseFloat(totalAmount);
+                totalQuantity = parseInt(totalQuantity, 10);
+
+                if (!supplierId || !warehouseId || !warehouseStaffId) {
+                    alert("Vui lòng điền đầy đủ thông tin nhà cung cấp, kho và nhân viên kho.");
+                    return;
+                }
+                if (isNaN(totalAmount) || totalAmount <= 0 || isNaN(totalQuantity) || totalQuantity <= 0) {
+                    alert("Tổng tiền và tổng số lượng phải lớn hơn 0.");
                     return;
                 }
 
-                // Create FormData
+                const skus = [];
+                const quantities = [];
+                const unitPrices = [];
+                const expirationDates = [];
+                const variantIds = [];
+
+                let isValid = true;
+
+                async function fetchVariantId(sku) {
+                    try {
+                        const response = await fetch(`/Gr1_Warehouse/getVariantId?sku=${sku}`);
+                        if (!response.ok) {
+                            throw new Error("Không thể lấy Variant ID từ máy chủ.");
+                        }
+                        const data = await response.json();
+                        return data.variantId > 0 ? data.variantId : null;
+                    } catch (error) {
+                        console.error("Lỗi lấy variantId từ server:", error);
+                        return null;
+                    }
+                }
+
+                const productRows = document.querySelectorAll(".selected-product");
+                for (const row of productRows) {
+                    const sku = row.querySelector(".col-2:nth-child(2)").textContent.trim();
+                    const expirationDate = row.querySelector(".expiry-date").value.trim();
+                    let unitPrice = row.querySelector(".price").value.trim();
+                    let quantity = row.querySelector(".quantity").value.trim();
+                    let variantId = row.getAttribute("data-variant-id") || row.dataset.variantId;
+
+                    unitPrice = parseFloat(unitPrice);
+                    quantity = parseInt(quantity, 10);
+
+                    if (!variantId || parseInt(variantId) <= 0) {
+                        variantId = await fetchVariantId(sku);
+                        if (!variantId) {
+                            alert(`Không thể tìm thấy Variant ID cho SKU: ${sku}. Hãy kiểm tra lại!`);
+                            isValid = false;
+                            break;
+                        }
+                    }
+
+                    if (!sku || !expirationDate || isNaN(quantity) || quantity <= 0 || isNaN(unitPrice) || unitPrice <= 0) {
+                        alert("Vui lòng kiểm tra thông tin sản phẩm.");
+                        isValid = false;
+                        break;
+                    }
+
+                    skus.push(sku);
+                    quantities.push(quantity);
+                    unitPrices.push(unitPrice);
+                    expirationDates.push(expirationDate);
+                    variantIds.push(variantId);
+                }
+
+                if (!isValid || skus.length === 0) {
+                    return;
+                }
+
+                // Kiểm tra định dạng ảnh trước khi gửi
+                if (billImgFile) {
+                    const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+                    if (!allowedTypes.includes(billImgFile.type)) {
+                        alert("Ảnh hóa đơn phải có định dạng JPEG, PNG hoặc JPG.");
+                        return;
+                    }
+                }
+
                 const formData = new FormData();
-                formData.append("supplierId", supplierId);
-                formData.append("warehouseId", warehouseId);
-                formData.append("warehouseStaffId", warehouseStaffId);
-                formData.append("totalAmount", totalAmount);
-                formData.append("totalQuantity", totalQuantity);
+                formData.append("supplierId", String(supplierId));
+                formData.append("warehouseId", String(warehouseId));
+                formData.append("warehouseStaffId", String(warehouseStaffId));
+                formData.append("totalAmount", String(totalAmount));
+                formData.append("totalQuantity", String(totalQuantity));
                 formData.append("notes", notes || "");
+
+                for (let i = 0; i < skus.length; i++) {
+                    formData.append("skus", skus[i]);
+                    formData.append("quantities", quantities[i]);
+                    formData.append("unitPrices", unitPrices[i]);
+                    formData.append("expirationDates", expirationDates[i]);
+                    formData.append("variantIds", variantIds[i]);
+                }
+
                 if (billImgFile) {
                     formData.append("billImgUrl", billImgFile);
                 }
 
-                // Debug: log all form data
-                console.log("Sending form data:");
-                for (let [key, value] of formData.entries()) {
-                    console.log(key + ": " + value);
-                }
+                try {
+                    const response = await fetch("/Gr1_Warehouse/handleImport", {
+                        method: "POST",
+                        body: formData
+                    });
 
-                // Send to servlet
-                fetch("handleImport", {
-                    method: "POST",
-                    body: formData
-                            // Don't set Content-Type here - browser will set it with proper boundary
-                })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok: ' + response.status);
-                            }
-                            return response.text();
-                        })
-                        .then(data => {
-                            console.log("Response from server:", data);
-                            if (data.includes("success")) {
-                                alert("Nhập hàng thành công!");
-                                window.location.href = '/Gr1_Warehouse/importGood';  // Redirect to importGood page
-                            } else {
-                                alert("Có lỗi xảy ra: " + data);
-                            }
-                        })
-                        .catch(error => {
-                            console.error("Error:", error);
-                            alert("Lỗi kết nối: " + error.message);
-                        });
-            });</script>
+                    const data = await response.text();
+                    if (data.includes("success")) {
+                        alert("Nhập hàng thành công!");
+                        window.location.href = '/Gr1_Warehouse/importGood';
+                    } else {
+                        alert("Có lỗi xảy ra: " + data);
+                    }
+                } catch (error) {
+                    alert("Lỗi kết nối: " + error.message);
+                }
+            });
+        </script>
+
+
 
         <style>
             .modal-dialog {
