@@ -234,11 +234,10 @@
                                             <i class="ri-store-3-line"></i>
                                             <span>Quản lí thu chi</span>
                                         </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="financial_management.jsp">Thu chi</a>
+                                        <ul class="sidebar-submenu" >
+                                            <li style="display: block">
+                                                <a href="/Gr1_Warehouse/manager/financial_management.jsp">Thu chi</a>
                                             </li>
-
                                             <li>
                                                 <a href="debt.jsp">Công nợ</a>
                                             </li> 
@@ -256,7 +255,7 @@
                                             </li>
 
                                             <li>
-                                                <a href="createproduct.jsp">Tạo sản phẩm</a>
+                                                <a href="createproduct.jsp">Tạo sản phẩm mới</a>
                                             </li>
                                         </ul>
                                     </li>

@@ -167,10 +167,6 @@
                 <!-- All User Table Ends-->
             </div>                
         </div>
-        <script>
-
-
-        </script>
 
 
         <!-- latest js -->

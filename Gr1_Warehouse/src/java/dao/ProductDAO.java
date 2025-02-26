@@ -699,9 +699,14 @@ public class ProductDAO extends DBContext {
 
     public static void main(String[] args) {
         ProductDAO pd = new ProductDAO();
-        List<Products> list = pd.getAllProductsManager();
-        for (Products products : list) {
-            System.out.println(products);
+//        List<Products> list = pd.getDetails(1);
+// for (Products products : list) {
+//            System.out.println(products);
+//        }
+        Products p = pd.getDetails(1);
+       List< Images> i= p.getImages();
+        for (Images images : i) {
+            System.out.println(images.getImage_url());
         }
     }
 }
