@@ -6,7 +6,9 @@ import model.ProductVariants;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import model.Brands;
 import model.Categories;
@@ -617,5 +619,89 @@ public class ProductDAO extends DBContext {
         }
 
         return list;
+    }
+
+    public List<Products> getAllProductsManager() {
+        List<Products> products = new ArrayList<>();
+        String sql = """
+            SELECT 
+                p.product_id, 
+                p.product_name, 
+                p.origin, 
+                p.description,
+                c.category_id, c.category_name,
+                b.brand_id, b.brand_name,
+                i.image_id, i.image_url,
+                s.size_id, s.size_name, pv.price, pv.sku
+            FROM Products p
+            JOIN Categories c ON p.category_id = c.category_id
+            JOIN Brands b ON p.brand_id = b.brand_id
+            LEFT JOIN Images i ON p.product_id = i.product_id
+            LEFT JOIN ProductVariants pv ON p.product_id = pv.product_id
+            LEFT JOIN Sizes s ON pv.size_id = s.size_id
+            ORDER BY p.product_id
+        """;
+
+        try (
+                PreparedStatement stmt = connection.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+
+            Map<Integer, Products> productMap = new HashMap<>();
+
+            while (rs.next()) {
+                int productId = rs.getInt("product_id");
+
+                Products product = productMap.get(productId);
+                if (product == null) {
+                    product = new Products();
+                    product.setProductId(productId);
+                    product.setProductName(rs.getString("product_name"));
+                    product.setOrigin(rs.getString("origin"));
+                    product.setDescription(rs.getString("description"));
+
+                    Categories category = new Categories();
+                    category.setCategory_id(rs.getInt("category_id"));
+                    category.setCategory_name(rs.getString("category_name"));
+                    product.setCate(category);
+
+                    Brands brand = new Brands();
+                    brand.setBrand_id(rs.getInt("brand_id"));
+                    brand.setBrand_name(rs.getString("brand_name"));
+                    product.setBrand(brand);
+
+                    product.setImages(new ArrayList<>());
+                    product.setVariants(new ArrayList<>());
+
+                    productMap.put(productId, product);
+                }
+
+                if (rs.getString("image_url") != null) {
+                    Images image = new Images();
+                    image.setImage_id(rs.getInt("image_id"));
+                    image.setImage_url(rs.getString("image_url"));
+                    product.getImages().add(image);
+                }
+
+                if (rs.getInt("size_id") != 0) {
+                    ProductVariants variant = new ProductVariants();
+                    variant.setSize(new Sizes(rs.getInt("size_id"), rs.getString("size_name")));
+                    variant.setPrice(rs.getBigDecimal("price"));
+                    variant.setSku(rs.getString("sku"));
+                    product.getVariants().add(variant);
+                }
+            }
+
+            products.addAll(productMap.values());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    public static void main(String[] args) {
+        ProductDAO pd = new ProductDAO();
+        List<Products> list = pd.getAllProductsManager();
+        for (Products products : list) {
+            System.out.println(products);
+        }
     }
 }

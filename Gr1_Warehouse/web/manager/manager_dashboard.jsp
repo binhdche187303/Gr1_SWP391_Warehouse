@@ -65,21 +65,6 @@
                         </div>
                     </div>
 
-                    <form class="form-inline search-full" action="javascript:void(0)" method="get">
-                        <div class="form-group w-100">
-                            <div class="Typeahead Typeahead--twitterUsers">
-                                <div class="u-posRelative">
-                                    <input class="demo-input Typeahead-input form-control-plaintext w-100" type="text"
-                                           placeholder="Search Fastkart .." name="q" title="" autofocus>
-                                    <i class="close-search" data-feather="x"></i>
-                                    <div class="spinner-border Typeahead-spinner" role="status">
-                                        <span class="sr-only">Loading...</span>
-                                    </div>
-                                </div>
-                                <div class="Typeahead-menu"></div>
-                            </div>
-                        </div>
-                    </form>
                     <div class="nav-right col-6 pull-right right-header p-0">
                         <ul class="nav-menus">
                             <li>
@@ -257,6 +242,22 @@
                                             <li>
                                                 <a href="debt.jsp">Công nợ</a>
                                             </li> 
+                                        </ul>
+                                    </li>
+
+                                    <li class="sidebar-list">
+                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
+                                            <i class="ri-store-3-line"></i>
+                                            <span>Quản lí sản phẩm</span>
+                                        </a>
+                                        <ul class="sidebar-submenu">
+                                            <li>
+                                                <a href="/Gr1_Warehouse/productlist">Danh sách sản phẩm</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="createproduct.jsp">Tạo sản phẩm</a>
+                                            </li>
                                         </ul>
                                     </li>
 

@@ -156,7 +156,7 @@
                                                                             <i class="ri-eye-line"></i>
                                                                         </a>
                                                                         <a href="createcouponproduct?product_id=${lp.productId}" class="view-discount-history">
-                                                                            <i class="ri-add-circle-line" style="color: rgb(116, 125, 198);"></i>
+                                                                            <i class="ri-add-circle-line" style="color: rgb(116, 125, 198);width: 19;height: 18"></i>
                                                                         </a>
                                                                     </ul>
                                                                 </td>
