@@ -49,7 +49,6 @@
 
 
     <body>
-
         <!-- Header Start -->
         <%@ include file="/includes/header.jsp" %> <!-- Nhúng header -->
         <!-- Header End -->
@@ -392,7 +391,6 @@
 
                         document.querySelectorAll(".select-size").forEach(button => {
                             button.addEventListener("change", function () {
-
                                 let productId = this.getAttribute("data-product-id");
                                 let typeSizeSelect = document.querySelector("#typeSize-" + productId);
                                 let selectedOption = typeSizeSelect.options[typeSizeSelect.selectedIndex];

@@ -5,12 +5,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBContext {
-    protected Connection connection;
+    public Connection connection;
 
     public DBContext() {
         try {
             // Cập nhật URL, username và password cho phù hợp với cấu hình của bạn
-            String url = "jdbc:sqlserver://localhost:1433;databaseName=SWPV3;encrypt=true;trustServerCertificate=true"; // Thêm cấu hình SSL nếu cần
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=SWPV1;encrypt=true;trustServerCertificate=true"; // Thêm cấu hình SSL nếu cần
             String username = "sa";  // Đảm bảo đúng username
             String password = "123"; // Đảm bảo đúng password
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");

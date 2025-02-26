@@ -142,16 +142,14 @@ CREATE TABLE Orders (
     order_date DATETIME NOT NULL DEFAULT GETDATE(),
     total_amount DECIMAL(18, 2) NOT NULL,
     status NVARCHAR(50) DEFAULT 'Pending',
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
-);
-
-ALTER TABLE Orders
-ADD
-    customer_name NVARCHAR(255) NULL,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+	customer_name NVARCHAR(255) NULL,
     phone_number NVARCHAR(15) NULL,
     email NVARCHAR(255) NULL,
     shipping_address NVARCHAR(MAX) NULL,
-    notes NVARCHAR(MAX) NULL;
+    notes NVARCHAR(MAX) NULL
+);
+
 
 -- Bảng OrderDetails (Chi tiết đơn hàng)
 CREATE TABLE OrderDetails (
@@ -194,6 +192,8 @@ CREATE TABLE TokenForgetPassword (
     FOREIGN KEY (user_id) REFERENCES Users(user_id) -- Khóa ngoại liên kết bảng Users
 );
 
+
+
 --Bảng IventoryBatches (Lô hàng)
 CREATE TABLE InventoryBatches (
     batch_id INT PRIMARY KEY IDENTITY(1,1),   -- ID của lô hàng
@@ -207,6 +207,9 @@ CREATE TABLE InventoryBatches (
     FOREIGN KEY (variant_id) REFERENCES ProductVariants(variant_id),
     FOREIGN KEY (warehouse_id) REFERENCES Warehouses(warehouse_id)
 );
+--select* from InventoryBatches 
+--select* from  PurchaseOrder
+--select* from PurchaseDetails 
 
 --Bảng PurchaseOrder (Phiếu nhập hàng)
 CREATE TABLE PurchaseOrder (
@@ -214,11 +217,12 @@ CREATE TABLE PurchaseOrder (
     order_date DATETIME NOT NULL,
     supplier_id INT NOT NULL,
     total_amount DECIMAL(10,2) NOT NULL,
-	bill_img_url VARCHAR(255),
+	bill_img_url VARCHAR(255) NULL,
     status NVARCHAR(50) DEFAULT 'Pending' CHECK (status IN ('Pending', 'Confirmed', 'Cancelled')),
     notes NVARCHAR(MAX),
     warehouse_id INT NOT NULL,
     user_id INT NOT NULL,
+	reference_code NVARCHAR(50) UNIQUE NOT NULL,
     FOREIGN KEY (supplier_id) REFERENCES Suppliers(supplier_id),
     FOREIGN KEY (warehouse_id) REFERENCES Warehouses(warehouse_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
@@ -333,7 +337,6 @@ BEGIN
     FROM Discounts
     JOIN inserted ON Discounts.discount_id = inserted.discount_id;
 END;
-
 INSERT INTO dbo.Roles(role_name)
 VALUES
 (N'Admin system'),
@@ -1296,6 +1299,8 @@ SELECT
     'In Stock' AS status
 FROM ProductVariants
 WHERE variant_id between 1 and 143;
+
+
 SELECT
     pv.variant_id,
     p.product_name,
@@ -1384,7 +1389,6 @@ BEGIN
         OR i.status <> d.status;
 END;
 
-select* from ProductQuantityDiscounts
 INSERT INTO dbo.ProductQuantityDiscounts
 (product_id, min_quantity,discount_percentage,created_at,status)
 VALUES

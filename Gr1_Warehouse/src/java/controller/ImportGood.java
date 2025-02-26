@@ -4,6 +4,7 @@
  */
 package controller;
 
+import dao.PurchaseOrderDAO;
 import dao.SupplierDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import model.PurchaseOrder;
 import model.Suppliers;
 
 /**
@@ -58,9 +60,19 @@ public class ImportGood extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        SupplierDAO supplierDAO = new SupplierDAO();
-        List<Suppliers> suppliers = supplierDAO.getAllSuppliers();
-        request.setAttribute("suppliers", suppliers);
+//        SupplierDAO supplierDAO = new SupplierDAO();
+//        List<Suppliers> suppliers = supplierDAO.getAllSuppliers();
+//        request.setAttribute("suppliers", suppliers);
+//        request.getRequestDispatcher("/manager/import_good.jsp").forward(request, response);
+
+        // Lấy tất cả các phiếu nhập kho từ cơ sở dữ liệu
+        PurchaseOrderDAO orderDAO = new PurchaseOrderDAO();
+        List<PurchaseOrder> orders = orderDAO.getAllPurchaseOrders(); // Giả sử có phương thức này trong DAO
+
+        // Lưu danh sách phiếu nhập vào request để hiển thị trong JSP
+        request.setAttribute("orders", orders);
+
+        // Chuyển đến JSP để hiển thị danh sách các phiếu nhập kho
         request.getRequestDispatcher("/manager/import_good.jsp").forward(request, response);
     }
 
@@ -75,7 +87,7 @@ public class ImportGood extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/manager/import_good.jsp").forward(request, response);
+        doGet(request, response);
     }
 
     /**
