@@ -216,58 +216,10 @@
                                     <li class="back-btn"></li>
 
                                     <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/dashboardAdmin">
+                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/dashboard">
                                             <i class="ri-home-line"></i>
                                             <span>Dashboard</span>
                                         </a>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-store-3-line"></i>
-                                            <span>Product</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="products.html">Prodcts</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="add-new-product.html">Add New Products</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-list-check-2"></i>
-                                            <span>Category</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="category.html">Category List</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="add-new-category.html">Add New Category</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-list-settings-line"></i>
-                                            <span>Attributes</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="attributes.html">Attributes</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="add-new-attributes.html">Add Attributes</a>
-                                            </li>
-                                        </ul>
                                     </li>
 
                                     <li class="sidebar-list">
@@ -413,13 +365,13 @@
         <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/custom.js"></script>
 
         <!-- Sidebar jquery -->
-        <script src="${pageContext.request.contextPath}/assets2/js/config.js"></script>
+<!--        <script src="${pageContext.request.contextPath}/assets2/js/config.js"></script>-->
 
         <!-- tooltip init js -->
         <script src="${pageContext.request.contextPath}/assets2/js/tooltip-init.js"></script>
 
         <!-- Plugins JS -->
-        <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
+<!--        <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>-->
 <!--        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
 
