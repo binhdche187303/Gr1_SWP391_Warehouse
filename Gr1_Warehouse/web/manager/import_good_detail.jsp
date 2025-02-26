@@ -63,8 +63,16 @@
                                                 <div>
                                                     <h3>Nhập hàng</h3>
                                                     <br/>
-                                                    <p class="text-muted">Mã phiếu: <strong>#${orderDetail.order.referenceCode}</strong></p>
+                                                    <p class="text-muted d-inline">
+                                                        Mã phiếu: <strong>#${orderId}</strong>
+                                                        <span class="separator"> | </span>
+                                                        Thời gian nhập: <strong>${orderDetail.order.orderDate}</strong>
+                                                        <span class="separator"> | </span>
+                                                        Trạng thái: <strong>${orderDetail.order.status}</strong>
+                                                    </p>
+
                                                 </div>
+
                                                 <div>
                                                     <button class="btn btn-primary" onclick="window.location.href = 'http://localhost:8080/Gr1_Warehouse/importGood'">Quay lại</button>
                                                 </div>
@@ -74,7 +82,7 @@
                                         <!-- Thông tin nhà cung cấp và kho nhập -->
                                         <div class="row mt-3">
                                             <div class="col-md-6">
-                                                <div class="card">
+                                                <div class="card border">
                                                     <div class="card-body">
                                                         <h5 class="card-title">Nhà cung cấp</h5>
                                                         <c:if test="${not empty orderDetail.supplier}">
@@ -88,13 +96,14 @@
                                             </div>
 
                                             <div class="col-md-6">
-                                                <div class="card">
+                                                <div class="card border">
                                                     <div class="card-body">
                                                         <h5 class="card-title">Kho nhập</h5>
                                                         <c:if test="${not empty orderDetail.warehouse}">
                                                             <p><strong>Tên kho lưu trữ:</strong> ${orderDetail.warehouse.warehouseName}</p>
                                                             <p><strong>Địa chỉ:</strong> ${orderDetail.warehouse.address}</p>
                                                             <p><strong>Điện thoại:</strong> ${orderDetail.warehouse.phone}</p>
+                                                            <p><strong></strong></p>
                                                         </c:if>
                                                     </div>
                                                 </div>
@@ -104,31 +113,27 @@
                                         <!-- Danh sách sản phẩm nhập -->
                                         <div class="row mt-4">
                                             <div class="col-md-12">
-                                                <div class="card">
+                                                <div class="card border">
                                                     <div class="card-body">
                                                         <h5 class="card-title">Sản phẩm nhập</h5>
                                                         <table class="table table-striped table-bordered">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>Tên sản phẩm</th>
-                                                                    <th>Số lượng</th>
-                                                                    <th>Đơn giá</th>
-                                                                    <th>Hạn sử dụng</th>
-                                                                    <th>Thành tiền</th>
+                                                                    <td>Tên sản phẩm</td>
+                                                                    <td>Số lượng</td>
+                                                                    <td>Đơn giá</td>
+                                                                    <td>Hạn sử dụng</td>
+                                                                    <td>Thành tiền</td>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
                                                                 <c:if test="${not empty orderDetail.purchaseDetails}">
-                                                                    <c:forEach var="detail" items="${orderDetail.purchaseDetails}">
+                                                                    <c:forEach var="detail" items="${orderDetail.purchaseDetails}" varStatus="status">
                                                                         <tr>
-                                                                            <td>
-                                                                                <img src="" width="50" class="me-2">
-                                                                                <br>
-                                                                                <small class="text-muted">${detail.sku}</small>
-                                                                            </td>
+                                                                            <td>${orderDetail.productNames[status.index]}  -  ${detail.sku}</td>
                                                                             <td>${detail.quantity}</td>
                                                                             <td>${detail.unitPrice} đ</td>
-                                                                            <td>${detail.unitPrice}</td>
+                                                                            <td>${detail.expirationDate != null ? detail.expirationDate : 'N/A'}</td>
                                                                             <td>${detail.totalPrice} đ</td>
                                                                         </tr>
                                                                     </c:forEach>
@@ -139,15 +144,13 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <!-- Thông tin hóa đơn -->
                                         <div class="row mt-4">
                                             <div class="col-md-6">
-                                                <div class="card">
+                                                <div class="card border">
                                                     <div class="card-body">
                                                         <h5 class="card-title">Thông tin phiếu nhập</h5>
                                                         <c:if test="${not empty orderDetail.order}">
-                                                            <p><strong>Mã phiếu đặt hàng:</strong> ${orderDetail.order.referenceCode}</p>
                                                             <p><strong>Nhân viên xử lý:</strong> ${orderDetail.processedBy.fullname}</p>
                                                             <p><strong>Mã tham chiếu:</strong> ${orderDetail.order.referenceCode}</p>
                                                             <p class="mt-3"><strong>Ghi chú:</strong> ${orderDetail.order.notes}</p>
@@ -188,6 +191,21 @@
             </div>
         </div>
 
+        <style>
+            .text-muted {
+                display: inline;
+            }
+
+            .separator {
+                margin: 0 10px;
+            }
+
+            strong {
+                margin-left: 5px;
+            }
+
+
+        </style>
         <!-- latest js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
 

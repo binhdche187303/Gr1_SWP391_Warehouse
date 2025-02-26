@@ -16,16 +16,18 @@ public class PurchaseOrderDetailDTO {
     private Warehouse warehouse;
     private User processedBy;
     private List<PurchaseDetails> purchaseDetails;
+    private List<String> productNames;  // Thêm danh sách tên sản phẩm
 
     public PurchaseOrderDetailDTO() {
     }
 
-    public PurchaseOrderDetailDTO(PurchaseOrder order, Suppliers supplier, Warehouse warehouse, User processedBy, List<PurchaseDetails> purchaseDetails) {
+    public PurchaseOrderDetailDTO(PurchaseOrder order, Suppliers supplier, Warehouse warehouse, User processedBy, List<PurchaseDetails> purchaseDetails, List<String> productNames) {
         this.order = order;
         this.supplier = supplier;
         this.warehouse = warehouse;
         this.processedBy = processedBy;
         this.purchaseDetails = purchaseDetails;
+        this.productNames = productNames;
     }
 
     public PurchaseOrder getOrder() {
@@ -67,4 +69,14 @@ public class PurchaseOrderDetailDTO {
     public void setPurchaseDetails(List<PurchaseDetails> purchaseDetails) {
         this.purchaseDetails = purchaseDetails;
     }
+
+    public List<String> getProductNames() {
+        return productNames;
+    }
+
+    public void setProductNames(List<String> productNames) {
+        this.productNames = productNames;
+    }
+
+
 }

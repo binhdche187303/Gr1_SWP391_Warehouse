@@ -72,6 +72,7 @@ public class ImportGoodDetail extends HttpServlet {
 
             // Đưa các đối tượng vào request để truyền vào JSP
             request.setAttribute("orderDetail", orderDetail);
+            request.setAttribute("orderId", orderId);
 
             // Chuyển hướng tới JSP để hiển thị thông tin chi tiết đơn hàng
             request.getRequestDispatcher("/manager/import_good_detail.jsp").forward(request, response);

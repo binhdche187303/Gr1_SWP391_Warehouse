@@ -119,7 +119,7 @@ public class HandleImport extends HttpServlet {
             purchaseOrder.setOrderDate(new Timestamp(System.currentTimeMillis()));
             purchaseOrder.setSupplierId(Integer.parseInt(supplierId));
             purchaseOrder.setTotalAmount(Double.parseDouble(totalAmount));
-            purchaseOrder.setStatus("Pending");
+            purchaseOrder.setStatus("Confirmed");
             purchaseOrder.setNotes(notes);
             purchaseOrder.setWarehouseId(Integer.parseInt(warehouseId));
             purchaseOrder.setUserId(Integer.parseInt(warehouseStaffId));

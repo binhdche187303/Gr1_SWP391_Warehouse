@@ -182,31 +182,32 @@ public class PurchaseOrderDAO extends DBContext {
 
     public PurchaseOrderDetailDTO getOrderDetail(int orderId) {
         String sql = """
-            SELECT 
-                po.reference_code,
-                po.order_date,
-                po.status,
-                s.supplier_name, s.address AS supplier_address, s.email AS supplier_email, s.phone AS supplier_phone,
-                w.warehouse_name, w.address AS warehouse_address, w.phone AS warehouse_phone,
-                u.fullname AS processed_by,
-                po.notes,
-                po.bill_img_url,
-                po.total_amount,
-                pd.detail_id,
-                p.product_name,
-                pv.sku,
-                pd.quantity,
-                pd.unit_price,
-                pd.total_price
-            FROM PurchaseOrder po
-            JOIN Suppliers s ON po.supplier_id = s.supplier_id
-            JOIN Warehouses w ON po.warehouse_id = w.warehouse_id
-            JOIN Users u ON po.user_id = u.user_id
-            JOIN PurchaseDetails pd ON po.order_id = pd.order_id
-            JOIN ProductVariants pv ON pd.variant_id = pv.variant_id
-            JOIN Products p ON pv.product_id = p.product_id
-            WHERE po.order_id = ?;
-        """;
+    SELECT 
+        po.reference_code,
+        po.order_date,
+        po.status,
+        s.supplier_name, s.address AS supplier_address, s.email AS supplier_email, s.phone AS supplier_phone,
+        w.warehouse_name, w.address AS warehouse_address, w.phone AS warehouse_phone,
+        u.fullname AS processed_by,
+        po.notes,
+        po.bill_img_url,
+        po.total_amount,
+        pd.detail_id,
+        p.product_name,  -- Lấy tên sản phẩm
+        pv.sku,
+        pd.quantity,
+        pd.unit_price,
+        pd.total_price,
+        pd.expiration_date -- Lấy thêm hạn sử dụng
+    FROM PurchaseOrder po
+    JOIN Suppliers s ON po.supplier_id = s.supplier_id
+    JOIN Warehouses w ON po.warehouse_id = w.warehouse_id
+    JOIN Users u ON po.user_id = u.user_id
+    JOIN PurchaseDetails pd ON po.order_id = pd.order_id
+    JOIN ProductVariants pv ON pd.variant_id = pv.variant_id
+    JOIN Products p ON pv.product_id = p.product_id
+    WHERE po.order_id = ?;
+    """;
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, orderId);
@@ -214,6 +215,7 @@ public class PurchaseOrderDAO extends DBContext {
 
             PurchaseOrderDetailDTO orderDetail = null;
             List<PurchaseDetails> purchaseDetailsList = new ArrayList<>();
+            List<String> productNames = new ArrayList<>(); // Danh sách tên sản phẩm
 
             while (rs.next()) {
                 if (orderDetail == null) {
@@ -259,10 +261,18 @@ public class PurchaseOrderDAO extends DBContext {
                 purchaseDetail.setQuantity(rs.getInt("quantity"));
                 purchaseDetail.setUnitPrice(rs.getDouble("unit_price"));
                 purchaseDetail.setTotalPrice(rs.getDouble("total_price"));
+                purchaseDetail.setExpirationDate(rs.getTimestamp("expiration_date"));  // Sử dụng getTimestamp cho expiration_date
+
+                // Thêm tên sản phẩm vào danh sách (danh sách tạm thời)
+                productNames.add(rs.getString("product_name"));
 
                 // Thêm vào danh sách chi tiết sản phẩm
                 purchaseDetailsList.add(purchaseDetail);
             }
+
+            // Đưa danh sách tên sản phẩm vào đối tượng orderDetail (hoặc dùng Map nếu muốn lưu SKU và tên sản phẩm)
+            orderDetail.setProductNames(productNames);
+
             return orderDetail;
         } catch (SQLException e) {
             e.printStackTrace();
