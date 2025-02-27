@@ -72,6 +72,10 @@
         <servlet-name>UpdateCartController</servlet-name>
         <servlet-class>controller.UpdateCartController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>InventoryCheckForm</servlet-name>
+        <servlet-class>controller.InventoryCheckForm</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ArchiveServlet</servlet-name>
         <url-pattern>/archive</url-pattern>
@@ -151,6 +155,10 @@
     <servlet-mapping>
         <servlet-name>UpdateCartController</servlet-name>
         <url-pattern>/update-cart</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InventoryCheckForm</servlet-name>
+        <url-pattern>/inventory-form</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login</welcome-file>

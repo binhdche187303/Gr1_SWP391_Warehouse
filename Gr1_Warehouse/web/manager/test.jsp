@@ -79,17 +79,22 @@
                                                             </div>
 
                                                             <!-- Dropdown chọn nhà cung cấp -->
-                                                            <label for="supplierDropdown" class="font-medium">Chọn người giám sát:</label>
-                                                            <select id="supplierDropdown" class="form-control font-medium" name="supplierId">
+                                                            <label for="staffDropdown" class="font-medium">Chọn người giám sát:</label>
+                                                            <select id="staffDropdown" class="form-control font-medium" name="staffId" onchange="updateStaffDetails(this)">
                                                                 <option value="">Chọn người giám sát</option>
-                                                                <!-- Các option sẽ được thêm vào bằng JavaScript -->
+                                                                <c:forEach var = "staff" items = "${staff}"> 
+                                                                    <option value="${staff.userId}" 
+                                                                            data-fullname = "${staff.fullname}"
+                                                                            data-phone = "${staff.phone}"
+                                                                            data-email = "${staff.email}">${staff.fullname}</option>
+                                                                </c:forEach>
                                                             </select>
 
-                                                           
-                                                            <div id="supplierDetails" class="mt-3">
-                                                                <p><strong>Tên người giám sát:</strong> <span id="supplierName"></span></p>
-                                                                <p><strong>Điện thoại:</strong> <span id="supplierPhone"></span></p>
-                                                                <p><strong>Email:</strong> <span id="supplierEmail"></span></p>
+
+                                                            <div id="staffDetails" class="mt-3">
+                                                                <p><strong>Tên người giám sát:</strong> <span id="staffName"></span></p>
+                                                                <p><strong>Điện thoại:</strong> <span id="staffPhone"></span></p>
+                                                                <p><strong>Email:</strong> <span id="staffEmail"></span></p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -103,9 +108,12 @@
 
                                                             <!-- Dropdown chọn kho lưu -->
                                                             <label for="warehouseDropdown" class="font-medium">Chọn kho lưu trữ:</label>
+
                                                             <select id="warehouseDropdown" class="form-select" name="warehouseId" onchange="updateWarehouseDetails(this)">
-                                                                <option value="" disabled selected>Chọn kho lưu trữ</option>
-                                                                <!-- Các option sẽ được thêm vào bằng JavaScript -->
+                                                                <option value="">Chọn kho lưu trữ</option>
+                                                                <c:forEach var = "warehouses" items = "${warehouses}"> 
+                                                                    <option value="${warehouses.warehouseId}">${warehouses.warehouseName}</option>
+                                                                </c:forEach>
                                                             </select>
 
                                                             <!-- Thông tin chi tiết -->
@@ -113,7 +121,7 @@
                                                                 <p><strong>Tên kho lưu trữ:</strong> <span id="warehouseName"></span></p>
                                                                 <p><strong>Địa chỉ:</strong> <span id="warehouseAddress"></span></p>
                                                                 <p><strong>Điện thoại:</strong> <span id="warehousePhone"></span></p>
-<!--                                                                <p><strong></strong> <span id=""></span></p>-->
+                                                                <!--                                                                <p><strong></strong> <span id=""></span></p>-->
                                                             </div>
                                                         </div>
                                                     </div>
@@ -199,10 +207,10 @@
                                                         <label class="form-label">Ghi chú</label>
                                                         <textarea id="notes" name="notes" class="form-control" placeholder="Nhập ghi chú"></textarea>
                                                     </div>
-<!--                                                    <div class="mb-4">
-                                                        <label class="form-label">Tải ảnh phiếu nhập hàng</label>
-                                                        <input type="file" class="form-control" id="billImgUrl" name="billImgUrl" accept=".png, .jpg, .jpeg, .pdf" required>
-                                                    </div>-->
+                                                    <!--                                                    <div class="mb-4">
+                                                                                                            <label class="form-label">Tải ảnh phiếu nhập hàng</label>
+                                                                                                            <input type="file" class="form-control" id="billImgUrl" name="billImgUrl" accept=".png, .jpg, .jpeg, .pdf" required>
+                                                                                                        </div>-->
                                                 </div>
                                             </div>
 
@@ -219,7 +227,7 @@
                                                         <span class="text-gray-700">Số lượng lệch tăng</span>
                                                         <span id="totalAmount" name="totalAmount">0</span>
                                                     </div>
-                                                    
+
                                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                                         <span class="text-gray-700">Giá trị lệch tăng</span>
                                                         <span id="totalAmount" name="totalAmount">0 VND</span>
@@ -246,6 +254,58 @@
             </div>
             <!-- Page Body End -->
         </div>
+        <script>
+            function updateStaffDetails(select) {
+                // Lấy option được chọn
+                let selectedOption = select.options[select.selectedIndex];
+
+                // Lấy dữ liệu từ các thuộc tính data-*
+                let fullname = selectedOption.getAttribute('data-fullname');
+                let phone = selectedOption.getAttribute('data-phone');
+                let email = selectedOption.getAttribute('data-email');
+
+                // Cập nhật thông tin chi tiết trên giao diện
+                document.getElementById('staffName').textContent = fullname || 'Không có thông tin';
+                document.getElementById('staffPhone').textContent = phone || 'Không có thông tin';
+                document.getElementById('staffEmail').textContent = email || 'Không có thông tin';
+            }
+
+
+            document.addEventListener("DOMContentLoaded", function () {
+                fetch('/Gr1_Warehouse/getArchive')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Lỗi khi lấy dữ liệu kho lưu trữ");
+                            }
+                            return response.json();
+                        })
+                        .then(warehouses => {
+                            const dropdown = document.getElementById('warehouseDropdown');
+
+                            // Xóa các option cũ (nếu có)
+                            dropdown.innerHTML = '<option value="" disabled selected>Chọn kho lưu trữ</option>';
+
+                            warehouses.forEach(warehouse => {
+                                let option = document.createElement('option');
+                                option.value = JSON.stringify(warehouse); // Lưu dữ liệu JSON trong value
+                                option.textContent = warehouse.warehouseName; // Đảm bảo có thuộc tính name
+                                dropdown.appendChild(option);
+                            });
+                        })
+                        .catch(error => console.error('Lỗi khi lấy dữ liệu kho lưu trữ:', error));
+            });
+
+            function updateWarehouseDetails(select) {
+                if (select.value) {
+                    let warehouse = JSON.parse(select.value); // Lấy dữ liệu từ value
+
+                    // Cập nhật thông tin chi tiết
+                    document.getElementById('warehouseName').textContent = warehouse.warehouseName;
+                    document.getElementById('warehouseAddress').textContent = warehouse.address;
+                    document.getElementById('warehousePhone').textContent = warehouse.phone;
+                }
+            }
+        </script>
         <!-- latest js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
 

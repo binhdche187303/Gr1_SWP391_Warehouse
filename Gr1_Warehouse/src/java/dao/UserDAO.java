@@ -146,21 +146,22 @@ public class UserDAO extends DBContext {
     }
 
     public void create(User user) throws SQLException {
-        String sql = "INSERT INTO users (username, fullname, email, password, role_id, status, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (username, fullname, email, phone, password, role_id, status, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getFullname());
             ps.setString(3, user.getEmail());
-            ps.setString(4, MD5Hash.hash("123"));  // Mã hóa mật khẩu mặc định "123"
-            ps.setInt(5, user.getRole().getRoleId());
-            ps.setString(6, user.getStatus());
+            ps.setString(4, user.getPhone());
+            ps.setString(5, MD5Hash.hash("123"));  // Mã hóa mật khẩu mặc định "123"
+            ps.setInt(6, user.getRole().getRoleId());
+            ps.setString(7, user.getStatus());
 
             // Kiểm tra nếu địa chỉ của người dùng là null
             if (user.getAddress() != null) {
-                ps.setString(7, user.getAddress()); // Gán địa chỉ nếu có
+                ps.setString(8, user.getAddress()); // Gán địa chỉ nếu có
             } else {
-                ps.setNull(7, java.sql.Types.VARCHAR); // Gán null nếu địa chỉ không có
+                ps.setNull(8, java.sql.Types.VARCHAR); // Gán null nếu địa chỉ không có
             }
 
             int rowsInserted = ps.executeUpdate();
@@ -463,6 +464,33 @@ public class UserDAO extends DBContext {
                 User user = new User();
                 user.setUserId(rs.getInt("user_id"));
                 user.setFullname(rs.getString("fullname"));
+                staffList.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return staffList;
+    }
+    
+    public List<User> getStaffByRole2(int roleId) {
+        List<User> staffList = new ArrayList<>();
+        String sql = "SELECT user_id, username, fullname, password, phone, email, address, status FROM Users WHERE role_id = ? AND status = 'Active'";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, roleId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("user_id"));
+                user.setUsername(rs.getString("username"));
+                user.setFullname(rs.getString("fullname"));
+                user.setPassword(rs.getString("password"));
+                user.setPhone(rs.getString("phone"));
+                user.setEmail(rs.getString("email"));
+                user.setAddress(rs.getString("address"));
+                user.setStatus(rs.getString("status"));
+                
                 staffList.add(user);
             }
         } catch (SQLException e) {
