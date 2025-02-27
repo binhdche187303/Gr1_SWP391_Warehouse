@@ -191,17 +191,19 @@
 
                                 <div class="col-xl-6 wow fadeInUp" data-wow-delay="0.1s">
                                     <div class="right-box-contain">
-                                        <h2 class="name">${product.productName}</h2>
+
+                                        <h2 class="name" style="color: red">${product.productName}</h2>
+                                        </br>
+                                        <h2 class="sku">Mã SKU: <span id="current-sku">${product.variants[0].sku}</span></h2>
+
+                                        </br>
                                         <div class="price-rating">
                                             <h3 class="theme-color price">
                                                 <span id="current-price" data-raw-price="${product.variants[0].price}">
                                                     <fmt:formatNumber value="${product.variants[0].price}" type="currency" currencyCode="VND" maxFractionDigits="0" />
                                                 </span>
                                             </h3>
-
-
                                         </div>
-
                                         <div class="procuct-contain">
                                             <p>${product.description}</p>
                                         </div>
@@ -217,6 +219,7 @@
                                                         <a href="javascript:void(0)" class="${status.first ? 'active' : ''}" 
                                                            data-price="${variant.price}" 
                                                            data-variant-id="${variant.size.size_id}" 
+                                                           data-sku="${variant.sku}"
                                                            onclick="updatePriceAndVariant(this)">
                                                             ${variant.size.size_name}
                                                         </a>
@@ -231,26 +234,271 @@
                                             </div>
                                             <div class="product-info">
                                                 <ul class="product-info-list">
-                                                    <li><strong>Thương hiệu:</strong> ${product.brand.brand_name}</li>
-                                                    <br                                  >
-                                                    <li><strong>Danh mục:</strong> ${product.cate.category_name}</li>
+                                                    <li><strong>Thương hiệu: </strong> ${product.brand.brand_name}</li>
+                                                    </br>
+                                                    <li><strong>Danh mục: </strong> ${product.cate.category_name}</li>
+                                                    </br>
+                                                    <li><strong>Nguồn gốc: </strong> ${product.origin}</li>
                                                 </ul>
                                             </div>
                                         </div>
-                                        <button class="btn btn-primary mt-2">
-                                            <a href="addProduct.jsp" style="color: white; text-decoration: none;">Thêm sản phẩm mới</a>
-                                        </button>
-
+                                        <div style="display: flex">    
+                                            <button class="edit-product-btn" data-bs-toggle="modal" data-bs-target="#edit"
+                                                    data-id="${product.productId}"
+                                                    data-name="${product.productName}"
+                                                    data-desc="${product.description}"
+                                                    data-origin="${product.origin}"
+                                                    data-brand-id="${product.brand.brand_id}"
+                                                    data-category-id="${product.cate.category_id}" >
+                                                Chỉnh sửa
+                                            </button>
+                                            <button style="margin-right: 20px" type="button" class="align-items-center btn btn-theme d-flex" 
+                                                    data-bs-toggle="modal" data-bs-target="#editimage">
+                                                <i data-feather="plus"></i>Chỉnh sửa ảnh
+                                            </button>
+                                            <button style="margin-right: 20px" type="button" class="align-items-center btn btn-theme d-flex" 
+                                                    data-bs-toggle="modal" data-bs-target="#editprice">
+                                                <i data-feather="plus"></i>Chỉnh sửa giá
+                                            </button>
+                                            <button type="button" class="align-items-center btn btn-theme d-flex" 
+                                                    data-bs-toggle="modal" data-bs-target="#addprice">
+                                                <i data-feather="plus"></i>Tạo mới
+                                            </button>
+                                        </div>   
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>                
         </div>
+
+        <!-- Modal -->
+
+        <!-- Modal chỉnh sửa chung -->
+        <div class="modal fade" id="edit" tabindex="-1" aria-labelledby="edit" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="edit">Chỉnh sửa sản phẩm</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="add" action="productdetail" method="post">
+                            <input type="hidden" name="action" value="edit">
+                            <input type="hidden" id="productId" name="productId">
+                            <div class="mb-3">
+                                <label for="productname" class="form-label">Tên sản phẩm</label>
+                                <input type="text" class="form-control" id="productname" name="productname" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Mô tả</label>
+                                <input type="text" class="form-control" id="description" name="description">
+                            </div>
+                            <!-- Thương hiệu với mũi tên dropdown -->
+                            <div class="mb-3">
+                                <label for="brand" class="form-label">Thương hiệu</label>
+                                <div class="dropdown-select-wrapper">
+                                    <select class="form-select" id="brand" name="brand">
+                                        <c:forEach var="b" items="${listBrands}">
+                                            <option value="${b.brand_id}">${b.brand_name}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="origin" class="form-label">Origin</label>
+                                <input type="text" class="form-control" id="origin" name="origin">
+                            </div>
+                            <!-- Danh mục với mũi tên dropdown -->
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Danh mục</label>
+                                <div class="dropdown-select-wrapper">
+                                    <select class="form-select" id="category" name="category">
+                                        <c:forEach var="c" items="${listCategories}">
+                                            <option value="${c.category_id}">${c.category_name}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Sửa</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal chỉnh sửa giá -->
+        <div class="modal fade" id="editimage" tabindex="-1" aria-labelledby="edit" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="edit">Chỉnh sửa ảnh</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="add" action="productdetail" method="post">
+                            <input type="hidden" name="action" value="editprice">
+                            <div class="mb-3">
+                                <label for="productname" class="form-label">Tên sản phẩm</label>
+                                <input type="text" class="form-control" id="productname" name="productname" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="sku" class="form-label">Mã Sku</label>
+                                <input type="text" class="form-control" id="sku" name="sku" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="price" class="form-label">Giá</label>
+                                <input type="number" class="form-control" id="price" name="price" >
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Mô tả</label>
+                                <input type="text" class="form-control" id="description" name="description">
+                            </div>
+                            <div class="mb-3">
+                                <label for="size" class="form-label">Phân loại</label>
+                                <input type="text" class="form-control" id="size" name="size" readonly="">
+                            </div>
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Thương hiệu </label>
+                                <input type="text" class="form-control" id="brand" name="brand">
+                            </div>
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Danh mục</label>
+                                <input type="text" class="form-control" id="category" name="category">
+                            </div>
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Ảnh</label>
+                                <input type="text" class="form-control" id="image" name="image" >
+                            </div>
+                            <button type="submit" class="btn btn-primary">Sửa</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal chỉnh sửa ảnh -->
+        <div class="modal fade" id="editprice" tabindex="-1" aria-labelledby="edit" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="edit">Chỉnh sửa giá</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="add" action="productdetail" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="action"  value="editimage">
+                            <div class="mb-3">
+                                <label for="productname" class="form-label">Tên sản phẩm</label>
+                                <input type="text" class="form-control" id="productname" name="productname" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Mô tả</label>
+                                <input type="text" class="form-control" id="description" name="description">
+                            </div>
+                            <!-- Thương hiệu với mũi tên dropdown -->
+                            <div class="mb-3">
+                                <label for="brand" class="form-label">Thương hiệu</label>
+                                <div class="dropdown-select-wrapper">
+                                    <select class="form-select" id="brand" name="brand">
+                                        <c:forEach var="b" items="${listBrands}">
+                                            <option value="${b.brand_id}">${b.brand_name}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="origin" class="form-label">Origin</label>
+                                <input type="text" class="form-control" id="origin" name="origin">
+                            </div>
+                            <!-- Danh mục với mũi tên dropdown -->
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Danh mục</label>
+                                <div class="dropdown-select-wrapper">
+                                    <select class="form-select" id="category" name="category">
+                                        <c:forEach var="c" items="${listCategories}">
+                                            <option value="${c.category_id}">${c.category_name}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Sửa</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal tạo mới -->
+        <div class="modal fade" id="addprice" tabindex="-1" aria-labelledby="edit" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="edit">Chỉnh sửa giá</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="add" action="productdetail" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="action"  value="add">
+                            <div class="mb-3">
+                                <label for="productname" class="form-label">Tên sản phẩm</label>
+                                <input type="text" class="form-control" id="productname" name="productname" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Mô tả</label>
+                                <input type="text" class="form-control" id="description" name="description">
+                            </div>
+                            <!-- Thương hiệu với mũi tên dropdown -->
+                            <div class="mb-3">
+                                <label for="brand" class="form-label">Thương hiệu</label>
+                                <div class="dropdown-select-wrapper">
+                                    <select class="form-select" id="brand" name="brand">
+                                        <c:forEach var="b" items="${listBrands}">
+                                            <option value="${b.brand_id}">${b.brand_name}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="origin" class="form-label">Origin</label>
+                                <input type="text" class="form-control" id="origin" name="origin">
+                            </div>
+                            <!-- Danh mục với mũi tên dropdown -->
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Danh mục</label>
+                                <div class="dropdown-select-wrapper">
+                                    <select class="form-select" id="category" name="category">
+                                        <c:forEach var="c" items="${listCategories}">
+                                            <option value="${c.category_id}">${c.category_name}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Sửa</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <%
+            String successMessage = (String) session.getAttribute("success");
+            if (successMessage != null) {
+        %>
+        <script>
+            alert("<%= successMessage %>");
+        </script>
+        <%
+                session.removeAttribute("success"); // Xóa session để không hiển thị lại
+            }
+        %>
+
 
         <!-- latest js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
@@ -331,60 +579,99 @@
         <!-- script js -->
         <script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
 
-        <script>function updatePriceAndVariant(element) {
-                                                                   // Xóa class active của tất cả các lựa chọn
-                                                                   document.querySelectorAll('.select-packege a').forEach(a => a.classList.remove('active'));
-                                                                   // Thêm class active cho phần tử được chọn
-                                                                   element.classList.add('active');
-                                                                   // Lấy dữ liệu từ thuộc tính data-variant-id và data-price
-                                                                   let variantId = element.getAttribute('data-variant-id');
-                                                                   let price = element.getAttribute('data-price');
-                                                                   // Định dạng giá tiền theo tiền tệ VND (không có phần thập phân)
-                                                                   let formattedPrice = new Intl.NumberFormat('vi-VN', {
-                                                                       style: 'currency',
-                                                                       currency: 'VND',
-                                                                       maximumFractionDigits: 0
-                                                                   }).format(price);
-                                                                   // Cập nhật giá trị của input hidden nếu có
-                                                                   const selectedVariantInput = document.getElementById('selected-variant-id');
-                                                                   if (selectedVariantInput) {
-                                                                       selectedVariantInput.value = variantId;
-                                                                   }
+        <script>
+            function updatePriceAndVariant(element) {
+                // Xóa class active của tất cả các lựa chọn
+                document.querySelectorAll('.select-packege a').forEach(a => a.classList.remove('active'));
+                // Thêm class active cho phần tử được chọn
+                element.classList.add('active');
+                // Lấy dữ liệu từ thuộc tính data-variant-id và data-price
+                let variantId = element.getAttribute('data-variant-id');
+                let price = element.getAttribute('data-price');
+                // Định dạng giá tiền theo tiền tệ VND (không có phần thập phân)
+                let formattedPrice = new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                    maximumFractionDigits: 0
+                }).format(price);
+                // Cập nhật giá trị của input hidden nếu có
+                const selectedVariantInput = document.getElementById('selected-variant-id');
+                if (selectedVariantInput) {
+                    selectedVariantInput.value = variantId;
+                }
 
-                                                                   // Cập nhật giá hiển thị với định dạng và lưu giá gốc
-                                                                   const priceElement = document.getElementById('current-price');
-                                                                   priceElement.setAttribute('data-raw-price', price);
-                                                                   priceElement.innerText = formattedPrice;
-                                                               }
-                                                               ;
+                // Cập nhật giá hiển thị với định dạng và lưu giá gốc
+                const priceElement = document.getElementById('current-price');
+                priceElement.setAttribute('data-raw-price', price);
+                priceElement.innerText = formattedPrice;
+            }
+            ;
 
-                                                               $(document).ready(function () {
-                                                                   // Khởi tạo slider chính
-                                                                   $('.product-main-1').slick({
-                                                                       slidesToShow: 1,
-                                                                       slidesToScroll: 1,
-                                                                       arrows: false,
-                                                                       fade: true,
-                                                                       asNavFor: '.bottom-slider-image'
-                                                                   });
+            $(document).ready(function () {
+                // Khởi tạo slider chính
+                $('.product-main-1').slick({
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    arrows: false,
+                    fade: true,
+                    asNavFor: '.bottom-slider-image'
+                });
 
-                                                                   // Khởi tạo slider nhỏ (thumbnail)
-                                                                   $('.bottom-slider-image').slick({
-                                                                       slidesToShow: 4,
-                                                                       slidesToScroll: 1,
-                                                                       asNavFor: '.product-main-1',
-                                                                       dots: false,
-                                                                       centerMode: false,
-                                                                       focusOnSelect: true,
-                                                                       arrows: true
-                                                                   });
-                                                               });
+                // Khởi tạo slider nhỏ (thumbnail)
+                $('.bottom-slider-image').slick({
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                    asNavFor: '.product-main-1',
+                    dots: false,
+                    centerMode: false,
+                    focusOnSelect: true,
+                    arrows: true
+                });
+            });
+
+            //Start Edit
+            document.addEventListener('DOMContentLoaded', function () {
+                // Sự kiện khi modal hiển thị
+                const editModal = document.getElementById('edit');
+                editModal.addEventListener('show.bs.modal', function (event) {
+                    // Lấy nút đã kích hoạt modal
+                    const button = event.relatedTarget;
+
+                    // Lấy dữ liệu từ thuộc tính data
+                    const productName = button.getAttribute('data-name');
+                    const description = button.getAttribute('data-desc');
+                    const origin = button.getAttribute('data-origin');
+                    const brandId = button.getAttribute('data-brand-id');
+                    const categoryId = button.getAttribute('data-category-id');
+                    const productId = button.getAttribute('data-id');
+
+                    // Điền dữ liệu vào form
+                    document.getElementById('productname').value = productName;
+                    document.getElementById('description').value = description;
+                    document.getElementById('origin').value = origin;
+                    document.getElementById('productId').value = button.getAttribute('data-id');
+                    console.log(productName);
+                    console.log(description);
+                    console.log(origin);
+                    console.log(brandId);
+                    console.log(categoryId);
+                    console.log(productId);
+                    const action = document.querySelector("input[name='action']").value;
+                    console.log("Action:", action);
+
+                    // Thiết lập dropdown thương hiệu
+                    document.getElementById('brand').value = brandId;
+
+                    // Thiết lập dropdown danh mục
+                    document.getElementById('category').value = categoryId;
+                });
+            });
+
+
+            //End Edit
         </script>                     
 
 
-
-    </script>
-
-</body>
+    </body>
 
 </html>

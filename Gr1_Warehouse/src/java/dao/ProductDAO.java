@@ -697,16 +697,55 @@ public class ProductDAO extends DBContext {
         return products;
     }
 
+    public boolean updateProduct(int productId, String productName, String description, String origin, int brandId, int categoryId) {
+        PreparedStatement stmt = null;
+        boolean success = false;
+
+        try {
+            // SQL để cập nhật sản phẩm
+            String sql = "UPDATE Products SET product_name = ?, description = ?, origin = ?, brand_id = ?, category_id = ? WHERE product_id = ?";
+
+            // Chuẩn bị câu lệnh
+            stmt = connection.prepareStatement(sql);
+            stmt.setString(1, productName);
+            stmt.setString(2, description);
+            stmt.setString(3, origin);
+            stmt.setInt(4, brandId);
+            stmt.setInt(5, categoryId);
+            stmt.setInt(6, productId);
+
+            // Thực thi câu lệnh
+            int rowsAffected = stmt.executeUpdate();
+
+            // Kiểm tra xem có bản ghi nào được cập nhật không
+            if (rowsAffected > 0) {
+                success = true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Ghi log lỗi
+        } finally {
+            // Đóng các tài nguyên
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return success;
+    }
+
     public static void main(String[] args) {
         ProductDAO pd = new ProductDAO();
-//        List<Products> list = pd.getDetails(1);
-// for (Products products : list) {
-//            System.out.println(products);
-//        }
         Products p = pd.getDetails(1);
-       List< Images> i= p.getImages();
-        for (Images images : i) {
-            System.out.println(images.getImage_url());
-        }
+        pd.updateProduct(1, "[1 THÙNG] Bánh ChocoPie Truyền Thống", "Chiếc bánh tròn màu nâu sôcôla thật ngon miệng. Cắn một miếng đầu tiên, bạn sẽ cảm nhận được sự mềm mịn, bông xốp của hai lớp bánh. Kế đến là cấu trúc khó lẫn của nhân marshmallow dẻo dẻo dai dai. Và đọng lại cuối cùng là vị sôcôla đặc trưng, thơm ngon đến nao lòngTình như ChocoPie, Orion ChocoPie là sự lựa chọn hàng đầu của các bà mẹ.", "Việt Nam", 1, 6);
+
     }
 }

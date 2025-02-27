@@ -4,6 +4,8 @@
  */
 package managerController;
 
+import dao.BrandDAO;
+import dao.CategoryDAO;
 import dao.ProductDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,6 +13,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
+import model.Brands;
+import model.Categories;
 import model.Products;
 
 /**
@@ -58,11 +63,17 @@ public class ProductDetail extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ProductDAO pd = new ProductDAO();
+        BrandDAO bd = new BrandDAO();
+        CategoryDAO cd = new CategoryDAO();
         String product_id_raw = request.getParameter("product_id");
         try {
             int product_id = Integer.parseInt(product_id_raw);
             Products p = pd.getDetails(product_id);
+            List<Brands> listBrands = bd.getAllBrands();
+            List<Categories> listCategories = cd.getAllCategories();
             request.setAttribute("product", p);
+            request.setAttribute("listBrands", listBrands);
+            request.setAttribute("listCategories", listCategories);
             request.getRequestDispatcher("/manager/product_detail.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             System.out.println(e);
@@ -80,7 +91,32 @@ public class ProductDetail extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String action = request.getParameter("action");
+        ProductDAO pd = new ProductDAO();
+        BrandDAO bd = new BrandDAO();
+        CategoryDAO cd = new CategoryDAO();
+        if ("edit".equals(action)) {
+            try {
+                String productId_raw = request.getParameter("productId");
+                int productId = Integer.parseInt(productId_raw);
+                String productName = request.getParameter("productname");
+                String description = request.getParameter("description");
+                String origin = request.getParameter("origin");
+                String brandId_raw = request.getParameter("brand");
+                int brandId = Integer.parseInt(brandId_raw);
+                String categoryId_raw = request.getParameter("category");
+                int categoryId = Integer.parseInt(categoryId_raw);
+                
+                boolean isUpdated = pd.updateProduct(productId, productName, description, origin, brandId, categoryId);
+                
+                if (isUpdated) {
+                    request.getSession().setAttribute("success", "Cập nhật thành công");
+                    response.sendRedirect("productdetail?product_id=" + productId);
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**

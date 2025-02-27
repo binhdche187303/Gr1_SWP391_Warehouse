@@ -12,6 +12,11 @@ public class Images {
     private int image_id;
     private String image_url;
 
+    public Images(String image_url) {
+        this.image_url = image_url;
+    }
+
+    
     public Images() {
     }
 
