@@ -114,6 +114,30 @@ public class HandleImport extends HttpServlet {
 
             System.out.println("Số lượng sản phẩm: " + variantIds.length);
 
+// Lấy file ảnh hóa đơn từ request
+            Part billImgPart = request.getPart("billImgUrl");
+            String billImgUrl = null;
+
+            if (billImgPart != null && billImgPart.getSize() > 0) {
+                // Lấy tên file mà không có đường dẫn
+                String fileName = Path.of(billImgPart.getSubmittedFileName()).getFileName().toString();
+
+                // Đường dẫn thư mục lưu file trên server
+                String uploadPath = getServletContext().getRealPath("/uploads");
+                File uploadDir = new File(uploadPath);
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdirs(); // Tạo thư mục nếu chưa có
+                }
+
+                // Lưu file vào thư mục uploads
+                File file = new File(uploadDir, fileName);
+                billImgPart.write(file.getAbsolutePath());
+
+                // Chỉ lưu tên file vào database
+                billImgUrl = fileName;
+                System.out.println("Ảnh hóa đơn đã được tải lên: " + billImgUrl);
+            }
+
             // Tạo đơn hàng mới
             PurchaseOrder purchaseOrder = new PurchaseOrder();
             purchaseOrder.setOrderDate(new Timestamp(System.currentTimeMillis()));
@@ -125,6 +149,10 @@ public class HandleImport extends HttpServlet {
             purchaseOrder.setUserId(Integer.parseInt(warehouseStaffId));
             purchaseOrder.setReferenceCode(UUID.randomUUID().toString());
 
+            // Set the bill image URL if it exists
+            if (billImgUrl != null) {
+                purchaseOrder.setBillImgUrl(billImgUrl);  // Add the bill image URL to the order
+            }
             PurchaseOrderDAO purchaseOrderDAO = new PurchaseOrderDAO();
             int orderId = purchaseOrderDAO.insertPurchaseOrder(purchaseOrder);
 

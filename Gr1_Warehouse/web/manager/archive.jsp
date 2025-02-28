@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
-    
+
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -161,7 +161,7 @@
                 <!-- All User Table Ends-->
             </div>                
         </div>
-            <script>
+        <script>
             document.getElementById("addWarehouseForm").addEventListener("submit", function (event) {
                 event.preventDefault();
 
@@ -214,6 +214,7 @@
         </script>
 
 
+        
         <!-- latest js -->
             <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
 
@@ -242,13 +243,5 @@
 
                 <!-- ratio js -->
                 <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>
-
-                <!-- sidebar effect -->
-                <script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>
-
-                <!-- Theme js -->
-                <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
-
-            </body>
-
-        </html>
+    </body>
+</html>

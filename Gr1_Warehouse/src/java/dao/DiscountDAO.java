@@ -13,6 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import model.DiscountHistory;
+import model.Order;
+import model.OrderDetailDTO;
 
 /**
  *
@@ -281,21 +283,5 @@ public class DiscountDAO extends DBContext {
         }
 
         return list;
-    }
-
-    public static void main(String[] args) throws SQLException {
-        DiscountDAO dd = new DiscountDAO();
-        List<DiscountHistory> list = dd.getDiscountHistoryByDiscountId(10);
-        for (DiscountHistory discountHistory : list) {
-            System.out.println(discountHistory);
-        }
-//
-//    List<Discounts> l= dd.getAllDiscounts();
-//        for (Discounts discounts : l) {
-//            System.out.println(discounts);
-//        }
-
-//        Discounts d = dd.getDiscountById(1);
-//        System.out.println(d);
     }
 }

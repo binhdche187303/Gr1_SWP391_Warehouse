@@ -1,5 +1,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
@@ -81,11 +83,16 @@
                                                         <c:forEach var="order" items="${orders}">
                                                             <tr>
                                                                 <td>${order.referenceCode}</td>
-                                                                <td>${order.orderDate}</td>
-                                                                <td>${order.supplierId}</td>
+                                                                <td>
+                                                                    <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy"/>
+                                                                </td>                                                                <td>${order.supplierId}</td>
                                                                 <td>${order.status}</td>
                                                                 <td>${order.formattedTotalAmount}</td>
-                                                                <td><a href="importGoodDetail?order_id=${order.orderId}">Xem chi tiết</a></td>
+                                                                <td>
+                                                                    <a href="importGoodDetail?order_id=${order.orderId}">
+                                                                        <i class="ri-eye-line"></i>
+                                                                    </a>  
+                                                                </td>
                                                             </tr>
                                                         </c:forEach>
                                                     </tbody>
@@ -144,13 +151,6 @@
 
         <!-- ratio js -->
         <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>
-
-        <!-- sidebar effect -->
-        <script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>
-
-        <!-- Theme js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
-
     </body>
 
 </html>

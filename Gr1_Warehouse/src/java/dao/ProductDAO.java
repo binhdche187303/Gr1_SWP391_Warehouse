@@ -567,24 +567,27 @@ public class ProductDAO extends DBContext {
 
     public List<ProductDTO> getProductsBySupplier(String supplierCode) {
         List<ProductDTO> products = new ArrayList<>();
-        String sql = "SELECT p.product_name, pv.sku , pv.variant_id "
+        String sql = "SELECT p.product_name, pv.sku, pv.variant_id, sz.size_name " // Add size_name to the select statement
                 + "FROM Products p "
                 + "JOIN ProductVariants pv ON p.product_id = pv.product_id "
                 + "JOIN Brands b ON p.brand_id = b.brand_id "
                 + "JOIN SupplierBrand sb ON b.brand_id = sb.brand_id "
                 + "JOIN Suppliers s ON sb.supplier_id = s.supplier_id "
+                + "JOIN Sizes sz ON pv.size_id = sz.size_id " // Join Sizes table to get size_name
                 + "WHERE s.supplier_code = ? "
-                + "GROUP BY p.product_id, p.product_name, pv.sku , pv.variant_id ";
+                + "GROUP BY p.product_id, p.product_name, pv.sku, pv.variant_id, sz.size_name";  // Include size_name in GROUP BY
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, supplierCode);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
+                // Modify ProductDTO to accept size_name
                 ProductDTO product = new ProductDTO(
                         rs.getString("product_name"),
                         rs.getString("sku"),
-                        rs.getString("variant_id")
+                        rs.getString("variant_id"),
+                        rs.getString("size_name") // Pass size_name to the DTO constructor
                 );
                 products.add(product);
             }

@@ -38,6 +38,26 @@ public class WarehouseDAO extends DBContext {
         return warehouses;
     }
 
+    public List<Warehouse> getActiveWarehouses() {
+        List<Warehouse> warehouses = new ArrayList<>();
+        String sql = "SELECT warehouse_id, warehouse_name, phone, address, status FROM Warehouses WHERE status = 'Active'";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Warehouse warehouse = new Warehouse();
+                warehouse.setWarehouseId(rs.getInt("warehouse_id"));
+                warehouse.setWarehouseName(rs.getString("warehouse_name"));
+                warehouse.setPhone(rs.getString("phone"));
+                warehouse.setAddress(rs.getString("address"));
+                warehouse.setStatus(rs.getString("status"));
+                warehouses.add(warehouse);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return warehouses;
+    }
+
     public void updateWarehouseStatus(int warehouseId, String status) {
         String sql = "UPDATE Warehouses SET status = ? WHERE warehouse_id = ?";
 
@@ -99,22 +119,22 @@ public class WarehouseDAO extends DBContext {
     }
 
     public boolean updateWarehouse(Warehouse warehouse) {
-    String sql = "UPDATE Warehouses SET warehouse_name = ?, phone = ?, address = ?, status = ? WHERE warehouse_id = ?";
+        String sql = "UPDATE Warehouses SET warehouse_name = ?, phone = ?, address = ?, status = ? WHERE warehouse_id = ?";
 
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-        ps.setString(1, warehouse.getWarehouseName());
-        ps.setString(2, warehouse.getPhone());
-        ps.setString(3, warehouse.getAddress());
-        ps.setString(4, warehouse.getStatus());
-        ps.setInt(5, warehouse.getWarehouseId());
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, warehouse.getWarehouseName());
+            ps.setString(2, warehouse.getPhone());
+            ps.setString(3, warehouse.getAddress());
+            ps.setString(4, warehouse.getStatus());
+            ps.setInt(5, warehouse.getWarehouseId());
 
-        int rowsUpdated = ps.executeUpdate();
-        return rowsUpdated > 0;
-    } catch (SQLException e) {
-        System.out.println("Lỗi SQL khi cập nhật kho: " + e.getMessage());
-        e.printStackTrace();
-        return false;
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            System.out.println("Lỗi SQL khi cập nhật kho: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
     }
-}
 
 }

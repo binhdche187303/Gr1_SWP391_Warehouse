@@ -19,11 +19,11 @@
         <!-- Google font-->
         <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
               rel="stylesheet">
-<!--         Linear Icon css -->
+        <!--         Linear Icon css -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets2/css/linearicon.css">
-         <!--fontawesome css--> 
+        <!--fontawesome css--> 
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets2/css/vendors/font-awesome.css">
-         <!--Themify icon css-->
+        <!--Themify icon css-->
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets2/css/vendors/themify.css">
         <!-- ratio css -->
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets2/css/ratio.css">
@@ -217,6 +217,21 @@
                                     </li>
 
                                     <li class="sidebar-list">
+                                        <a class="sidebar-link sidebar-title" href="javascript:void(0)">
+                                            <i class="ri-archive-line"></i>
+                                            <span>Đơn hàng</span>
+                                        </a>
+                                        <ul class="sidebar-submenu">
+                                            <li>
+                                                <a href="/Gr1_Warehouse/orderlist">Danh sách đơn hàng</a>
+                                            </li>
+                                            <li>
+                                                <a href="order-tracking.html">Theo dõi đơn hàng</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="sidebar-list">
                                         <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
                                             <i class="ri-store-3-line"></i>
                                             <span>Quản lí tồn kho</span>
@@ -324,13 +339,6 @@
 
         <!-- ratio js -->
         <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>
-
-        <!-- sidebar effect -->
-        <script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>
-        
-        <!-- Theme js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
-
     </body>
 
 </html>

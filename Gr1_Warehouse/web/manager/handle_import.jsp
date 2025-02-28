@@ -372,11 +372,14 @@
                 const tdVariantId = document.createElement("td");
                 tdVariantId.textContent = product.variantId || "N/A";
 
-
+                // Add sizeName column
+                const tdSizeName = document.createElement("td");
+                tdSizeName.textContent = product.sizeName || "N/A";
                 tr.appendChild(tdCheckbox);
                 tr.appendChild(tdName);
                 tr.appendChild(tdSku);
-                tr.appendChild(tdVariantId); // 🆕 Thêm cột variant_id
+                tr.appendChild(tdVariantId);
+                tr.appendChild(tdSizeName);
                 productTableBody.appendChild(tr);
             });
 
@@ -446,7 +449,7 @@
 
                 const productName = row.children[1]?.textContent.trim() || "Không có tên";
                 const sku = row.children[2]?.textContent.trim() || "Không có SKU";
-                const variantId = row.children[3]?.textContent.trim() || ""; // Lấy variant_id từ cột thứ 4
+                const variantId = row.children[3]?.textContent.trim() || "";
 
                 // Kiểm tra sản phẩm đã tồn tại chưa
                 const existingProduct = [...document.querySelectorAll(".selected-product")]
@@ -832,14 +835,6 @@
 
 <!-- ratio js -->
 <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>
-
-<!-- sidebar effect -->
-<script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>
-
-<!-- Theme js -->
-<script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
-
-
 </body>
 
 </html>

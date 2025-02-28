@@ -129,29 +129,34 @@
                 color: white;
             }
         </style>
+
         <!-- latest js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
-        <!-- Bootstrap js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/bootstrap/bootstrap.bundle.min.js"></script>
-        <!-- feather icon js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/icons/feather-icon/feather.min.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/icons/feather-icon/feather-icon.js"></script>
-        <!-- scrollbar simplebar js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/simplebar.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/custom.js"></script>
-        <!-- Sidebar jquery -->
-        <script src="${pageContext.request.contextPath}/assets2/js/config.js"></script>
-        <!-- tooltip init js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/tooltip-init.js"></script>
-        <!-- Plugins JS -->
-        <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
-        <!-- customizer js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>
-        <!-- ratio js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>
-        <!-- sidebar effect -->
-        <script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>
-        <!-- Theme js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
+            <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
+
+                <!-- Bootstrap js -->
+                <script src="${pageContext.request.contextPath}/assets2/js/bootstrap/bootstrap.bundle.min.js"></script>
+
+                <!-- feather icon js -->
+                <script src="${pageContext.request.contextPath}/assets2/js/icons/feather-icon/feather.min.js"></script>
+                <script src="${pageContext.request.contextPath}/assets2/js/icons/feather-icon/feather-icon.js"></script>
+
+                <!-- scrollbar simplebar js -->
+                <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/simplebar.js"></script>
+                <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/custom.js"></script>
+
+                <!-- Sidebar jquery -->
+                <script src="${pageContext.request.contextPath}/assets2/js/config.js"></script>
+
+                <!-- tooltip init js -->
+                <script src="${pageContext.request.contextPath}/assets2/js/tooltip-init.js"></script>
+
+                <!-- Plugins JS -->
+                <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
+
+                <!-- customizer js -->
+                <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>
+
+                <!-- ratio js -->
+                <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>
     </body>
 </html>

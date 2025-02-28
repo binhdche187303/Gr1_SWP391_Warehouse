@@ -180,8 +180,8 @@ public class PurchaseOrderDAO extends DBContext {
         return false;
     }
 
-    public PurchaseOrderDetailDTO getOrderDetail(int orderId) {
-        String sql = """
+public PurchaseOrderDetailDTO getOrderDetail(int orderId) {
+    String sql = """
     SELECT 
         po.reference_code,
         po.order_date,
@@ -198,7 +198,8 @@ public class PurchaseOrderDAO extends DBContext {
         pd.quantity,
         pd.unit_price,
         pd.total_price,
-        pd.expiration_date -- Lấy thêm hạn sử dụng
+        pd.expiration_date, -- Lấy thêm hạn sử dụng
+        sz.size_name -- Lấy tên kích cỡ từ bảng Sizes
     FROM PurchaseOrder po
     JOIN Suppliers s ON po.supplier_id = s.supplier_id
     JOIN Warehouses w ON po.warehouse_id = w.warehouse_id
@@ -206,78 +207,82 @@ public class PurchaseOrderDAO extends DBContext {
     JOIN PurchaseDetails pd ON po.order_id = pd.order_id
     JOIN ProductVariants pv ON pd.variant_id = pv.variant_id
     JOIN Products p ON pv.product_id = p.product_id
+    JOIN Sizes sz ON pv.size_id = sz.size_id  -- Join bảng Sizes để lấy tên kích cỡ
     WHERE po.order_id = ?;
     """;
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, orderId);
-            ResultSet rs = stmt.executeQuery();
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        stmt.setInt(1, orderId);
+        ResultSet rs = stmt.executeQuery();
 
-            PurchaseOrderDetailDTO orderDetail = null;
-            List<PurchaseDetails> purchaseDetailsList = new ArrayList<>();
-            List<String> productNames = new ArrayList<>(); // Danh sách tên sản phẩm
+        PurchaseOrderDetailDTO orderDetail = null;
+        List<PurchaseDetails> purchaseDetailsList = new ArrayList<>();
+        List<String> productNames = new ArrayList<>(); // Danh sách tên sản phẩm
+        List<String> sizeNames = new ArrayList<>(); // Danh sách tên kích cỡ
 
-            while (rs.next()) {
-                if (orderDetail == null) {
-                    // Khởi tạo PurchaseOrder
-                    PurchaseOrder order = new PurchaseOrder();
-                    order.setReferenceCode(rs.getString("reference_code"));
-                    order.setOrderDate(rs.getTimestamp("order_date"));
-                    order.setStatus(rs.getString("status"));
-                    order.setNotes(rs.getString("notes"));
-                    order.setBillImgUrl(rs.getString("bill_img_url"));
-                    order.setTotalAmount(rs.getDouble("total_amount"));
+        while (rs.next()) {
+            if (orderDetail == null) {
+                // Khởi tạo PurchaseOrder
+                PurchaseOrder order = new PurchaseOrder();
+                order.setReferenceCode(rs.getString("reference_code"));
+                order.setOrderDate(rs.getTimestamp("order_date"));
+                order.setStatus(rs.getString("status"));
+                order.setNotes(rs.getString("notes"));
+                order.setBillImgUrl(rs.getString("bill_img_url"));
+                order.setTotalAmount(rs.getDouble("total_amount"));
 
-                    // Khởi tạo Suppliers
-                    Suppliers supplier = new Suppliers();
-                    supplier.setSupplierName(rs.getString("supplier_name"));
-                    supplier.setAddress(rs.getString("supplier_address"));
-                    supplier.setEmail(rs.getString("supplier_email"));
-                    supplier.setPhone(rs.getString("supplier_phone"));
+                // Khởi tạo Suppliers
+                Suppliers supplier = new Suppliers();
+                supplier.setSupplierName(rs.getString("supplier_name"));
+                supplier.setAddress(rs.getString("supplier_address"));
+                supplier.setEmail(rs.getString("supplier_email"));
+                supplier.setPhone(rs.getString("supplier_phone"));
 
-                    // Khởi tạo Warehouse
-                    Warehouse warehouse = new Warehouse();
-                    warehouse.setWarehouseName(rs.getString("warehouse_name"));
-                    warehouse.setAddress(rs.getString("warehouse_address"));
-                    warehouse.setPhone(rs.getString("warehouse_phone"));
+                // Khởi tạo Warehouse
+                Warehouse warehouse = new Warehouse();
+                warehouse.setWarehouseName(rs.getString("warehouse_name"));
+                warehouse.setAddress(rs.getString("warehouse_address"));
+                warehouse.setPhone(rs.getString("warehouse_phone"));
 
-                    // Khởi tạo User (Processed by)
-                    User processedBy = new User();
-                    processedBy.setFullname(rs.getString("processed_by"));
+                // Khởi tạo User (Processed by)
+                User processedBy = new User();
+                processedBy.setFullname(rs.getString("processed_by"));
 
-                    // Tạo đối tượng PurchaseOrderDetailDTO
-                    orderDetail = new PurchaseOrderDetailDTO();
-                    orderDetail.setOrder(order);
-                    orderDetail.setSupplier(supplier);
-                    orderDetail.setWarehouse(warehouse);
-                    orderDetail.setProcessedBy(processedBy);
-                    orderDetail.setPurchaseDetails(purchaseDetailsList);
-                }
-
-                // Tạo PurchaseDetails cho từng sản phẩm trong đơn hàng
-                PurchaseDetails purchaseDetail = new PurchaseDetails();
-                purchaseDetail.setDetailId(rs.getInt("detail_id"));
-                purchaseDetail.setSku(rs.getString("sku"));
-                purchaseDetail.setQuantity(rs.getInt("quantity"));
-                purchaseDetail.setUnitPrice(rs.getDouble("unit_price"));
-                purchaseDetail.setTotalPrice(rs.getDouble("total_price"));
-                purchaseDetail.setExpirationDate(rs.getTimestamp("expiration_date"));  // Sử dụng getTimestamp cho expiration_date
-
-                // Thêm tên sản phẩm vào danh sách (danh sách tạm thời)
-                productNames.add(rs.getString("product_name"));
-
-                // Thêm vào danh sách chi tiết sản phẩm
-                purchaseDetailsList.add(purchaseDetail);
+                // Tạo đối tượng PurchaseOrderDetailDTO
+                orderDetail = new PurchaseOrderDetailDTO();
+                orderDetail.setOrder(order);
+                orderDetail.setSupplier(supplier);
+                orderDetail.setWarehouse(warehouse);
+                orderDetail.setProcessedBy(processedBy);
+                orderDetail.setPurchaseDetails(purchaseDetailsList);
+                orderDetail.setProductNames(productNames);
+                orderDetail.setSizeName(sizeNames);
             }
 
-            // Đưa danh sách tên sản phẩm vào đối tượng orderDetail (hoặc dùng Map nếu muốn lưu SKU và tên sản phẩm)
-            orderDetail.setProductNames(productNames);
+            // Tạo PurchaseDetails cho từng sản phẩm trong đơn hàng
+            PurchaseDetails purchaseDetail = new PurchaseDetails();
+            purchaseDetail.setDetailId(rs.getInt("detail_id"));
+            purchaseDetail.setSku(rs.getString("sku"));
+            purchaseDetail.setQuantity(rs.getInt("quantity"));
+            purchaseDetail.setUnitPrice(rs.getDouble("unit_price"));
+            purchaseDetail.setTotalPrice(rs.getDouble("total_price"));
+            purchaseDetail.setExpirationDate(rs.getTimestamp("expiration_date"));  // Sử dụng getTimestamp cho expiration_date
 
-            return orderDetail;
-        } catch (SQLException e) {
-            e.printStackTrace();
+            // Thêm tên sản phẩm vào danh sách
+            productNames.add(rs.getString("product_name"));
+
+            // Thêm tên kích cỡ vào danh sách
+            sizeNames.add(rs.getString("size_name"));
+
+            // Thêm vào danh sách chi tiết sản phẩm
+            purchaseDetailsList.add(purchaseDetail);
         }
-        return null;
+
+        return orderDetail;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return null;
+}
 
 }

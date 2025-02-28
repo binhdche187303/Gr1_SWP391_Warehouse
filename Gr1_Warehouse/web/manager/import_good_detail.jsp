@@ -1,5 +1,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -130,11 +131,15 @@
                                                                 <c:if test="${not empty orderDetail.purchaseDetails}">
                                                                     <c:forEach var="detail" items="${orderDetail.purchaseDetails}" varStatus="status">
                                                                         <tr>
-                                                                            <td>${orderDetail.productNames[status.index]}  -  ${detail.sku}</td>
+                                                                            <td>${orderDetail.productNames[status.index]}  -  ${detail.sku}   -   ${orderDetail.sizeName[status.index]}</td>
                                                                             <td>${detail.quantity}</td>
-                                                                            <td>${detail.unitPrice} đ</td>
+                                                                            <td>
+                                                                                <fmt:formatNumber value="${detail.unitPrice}" type="currency" currencySymbol="đ" />
+                                                                            </td>
                                                                             <td>${detail.expirationDate != null ? detail.expirationDate : 'N/A'}</td>
-                                                                            <td>${detail.totalPrice} đ</td>
+                                                                            <td>
+                                                                                <fmt:formatNumber value="${detail.totalPrice}" type="currency" currencySymbol="đ" />
+                                                                            </td>                                                                        
                                                                         </tr>
                                                                     </c:forEach>
                                                                 </c:if>
@@ -154,11 +159,12 @@
                                                             <p><strong>Nhân viên xử lý:</strong> ${orderDetail.processedBy.fullname}</p>
                                                             <p><strong>Mã tham chiếu:</strong> ${orderDetail.order.referenceCode}</p>
                                                             <p class="mt-3"><strong>Ghi chú:</strong> ${orderDetail.order.notes}</p>
+                                                            <p class="mt-3"><strong>Ảnh hóa đơn tham chiếu</strong></p>
+                                                            <a href="/Gr1_Warehouse/assets/images/bill_img/${orderDetail.order.billImgUrl}" target="_blank">Xem ảnh hóa đơn</a>
                                                         </c:if>
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <div class="col-md-6">
                                                 <div class="card">
                                                     <div class="card-body">
@@ -170,12 +176,16 @@
                                                             </li>
                                                             <li class="list-group-item d-flex justify-content-between">
                                                                 <span>Giá</span>
-                                                                <span>${not empty orderDetail.purchaseDetails ? orderDetail.purchaseDetails[0].unitPrice : 0} đ</span>
+                                                                <span>
+                                                                    <fmt:formatNumber value="${not empty orderDetail.purchaseDetails ? orderDetail.purchaseDetails[0].unitPrice : 0}" type="currency" currencySymbol="₫" />
+                                                                </span>
                                                             </li>
 
                                                             <li class="list-group-item d-flex justify-content-between text-danger">
                                                                 <strong>Tổng tiền hàng</strong>
-                                                                <strong>${not empty orderDetail.order.totalAmount ? orderDetail.order.totalAmount : 0} đ</strong>
+                                                                <strong>
+                                                                    <fmt:formatNumber value="${not empty orderDetail.order.totalAmount ? orderDetail.order.totalAmount : 0}" type="currency" currencySymbol="₫" />
+                                                                </strong>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -240,7 +250,6 @@
 
         <!-- Theme js -->
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
-
     </body>
 
 </html>

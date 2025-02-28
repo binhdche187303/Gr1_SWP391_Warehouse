@@ -12,14 +12,16 @@ public class ProductDTO {
     private String productName;
     private String sku;
     private String variantId;
+    private String sizeName; // New field for size name
 
     public ProductDTO() {
     }
 
-    public ProductDTO(String productName, String sku, String variantId) {
+    public ProductDTO(String productName, String sku, String variantId, String sizeName) {
         this.productName = productName;
         this.sku = sku;
         this.variantId = variantId;
+        this.sizeName = sizeName;
     }
 
     public String getProductName() {
@@ -46,7 +48,11 @@ public class ProductDTO {
         this.variantId = variantId;
     }
 
+    public String getSizeName() {
+        return sizeName;
+    }
 
-    
-    
+    public void setSizeName(String sizeName) {
+        this.sizeName = sizeName;
+    } 
 }
