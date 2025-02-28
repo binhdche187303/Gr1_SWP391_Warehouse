@@ -742,10 +742,50 @@ public class ProductDAO extends DBContext {
         return success;
     }
 
+    public boolean updatePrice(int variantId, BigDecimal price) {
+        // SQL statement to update the price of a specific product variant
+        String sql = "UPDATE ProductVariants SET price = ? WHERE variant_id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            // Set parameters for the SQL statement
+            stmt.setBigDecimal(1, price);
+            stmt.setInt(2, variantId);
+
+            // Execute the update
+            int rowsAffected = stmt.executeUpdate();
+
+            // Return true if the update was successful (at least one row was affected)
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public int getProductIdFromVariant(int variantId) {
+    String sql = "SELECT product_id FROM ProductVariants WHERE variant_id = ?";
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        stmt.setInt(1, variantId);
+        
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("product_id");
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    
+    // Fallback nếu không tìm thấy
+    return -1;
+}
+    
     public static void main(String[] args) {
         ProductDAO pd = new ProductDAO();
+        pd.updatePrice(1, BigDecimal.valueOf(2));
         Products p = pd.getDetails(1);
-        pd.updateProduct(1, "[1 THÙNG] Bánh ChocoPie Truyền Thống", "Chiếc bánh tròn màu nâu sôcôla thật ngon miệng. Cắn một miếng đầu tiên, bạn sẽ cảm nhận được sự mềm mịn, bông xốp của hai lớp bánh. Kế đến là cấu trúc khó lẫn của nhân marshmallow dẻo dẻo dai dai. Và đọng lại cuối cùng là vị sôcôla đặc trưng, thơm ngon đến nao lòngTình như ChocoPie, Orion ChocoPie là sự lựa chọn hàng đầu của các bà mẹ.", "Việt Nam", 1, 6);
-
+        System.out.println(pd.getProductIdFromVariant(1));
     }
 }

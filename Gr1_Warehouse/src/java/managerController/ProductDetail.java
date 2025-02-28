@@ -13,6 +13,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.List;
 import model.Brands;
 import model.Categories;
@@ -106,15 +107,38 @@ public class ProductDetail extends HttpServlet {
                 int brandId = Integer.parseInt(brandId_raw);
                 String categoryId_raw = request.getParameter("category");
                 int categoryId = Integer.parseInt(categoryId_raw);
-                
+
                 boolean isUpdated = pd.updateProduct(productId, productName, description, origin, brandId, categoryId);
-                
+
                 if (isUpdated) {
                     request.getSession().setAttribute("success", "Cập nhật thành công");
                     response.sendRedirect("productdetail?product_id=" + productId);
                 }
             } catch (NumberFormatException e) {
                 e.printStackTrace();
+            }
+        } else if ("editprice".equals(action)) {
+            try {
+                // Lấy thông tin từ form
+                int variantId = Integer.parseInt(request.getParameter("variant_id"));
+                BigDecimal price = new BigDecimal(request.getParameter("price"));
+
+                // Validate dữ liệu
+                if (price.compareTo(BigDecimal.ZERO) <= 0) {
+                    // Giá không hợp lệ
+                    request.setAttribute("errorMessage", "Giá phải lớn hơn 0");
+                }
+
+                // Sử dụng hàm updatePrice đã có
+                boolean success = pd.updatePrice(variantId, price);
+                int productId = pd.getProductIdFromVariant(variantId);
+                if (success) {
+                    request.getSession().setAttribute("success", "Cập nhật thành công");
+                    response.sendRedirect("productdetail?product_id=" + productId);
+                }
+
+            } catch (NumberFormatException e) {
+                System.out.println(e);
             }
         }
     }

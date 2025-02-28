@@ -242,27 +242,30 @@
                                                 </ul>
                                             </div>
                                         </div>
-                                        <div style="display: flex">    
-                                            <button class="edit-product-btn" data-bs-toggle="modal" data-bs-target="#edit"
+                                        <div style="display: flex;margin-top: 20px ">    
+                                            <button style="margin-right: 20px" class="align-items-center btn btn-theme d-flex" data-bs-toggle="modal" data-bs-target="#edit"
                                                     data-id="${product.productId}"
                                                     data-name="${product.productName}"
                                                     data-desc="${product.description}"
                                                     data-origin="${product.origin}"
                                                     data-brand-id="${product.brand.brand_id}"
                                                     data-category-id="${product.cate.category_id}" >
-                                                Chỉnh sửa
+                                                Chỉnh sửa chung
                                             </button>
                                             <button style="margin-right: 20px" type="button" class="align-items-center btn btn-theme d-flex" 
                                                     data-bs-toggle="modal" data-bs-target="#editimage">
-                                                <i data-feather="plus"></i>Chỉnh sửa ảnh
+                                                Chỉnh sửa ảnh
                                             </button>
                                             <button style="margin-right: 20px" type="button" class="align-items-center btn btn-theme d-flex" 
-                                                    data-bs-toggle="modal" data-bs-target="#editprice">
-                                                <i data-feather="plus"></i>Chỉnh sửa giá
+                                                    data-bs-toggle="modal" data-bs-target="#editprice"
+                                                    data-id="${product.productId}"
+                                                    data-sku="" 
+                                                    data-price="">
+                                                Chỉnh sửa giá
                                             </button>
                                             <button type="button" class="align-items-center btn btn-theme d-flex" 
                                                     data-bs-toggle="modal" data-bs-target="#addprice">
-                                                <i data-feather="plus"></i>Tạo mới
+                                                Tạo mới
                                             </button>
                                         </div>   
                                     </div>
@@ -294,7 +297,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="description" class="form-label">Mô tả</label>
-                                <input type="text" class="form-control" id="description" name="description">
+                                <input type="text" class="form-control" id="description" name="description" required>
                             </div>
                             <!-- Thương hiệu với mũi tên dropdown -->
                             <div class="mb-3">
@@ -310,7 +313,7 @@
 
                             <div class="mb-3">
                                 <label for="origin" class="form-label">Origin</label>
-                                <input type="text" class="form-control" id="origin" name="origin">
+                                <input type="text" class="form-control" id="origin" name="origin" required>
                             </div>
                             <!-- Danh mục với mũi tên dropdown -->
                             <div class="mb-3">
@@ -330,7 +333,7 @@
             </div>
         </div>
 
-        <!-- Modal chỉnh sửa giá -->
+        <!-- Modal chỉnh sửa ảnh -->
         <div class="modal fade" id="editimage" tabindex="-1" aria-labelledby="edit" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -380,7 +383,7 @@
             </div>
         </div>
 
-        <!-- Modal chỉnh sửa ảnh -->
+        <!-- Modal chỉnh sửa giá -->
         <div class="modal fade" id="editprice" tabindex="-1" aria-labelledby="edit" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -389,39 +392,27 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="add" action="productdetail" method="post" enctype="multipart/form-data">
-                            <input type="hidden" name="action"  value="editimage">
+                        <form id="add" action="productdetail" method="post">
+                            <input type="hidden" name="action"  value="editprice">
+                            <input type="hidden" name="variant_id" value="">
                             <div class="mb-3">
-                                <label for="productname" class="form-label">Tên sản phẩm</label>
-                                <input type="text" class="form-control" id="productname" name="productname" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="description" class="form-label">Mô tả</label>
-                                <input type="text" class="form-control" id="description" name="description">
-                            </div>
-                            <!-- Thương hiệu với mũi tên dropdown -->
-                            <div class="mb-3">
-                                <label for="brand" class="form-label">Thương hiệu</label>
-                                <div class="dropdown-select-wrapper">
-                                    <select class="form-select" id="brand" name="brand">
-                                        <c:forEach var="b" items="${listBrands}">
-                                            <option value="${b.brand_id}">${b.brand_name}</option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
+                                <label for="sku" class="form-label">Mã SKU</label>
+                                <input type="text" class="form-control" id="sku" name="sku" required readonly="">
                             </div>
 
                             <div class="mb-3">
-                                <label for="origin" class="form-label">Origin</label>
-                                <input type="text" class="form-control" id="origin" name="origin">
+                                <label for="price" class="form-label">Giá</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="price" name="price" value="" min="1" required>
+                                </div>
                             </div>
-                            <!-- Danh mục với mũi tên dropdown -->
+                            <!-- Size với mũi tên dropdown -->
                             <div class="mb-3">
-                                <label for="category" class="form-label">Danh mục</label>
+                                <label for="size" class="form-label">Phân loại</label>
                                 <div class="dropdown-select-wrapper">
-                                    <select class="form-select" id="category" name="category">
-                                        <c:forEach var="c" items="${listCategories}">
-                                            <option value="${c.category_id}">${c.category_name}</option>
+                                    <select class="form-select" id="size" name="size">
+                                        <c:forEach var="variant" items="${product.variants}" varStatus="status">
+                                            <option value="${variant.size.size_id}">${variant.size.size_name}</option>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -669,6 +660,73 @@
 
 
             //End Edit
+
+            //Start Edit Price
+            document.addEventListener('DOMContentLoaded', function () {
+                // Lưu trữ thông tin của tất cả variant để dễ truy cập
+                const variantData = {};
+                // Thu thập thông tin về các variant
+                document.querySelectorAll('.select-packege a').forEach(variant => {
+                    const sizeId = variant.getAttribute('data-variant-id');
+                    variantData[sizeId] = {
+                        sku: variant.getAttribute('data-sku'),
+                        price: variant.getAttribute('data-price')
+                    };
+                });
+                // Lắng nghe sự kiện click cho nút "Chỉnh sửa giá"
+                const buttons = document.querySelectorAll('button[data-bs-target="#editprice"]');
+                buttons.forEach(button => {
+                    button.addEventListener('click', function () {
+                        // Lấy data từ nút được nhấn
+                        const productId = this.getAttribute('data-id');
+
+                        // Tìm phân loại đang active
+                        const activeVariant = document.querySelector('.select-packege a.active');
+
+                        if (activeVariant) {
+                            const variantId = activeVariant.getAttribute('data-variant-id');
+                            const sku = activeVariant.getAttribute('data-sku');
+                            const price = activeVariant.getAttribute('data-price');
+
+                            // Điền dữ liệu vào modal
+                            const modal = document.getElementById('editprice');
+                            modal.querySelector('input[name="variant_id"]').value = variantId;
+                            modal.querySelector('input[name="sku"]').value = sku;
+                            modal.querySelector('input[name="price"]').value = price;
+
+                            // Chọn kích thước trong dropdown
+                            const sizeSelect = modal.querySelector('#size');
+
+                            for (let i = 0; i < sizeSelect.options.length; i++) {
+                                if (sizeSelect.options[i].value === variantId) {
+                                    sizeSelect.selectedIndex = i;
+                                    break;
+                                }
+                            }
+                        } else {
+                        }
+                    });
+                });
+
+                // Lắng nghe sự kiện khi thay đổi size trong modal
+                const sizeSelect = document.querySelector('#editprice #size');
+
+                if (sizeSelect) {
+                    sizeSelect.addEventListener('change', function () {
+                        const selectedSizeId = this.value;
+
+                        if (variantData[selectedSizeId]) {
+                            const modal = document.getElementById('editprice');
+                            modal.querySelector('input[name="variant_id"]').value = selectedSizeId;
+                            modal.querySelector('input[name="sku"]').value = variantData[selectedSizeId].sku;
+                            modal.querySelector('input[name="price"]').value = variantData[selectedSizeId].price;
+                        } else {
+                        }
+                    });
+                }
+            });
+            //End Price
+
         </script>                     
 
 
