@@ -7,6 +7,7 @@ package managerController;
 import dao.BrandDAO;
 import dao.CategoryDAO;
 import dao.ProductDAO;
+import dao.SizeDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,10 +15,15 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import model.Brands;
 import model.Categories;
+import model.Images;
 import model.Products;
+import model.Sizes;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -66,15 +72,18 @@ public class ProductDetail extends HttpServlet {
         ProductDAO pd = new ProductDAO();
         BrandDAO bd = new BrandDAO();
         CategoryDAO cd = new CategoryDAO();
+        SizeDAO sd = new SizeDAO();
         String product_id_raw = request.getParameter("product_id");
         try {
             int product_id = Integer.parseInt(product_id_raw);
             Products p = pd.getDetails(product_id);
             List<Brands> listBrands = bd.getAllBrands();
             List<Categories> listCategories = cd.getAllCategories();
+            List<Sizes> listSizes = sd.getAllSizes();
             request.setAttribute("product", p);
             request.setAttribute("listBrands", listBrands);
             request.setAttribute("listCategories", listCategories);
+            request.setAttribute("listSizes", listSizes);
             request.getRequestDispatcher("/manager/product_detail.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             System.out.println(e);
@@ -138,6 +147,83 @@ public class ProductDetail extends HttpServlet {
                 }
 
             } catch (NumberFormatException e) {
+                System.out.println(e);
+            }
+        } else if ("addprice".equals(action)) {
+            try {
+                String product_id_raw = request.getParameter("product_id");
+                String size_id_raw = request.getParameter("size");
+                BigDecimal price = new BigDecimal(request.getParameter("price"));
+                String sku = request.getParameter("sku");
+                int product_id = Integer.parseInt(product_id_raw);
+                int size_id = Integer.parseInt(size_id_raw);
+                // Validate dữ liệu
+                if (price.compareTo(BigDecimal.ZERO) <= 0) {
+                    // Giá không hợp lệ
+                    request.setAttribute("errorMessage", "Giá phải lớn hơn 0");
+                }
+
+                boolean success = pd.addProductVariant(product_id, size_id, price, sku);
+                System.out.println(product_id);
+                System.out.println(size_id);
+                System.out.println(price);
+                System.out.println(sku);
+                System.out.println(success);
+                if (success) {
+                    request.getSession().setAttribute("success", "Thêm mới thành công");
+                } else {
+                    request.getSession().setAttribute("errorMessage", "Thêm mới thất bại do mã SKU đã tồn tại");
+                    request.getSession().setAttribute("sku", sku);
+                    request.getSession().setAttribute("price", price);
+                    request.getSession().setAttribute("size", size_id);
+                    request.getSession().setAttribute("success", "Thêm mới thất bại do mã sku đã tồn tại");
+                }
+                response.sendRedirect("productdetail?product_id=" + product_id);
+            } catch (NumberFormatException e) {
+                System.out.println(e);
+            }
+        } else if ("editimage".equals(action)) {
+            try {
+                // Lấy product_id từ request
+                int productId = Integer.parseInt(request.getParameter("product_id"));
+
+                // Lấy danh sách ảnh từ form gửi lên dưới dạng JSON
+                String imagesListJson = request.getParameter("imagesList");
+                List<Images> updatedImages = new ArrayList<>();
+
+                // Nếu có dữ liệu JSON từ client
+                if (imagesListJson != null && !imagesListJson.isEmpty()) {
+                    try {
+                        // Parse JSON string thành danh sách đối tượng Images
+                        // Giả sử bạn có một lớp tiện ích JsonParser hoặc sử dụng thư viện JSON như Gson
+                        JSONArray imagesArray = new JSONArray(imagesListJson);
+
+                        for (int i = 0; i < imagesArray.length(); i++) {
+                            JSONObject imageObj = imagesArray.getJSONObject(i);
+
+                            Images image = new Images();
+                            image.setImage_url("assets/images/img_products/"+ imageObj.getString("image_url"));
+                            updatedImages.add(image);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        // Xử lý lỗi khi parse JSON
+                    }
+                }
+
+                boolean success = pd.updateProductImages(updatedImages, productId);
+
+                if (success) {
+                    request.getSession().setAttribute("success", "Thêm mới thành công");
+                } else {
+                    request.getSession().setAttribute("success", "Thêm mới thất bại");
+                }
+
+                response.sendRedirect("productdetail?product_id=" + productId);
+
+            } catch (NumberFormatException e) {
+                System.out.println(e);
+            } catch (IOException e) {
                 System.out.println(e);
             }
         }

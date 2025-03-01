@@ -56,5 +56,35 @@ public class SizeDAO extends DBContext {
     }
     return variants;
 }
+    
+        public List<Sizes> getAllSizes() {
+
+        List<Sizes> list = new ArrayList<>();
+        String sql = "SELECT * FROM dbo.Sizes";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Sizes size = new Sizes();
+                size.setSize_id(rs.getInt("size_id"));
+                size.setSize_name(rs.getString("size_name"));
+                list.add(size);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public static void main(String[] args) {
+       SizeDAO sd = new SizeDAO();
+        List<Sizes> l = sd.getAllSizes();
+        for (Sizes size : l) {
+            System.out.println(size.getSize_name());
+        }
+    }
+    
 
 }
