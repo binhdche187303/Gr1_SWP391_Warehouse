@@ -17,6 +17,7 @@ public class ProductVariants {
     private BigDecimal price;
     private int stock;
     private Sizes size;
+    private Products product;
     private String sku;
 
     public Sizes getSize() {
@@ -25,6 +26,14 @@ public class ProductVariants {
 
     public void setSize(Sizes size) {
         this.size = size;
+    }
+
+    public Products getProduct() {
+        return product;
+    }
+
+    public void setProduct(Products product) {
+        this.product = product;
     }
 
     
@@ -80,16 +89,18 @@ public class ProductVariants {
     
     // Constructor
 
-    public ProductVariants(int variantId, int productId, int sizeId, BigDecimal price, int stock, Sizes size, String sku) {
+    public ProductVariants(int variantId, int productId, int sizeId, BigDecimal price, int stock, Sizes size, Products product, String sku) {
         this.variantId = variantId;
         this.productId = productId;
         this.sizeId = sizeId;
         this.price = price;
         this.stock = stock;
         this.size = size;
+        this.product = product;
         this.sku = sku;
     }
-    
+
+   
 
     // Default constructor
     public ProductVariants() {
