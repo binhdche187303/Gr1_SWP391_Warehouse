@@ -223,12 +223,12 @@
                                                     <h3 class="mb-4">Tổng kết</h3>
                                                     <div class="d-flex justify-content-between mb-2">
                                                         <span class="text-gray-700">Số lượng lệch tăng</span>
-                                                        <span id="totalQuantity" name="totalQuantity">0</span>
+                                                        <span id="totalDifferenceUp" name="totalDifferenceUp">0</span>
                                                     </div>
 
                                                     <div class="d-flex justify-content-between align-items-center mb-2">
-                                                        <span class="text-gray-700">Số lượng lệch tăng</span>
-                                                        <span id="totalAmount" name="totalAmount">0</span>
+                                                        <span class="text-gray-700">Số lượng lệch giảm</span>
+                                                        <span id="totalDifferenceDown" name="totalDifferenceDown">0</span>
                                                     </div>
 
                                                     <div class="d-flex justify-content-between align-items-center mb-2">
@@ -242,7 +242,7 @@
                                                     </div>
 
 
-                                                    <button id="submitOrderBtn" class="w-100 btn btn-primary" type="submit">Hoàn tất</button>
+                                                    <button id="submitOrderBtn" class="w-100 btn btn-primary" type="submit">Hoàn tất kiểm kho</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -561,9 +561,10 @@
                     modal.hide();
                     updateTotalDifference();
                 });
-
-
                 function updateTotalDifference() {
+                    let totalDifferenceUp = 0; // Tổng sản phẩm lệch tăng
+                    let totalDifferenceDown = 0; // Tổng sản phẩm lệch giảm
+
                     document.querySelectorAll(".selected-product").forEach(row => {
                         const stock = parseInt(row.children[1].textContent.trim()) || 0; // Lấy tồn kho
                         const actualStockInput = row.children[2].querySelector("input"); // Ô nhập tồn thực tế
@@ -579,9 +580,19 @@
 
                         const difference = actualStock - stock; // Tính số lượng chênh lệch
                         differenceSpan.textContent = difference; // Cập nhật vào ô hiển thị
-                    });
-                }
 
+                        // Cập nhật tổng số lượng lệch tăng và giảm
+                        if (difference > 0) {
+                            totalDifferenceUp += difference;
+                        } else if (difference < 0) {
+                            totalDifferenceDown += difference;
+                        }
+                    });
+
+                    // Cập nhật vào phần Tổng kết
+                    document.getElementById("totalDifferenceUp").textContent = totalDifferenceUp;
+                    document.getElementById("totalDifferenceDown").textContent = totalDifferenceDown;
+                }
             });
 
         </script>
