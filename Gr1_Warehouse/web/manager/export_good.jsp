@@ -123,22 +123,25 @@
                                 <!-- Chiết khấu áp dụng -->
                                 <div class="card mb-4">
                                     <div class="card-body">
-                                        <h5 class="fw-bold mb-3">Chiết khấu áp dụng</h5>
-                                        <div class="d-flex gap-3 align-items-center mb-3">
-                                            <label for="discount-code" class="form-label mb-0 fs-6" style="min-width: 120px;">Mã giảm giá:</label>
-                                            <input type="text" id="discount-code" class="form-control flex-grow-1" placeholder="Nhập mã giảm giá" />
-                                            <button class="btn btn-primary" onclick="applyDiscount()">Áp dụng</button>
-                                        </div>
 
+                                        <h5 class="fw-bold mb-3">Chiết khấu áp dụng</h5>
+                                        <form id="discount-form">
+                                            <div class="d-flex gap-3 align-items-center mb-3">
+                                                <label for="discount-code" class="form-label mb-0 fs-6" style="min-width: 120px;">Mã giảm giá:</label>
+                                                <input type="text" name="discount_code" id="discount-code" class="form-control flex-grow-1" placeholder="Nhập mã giảm giá" required />
+                                                <input type="hidden" name="order_id" id="order-id" value="${orderDetailDTO.order.orderId}">
+                                                <button type="button" class="btn btn-primary" onclick="applyDiscount();">Áp dụng</button>
+                                            </div>
+                                            <div id="error-message" class="text-danger mt-2 d-none"></div>
+                                        </form>
                                         <hr>
                                         <div class="d-flex justify-content-between fw-bold">
                                             <span>Tổng thanh toán (sau khi áp dụng mã giảm giá)</span>
-                                            <span class="fw-bold text-danger">
-                                                <!-- Hiển thị tổng thanh toán sau khi áp dụng mã giảm giá -->
-                                                <fmt:formatNumber value="${totalAmount != null ? totalAmount : 0}" type="currency" currencySymbol="đ" />
+                                            <span class="fw-bold text-danger" id="total-amount">
+                                                <fmt:formatNumber value="${orderDetailDTO.order.totalAmount}" type="currency" currencySymbol="đ" />
                                             </span>
+
                                         </div>
-                                            
                                         <div class="mt-3 fw-bold">
                                             <label for="note" class="form-label">Ghi chú đơn hàng</label>
                                             <textarea id="note" class="form-control" rows="3" placeholder="Nhập ghi chú về đơn hàng..."></textarea>
@@ -209,6 +212,67 @@
             </div>
         </div>
     </div>
+    <script>
+        function applyDiscount() {
+            console.log("🔹 Bắt đầu gọi API apply-discount");
+
+            const orderId = document.getElementById("order-id").value; // Lấy giá trị order_id từ input hidden
+            const discountCode = document.getElementById("discount-code").value.trim(); // Lấy giá trị discount_code từ input text
+
+            // Kiểm tra giá trị orderId và discountCode trước khi gửi request
+            console.log("Order ID:", orderId);
+            console.log("Discount Code:", discountCode);
+
+            if (!discountCode) {
+                alert("⚠️ Vui lòng nhập mã giảm giá!");
+                return;
+            }
+
+            // Log request body trước khi gửi
+            const requestBody = "order_id=" + orderId + "&discount_code=" + discountCode;
+            console.log("Request body:", requestBody);  // In ra request body
+
+            fetch("/Gr1_Warehouse/apply-discount", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: requestBody  // Gửi dữ liệu
+            })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Response từ API:", data);
+
+                        if (data.error) {
+                            document.getElementById("error-message").innerText = data.error;
+                            document.getElementById("error-message").classList.remove("d-none");
+                        } else if (data.success) {
+                            alert(data.success);
+
+                            // Trích xuất giá trị newTotal từ thông báo
+                            let successMessage = data.success;
+                            let newTotal = successMessage.match(/Tổng tiền mới: (\d+(\.\d+)?)/);
+
+                            if (newTotal) {
+                                newTotal = newTotal[1];  // Lấy số tiền từ thông báo
+                                document.getElementById("total-amount").innerText = new Intl.NumberFormat().format(newTotal) + " đ";
+                            } else {
+                                console.error("Không thể trích xuất newTotal từ thông báo");
+                                document.getElementById("total-amount").innerText = "Lỗi tính tổng";
+                            }
+
+                            document.getElementById("error-message").classList.add("d-none");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("❌ Lỗi:", error);
+                        document.getElementById("error-message").innerText = "⚠️ Không thể áp dụng mã giảm giá!";
+                        document.getElementById("error-message").classList.remove("d-none");
+                    });
+        }
+    </script>
+
+
 
     <!-- latest js -->
     <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>

@@ -220,7 +220,7 @@
 
 
                                                 <div class="onhover-div">
-                                                    
+
                                                     <li class="right-side onhover-dropdown">
                                                         <div class="delivery-login-box">
                                                             <div class="delivery-icon">
@@ -742,6 +742,26 @@
                                                 </div>
                                             </div>
                                             </header>
+                                            <!-- Modal -->
+                                            <div class="modal" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="paymentModalLabel">Yêu Cầu Thanh Toán 50%</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Đơn hàng của bạn đã được xác nhận. Vui lòng thanh toán 50% tổng giá trị qua QR Code dưới đây:</p>
+                                                            <div id="qrCodeContainer"></div> <!-- QR code sẽ được hiển thị ở đây -->
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                            <button type="button" class="btn btn-primary" onclick="redirectToPayment()">Thanh Toán</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>                                    
+
                                             <!-- Header End -->
                                             <!-- Tap to top start -->
                                             <div class="theme-option">

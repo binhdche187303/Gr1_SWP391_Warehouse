@@ -88,6 +88,10 @@
         <servlet-name>OrderDetailServlet</servlet-name>
         <servlet-class>controller.OrderDetailServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ApplyDiscountServlet</servlet-name>
+        <servlet-class>dashboardController.ApplyDiscountServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ArchiveServlet</servlet-name>
         <url-pattern>/archive</url-pattern>
@@ -183,6 +187,10 @@
     <servlet-mapping>
         <servlet-name>OrderDetailServlet</servlet-name>
         <url-pattern>/order-details</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ApplyDiscountServlet</servlet-name>
+        <url-pattern>/apply-discount</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login</welcome-file>

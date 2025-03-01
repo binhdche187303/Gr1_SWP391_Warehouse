@@ -1,5 +1,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
@@ -91,7 +93,9 @@
                                                               ${payment != null ? payment.paymentStatus : 'Chưa thanh toán'}
                                                           </span>
                                                     </td>
-                                                    <td>${order.totalAmount}</td>
+<td>
+    <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="₫" />
+</td>
                                                     <td class="text-center">
                                                         <a href="order-details?orderId=${order.orderId}">
                                                             <i class="ri-eye-line"></i>
