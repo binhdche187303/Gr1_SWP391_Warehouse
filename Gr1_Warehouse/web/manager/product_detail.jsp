@@ -235,7 +235,7 @@
                                                     <li>
                                                         <a href="javascript:void(0)" class="${status.first ? 'active' : ''}" 
                                                            data-price="${variant.price}" 
-                                                           data-variant-id="${variant.size.size_id}" 
+                                                           data-variant-id="${variant.variantId}" 
                                                            data-sku="${variant.sku}"
                                                            onclick="updatePriceAndVariant(this)">
                                                             ${variant.size.size_name}
@@ -369,7 +369,7 @@
                                     <c:forEach var="image" items="${product.images}">
                                         <div class="col-md-3 text-center image-item" data-id="${image.image_id}">
                                             <img src="${image.image_url}" 
-                                                 alt="${product.productName}" class="img-thumbnail existing-image mb-2" style="width: 100%;">
+                                                 alt="${product.productName}" class="img-thumbnail existing-image mb-2" style="width: 100%; height: 120px; object-fit: contain;">
                                             <button type="button" class="btn btn-danger btn-sm" onclick="removeImage('${image.image_id}')">
                                                 Xóa
                                             </button>
@@ -387,7 +387,7 @@
                             <div class="mb-3 text-center">
                                 <label for="imagePreview" class="form-label">Xem trước ảnh</label>
                                 <img id="imagePreview" src="" alt="Xem trước ảnh" class="img-fluid" 
-                                     style="max-width: 100%; display: none; border: 1px solid #ccc; padding: 5px;">
+                                     style="max-width: 40%; display: none; border: 1px solid #ccc; padding: 5px;">
                             </div>
                             <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                         </form>
@@ -650,178 +650,149 @@
             document.addEventListener('DOMContentLoaded', function () {
                 console.log('DOM loaded');
 
-                // Lưu trữ thông tin của tất cả variant để dễ truy cập
+                // Store variant data for quick access
                 const variantData = {};
 
-                // Thu thập thông tin về các variant
+                // Collect all variant information
                 document.querySelectorAll('.select-packege a').forEach(variant => {
                     const variantId = variant.getAttribute('data-variant-id');
                     variantData[variantId] = {
                         sku: variant.getAttribute('data-sku'),
                         price: variant.getAttribute('data-price'),
-                        sizeId: variant.getAttribute('data-size-id')
+                        sizeId: variant.getAttribute('data-size-id') || null // Add this if you have data-size-id attribute, otherwise it's null
                     };
                     console.log('Loaded variant: ' + variantId);
                 });
 
-                // Maps để lưu mối quan hệ giữa size_id và variant_id
+                // Create a map from size_id to variant_id based on select options
                 const sizeToVariantMap = {};
-                const variantToSizeMap = {};
-
-                // Xây dựng map ánh xạ từ các option trong dropdown
-                const sizeOptions = document.querySelectorAll('#editprice #size option');
-                sizeOptions.forEach(option => {
+                document.querySelectorAll('#editprice #size option').forEach(option => {
                     const sizeId = option.value;
-                    const relatedVariantId = option.getAttribute('data-variant-id');
-
-                    if (relatedVariantId) {
-                        sizeToVariantMap[sizeId] = relatedVariantId;
-                        variantToSizeMap[relatedVariantId] = sizeId;
-                        console.log('Map - Size: ' + sizeId + ' -> Variant: ' + relatedVariantId);
+                    const variantId = option.getAttribute('data-variant-id');
+                    if (variantId) {
+                        sizeToVariantMap[sizeId] = variantId;
+                        console.log('Mapped size ' + sizeId + ' to variant ' + variantId);
                     }
                 });
 
-                // Biến để lưu trữ giá trị size được chọn
-                let lastSelectedSize = null;
+                // Track the current size selection
+                let currentSizeId = null;
 
-                // Lắng nghe sự kiện khi modal được hiển thị
-                $('#editprice').on('show.bs.modal', function () {
-                    console.log('Modal is about to show');
-                    // Đặt lại biến lastSelectedSize
-                    lastSelectedSize = null;
-                });
-
-                // Lắng nghe sự kiện click cho nút "Chỉnh sửa giá"
-                const buttons = document.querySelectorAll('button[data-bs-target="#editprice"]');
-                buttons.forEach(button => {
+                // Handle edit price button click
+                document.querySelectorAll('button[data-bs-target="#editprice"]').forEach(button => {
                     button.addEventListener('click', function () {
                         console.log('Edit price button clicked');
 
-                        // Tìm phân loại đang active
+                        // Get the active variant
                         const activeVariant = document.querySelector('.select-packege a.active');
-                        if (activeVariant) {
-                            const variantId = activeVariant.getAttribute('data-variant-id');
-                            const sku = activeVariant.getAttribute('data-sku');
-                            const price = activeVariant.getAttribute('data-price');
+                        if (!activeVariant) {
+                            console.log('No active variant found');
+                            return;
+                        }
 
-                            console.log('Active variant: ' + variantId);
+                        const variantId = activeVariant.getAttribute('data-variant-id');
+                        const sku = activeVariant.getAttribute('data-sku');
+                        const price = activeVariant.getAttribute('data-price');
+                        console.log('Active variant: ' + variantId);
 
-                            // Điền dữ liệu vào modal
-                            const modal = document.getElementById('editprice');
-                            const variantIdInput = modal.querySelector('input[name="variant_id"]');
-                            variantIdInput.value = variantId;
-                            modal.querySelector('input[name="sku"]').value = sku;
-                            modal.querySelector('input[name="price"]').value = price;
+                        // Get the modal and form elements
+                        const modal = document.getElementById('editprice');
+                        const variantIdInput = modal.querySelector('input[name="variant_id"]');
+                        const skuInput = modal.querySelector('input[name="sku"]');
+                        const priceInput = modal.querySelector('input[name="price"]');
+                        const sizeSelect = modal.querySelector('#size');
 
-                            // Tìm size_id tương ứng với variant_id để chọn trong dropdown
-                            const sizeSelect = modal.querySelector('#size');
+                        // Set the variant ID in the form
+                        variantIdInput.value = variantId;
+                        skuInput.value = sku;
+                        priceInput.value = price;
 
-                            // Nếu có sizeId tương ứng với variantId, chọn nó
-                            if (variantToSizeMap[variantId]) {
-                                sizeSelect.value = variantToSizeMap[variantId];
-                                lastSelectedSize = sizeSelect.value; // Lưu lại size đã chọn
-                                console.log('Selected size: ' + sizeSelect.value + ' for variant: ' + variantId);
-                            } else {
-                                // Tìm option có data-variant-id phù hợp
-                                for (let i = 0; i < sizeSelect.options.length; i++) {
-                                    if (sizeSelect.options[i].getAttribute('data-variant-id') === variantId) {
-                                        sizeSelect.selectedIndex = i;
-                                        lastSelectedSize = sizeSelect.options[i].value; // Lưu lại size đã chọn
-                                        console.log('Found matching option at index: ' + i);
-                                        break;
-                                    }
-                                }
+                        // Find and select the matching size option
+                        let sizeFound = false;
+                        for (let i = 0; i < sizeSelect.options.length; i++) {
+                            const option = sizeSelect.options[i];
+                            if (option.getAttribute('data-variant-id') === variantId) {
+                                sizeSelect.selectedIndex = i;
+                                currentSizeId = option.value;
+                                sizeFound = true;
+                                console.log('Selected size option at index ' + i + ' with size ID ' + currentSizeId);
+                                break;
                             }
-                            // Thêm data-original-variant-id để biết variant ban đầu
-                            variantIdInput.setAttribute('data-original-variant-id', variantId);
+                        }
+
+                        if (!sizeFound) {
+                            console.log('Warning: Could not find size option for variant ' + variantId);
                         }
                     });
                 });
 
-                // Lắng nghe sự kiện khi thay đổi size trong modal
+                // Handle size selection change
                 const sizeSelect = document.querySelector('#editprice #size');
                 if (sizeSelect) {
-                    sizeSelect.addEventListener('change', function (e) {
-                        e.stopPropagation(); // Ngăn sự kiện lan truyền
-
+                    sizeSelect.addEventListener('change', function () {
                         const selectedSizeId = this.value;
                         const selectedOption = this.options[this.selectedIndex];
-                        console.log('Size changed to: ' + selectedSizeId);
+                        const selectedVariantId = selectedOption.getAttribute('data-variant-id');
 
-                        // Lưu lại size đã chọn
-                        lastSelectedSize = selectedSizeId;
-                        console.log('Saved lastSelectedSize as: ' + lastSelectedSize);
+                        console.log('Size changed to: ' + selectedSizeId + ' (variant: ' + selectedVariantId + ')');
+                        currentSizeId = selectedSizeId;
 
-                        // Lấy variant_id trực tiếp từ option đã chọn
-                        const correspondingVariantId = selectedOption.getAttribute('data-variant-id');
+                        // Update the form with the new variant information
+                        const modal = document.getElementById('editprice');
+                        const variantIdInput = modal.querySelector('input[name="variant_id"]');
+                        const skuInput = modal.querySelector('input[name="sku"]');
+                        const priceInput = modal.querySelector('input[name="price"]');
 
-                        if (correspondingVariantId) {
-                            console.log('Found variant from option: ' + correspondingVariantId);
+                        // Set the variant ID
+                        variantIdInput.value = selectedVariantId;
 
-                            // Cập nhật form với variant_id đúng
-                            const modal = document.getElementById('editprice');
-                            const variantIdInput = modal.querySelector('input[name="variant_id"]');
-                            variantIdInput.value = correspondingVariantId;
-
-                            // Cập nhật SKU và giá nếu có trong variantData
-                            if (variantData[correspondingVariantId]) {
-                                modal.querySelector('input[name="sku"]').value = variantData[correspondingVariantId].sku;
-                                modal.querySelector('input[name="price"]').value = variantData[correspondingVariantId].price;
-                            } else {
-                                // Nếu không có trong variantData, thử tìm từ DOM
-                                const matchingVariant = document.querySelector('.select-packege a[data-variant-id="' + correspondingVariantId + '"]');
-                                if (matchingVariant) {
-                                    modal.querySelector('input[name="sku"]').value = matchingVariant.getAttribute('data-sku');
-                                    modal.querySelector('input[name="price"]').value = matchingVariant.getAttribute('data-price');
-                                }
-                            }
-
-                            console.log('Updated variant_id to: ' + correspondingVariantId);
-
-                            // Đảm bảo select box vẫn giữ giá trị đã chọn
-                            setTimeout(function () {
-                                sizeSelect.value = lastSelectedSize;
-                                console.log('Restored select to: ' + lastSelectedSize);
-                            }, 0);
+                        // Find the matching variant element to get price and SKU
+                        const matchingVariant = document.querySelector(`.select-packege a[data-variant-id="${selectedVariantId}"]`);
+                        if (matchingVariant) {
+                            skuInput.value = matchingVariant.getAttribute('data-sku');
+                            priceInput.value = matchingVariant.getAttribute('data-price');
+                            console.log('Updated form with data from variant ' + selectedVariantId);
+                        } else if (variantData[selectedVariantId]) {
+                            // Fallback to data from our cache
+                            skuInput.value = variantData[selectedVariantId].sku;
+                            priceInput.value = variantData[selectedVariantId].price;
+                            console.log('Updated form with data from cached variant ' + selectedVariantId);
                         } else {
-                            console.log('WARNING: No variant_id found for selected option');
+                            console.log('Warning: No data found for variant ' + selectedVariantId);
                         }
                     });
                 }
 
-                // Lắng nghe sự kiện khi modal hiển thị hoàn tất
-                $('#editprice').on('shown.bs.modal', function () {
-                    console.log('Modal fully shown');
-                    // Nếu có lastSelectedSize, đảm bảo select box được đặt đúng
-                    if (lastSelectedSize) {
-                        const sizeSelect = document.querySelector('#editprice #size');
-                        sizeSelect.value = lastSelectedSize;
-                        console.log('Restored select to lastSelectedSize: ' + lastSelectedSize);
-                    }
-                });
-
-                // Kiểm tra cuối cùng trước khi submit form
+                // Ensure correct data before form submission
                 const form = document.querySelector('#editprice form');
                 if (form) {
                     form.addEventListener('submit', function (e) {
                         console.log('Form submission check');
 
-                        // Đảm bảo variant_id phù hợp với size đã chọn
+                        // Get the selected option and its variant ID
                         const sizeSelect = this.querySelector('#size');
                         const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
-                        const correctVariantId = selectedOption.getAttribute('data-variant-id');
+                        const variantId = selectedOption.getAttribute('data-variant-id');
 
-                        if (correctVariantId) {
-                            // Cập nhật variant_id trước khi submit
-                            this.querySelector('input[name="variant_id"]').value = correctVariantId;
-                            console.log('Final variant_id for submission: ' + correctVariantId);
-                        } else {
-                            console.log('WARNING: Could not find variant_id for submission');
-                            e.preventDefault(); // Ngăn form submit nếu không có variant_id
-                            alert('Không thể xác định variant_id. Vui lòng thử lại.');
+                        if (!variantId) {
+                            console.log('Error: No variant ID found for submission');
+                            e.preventDefault();
+                            alert('Không thể xác định biến thể sản phẩm. Vui lòng thử lại.');
+                            return;
                         }
+
+                        // Update the variant ID input
+                        const variantIdInput = this.querySelector('input[name="variant_id"]');
+                        variantIdInput.value = variantId;
+                        console.log('Submitting form with variant ID: ' + variantId);
                     });
                 }
+
+                // Reset when modal is hidden
+                $('#editprice').on('hidden.bs.modal', function () {
+                    console.log('Modal hidden, resetting state');
+                    currentSizeId = null;
+                });
             });
             //End Price
 
@@ -937,7 +908,7 @@
 
                     // Tạo HTML cho mỗi ảnh không sử dụng template literal
                     imageItem.innerHTML =
-                            '<img src="' + displayUrl + '" alt="Ảnh sản phẩm" class="img-thumbnail existing-image mb-2" style="width: 100%;">' +
+                            '<img src="' + displayUrl + '" alt="Ảnh sản phẩm" class="img-thumbnail existing-image mb-2" style="width: 100%; max-height: 120px; object-fit: contain;">' +
                             '<button type="button" class="btn btn-danger btn-sm" onclick="removeImage(\'' + image.id + '\')">' +
                             'Xóa' +
                             '</button>';

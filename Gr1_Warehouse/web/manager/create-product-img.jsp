@@ -102,17 +102,11 @@
                                                     <div class="tab-pane fade show active" id="pills-home" role="tabpanel">
                                                         <form class="theme-form theme-form-2 mega-form" action="createproductimg" method="post" id="editImageForm">
                                                             <div class="row">
-                                                                <!-- Hiển thị danh sách ảnh hiện có -->
-                                                                <div class="mb-3">
+                                                                <!-- Hiển thị danh sách ảnh hiện có - sẽ ẩn khi chưa có ảnh -->
+                                                                <div class="mb-3 existing-images-section" style="display: none;">
                                                                     <label class="form-label">Ảnh hiện có</label>
                                                                     <div class="row" id="imageContainer">
-                                                                        <div class="col-md-3 text-center image-item" data-id="">
-                                                                            <img src="" 
-                                                                                 alt="Ảnh lỗi" class="img-thumbnail existing-image mb-2" style="width: 100%;">
-                                                                            <button type="button" class="btn btn-danger btn-sm" onclick="removeImage('')">
-                                                                                Xóa
-                                                                            </button>
-                                                                        </div>
+                                                                        <!-- Ảnh sẽ được thêm vào đây bằng JavaScript -->
                                                                     </div>
                                                                 </div>
                                                                 <!-- Tải ảnh mới -->
@@ -125,7 +119,7 @@
                                                                 <div class="mb-3 text-center">
                                                                     <label for="imagePreview" class="form-label">Xem trước ảnh</label>
                                                                     <img id="imagePreview" src="" alt="Xem trước ảnh" class="img-fluid" 
-                                                                         style="max-width: 100%; display: none; border: 1px solid #ccc; padding: 5px;">
+                                                                         style="max-width: 30%; display: none; border: 1px solid #ccc; padding: 5px;">
                                                                 </div>
                                                                 <button type="submit" class="btn btn-primary">Gửi</button>
                                                             </div>
@@ -223,7 +217,7 @@
         <script src="${pageContext.request.contextPath}/assets/js/script.js"></script>                 
 
         <script>
-                                                                        //Start edit Image
+// Start edit Image
 // Định nghĩa cấu trúc dữ liệu để lưu trữ danh sách ảnh
                                                                         let imageList = []; // Mảng lưu danh sách ảnh hiện tại
                                                                         let deletedImageIds = []; // Mảng lưu ID ảnh cần xóa
@@ -232,16 +226,39 @@
 // Khởi tạo dữ liệu ban đầu từ danh sách ảnh hiện có
                                                                         function initializeImageList() {
                                                                             const imageContainer = document.getElementById('imageContainer');
+
+                                                                            // Nếu không có imageContainer, có thể đây là trường hợp tạo mới, không cần tiếp tục
+                                                                            if (!imageContainer)
+                                                                                return;
+
                                                                             const existingImages = imageContainer.querySelectorAll('.image-item');
 
                                                                             // Reset mảng
                                                                             imageList = [];
 
+                                                                            // Kiểm tra xem có ảnh hiện có không
+                                                                            if (existingImages.length === 0 || (existingImages.length === 1 && !existingImages[0].getAttribute('data-id'))) {
+                                                                                // Nếu không có ảnh hoặc chỉ có ảnh mẫu trống, ẩn phần hiển thị ảnh hiện có
+                                                                                const existingImagesSection = document.querySelector('.existing-images-section');
+                                                                                if (existingImagesSection) {
+                                                                                    existingImagesSection.style.display = 'none';
+                                                                                }
+                                                                                return;
+                                                                            }
+
                                                                             // Thêm các ảnh hiện có vào mảng
                                                                             existingImages.forEach(imageItem => {
                                                                                 const imageId = imageItem.getAttribute('data-id');
+                                                                                // Nếu không có ID hoặc ID trống, bỏ qua
+                                                                                if (!imageId)
+                                                                                    return;
+
                                                                                 const imgElement = imageItem.querySelector('img');
                                                                                 const imageSrc = imgElement.getAttribute('src');
+
+                                                                                // Nếu không có source hoặc source trống, bỏ qua
+                                                                                if (!imageSrc)
+                                                                                    return;
 
                                                                                 // Lấy tên file từ đường dẫn
                                                                                 let fileName = '';
@@ -291,6 +308,11 @@
                                                                                 renderImageList(); // Cập nhật giao diện
                                                                                 console.log("Đã thêm ảnh mới:", newImage);
 
+                                                                                // Hiển thị phần danh sách ảnh nếu trước đó đang ẩn
+                                                                                const existingImagesSection = document.querySelector('.existing-images-section');
+                                                                                if (existingImagesSection) {
+                                                                                    existingImagesSection.style.display = 'block';
+                                                                                }
                                                                             };
                                                                             reader.readAsDataURL(file);
                                                                         }
@@ -315,18 +337,29 @@
                                                                                 renderImageList();
                                                                                 console.log("Đã xóa ảnh:", removedImage);
                                                                                 console.log("Danh sách ảnh cần xóa:", deletedImageIds);
+
+                                                                                // Nếu không còn ảnh nào, ẩn phần danh sách ảnh
+                                                                                if (imageList.length === 0) {
+                                                                                    const existingImagesSection = document.querySelector('.existing-images-section');
+                                                                                    if (existingImagesSection) {
+                                                                                        existingImagesSection.style.display = 'none';
+                                                                                    }
+                                                                                }
                                                                             }
                                                                         }
 
 // Hiển thị danh sách ảnh lên giao diện
                                                                         function renderImageList() {
                                                                             const imageContainer = document.getElementById('imageContainer');
+                                                                            if (!imageContainer)
+                                                                                return;
+
                                                                             imageContainer.innerHTML = ''; // Xóa nội dung hiện tại
 
                                                                             // Thêm các ảnh vào container
                                                                             imageList.forEach(image => {
                                                                                 const imageItem = document.createElement('div');
-                                                                                imageItem.className = 'col-md-3 text-center image-item';
+                                                                                imageItem.className = 'col-md-2 text-center image-item'; // Giảm từ col-md-3 xuống col-md-2
                                                                                 imageItem.setAttribute('data-id', image.id);
 
                                                                                 // Sử dụng URL hiển thị phù hợp cho từng loại ảnh
@@ -334,7 +367,7 @@
 
                                                                                 // Tạo HTML cho mỗi ảnh không sử dụng template literal
                                                                                 imageItem.innerHTML =
-                                                                                        '<img src="' + displayUrl + '" alt="Ảnh sản phẩm" class="img-thumbnail existing-image mb-2" style="width: 100%;">' +
+                                                                                        '<img src="' + displayUrl + '" alt="Ảnh sản phẩm" class="img-thumbnail existing-image mb-2" style="width: 100%; height: 120px; object-fit: contain;">' +
                                                                                         '<button type="button" class="btn btn-danger btn-sm" onclick="removeImage(\'' + image.id + '\')">' +
                                                                                         'Xóa' +
                                                                                         '</button>';
@@ -419,6 +452,7 @@
                                                                                 console.log("Hidden input value:", hiddenInput.value);
                                                                             });
                                                                         }
+
 // Khởi tạo khi trang được tải
                                                                         document.addEventListener('DOMContentLoaded', function () {
                                                                             initializeImageList();

@@ -112,6 +112,12 @@ public class CreateProductGeneral extends HttpServlet {
                 request.setAttribute("category", category);
                 request.setAttribute("description", description);
                 request.setAttribute("message", "Tên sản phẩm đã tồn tại!");
+                BrandDAO bd = new BrandDAO();
+                CategoryDAO cd = new CategoryDAO();
+                List<Brands> listBrands = bd.getAllBrands();
+                List<Categories> listCategories = cd.getAllCategories();
+                request.setAttribute("listBrands", listBrands);
+                request.setAttribute("listCategories", listCategories);
                 request.getRequestDispatcher("/manager/create-product-general.jsp").forward(request, response);
             } else {
                 HttpSession session = request.getSession();
