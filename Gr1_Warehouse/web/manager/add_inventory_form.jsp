@@ -151,9 +151,11 @@
                                                     <thead>
                                                         <tr >
                                                             <th style="font-size: 16px; text-align: center">Tên sản phẩm</th>
+                                                            <th style="font-size: 16px; text-align: center">Số lô</th>
                                                             <th style="font-size: 16px; text-align: center">Tồn kho</th>
                                                             <th style="font-size: 16px; text-align: center">Tồn thực tế</th>
                                                             <th style="font-size: 16px; text-align: center">Lệch</th>
+                                                            <th style="font-size: 16px; text-align: center">Giá trị lệch</th>
                                                             <th style="font-size: 16px; text-align: center">Lý do</th>
                                                             <th style="font-size: 16px">Xóa</th>
                                                         </tr>
@@ -179,7 +181,9 @@
                                                                         <td>Tên sản phẩm</td>
                                                                         <td>Phân loại</td>
                                                                         <td>SKU</td>
+                                                                        <td>Số lô</td>
                                                                         <td>Tồn</td>
+                                                                        <td>Giá nhập</td>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody id="productTable"></tbody> <!-- JS sẽ render sản phẩm vào đây -->
@@ -208,7 +212,7 @@
                                                 <div class="bg-white p-4 rounded-lg shadow-md border border-gray-300">
                                                     <div class="mb-4">
                                                         <label class="form-label">Nhân viên kiểm kê: </label>
-                                                        <textarea id="#" name="#" class="form-control" placeholder="Nhập tên nhân viên kiểm kê"></textarea>
+                                                        <textarea id="warehouseStaff" name="warehouseStaff" class="form-control" placeholder="Nhập tên nhân viên kiểm kê"></textarea>
                                                     </div>
                                                     <div class="mb-4">
                                                         <label class="form-label">Ghi chú</label>
@@ -233,12 +237,12 @@
 
                                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                                         <span class="text-gray-700">Giá trị lệch tăng</span>
-                                                        <span id="totalAmount" name="totalAmount">0 VND</span>
+                                                        <span id="totalPriceDifferenceUp" name="totalPriceDifferenceUp">0 VND</span>
                                                     </div>
 
                                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                                         <span class="text-gray-700">Giá trị lệch giảm</span>
-                                                        <span id="totalAmount" name="totalAmount">0 VND</span>
+                                                        <span id="totalPriceDifferenceDown" name="totalPriceDifferenceDown">0 VND</span>
                                                     </div>
 
 
@@ -324,36 +328,31 @@
             }
         </script>
 
+        <!--Hiển thị product list ở modal-->
         <script>
             document.addEventListener("DOMContentLoaded", function () {
-                const warehouseDropdown = document.getElementById("warehouseDropdown"); // Dropdown chọn kho
-                const openProductModalBtn = document.getElementById("openProductModal"); // Nút mở modal sản phẩm
-                const productTableBody = document.getElementById("productTable"); // Body của bảng hiển thị sản phẩm
-                let selectedWarehouseId = ""; // Lưu warehouseId được chọn
+                const warehouseDropdown = document.getElementById("warehouseDropdown");
+                const openProductModalBtn = document.getElementById("openProductModal");
+                const productTableBody = document.getElementById("productTable");
+                let selectedWarehouseId = "";
 
-                // 🔹 Xử lý khi chọn kho hàng
                 warehouseDropdown.addEventListener("change", function () {
-                    selectedWarehouseId = this.value; // Cập nhật warehouseId khi người dùng chọn
+                    selectedWarehouseId = this.value;
                     console.log("✅ Warehouse ID đã chọn:", selectedWarehouseId);
                     updateWarehouseDetails(this);
                 });
 
                 function updateWarehouseDetails(select) {
                     if (select.value) {
-                        let warehouse = JSON.parse(select.value); // Chuyển đổi JSON từ value
-
-                        // Cập nhật thông tin kho vào giao diện
+                        let warehouse = JSON.parse(select.value);
                         document.getElementById('warehouseName').textContent = warehouse.warehouseName;
                         document.getElementById('warehouseAddress').textContent = warehouse.address;
                         document.getElementById('warehousePhone').textContent = warehouse.phone;
-
-                        // Lưu warehouseId để gọi API sau này
                         selectedWarehouseId = warehouse.warehouseId;
                         console.log("✅ Warehouse ID cập nhật:", selectedWarehouseId);
                     }
                 }
 
-                // 🔹 Khi nhấn vào nút mở danh sách sản phẩm
                 openProductModalBtn.addEventListener("click", function () {
                     if (!selectedWarehouseId) {
                         alert("Vui lòng chọn kho hàng trước!");
@@ -367,12 +366,11 @@
                             .then(response => response.json())
                             .then(productVar => {
                                 console.log("✅ Dữ liệu sản phẩm nhận được:", productVar);
-                                displayProductList(productVar); // 🛠 Gọi hàm hiển thị danh sách sản phẩm
+                                displayProductList(productVar);
                             })
                             .catch(error => console.error("❌ Lỗi khi lấy danh sách sản phẩm:", error));
                 });
 
-                // 🔹 Hàm hiển thị danh sách sản phẩm trong modal
                 function displayProductList(productVar) {
                     if (!productTableBody) {
                         console.error("❌ Lỗi: Không tìm thấy phần tử productTableBody");
@@ -383,42 +381,53 @@
 
                     if (!Array.isArray(productVar) || productVar.length === 0) {
                         console.warn("⚠️ Cảnh báo: Không có sản phẩm nào trong kho này!", productVar);
-                        productTableBody.innerHTML = "<tr><td colspan='3' class='text-center text-muted'>Không có sản phẩm nào!</td></tr>";
+                        productTableBody.innerHTML = "<tr><td colspan='6' class='text-center text-muted'>Không có sản phẩm nào!</td></tr>";
                         return;
                     }
 
                     productVar.forEach((product, index) => {
                         console.log(`🔹 Sản phẩm ${index + 1}:`, product);
 
-                        const tr = document.createElement("tr");
+                        product.inventoryBatches.forEach((batch) => {
+                            const tr = document.createElement("tr");
 
-                        const tdCheckbox = document.createElement("td");
-                        const checkbox = document.createElement("input");
-                        checkbox.type = "checkbox";
-                        checkbox.classList.add("product-checkbox");
-                        tdCheckbox.appendChild(checkbox);
+                            const tdCheckbox = document.createElement("td");
+                            const checkbox = document.createElement("input");
+                            checkbox.type = "checkbox";
+                            checkbox.classList.add("product-checkbox");
+                            tdCheckbox.appendChild(checkbox);
 
-                        const tdName = document.createElement("td");
-                        tdName.textContent = product.product?.productName || "N/A";
+                            const tdName = document.createElement("td");
+                            tdName.textContent = product.product?.productName || "N/A";
 
-                        const tdVariantName = document.createElement("td");
-                        tdVariantName.textContent = product.size?.size_name || "N/A";
+                            const tdVariantName = document.createElement("td");
+                            tdVariantName.textContent = product.size?.size_name || "N/A";
 
-                        const tdSku = document.createElement("td");
-                        tdSku.textContent = product.sku || "N/A";
+                            const tdSku = document.createElement("td");
+                            tdSku.textContent = product.sku || "N/A";
 
-                        const tdStock = document.createElement("td");
-                        tdStock.textContent = product.stock || "N/A";
+                            const tdBatchId = document.createElement("td");
+                            tdBatchId.textContent = batch.batchId || "N/A";
 
-                        tr.appendChild(tdCheckbox);
-                        tr.appendChild(tdName);
-                        tr.appendChild(tdVariantName);
-                        tr.appendChild(tdSku);
-                        tr.appendChild(tdStock);
-                        productTableBody.appendChild(tr);
+                            const tdStock = document.createElement("td");
+                            tdStock.textContent = batch.quantity || "0";
+
+                            const tdPrice = document.createElement("td");
+                            const formatter = new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'});
+                            tdPrice.textContent = batch.unitPrice ? formatter.format(batch.unitPrice) : "N/A";
+
+
+                            tr.appendChild(tdCheckbox);
+                            tr.appendChild(tdName);
+                            tr.appendChild(tdVariantName);
+                            tr.appendChild(tdSku);
+                            tr.appendChild(tdBatchId);
+                            tr.appendChild(tdStock);
+                            tr.appendChild(tdPrice);
+                            productTableBody.appendChild(tr);
+                        });
                     });
 
-                    // Hiển thị modal sau khi cập nhật dữ liệu
                     const modalElement = document.getElementById("searchProductModal");
                     if (modalElement) {
                         const modal = new bootstrap.Modal(modalElement);
@@ -428,6 +437,7 @@
                     }
                 }
             });
+
         </script>
 
         <!--Chọn sản phẩm để submit-->
@@ -435,7 +445,6 @@
             document.addEventListener("DOMContentLoaded", function () {
                 const completeSelectionBtn = document.querySelector(".modal-footer .btn-primary");
                 const selectedProductContainer = document.getElementById("selectedProductContainer");
-
                 if (!completeSelectionBtn || !selectedProductContainer) {
                     console.error("❌ Lỗi: Không tìm thấy phần tử cần thiết");
                     return;
@@ -443,7 +452,6 @@
 
                 completeSelectionBtn.addEventListener("click", function () {
                     console.log("✅ Nút Hoàn tất chọn đã được ấn!");
-
                     const checkedProducts = document.querySelectorAll("#productTable input[type='checkbox']:checked");
                     if (checkedProducts.length === 0) {
                         alert("Vui lòng chọn ít nhất một sản phẩm!");
@@ -452,8 +460,7 @@
 
                     checkedProducts.forEach(checkbox => {
                         const row = checkbox.closest("tr");
-
-                        if (!row || row.children.length < 5) {
+                        if (!row || row.children.length < 6) { // Đảm bảo có đủ cột dữ liệu
                             console.error("⚠️ Lỗi: Không tìm thấy hàng hoặc số cột không đủ!");
                             return;
                         }
@@ -461,40 +468,47 @@
                         const productName = row.children[1]?.textContent.trim() || "Không có tên";
                         const sizeName = row.children[2]?.textContent.trim() || "Không có kích cỡ";
                         const sku = row.children[3]?.textContent.trim() || "Không có SKU";
-                        const stock = row.children[4]?.textContent.trim() || "0"; // Lấy tồn kho từ cột thứ 5
+                        const batch = row.children[4]?.textContent.trim() || "Không có Batch"; // Lấy batch từ cột 5
+                        const stock = row.children[5]?.textContent.trim() || "0";
+                        const price = row.children[6]?.textContent.trim() || "0"; // Lấy tồn kho từ cột 6
 
                         const productInfo = productName + " - " + sizeName + " - " + sku;
                         console.log("Chuỗi ghép:", productInfo);
-
-                        // Kiểm tra sản phẩm đã tồn tại chưa
+                        // Kiểm tra sản phẩm đã tồn tại chưa (dựa trên SKU & Batch)
                         const existingProduct = [...document.querySelectorAll(".selected-product")]
-                                .find(product => product.dataset.sku === sku);
-
+                                .find(product => product.dataset.sku === sku && product.dataset.batch === batch);
                         if (existingProduct) {
-                            console.warn(`⚠️ Sản phẩm "${productName}" (SKU: ${sku}) đã tồn tại, không thêm lại!`);
+                            console.warn(`⚠️ Sản phẩm "${productName}" (SKU: ${sku}, Batch: ${batch}) đã tồn tại, không thêm lại!`);
                             return;
                         }
 
-                        console.log("📌 Dữ liệu trước khi thêm vào UI:", {productName, sizeName, sku, stock});
-
-
-
+                        console.log("📌 Dữ liệu trước khi thêm vào UI:", {productName, sizeName, sku, batch, stock});
                         // ✅ Tạo hàng sản phẩm (tr)
                         const productRow = document.createElement("tr");
                         productRow.classList.add("selected-product");
                         productRow.dataset.sku = sku; // Lưu SKU để kiểm tra trùng
+                        productRow.dataset.batch = batch; // Lưu batch để phân biệt lô
+                        productRow.dataset.price = price; // Lưu giá nhập vào dataset
 
                         // Tạo các cột (td)
                         const nameCol = document.createElement("td");
                         nameCol.textContent = productInfo;
                         nameCol.style.wordWrap = "break-word";
                         nameCol.style.whiteSpace = "normal";
-                        nameCol.style.width = "200px";
+                        nameCol.style.width = "250px";
+
+
+                        const batchCol = document.createElement("td");
+                        batchCol.textContent = batch;
+                        batchCol.style.width = "120px";
+                        batchCol.style.textAlign = "center";
+
 
                         const stockCol = document.createElement("td");
                         stockCol.textContent = stock;
                         stockCol.style.width = "120px";
                         stockCol.style.textAlign = "center";
+
 
                         const actualStockCol = document.createElement("td");
                         const actualStockInput = document.createElement("input");
@@ -506,17 +520,26 @@
                         actualStockInput.value = "1";
                         actualStockCol.appendChild(actualStockInput);
 
+
                         const differenceCol = document.createElement("td");
-                        const differenceInput = document.createElement("span");
-                        differenceInput.type = "number";
-                        differenceInput.classList.add("difference");
-                        differenceCol.appendChild(differenceInput);
+                        const differenceSpan = document.createElement("span");
+                        differenceSpan.classList.add("difference");
+                        differenceCol.appendChild(differenceSpan);
                         differenceCol.style.textAlign = "center";
+
+
+                        const priceCol = document.createElement("td"); // Cột giá trị chênh lệch
+                        const priceDifferenceSpan = document.createElement("span");
+                        priceDifferenceSpan.classList.add("price-diff");
+                        priceCol.appendChild(priceDifferenceSpan); // Đưa span vào cột
+                        priceCol.style.width = "120px";
+                        priceCol.style.textAlign = "center";
+
+
 
                         const reasonCol = document.createElement("td");
                         const reasonSelect = document.createElement("select");
                         reasonSelect.classList.add("form-control");
-
                         // Danh sách lý do có sẵn
                         const reasons = ["Sản phẩm mới", "Hàng lỗi", "Hết hạn", "Khác"];
                         reasonCol.style.width = "170px";
@@ -526,7 +549,6 @@
                             option.textContent = reason;
                             reasonSelect.appendChild(option);
                         });
-
                         reasonCol.appendChild(reasonSelect);
 
 
@@ -537,19 +559,23 @@
                         removeBtn.classList.add("btn", "btn-danger", "btn-sm", "remove-product");
                         removeBtn.textContent = "X";
                         removeCol.appendChild(removeBtn);
-
                         // Thêm các cột vào hàng
                         productRow.appendChild(nameCol);
+                        productRow.appendChild(batchCol);
                         productRow.appendChild(stockCol);
                         productRow.appendChild(actualStockCol);
                         productRow.appendChild(differenceCol);
+                        productRow.appendChild(priceCol);
                         productRow.appendChild(reasonCol);
                         productRow.appendChild(removeCol);
-
                         selectedProductContainer.appendChild(productRow);
                         console.log("📌 Đã thêm sản phẩm vào selectedProductContainer!", selectedProductContainer);
+                        actualStockInput.addEventListener("input", function () {
+                            updateTotalDifference();
+                            updatePriceDifference();
+                        });
 
-                        actualStockInput.addEventListener("input", updateTotalDifference);
+
                         // 🟢 Thêm sự kiện xóa sản phẩm
                         removeBtn.addEventListener("click", function () {
                             productRow.remove();
@@ -560,15 +586,18 @@
                     const modal = bootstrap.Modal.getInstance(document.getElementById("searchProductModal"));
                     modal.hide();
                     updateTotalDifference();
+                    updatePriceDifference();
                 });
+
+
                 function updateTotalDifference() {
                     let totalDifferenceUp = 0; // Tổng sản phẩm lệch tăng
                     let totalDifferenceDown = 0; // Tổng sản phẩm lệch giảm
 
                     document.querySelectorAll(".selected-product").forEach(row => {
-                        const stock = parseInt(row.children[1].textContent.trim()) || 0; // Lấy tồn kho
-                        const actualStockInput = row.children[2].querySelector("input"); // Ô nhập tồn thực tế
-                        const differenceSpan = row.children[3].querySelector("span"); // Ô hiển thị chênh lệch
+                        const stock = parseInt(row.children[2].textContent.trim()) || 0; // Lấy tồn kho
+                        const actualStockInput = row.children[3].querySelector("input"); // Ô nhập tồn thực tế
+                        const differenceSpan = row.children[4].querySelector("span"); // Ô hiển thị chênh lệch
 
                         let actualStock = parseInt(actualStockInput.value) || 0; // Lấy giá trị tồn thực tế nhập vào
 
@@ -593,12 +622,181 @@
                     document.getElementById("totalDifferenceUp").textContent = totalDifferenceUp;
                     document.getElementById("totalDifferenceDown").textContent = totalDifferenceDown;
                 }
+
+                function updatePriceDifference() {
+                    let totalPriceDifferenceUp = 0; // Tổng giá trị lệch tăng
+                    let totalPriceDifferenceDown = 0; // Tổng giá trị lệch giảm
+
+                    document.querySelectorAll(".selected-product").forEach(row => {
+                        const stock = parseInt(row.children[2].textContent.trim()) || 0; // Lấy tồn kho
+                        const actualStockInput = row.children[3].querySelector("input"); // Ô nhập tồn thực tế
+                        const differenceSpan = row.children[4].querySelector("span"); // Ô hiển thị chênh lệch số lượng
+                        const priceStr = row.dataset.price.replace(/\./g, '').replace(',', '.'); // Xóa dấu chấm, đổi dấu phẩy thành dấu chấm
+                        const price = parseFloat(priceStr) || 0;
+                        console.log(price);
+                        const priceDifferenceSpan = row.children[5].querySelector("span"); // Ô hiển thị giá trị chênh lệch
+
+
+
+                        let actualStock = parseInt(actualStockInput.value) || 0; // Lấy giá trị tồn thực tế nhập vào
+
+                        // ✅ Nếu tồn thực tế nhập vào nhỏ hơn 1 hoặc không hợp lệ, đặt về 1
+                        if (actualStock < 1 || isNaN(actualStock)) {
+                            actualStock = 1;
+                            actualStockInput.value = 1; // Cập nhật lại giá trị
+                        }
+
+                        const difference = actualStock - stock;
+                        differenceSpan.textContent = difference; // Cập nhật ô chênh lệch
+
+                        const priceDifference = price * difference; // Tính giá trị chênh lệch
+                        priceDifferenceSpan.textContent = priceDifference.toLocaleString('vi-VN') + " VNĐ"; // Hiển thị giá trị chênh lệch
+
+                        // ✅ Cập nhật tổng giá trị lệch tăng và giảm
+                        if (priceDifference > 0) {
+                            totalPriceDifferenceUp += priceDifference;
+                        } else if (priceDifference < 0) {
+                            totalPriceDifferenceDown += priceDifference;
+                        }
+                    });
+// Cập nhật vào phần Tổng kết
+                    document.getElementById("totalPriceDifferenceUp").textContent = totalPriceDifferenceUp.toLocaleString('vi-VN') + " VNĐ";
+                    document.getElementById("totalPriceDifferenceDown").textContent = totalPriceDifferenceDown.toLocaleString('vi-VN') + " VNĐ";
+                }
+
             });
+        </script>
+
+
+        <!--Xử lí nhập vào table-->
+        <script>
+            document.getElementById("submitOrderBtn").addEventListener("click", async function (event) {
+            event.preventDefault();
+                    console.log("===> Bắt đầu xử lý nhập hàng");
+                    const staffValue = document.getElementById("staffDropdown").value;
+                    const staffId = staffValue ? JSON.parse(staffValue).staffId : null;
+                    console.log("Staff ID:", staffId);
+                    const warehouseValue = document.getElementById("warehouseDropdown").value;
+                    const warehouseId = warehouseValue ? JSON.parse(warehouseValue).warehouseId : null;
+                    console.log("Warehouse ID:", warehouseId);
+                    let totalDifferenceUp = parseInt(document.getElementById("totalDifferenceUp").textContent.trim(), 10);
+                    let totalDifferenceDown = parseInt(document.getElementById("totalDifferenceDown").textContent.trim(), 10);
+                    let totalPriceDifferenceUp = parseFloat(document.getElementById("totalPriceDifferenceUp").textContent.replace(" VND", "").replace(/\./g, "").trim());
+                    let totalPriceDifferenceDown = parseFloat(document.getElementById("totalPriceDifferenceDown").textContent.replace(" VND", "").replace(/\./g, "").trim());
+                    const warehouseStaff = document.getElementById("warehouseStaff").value.trim();
+                    const notes = document.getElementById("notes").value.trim();
+                    // Kiểm tra tổng số tiền và số lượng hợp lệ
+                    totalPriceDifferenceUp = parseFloat(totalPriceDifferenceUp);
+                    totalPriceDifferenceDown = parseFloat(totalPriceDifferenceDown);
+                    totalDifferenceUp = parseInt(totalDifferenceUp, 10);
+                    totalDifferenceDown = parseInt(totalDifferenceDown, 10);
+                    if (!staffId || !warehouseId || !warehouseStaff) {
+            alert("Vui lòng điền đầy đủ thông tin người giám sát, kho và nhân viên kiểm kho.");
+                    return;
+            }
+//                if (isNaN(totalAmount) || totalAmount <= 0 || isNaN(totalQuantity) || totalQuantity <= 0) {
+//                    alert("Tổng tiền và tổng số lượng phải lớn hơn 0.");
+//                    return;
+//                }
+
+            const skus = [];
+                    const actualQuantities = [];
+                    const recordedQuantities = [];
+                    const differences = [];
+                    const differencePrices = [];
+                    const variantIds = [];
+                    let isValid = true;
+                    async function fetchVariantId(sku) {
+                    try {
+                    const response = await fetch(`/Gr1_Warehouse/getVariantId?sku=${sku}`);
+                            if (!response.ok) {
+                    throw new Error("Không thể lấy Variant ID từ máy chủ.");
+                    }
+                    const data = await response.json();
+                            return data.variantId > 0 ? data.variantId : null;
+                    } catch (error) {
+                    console.error("Lỗi lấy variantId từ server:", error);
+                            return null;
+                    }
+                    }
+
+            const productRows = document.querySelectorAll(".inventory-product");
+                    for (const row of productRows) {
+            const sku = row.querySelector(".col-2:nth-child(2)").textContent.trim();
+                    let actualQuantity = row.querySelector(".actual-quantity").value.trim();
+                    let recordedQuantity = row.querySelector(".recorded-quantity").value.trim();
+                    let difference = row.querySelector(".difference").textContent.trim();
+                    let differencePrice = row.querySelector(".difference-price").textContent.trim();
+                    let variantId = row.getAttribute("data-variant-id") || row.dataset.variantId;
+                    actualQuantity = parseInt(actualQuantity, 10);
+                    recordedQuantity = parseInt(recordedQuantity, 10);
+                    difference = parseInt(difference, 10);
+                    differencePrice = parseFloat(differencePrice);
+                    if (!variantId || parseInt(variantId) <= 0) {
+            variantId = await fetchVariantId(sku);
+                    if (!variantId) {
+            alert(`Không thể tìm thấy Variant ID cho SKU: ${sku}. Hãy kiểm tra lại!`);
+                    isValid = false;
+                    break;
+            }
+            }
+
+            if (!sku || isNaN(actualQuantity) || isNaN(recordedQuantity) || isNaN(difference) || isNaN(differencePrice)) {
+            alert("Vui lòng kiểm tra thông tin sản phẩm.");
+                    isValid = false;
+                    break;
+            }
+
+            skus.push(sku);
+                    actualQuantities.push(actualQuantity);
+                    recordedQuantities.push(recordedQuantity);
+                    differences.push(difference);
+                    differencePrices.push(differencePrice);
+                    variantIds.push(variantId);
+            }
+
+            if (!isValid || skus.length === 0) {
+            return;
+            }
+
+            const formData = new FormData();
+                    formData.append("staffId", String(staffId));
+                    formData.append("warehouseId", String(warehouseId));
+                    formData.append("warehouseStaff", warehouseStaff);
+                    formData.append("totalDifferenceUp", String(totalDifferenceUp));
+                    formData.append("totalDifferenceDown", String(totalDifferenceDown));
+                    formData.append("totalPriceDifferenceUp", String(totalPriceDifferenceUp));
+                    formData.append("totalPriceDifferenceDown", String(totalPriceDifferenceDown));
+                    formData.append("notes", notes || "");
+                    for (let i = 0; i < skus.length; i++) {
+            formData.append("skus", skus[i]);
+                    formData.append("actualQuantities", actualQuantities[i]);
+                    formData.append("recordedQuantities", recordedQuantities[i]);
+                    formData.append("differences", differences[i]);
+                    formData.append("differencePrices", differencePrices[i]);
+                    formData.append("variantIds", variantIds[i]);
+            }
+
+            try {
+            const response = await fetch("/Gr1_Warehouse/handleInventoryCheck", {
+            method: "POST",
+                    body: formData
+            });
+                    const data = await response.text();
+                    if (data.includes("success")) {
+            alert("Kiểm kho thành công!");
+                    window.location.href = '/Gr1_Warehouse/inventoryCheck';
+            } else {
+            alert("Có lỗi xảy ra: " + data);
+            }
+            } catch (error) {
+            alert("Lỗi kết nối: " + error.message);
+            }
 
         </script>
         <style>
             .modal-dialog {
-                max-width: 900px; /* Giới hạn chiều rộng modal */
+                max-width: 1100px; /* Giới hạn chiều rộng modal */
             }
 
             .modal-content {

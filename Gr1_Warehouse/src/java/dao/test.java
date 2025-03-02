@@ -5,6 +5,7 @@
 package dao;
 
 import java.util.List;
+import model.InventoryBatches;
 import model.ProductVariants;
 
 /**
@@ -17,21 +18,30 @@ public class test {
         // Nhập warehouseId cần kiểm tra
         int warehouseId = 1; // Giả sử test với kho có ID = 1
         InventoryDAO dao = new InventoryDAO();
-        // Gọi hàm lấy danh sách sản phẩm trong kho
-        List<ProductVariants> productList = dao.getProductsByWarehouseId(warehouseId);
+        // Gọi phương thức lấy danh sách sản phẩm trong kho
+        List<ProductVariants> products = dao.getProductsByWarehouseId(warehouseId);
 
         // Kiểm tra kết quả
-        if (productList.isEmpty()) {
-            System.out.println("Không có sản phẩm nào trong kho ID " + warehouseId);
+        if (products.isEmpty()) {
+            System.out.println("Không có sản phẩm nào trong kho với ID: " + warehouseId);
         } else {
-            System.out.println("Danh sách sản phẩm trong kho ID " + warehouseId + ":");
-            System.out.println("Có tất cả " + productList.size() + " sản phẩm");
-            for (ProductVariants product : productList) {
-                System.out.println("Variant ID: " + product.getVariantId()
-                        + ", Tên sản phẩm: " + product.getProduct().getProductName()
-                        + ", Size: " + product.getSize().getSize_name()
-                        + ", SKU: " + product.getSku()
-                        + ", Số lượng tồn kho: " + product.getStock());
+            System.out.println("Danh sách sản phẩm trong kho ID: " + warehouseId);
+            for (ProductVariants variant : products) {
+                System.out.println("Variant ID: " + variant.getVariantId());
+                System.out.println("Tên sản phẩm: " + variant.getProduct().getProductName());
+                System.out.println("Kích thước: " + variant.getSize().getSize_name());
+                System.out.println("SKU: " + variant.getSku());
+                System.out.println("Giá bán: " + variant.getPrice());
+
+                // Hiển thị thông tin từng lô hàng
+                System.out.println("Danh sách lô hàng:");
+                for (InventoryBatches batch : variant.getInventoryBatches()) {
+                    System.out.println("  - Batch ID: " + batch.getBatchId());
+                    System.out.println("    Số lượng tồn: " + batch.getQuantity());
+                    System.out.println("    Giá nhập: " + batch.getUnitPrice());
+                    System.out.println("    Ngày hết hạn: " + (batch.getExpirationDate() != null ? batch.getExpirationDate() : "Không có"));
+                }
+                System.out.println("-----------------------------");
             }
         }
     }

@@ -5,6 +5,7 @@
 package model;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  *
@@ -19,7 +20,17 @@ public class ProductVariants {
     private Sizes size;
     private Products product;
     private String sku;
+    private List<InventoryBatches> inventoryBatches;
 
+    public List<InventoryBatches> getInventoryBatches() {
+        return inventoryBatches;
+    }
+
+    public void setInventoryBatches(List<InventoryBatches> inventoryBatches) {
+        this.inventoryBatches = inventoryBatches;
+    }
+    
+    
     public Sizes getSize() {
         return size;
     }
@@ -89,7 +100,7 @@ public class ProductVariants {
     
     // Constructor
 
-    public ProductVariants(int variantId, int productId, int sizeId, BigDecimal price, int stock, Sizes size, Products product, String sku) {
+    public ProductVariants(int variantId, int productId, int sizeId, BigDecimal price, int stock, Sizes size, Products product, String sku, List<InventoryBatches> inventoryBatches) {
         this.variantId = variantId;
         this.productId = productId;
         this.sizeId = sizeId;
@@ -98,9 +109,9 @@ public class ProductVariants {
         this.size = size;
         this.product = product;
         this.sku = sku;
+        this.inventoryBatches = inventoryBatches;
     }
 
-   
 
     // Default constructor
     public ProductVariants() {

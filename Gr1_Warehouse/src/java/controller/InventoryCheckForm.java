@@ -65,7 +65,7 @@ public class InventoryCheckForm extends HttpServlet {
         List<Warehouse> warehouses = warehouseDAO.getAllWarehouse();
         request.setAttribute("staff", staff);
         request.setAttribute("warehouses", warehouses);
-        request.getRequestDispatcher("manager/test.jsp").forward(request, response);
+        request.getRequestDispatcher("manager/add_inventory_form.jsp").forward(request, response);
     }
 
     /** 

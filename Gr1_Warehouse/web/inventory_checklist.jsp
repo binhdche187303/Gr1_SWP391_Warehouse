@@ -61,8 +61,8 @@
                             <div class="container mt-4">
                                 <!-- Action Buttons -->
                                 <div class="d-flex align-items-center mb-4">
-                                    <button class="btn btn-primary me-2">
-                                        <i class="fas fa-plus"></i> Tạo phiếu kiểm
+                                    <button class="btn btn-primary me-2" onclick="window.location.href='inventory-form'">
+                                            <i class="fas fa-plus"></i>Tạo phiếu kiểm
                                     </button>
                                     <button class="btn btn-outline-secondary me-2">Tất cả</button>
                                     <button class="btn btn-outline-secondary me-2">Thêm điều kiện lọc</button>
