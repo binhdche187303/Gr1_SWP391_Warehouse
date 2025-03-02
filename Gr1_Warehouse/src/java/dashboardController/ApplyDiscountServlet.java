@@ -133,11 +133,18 @@ public class ApplyDiscountServlet extends HttpServlet {
             discountCode = discountCode.trim();
             System.out.println("? discountCode: " + discountCode);
 
-            // Kiểm tra mã giảm giá hợp lệ
+            // Kiểm tra mã giảm giá có tồn tại và đang active
             Discounts discount = orderDiscountDAO.getDiscountByCode(discountCode);
             if (discount == null) {
-                System.out.println("?? Discount không tồn tại!");
+                System.out.println("?? Mã giảm giá không tồn tại!");
                 out.write("{\"error\": \"Mã giảm giá không hợp lệ!\"}");
+                return;
+            }
+
+            // Kiểm tra trạng thái của mã giảm giá, chỉ áp dụng nếu nó đang active
+            if (!discount.getStatus().equals("Active")) {
+                System.out.println("?? Mã giảm giá không active!");
+                out.write("{\"error\": \"Mã giảm giá không active!\"}");
                 return;
             }
 
@@ -146,6 +153,14 @@ public class ApplyDiscountServlet extends HttpServlet {
             if (isApplied) {
                 System.out.println("?? Mã giảm giá đã được áp dụng trước đó!");
                 out.write("{\"error\": \"Mã giảm giá đã áp dụng!\"}");
+                return;
+            }
+
+            // Kiểm tra mỗi đơn hàng chỉ được giảm giá một lần
+            OrderDiscount existingOrderDiscount = orderDiscountDAO.getExistingOrderDiscount(orderId);
+            if (existingOrderDiscount != null) {
+                System.out.println("?? Mỗi đơn hàng chỉ được giảm giá một lần!");
+                out.write("{\"error\": \"Mỗi đơn hàng chỉ được giảm giá một lần!\"}");
                 return;
             }
 

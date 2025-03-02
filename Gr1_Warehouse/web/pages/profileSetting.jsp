@@ -59,17 +59,6 @@
                                 </div>
 
                                 <div class="profile-contain">
-                                    <!--                                    <div class="profile-image">
-                                                                            <div class="position-relative">
-                                                                                <img src="../assets/images/inner-page/user/1.jpg" class="blur-up lazyload update_img" alt=""/>
-                                                                                <div class="cover-icon">
-                                                                                    <i class="fa-solid fa-pen">
-                                                                                        <input type="file" onchange="readURL(this, 0)" />
-                                                                                    </i>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>-->
-
                                     <div class="profile-name">
                                         <h3>${sessionScope.acc.fullname}</h3> 
                                         <h6 class="text-content">${sessionScope.acc.email}</h6>
@@ -85,25 +74,22 @@
 
                                 </li>
 
-                                <li class="nav-item" role="presentation"><button class="nav-link" id="pills-order-tab" data-bs-toggle="pill" data-bs-target="#pills-order" type="button" role="tab" aria-controls="pills-order" aria-selected="false"><i data-feather="shopping-bag">
-                                        </i>Order</button>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="pills-order-tab" data-bs-toggle="pill" data-bs-target="#pills-order"
+                                            type="button" role="tab" aria-controls="pills-order" aria-selected="true"
+                                            onclick="loadOrders()">
+                                        <i data-feather="shopping-bag"></i> Order
+                                    </button>
                                 </li>
+
 
 
                                 <li class="nav-item" role="presentation"><button class="nav-link" id="pills-card-tab" data-bs-toggle="pill" data-bs-target="#pills-card" type="button" role="tab" aria-controls="pills-card" aria-selected="false"><i data-feather="credit-card">
                                         </i> Saved Card</button>
                                 </li>
-
-
-                                <li class="nav-item" role="presentation"><button class="nav-link" id="pills-address-tab" data-bs-toggle="pill" data-bs-target="#pills-address" type="button" role="tab" aria-controls="pills-address" aria-selected="false"><i data-feather="map-pin">
-                                        </i> Address</button>
-                                </li>
-
-                                <li class="nav-item active" role="presentation"><button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true"><i data-feather="user">
+                                <li class="nav-item active" role="presentation"><button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false"><i data-feather="user">
                                         </i> Profile</button>
                                 </li>
-
-
                             </ul>
                         </div>
                     </div>
@@ -156,736 +142,19 @@
                                 </div>
 
 
-
-                                <div
-                                    class="tab-pane fade show"
-                                    id="pills-order"
-                                    role="tabpanel"
-                                    aria-labelledby="pills-order-tab"
-                                    >
+                                <div class="tab-pane fade show" id="pills-order" role="tabpanel" aria-labelledby="pills-order-tab">
                                     <div class="dashboard-order">
                                         <div class="title">
-                                            <h2>My Orders History</h2>
-                                            <span class="title-leaf title-leaf-gray">
-                                                <svg class="icon-width bg-gray"><use xlink:href="../assets/svg/leaf.svg#leaf"></use></svg>
+                                            <h2 style="margin-bottom: 20px;">My Orders History</h2>
+                                            <span class="title-leaf">
+                                                <svg class="icon-width bg-gray">
+                                                <use xlink:href="${pageContext.request.contextPath}/assets/svg/leaf.svg#leaf"></use>
+                                                </svg>
                                             </span>
                                         </div>
 
-                                        <div class="order-contain">
-                                            <div class="order-box dashboard-bg-box">
-                                                <div class="order-container">
-                                                    <div class="order-icon">
-                                                        <i data-feather="box"></i>
-                                                    </div>
-
-                                                    <div class="order-detail">
-                                                        <h4>Delivere <span>Pending</span></h4>
-                                                        <h6 class="text-content">
-                                                            Gouda parmesan caerphilly mozzarella cottage
-                                                            cheese cauliflower cheese taleggio gouda.
-                                                        </h6>
-                                                    </div>
-                                                </div>
-
-                                                <div class="product-order-detail">
-                                                    <a
-                                                        href="product-left-thumbnail.html"
-                                                        class="order-image"
-                                                        >
-                                                        <img
-                                                            src="../assets/images/vegetable/product/1.png"
-                                                            class="blur-up lazyload"
-                                                            alt=""
-                                                            />
-                                                    </a>
-
-                                                    <div class="order-wrap">
-                                                        <a href="product-left-thumbnail.html">
-                                                            <h3>Fantasy Crunchy Choco Chip Cookies</h3>
-                                                        </a>
-                                                        <p class="text-content">
-                                                            Cheddar dolcelatte gouda. Macaroni cheese cheese
-                                                            strings feta halloumi cottage cheese jarlsberg
-                                                            cheese triangles say cheese.
-                                                        </p>
-                                                        <ul class="product-size">
-                                                            <li>
-                                                                <div class="size-box">
-                                                                    <h6 class="text-content">Price :</h6>
-                                                                    <h5>$20.68</h5>
-                                                                </div>
-                                                            </li>
-
-                                                            <li>
-                                                                <div class="size-box">
-                                                                    <h6 class="text-content">Rate :</h6>
-                                                                    <div class="product-rating ms-2">
-                                                                        <ul class="rating">
-                                                                            <li>
-                                                                                <i data-feather="star" class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star" class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star" class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star" class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star"></i>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-
-                                                            <li>
-                                                                <div class="size-box">
-                                                                    <h6 class="text-content">Sold By :</h6>
-                                                                    <h5>Fresho</h5>
-                                                                </div>
-                                                            </li>
-
-                                                            <li>
-                                                                <div class="size-box">
-                                                                    <h6 class="text-content">Quantity :</h6>
-                                                                    <h5>250 G</h5>
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="order-box dashboard-bg-box">
-                                                <div class="order-container">
-                                                    <div class="order-icon">
-                                                        <i data-feather="box"></i>
-                                                    </div>
-
-                                                    <div class="order-detail">
-                                                        <h4>
-                                                            Delivered <span class="success-bg">Success</span>
-                                                        </h4>
-                                                        <h6 class="text-content">
-                                                            Cheese on toast cheesy grin cheesy grin cottage
-                                                            cheese caerphilly everyone loves cottage cheese
-                                                            the big cheese.
-                                                        </h6>
-                                                    </div>
-                                                </div>
-
-                                                <div class="product-order-detail">
-                                                    <a
-                                                        href="product-left-thumbnail.html"
-                                                        class="order-image"
-                                                        >
-                                                        <img
-                                                            src="../assets/images/vegetable/product/2.png"
-                                                            alt=""
-                                                            class="blur-up lazyload"
-                                                            />
-                                                    </a>
-
-                                                    <div class="order-wrap">
-                                                        <a href="product-left-thumbnail.html">
-                                                            <h3>Cold Brew Coffee Instant Coffee 50 g</h3>
-                                                        </a>
-                                                        <p class="text-content">
-                                                            Pecorino paneer port-salut when the cheese comes
-                                                            out everybody's happy red leicester mascarpone
-                                                            blue castello cauliflower cheese.
-                                                        </p>
-                                                        <ul class="product-size">
-                                                            <li>
-                                                                <div class="size-box">
-                                                                    <h6 class="text-content">Price :</h6>
-                                                                    <h5>$20.68</h5>
-                                                                </div>
-                                                            </li>
-
-                                                            <li>
-                                                                <div class="size-box">
-                                                                    <h6 class="text-content">Rate :</h6>
-                                                                    <div class="product-rating ms-2">
-                                                                        <ul class="rating">
-                                                                            <li>
-                                                                                <i data-feather="star" class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star" class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star" class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star" class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star"></i>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-
-                                                            <li>
-                                                                <div class="size-box">
-                                                                    <h6 class="text-content">Sold By :</h6>
-                                                                    <h5>Fresho</h5>
-                                                                </div>
-                                                            </li>
-
-                                                            <li>
-                                                                <div class="size-box">
-                                                                    <h6 class="text-content">Quantity :</h6>
-                                                                    <h5>250 G</h5>
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="order-box dashboard-bg-box">
-                                                <div class="order-container">
-                                                    <div class="order-icon">
-                                                        <i data-feather="box"></i>
-                                                    </div>
-
-                                                    <div class="order-detail">
-                                                        <h4>Delivere <span>Panding</span></h4>
-                                                        <h6 class="text-content">
-                                                            Cheesy grin boursin cheesy grin cheesecake blue
-                                                            castello cream cheese lancashire melted cheese.
-                                                        </h6>
-                                                    </div>
-                                                </div>
-
-                                                <div class="product-order-detail">
-                                                    <a
-                                                        href="product-left-thumbnail.html"
-                                                        class="order-image"
-                                                        >
-                                                        <img
-                                                            src="../assets/images/vegetable/product/3.png"
-                                                            alt=""
-                                                            class="blur-up lazyload"
-                                                            />
-                                                    </a>
-
-                                                    <div class="order-wrap">
-                                                        <a href="product-left-thumbnail.html">
-                                                            <h3>
-                                                                Peanut Butter Bite Premium Butter Cookies 600 g
-                                                            </h3>
-                                                        </a>
-                                                        <p class="text-content">
-                                                            Cow bavarian bergkase mascarpone paneer squirty
-                                                            cheese fromage frais cheese slices when the cheese
-                                                            comes out everybody's happy.
-                                                        </p>
-                                                        <ul class="product-size">
-                                                            <li>
-                                                                <div class="size-box">
-                                                                    <h6 class="text-content">Price :</h6>
-                                                                    <h5>$20.68</h5>
-                                                                </div>
-                                                            </li>
-
-                                                            <li>
-                                                                <div class="size-box">
-                                                                    <h6 class="text-content">Rate :</h6>
-                                                                    <div class="product-rating ms-2">
-                                                                        <ul class="rating">
-                                                                            <li>
-                                                                                <i data-feather="star" class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star" class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star" class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star" class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star"></i>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-
-                                                            <li>
-                                                                <div class="size-box">
-                                                                    <h6 class="text-content">Sold By :</h6>
-                                                                    <h5>Fresho</h5>
-                                                                </div>
-                                                            </li>
-
-                                                            <li>
-                                                                <div class="size-box">
-                                                                    <h6 class="text-content">Quantity :</h6>
-                                                                    <h5>250 G</h5>
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="order-box dashboard-bg-box">
-                                                <div class="order-container">
-                                                    <div class="order-icon">
-                                                        <i data-feather="box"></i>
-                                                    </div>
-
-                                                    <div class="order-detail">
-                                                        <h4>
-                                                            Delivered <span class="success-bg">Success</span>
-                                                        </h4>
-                                                        <h6 class="text-content">
-                                                            Caerphilly port-salut parmesan pecorino croque
-                                                            monsieur dolcelatte melted cheese cheese and wine.
-                                                        </h6>
-                                                    </div>
-                                                </div>
-
-                                                <div class="product-order-detail">
-                                                    <a
-                                                        href="product-left-thumbnail.html"
-                                                        class="order-image"
-                                                        >
-                                                        <img
-                                                            src="../assets/images/vegetable/product/4.png"
-                                                            class="blur-up lazyload"
-                                                            alt=""
-                                                            />
-                                                    </a>
-
-                                                    <div class="order-wrap">
-                                                        <a href="product-left-thumbnail.html">
-                                                            <h3>
-                                                                SnackAmor Combo Pack of Jowar Stick and Jowar
-                                                                Chips
-                                                            </h3>
-                                                        </a>
-                                                        <p class="text-content">
-                                                            The big cheese cream cheese pepper jack cheese
-                                                            slices danish fontina everyone loves cheese on
-                                                            toast bavarian bergkase.
-                                                        </p>
-                                                        <ul class="product-size">
-                                                            <li>
-                                                                <div class="size-box">
-                                                                    <h6 class="text-content">Price :</h6>
-                                                                    <h5>$20.68</h5>
-                                                                </div>
-                                                            </li>
-
-                                                            <li>
-                                                                <div class="size-box">
-                                                                    <h6 class="text-content">Rate :</h6>
-                                                                    <div class="product-rating ms-2">
-                                                                        <ul class="rating">
-                                                                            <li>
-                                                                                <i data-feather="star" class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star" class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star" class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star" class="fill"></i>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i data-feather="star"></i>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-
-                                                            <li>
-                                                                <div class="size-box">
-                                                                    <h6 class="text-content">Sold By :</h6>
-                                                                    <h5>Fresho</h5>
-                                                                </div>
-                                                            </li>
-
-                                                            <li>
-                                                                <div class="size-box">
-                                                                    <h6 class="text-content">Quantity :</h6>
-                                                                    <h5>250 G</h5>
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div
-                                    class="tab-pane fade show"
-                                    id="pills-address"
-                                    role="tabpanel"
-                                    aria-labelledby="pills-address-tab"
-                                    >
-                                    <div class="dashboard-address">
-                                        <div class="title title-flex">
-                                            <div>
-                                                <h2>My Address Book</h2>
-                                                <span class="title-leaf">
-                                                    <svg class="icon-width bg-gray">
-                                                    <use xlink:href="../assets/svg/leaf.svg#leaf"></use>
-                                                    </svg>
-                                                </span>
-                                            </div>
-
-                                            <button
-                                                class="btn theme-bg-color text-white btn-sm fw-bold mt-lg-0 mt-3"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#add-address"
-                                                >
-                                                <i data-feather="plus" class="me-2"></i> Add New Address
-                                            </button>
-                                        </div>
-
-                                        <div class="row g-sm-4 g-3">
-                                            <div class="col-xxl-4 col-xl-6 col-lg-12 col-md-6">
-                                                <div class="address-box">
-                                                    <div>
-                                                        <div class="form-check">
-                                                            <input
-                                                                class="form-check-input"
-                                                                type="radio"
-                                                                name="jack"
-                                                                id="flexRadioDefault2"
-                                                                checked
-                                                                />
-                                                        </div>
-
-                                                        <div class="label">
-                                                            <label>Home</label>
-                                                        </div>
-
-                                                        <div class="table-responsive address-table">
-                                                            <table class="table">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td colspan="2">Jack Jennas</td>
-                                                                    </tr>
-
-                                                                    <tr>
-                                                                        <td>Address :</td>
-                                                                        <td>
-                                                                            <p>
-                                                                                8424 James Lane South San Francisco, CA
-                                                                                94080
-                                                                            </p>
-                                                                        </td>
-                                                                    </tr>
-
-                                                                    <tr>
-                                                                        <td>Pin Code :</td>
-                                                                        <td>+380</td>
-                                                                    </tr>
-
-                                                                    <tr>
-                                                                        <td>Phone :</td>
-                                                                        <td>+ 812-710-3798</td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="button-group">
-                                                        <button
-                                                            class="btn btn-sm add-button w-100"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#editProfile"
-                                                            >
-                                                            <i data-feather="edit"></i> Edit
-                                                        </button>
-                                                        <button
-                                                            class="btn btn-sm add-button w-100"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#removeProfile"
-                                                            >
-                                                            <i data-feather="trash-2"></i> Remove
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-xxl-4 col-xl-6 col-lg-12 col-md-6">
-                                                <div class="address-box">
-                                                    <div>
-                                                        <div class="form-check">
-                                                            <input
-                                                                class="form-check-input"
-                                                                type="radio"
-                                                                name="jack"
-                                                                id="flexRadioDefault3"
-                                                                />
-                                                        </div>
-
-                                                        <div class="label">
-                                                            <label>Office</label>
-                                                        </div>
-
-                                                        <div class="table-responsive address-table">
-                                                            <table class="table">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td colspan="2">Terry S. Sutton</td>
-                                                                    </tr>
-
-                                                                    <tr>
-                                                                        <td>Address :</td>
-                                                                        <td>
-                                                                            <p>2280 Rose Avenue Kenner, LA 70062</p>
-                                                                        </td>
-                                                                    </tr>
-
-                                                                    <tr>
-                                                                        <td>Pin Code :</td>
-                                                                        <td>+25</td>
-                                                                    </tr>
-
-                                                                    <tr>
-                                                                        <td>Phone :</td>
-                                                                        <td>+ 504-228-0969</td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="button-group">
-                                                        <button
-                                                            class="btn btn-sm add-button w-100"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#editProfile"
-                                                            >
-                                                            <i data-feather="edit"></i> Edit
-                                                        </button>
-                                                        <button
-                                                            class="btn btn-sm add-button w-100"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#removeProfile"
-                                                            >
-                                                            <i data-feather="trash-2"></i> Remove
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-xxl-4 col-xl-6 col-lg-12 col-md-6">
-                                                <div class="address-box">
-                                                    <div>
-                                                        <div class="form-check">
-                                                            <input
-                                                                class="form-check-input"
-                                                                type="radio"
-                                                                name="jack"
-                                                                id="flexRadioDefault4"
-                                                                />
-                                                        </div>
-
-                                                        <div class="label">
-                                                            <label>Neighbour</label>
-                                                        </div>
-
-                                                        <div class="table-responsive address-table">
-                                                            <table class="table">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td colspan="2">Juan M. McKeon</td>
-                                                                    </tr>
-
-                                                                    <tr>
-                                                                        <td>Address :</td>
-                                                                        <td>
-                                                                            <p>
-                                                                                1703 Carson Street Lexington, KY 40593
-                                                                            </p>
-                                                                        </td>
-                                                                    </tr>
-
-                                                                    <tr>
-                                                                        <td>Pin Code :</td>
-                                                                        <td>+78</td>
-                                                                    </tr>
-
-                                                                    <tr>
-                                                                        <td>Phone :</td>
-                                                                        <td>+ 859-257-0509</td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="button-group">
-                                                        <button
-                                                            class="btn btn-sm add-button w-100"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#editProfile"
-                                                            >
-                                                            <i data-feather="edit"></i> Edit
-                                                        </button>
-                                                        <button
-                                                            class="btn btn-sm add-button w-100"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#removeProfile"
-                                                            >
-                                                            <i data-feather="trash-2"></i> Remove
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-xxl-4 col-xl-6 col-lg-12 col-md-6">
-                                                <div class="address-box">
-                                                    <div>
-                                                        <div class="form-check">
-                                                            <input
-                                                                class="form-check-input"
-                                                                type="radio"
-                                                                name="jack"
-                                                                id="flexRadioDefault5"
-                                                                />
-                                                        </div>
-
-                                                        <div class="label">
-                                                            <label>Home 2</label>
-                                                        </div>
-
-                                                        <div class="table-responsive address-table">
-                                                            <table class="table">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td colspan="2">Gary M. Bailey</td>
-                                                                    </tr>
-
-                                                                    <tr>
-                                                                        <td>Address :</td>
-                                                                        <td>
-                                                                            <p>
-                                                                                2135 Burning Memory Lane Philadelphia,
-                                                                                PA 19135
-                                                                            </p>
-                                                                        </td>
-                                                                    </tr>
-
-                                                                    <tr>
-                                                                        <td>Pin Code :</td>
-                                                                        <td>+26</td>
-                                                                    </tr>
-
-                                                                    <tr>
-                                                                        <td>Phone :</td>
-                                                                        <td>+ 215-335-9916</td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="button-group">
-                                                        <button
-                                                            class="btn btn-sm add-button w-100"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#editProfile"
-                                                            >
-                                                            <i data-feather="edit"></i> Edit
-                                                        </button>
-                                                        <button
-                                                            class="btn btn-sm add-button w-100"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#removeProfile"
-                                                            >
-                                                            <i data-feather="trash-2"></i> Remove
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-xxl-4 col-xl-6 col-lg-12 col-md-6">
-                                                <div class="address-box">
-                                                    <div>
-                                                        <div class="form-check">
-                                                            <input
-                                                                class="form-check-input"
-                                                                type="radio"
-                                                                name="jack"
-                                                                id="flexRadioDefault1"
-                                                                />
-                                                        </div>
-
-                                                        <div class="label">
-                                                            <label>Home 2</label>
-                                                        </div>
-
-                                                        <div class="table-responsive address-table">
-                                                            <table class="table">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td colspan="2">Gary M. Bailey</td>
-                                                                    </tr>
-
-                                                                    <tr>
-                                                                        <td>Address :</td>
-                                                                        <td>
-                                                                            <p>
-                                                                                2135 Burning Memory Lane Philadelphia,
-                                                                                PA 19135
-                                                                            </p>
-                                                                        </td>
-                                                                    </tr>
-
-                                                                    <tr>
-                                                                        <td>Pin Code :</td>
-                                                                        <td>+26</td>
-                                                                    </tr>
-
-                                                                    <tr>
-                                                                        <td>Phone :</td>
-                                                                        <td>+ 215-335-9916</td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="button-group">
-                                                        <button
-                                                            class="btn btn-sm add-button w-100"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#editProfile"
-                                                            >
-                                                            <i data-feather="edit"></i> Edit
-                                                        </button>
-                                                        <button
-                                                            class="btn btn-sm add-button w-100"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#removeProfile"
-                                                            >
-                                                            <i data-feather="trash-2"></i> Remove
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <div id="pills-order-content">
+                                            <!-- Dữ liệu đơn hàng sẽ được hiển thị ở đây -->
                                         </div>
                                     </div>
                                 </div>
@@ -1864,6 +1133,108 @@
 
         <!-- script js -->
         <script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
+        <style>
+            .order-contain {
+                margin-bottom: 30px; /* Tạo khoảng cách giữa các đơn hàng */
+            }
+
+            .order-box {
+                width: 100%;
+                max-width: 1200px; /* Giới hạn chiều rộng để không bị quá lớn */
+                padding: 20px;
+                border-radius: 10px;
+                background-color: #f8f9fa;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .order-container {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .order-icon i {
+                font-size: 40px;
+                color: #ff8c00;
+            }
+
+            .order-detail {
+                flex-grow: 1;
+            }
+
+            .order-footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 15px;
+            }
+
+            .order-footer h5 {
+                font-size: 18px;
+                color: #333;
+            }
+
+            .btn-primary {
+                padding: 10px 20px;
+                font-size: 16px;
+                border-radius: 5px;
+            }
+        </style>
+
+
+        <script>
+                                                function loadOrders() {
+                                                    console.log("📌 Fetching order data...");
+                                                    fetch('/Gr1_Warehouse/customer-order')
+                                                            .then(function (response) {
+                                                                if (!response.ok) {
+                                                                    throw new Error("Server returned " + response.status);
+                                                                }
+                                                                return response.json(); // ✅ Chuyển đổi phản hồi thành JSON
+                                                            })
+                                                            .then(function (orderList) {
+                                                                console.log("✅ Orders received:", orderList);
+
+                                                                var orderHTML = "";
+                                                                if (orderList.length === 0) {
+                                                                    orderHTML = "<p class='text-danger'>🚨 Bạn chưa có đơn hàng nào!</p>";
+                                                                } else {
+                                                                    orderList.forEach(function (orderDetail) {
+                                                                        var order = orderDetail.order;
+
+                                                                        // ✅ Chuyển đổi timestamp thành ngày tháng chuẩn
+                                                                        var formattedDate = new Date(order.orderDate).toLocaleString('vi-VN', {
+                                                                            day: '2-digit', month: '2-digit', year: 'numeric',
+                                                                            hour: '2-digit', minute: '2-digit'
+                                                                        });
+
+                                                                        // ✅ Nối chuỗi bằng cách sử dụng dấu `+`
+                                                                        orderHTML += "<div class='order-contain'>" +
+                                                                                "<div class='order-box dashboard-bg-box'>" +
+                                                                                "<div class='order-container'>" +
+                                                                                "<div class='order-icon'><i data-feather='box'></i></div>" +
+                                                                                "<div class='order-detail'>" +
+                                                                                "<h4>Order ID: <span>#" + order.orderId + "</span></h4>" +
+                                                                                "<h6 class='text-content'>Date: " + formattedDate + "</h6>" +
+                                                                                "<h6 class='text-content'>Status: <span class='badge bg-warning'>" + order.status + "</span></h6>" +
+                                                                                "<h6 class='text-content'>Total: " + order.totalAmount.toLocaleString('vi-VN') + " VND</h6>" +
+                                                                                "</div>" +
+                                                                                "</div>" +
+                                                                                "<div class='order-footer d-flex justify-content-end'>" +
+                                                                                "<a href='customerOrderDetail?orderId=" + order.orderId + "' class='btn btn-primary'>View Details</a>" +
+                                                                                "</div>" +
+                                                                                "</div>" +
+                                                                                "</div>";
+                                                                    });
+                                                                }
+                                                                document.getElementById('pills-order-content').innerHTML = orderHTML;
+                                                            })
+                                                            .catch(function (error) {
+                                                                console.error("❌ Error loading orders:", error);
+                                                            });
+                                                }
+
+        </script>
 
         <script>
             // Kiểm tra xem có thông báo error hoặc success không
@@ -1874,5 +1245,6 @@
             });
             <% } %>
         </script>
+
         <%@ include file="/includes/footer.jsp" %> <!-- Nhúng footer -->
     </body>

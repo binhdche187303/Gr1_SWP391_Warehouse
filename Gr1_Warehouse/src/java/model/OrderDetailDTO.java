@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -19,7 +20,9 @@ public class OrderDetailDTO {
     private List<Products> products; // ✅ Danh sách sản phẩm (để tránh trùng lặp)
     private List<ProductVariants> productVariants; // ✅ Danh sách biến thể sản phẩm
     private List<Sizes> sizes; // ✅ Danh sách kích thước
-
+    private BigDecimal totalBeforeDiscount;  // Giá trị trước khi giảm giá
+    private BigDecimal totalAfterDiscount;   // Giá trị sau khi giảm giá
+    
     public OrderDetailDTO() {
     }
 
@@ -89,7 +92,22 @@ public class OrderDetailDTO {
         this.sizes = sizes;
     }
 
- 
+     // Getter and Setter for the new fields
+    public BigDecimal getTotalBeforeDiscount() {
+        return totalBeforeDiscount;
+    }
+
+    public void setTotalBeforeDiscount(BigDecimal totalBeforeDiscount) {
+        this.totalBeforeDiscount = totalBeforeDiscount;
+    }
+
+    public BigDecimal getTotalAfterDiscount() {
+        return totalAfterDiscount;
+    }
+
+    public void setTotalAfterDiscount(BigDecimal totalAfterDiscount) {
+        this.totalAfterDiscount = totalAfterDiscount;
+    }
     
 
 

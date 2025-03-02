@@ -311,6 +311,17 @@ CREATE TABLE SupplierBrand (
     FOREIGN KEY (brand_id) REFERENCES Brands(brand_id)
 );
 
+CREATE TABLE OrderDiscounts (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    order_id INT NOT NULL,
+    discount_id INT NOT NULL,
+    applied_discount_percentage DECIMAL(5,2) NOT NULL,
+    applied_amount DECIMAL(18,2) NOT NULL,
+    applied_date DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+    FOREIGN KEY (discount_id) REFERENCES Discounts(discount_id)
+);
+
 CREATE TRIGGER trg_AfterDiscountUpdate
 ON Discounts
 AFTER UPDATE, INSERT

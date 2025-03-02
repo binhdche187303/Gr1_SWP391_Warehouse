@@ -111,60 +111,155 @@ public class TestGetOrderDetail {
         //            }
         //        }
         //    }
-        // Tạo đối tượng DAO
+//        // Tạo đối tượng DAO
+//        OrderDAO orderDAO = new OrderDAO();
+//
+//        // Order ID cần test
+//        int orderId = 5;  // Thay đổi ID tùy theo dữ liệu trong database
+//
+//        // Lấy chi tiết đơn hàng
+//        OrderDetailDTO orderDetailDTO = orderDAO.getOrderDetails(orderId);
+//
+//        // Kiểm tra kết quả
+//        if (orderDetailDTO.getOrder() == null) {
+//            System.out.println("❌ Không tìm thấy đơn hàng với ID: " + orderId);
+//            return;
+//        }
+//
+//        // In thông tin đơn hàng
+//        System.out.println("\n📌 Thông tin đơn hàng:");
+//        System.out.println("🔹 Order ID: " + orderDetailDTO.getOrder().getOrderId());
+//        System.out.println("🔹 Ngày đặt hàng: " + orderDetailDTO.getOrder().getOrderDate());
+//        System.out.println("🔹 Trạng thái: " + orderDetailDTO.getOrder().getStatus());
+//        System.out.println("🔹 Tổng tiền: " + orderDetailDTO.getOrder().getTotalAmount());
+//
+//        // In thông tin khách hàng
+//        System.out.println("\n📌 Thông tin khách hàng:");
+//        System.out.println("🔹 Họ tên: " + orderDetailDTO.getUser().getFullname());
+//        System.out.println("🔹 Số điện thoại: " + orderDetailDTO.getUser().getPhone());
+//        System.out.println("🔹 Email: " + orderDetailDTO.getUser().getEmail());
+//
+//        // In thông tin thanh toán
+//        System.out.println("\n📌 Thông tin thanh toán:");
+//        System.out.println("🔹 Phương thức thanh toán: " + orderDetailDTO.getPayment().getPaymentMethod());
+//        System.out.println("🔹 Trạng thái thanh toán: " + orderDetailDTO.getPayment().getPaymentStatus());
+//        System.out.println("🔹 Ngày thanh toán: " + orderDetailDTO.getPayment().getPaymentDate());
+//
+//        // In danh sách sản phẩm
+//        System.out.println("\n📌 Danh sách sản phẩm:");
+//        for (int i = 0; i < orderDetailDTO.getOrderDetails().size(); i++) {
+//            OrderDetail orderDetail = orderDetailDTO.getOrderDetails().get(i);
+//            Products product = orderDetailDTO.getProducts().get(i);
+//            ProductVariants variant = orderDetailDTO.getProductVariants().get(i);
+//            Sizes size = orderDetailDTO.getSizes().get(i);
+//
+//            System.out.println("🔹 Product ID: " + product.getProductId());
+//            System.out.println("   - Tên sản phẩm: " + product.getProductName());
+//            System.out.println("   - SKU: " + variant.getSku());
+//            System.out.println("   - Giá biến thể: " + variant.getPrice());
+//            System.out.println("   - Kích thước: " + size.getSize_name());
+//            System.out.println("   - Số lượng: " + orderDetail.getQuantity());
+//            System.out.println("   - Giá đơn vị: " + orderDetail.getUnitPrice());
+//            System.out.println("   💰 Tổng giá: "
+//                    + new BigDecimal(orderDetail.getQuantity()).multiply(orderDetail.getUnitPrice()));
+//            System.out.println("-------------------------------------------------");
+//
+//        }
+//
+//    }
+//        // Khởi tạo đối tượng DAO (giả sử bạn đã có lớp DAO kết nối cơ sở dữ liệu)
+//        OrderDAO orderDAO = new OrderDAO();
+//
+//        // Test phương thức getOrdersByCustomerId() với customerId giả định (ví dụ: 1)
+//        int customerId = 6;
+//
+//        // Lấy danh sách OrderDetailDTO cho customerId = 1
+//        List<OrderDetailDTO> orders = orderDAO.getOrdersByCustomerId(customerId);
+//
+//
+//        // In thông tin các đơn hàng trả về
+//        for (OrderDetailDTO orderDetailDTO : orders) {
+//            System.out.println("Order ID: " + orderDetailDTO.getOrder().getOrderId());
+//            System.out.println("Order Date: " + orderDetailDTO.getOrder().getOrderDate());
+//            System.out.println("Order Status: " + orderDetailDTO.getOrder().getStatus());
+//            System.out.println("Total Amount: " + orderDetailDTO.getOrder().getTotalAmount());
+//            System.out.println("Customer Name: " + orderDetailDTO.getUser().getFullname());
+//            System.out.println("Payment Method: " + orderDetailDTO.getPayment().getPaymentMethod());
+//            System.out.println("Total Before Discount: " + orderDetailDTO.getTotalBeforeDiscount());
+//            System.out.println("Total After Discount: " + orderDetailDTO.getTotalAfterDiscount());
+//
+//            // In thông tin chi tiết sản phẩm
+//            for (OrderDetail orderDetail : orderDetailDTO.getOrderDetails()) {
+//                System.out.println("Product ID: " + orderDetail.getProductId());
+//                System.out.println("Quantity: " + orderDetail.getQuantity());
+//                System.out.println("Unit Price: " + orderDetail.getUnitPrice());
+//            }
+//
+//            // In thông tin sản phẩm, biến thể và kích thước
+//            for (Products product : orderDetailDTO.getProducts()) {
+//                System.out.println("Product Name: " + product.getProductName());
+//            }
+//            for (ProductVariants productVariant : orderDetailDTO.getProductVariants()) {
+//                System.out.println("SKU: " + productVariant.getSku());
+//                System.out.println("Variant Price: " + productVariant.getPrice());
+//            }
+//            for (Sizes size : orderDetailDTO.getSizes()) {
+//                System.out.println("Size: " + size.getSize_name());
+//            }
+//
+//            System.out.println("------------------------------------------------------");
+//        }
+//            
+//            }
+        // Khởi tạo đối tượng DAO (giả sử có lớp OrderDAO)
         OrderDAO orderDAO = new OrderDAO();
 
-        // Order ID cần test
-        int orderId = 3;  // Thay đổi ID tùy theo dữ liệu trong database
+        // ID đơn hàng cần test
+        int testOrderId = 4; // Thay bằng ID thực tế trong database
 
-        // Lấy chi tiết đơn hàng
-        OrderDetailDTO orderDetailDTO = orderDAO.getOrderDetails(orderId);
+        // Gọi hàm lấy chi tiết đơn hàng
+        OrderDetailDTO orderDetail = orderDAO.getOrderDetailById(testOrderId);
 
         // Kiểm tra kết quả
-        if (orderDetailDTO.getOrder() == null) {
-            System.out.println("❌ Không tìm thấy đơn hàng với ID: " + orderId);
-            return;
+        if (orderDetail != null) {
+            System.out.println("===== ORDER DETAIL =====");
+            System.out.println("Order ID: " + orderDetail.getOrder().getOrderId());
+            System.out.println("Customer Name: " + orderDetail.getOrder().getCustomerName());
+            System.out.println("Total Amount: " + orderDetail.getTotalAfterDiscount() + " VND");
+            System.out.println("Order Date: " + orderDetail.getOrder().getOrderDate());
+            System.out.println("Status: " + orderDetail.getOrder().getStatus());
+            System.out.println("Shipping Address: " + orderDetail.getOrder().getShippingAddress());
+            System.out.println("Phone: " + orderDetail.getOrder().getPhoneNumber());
+            System.out.println("Email: " + orderDetail.getOrder().getEmail());
+
+            // Hiển thị thông tin thanh toán
+            System.out.println("===== PAYMENT INFO =====");
+            System.out.println("Payment Method: " + orderDetail.getPayment().getPaymentMethod());
+            System.out.println("Payment Status: " + orderDetail.getPayment().getPaymentStatus());
+            System.out.println("Payment Date: " + orderDetail.getPayment().getPaymentDate());
+
+            // Hiển thị danh sách sản phẩm
+            System.out.println("===== ORDER ITEMS =====");
+            for (int i = 0; i < orderDetail.getOrderDetails().size(); i++) {
+                OrderDetail item = orderDetail.getOrderDetails().get(i);
+                Products product = orderDetail.getProducts().get(i);
+                ProductVariants variant = orderDetail.getProductVariants().get(i);
+                Sizes size = orderDetail.getSizes().get(i);
+
+                System.out.println("- Product: " + product.getProductName());
+                System.out.println("  SKU: " + variant.getSku());
+                System.out.println("  Size: " + size.getSize_name());
+                System.out.println("  Quantity: " + item.getQuantity());
+                System.out.println("  Unit Price: " + item.getUnitPrice() + " VND");
+                System.out.println("  Total: " + item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())) + " VND");
+            }
+
+            // Tổng tiền trước giảm giá
+            System.out.println("===== SUMMARY =====");
+            System.out.println("Total Before Discount: " + orderDetail.getTotalBeforeDiscount() + " VND");
+            System.out.println("Total After Discount: " + orderDetail.getTotalAfterDiscount() + " VND");
+        } else {
+            System.out.println("No order found with ID: " + testOrderId);
         }
-
-        // In thông tin đơn hàng
-        System.out.println("\n📌 Thông tin đơn hàng:");
-        System.out.println("🔹 Order ID: " + orderDetailDTO.getOrder().getOrderId());
-        System.out.println("🔹 Ngày đặt hàng: " + orderDetailDTO.getOrder().getOrderDate());
-        System.out.println("🔹 Trạng thái: " + orderDetailDTO.getOrder().getStatus());
-        System.out.println("🔹 Tổng tiền: " + orderDetailDTO.getOrder().getTotalAmount());
-
-        // In thông tin khách hàng
-        System.out.println("\n📌 Thông tin khách hàng:");
-        System.out.println("🔹 Họ tên: " + orderDetailDTO.getUser().getFullname());
-        System.out.println("🔹 Số điện thoại: " + orderDetailDTO.getUser().getPhone());
-        System.out.println("🔹 Email: " + orderDetailDTO.getUser().getEmail());
-
-        // In thông tin thanh toán
-        System.out.println("\n📌 Thông tin thanh toán:");
-        System.out.println("🔹 Phương thức thanh toán: " + orderDetailDTO.getPayment().getPaymentMethod());
-        System.out.println("🔹 Trạng thái thanh toán: " + orderDetailDTO.getPayment().getPaymentStatus());
-        System.out.println("🔹 Ngày thanh toán: " + orderDetailDTO.getPayment().getPaymentDate());
-
-        // In danh sách sản phẩm
-        System.out.println("\n📌 Danh sách sản phẩm:");
-        for (int i = 0; i < orderDetailDTO.getOrderDetails().size(); i++) {
-            OrderDetail orderDetail = orderDetailDTO.getOrderDetails().get(i);
-            Products product = orderDetailDTO.getProducts().get(i);
-            ProductVariants variant = orderDetailDTO.getProductVariants().get(i);
-            Sizes size = orderDetailDTO.getSizes().get(i);
-
-            System.out.println("🔹 Product ID: " + product.getProductId());
-            System.out.println("   - Tên sản phẩm: " + product.getProductName());
-            System.out.println("   - SKU: " + variant.getSku());
-            System.out.println("   - Giá biến thể: " + variant.getPrice());
-            System.out.println("   - Kích thước: " + size.getSize_name());
-            System.out.println("   - Số lượng: " + orderDetail.getQuantity());
-            System.out.println("   - Giá đơn vị: " + orderDetail.getUnitPrice());
-            System.out.println("   💰 Tổng giá: "
-                    + new BigDecimal(orderDetail.getQuantity()).multiply(orderDetail.getUnitPrice()));
-            System.out.println("-------------------------------------------------");
-
-        }
-
     }
 }

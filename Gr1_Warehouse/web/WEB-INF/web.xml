@@ -92,6 +92,14 @@
         <servlet-name>ApplyDiscountServlet</servlet-name>
         <servlet-class>dashboardController.ApplyDiscountServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CustomerOrderServlet</servlet-name>
+        <servlet-class>controller.CustomerOrderServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CustomerOrderDetail</servlet-name>
+        <servlet-class>controller.CustomerOrderDetail</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ArchiveServlet</servlet-name>
         <url-pattern>/archive</url-pattern>
@@ -191,6 +199,14 @@
     <servlet-mapping>
         <servlet-name>ApplyDiscountServlet</servlet-name>
         <url-pattern>/apply-discount</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CustomerOrderServlet</servlet-name>
+        <url-pattern>/customer-order</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CustomerOrderDetail</servlet-name>
+        <url-pattern>/customerOrderDetail</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login</welcome-file>

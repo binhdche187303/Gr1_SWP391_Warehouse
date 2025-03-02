@@ -12,6 +12,7 @@ import model.Order;
 import model.OrderDetail;
 import model.OrderDetailDTO;
 import model.Payment;
+import model.ProductDTO;
 import model.ProductVariants;
 import model.Products;
 import model.Sizes;
@@ -339,6 +340,209 @@ public class OrderDAO extends DBContext {
         }
 
         return new OrderDetailDTO(order, user, payment, orderDetails, productList, productVariantList, sizeList);
+    }
+
+    public List<OrderDetailDTO> getOrdersByCustomerId(int customerId) {
+        List<OrderDetailDTO> orderDetailDTOList = new ArrayList<>();
+
+        String sql = "SELECT "
+                + "o.order_id, o.order_date, o.status AS order_status, o.total_amount, "
+                + "o.customer_name, o.phone_number, o.email, o.shipping_address, o.notes, "
+                + "u.fullname AS account_name, u.phone AS account_phone, u.email AS account_email, "
+                + "p.payment_method, p.payment_status, p.payment_date, "
+                + "od.product_id, pdt.product_name, "
+                + "pv.sku, pv.price AS variant_price, "
+                + "s.size_id, s.size_name, "
+                + "od.quantity, od.unit_price "
+                + "FROM Orders o "
+                + "JOIN Users u ON o.user_id = u.user_id "
+                + "LEFT JOIN Payment p ON o.order_id = p.order_id "
+                + "JOIN OrderDetails od ON o.order_id = od.order_id "
+                + "JOIN ProductVariants pv ON od.product_id = pv.product_id AND od.size_id = pv.size_id "
+                + "JOIN Products pdt ON pv.product_id = pdt.product_id "
+                + "JOIN Sizes s ON od.size_id = s.size_id "
+                + "WHERE o.user_id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, customerId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Order order = new Order();
+                    User user = new User();
+                    Payment payment = new Payment();
+                    List<OrderDetail> orderDetails = new ArrayList<>();
+                    List<Products> productList = new ArrayList<>();
+                    List<ProductVariants> productVariantList = new ArrayList<>();
+                    List<Sizes> sizeList = new ArrayList<>();
+
+                    // Lấy thông tin đơn hàng
+                    order.setOrderId(rs.getInt("order_id"));
+                    order.setOrderDate(rs.getTimestamp("order_date"));
+                    order.setStatus(rs.getString("order_status"));
+                    order.setTotalAmount(rs.getBigDecimal("total_amount"));  // Giá trị đã áp mã giảm giá
+                    order.setCustomerName(rs.getString("customer_name"));
+                    order.setPhoneNumber(rs.getString("phone_number"));
+                    order.setEmail(rs.getString("email"));
+                    order.setShippingAddress(rs.getString("shipping_address"));
+                    order.setNotes(rs.getString("notes"));
+
+                    user.setFullname(rs.getString("account_name"));
+                    user.setPhone(rs.getString("account_phone"));
+                    user.setEmail(rs.getString("account_email"));
+
+                    payment.setPaymentMethod(rs.getString("payment_method"));
+                    payment.setPaymentStatus(rs.getString("payment_status"));
+                    payment.setPaymentDate(rs.getTimestamp("payment_date"));
+
+                    // Lấy thông tin chi tiết đơn hàng
+                    OrderDetail orderDetail = new OrderDetail();
+                    orderDetail.setProductId(rs.getInt("product_id"));
+                    orderDetail.setQuantity(rs.getInt("quantity"));
+                    orderDetail.setUnitPrice(rs.getBigDecimal("unit_price"));
+                    orderDetails.add(orderDetail);
+
+                    // Lấy thông tin sản phẩm, biến thể và kích thước
+                    Products product = new Products();
+                    product.setProductId(rs.getInt("product_id"));
+                    product.setProductName(rs.getString("product_name"));
+                    productList.add(product);
+
+                    ProductVariants productVariant = new ProductVariants();
+                    productVariant.setSku(rs.getString("sku"));
+                    productVariant.setPrice(rs.getBigDecimal("variant_price"));
+                    productVariantList.add(productVariant);
+
+                    Sizes size = new Sizes();
+                    size.setSize_id(rs.getInt("size_id"));
+                    size.setSize_name(rs.getString("size_name"));
+                    sizeList.add(size);
+
+                    // Tính tổng tiền trước khi áp mã giảm giá
+                    BigDecimal totalBeforeDiscount = BigDecimal.ZERO;
+                    totalBeforeDiscount = totalBeforeDiscount.add(orderDetail.getUnitPrice().multiply(BigDecimal.valueOf(orderDetail.getQuantity())));
+
+                    // Cập nhật DTO
+                    OrderDetailDTO orderDetailDTO = new OrderDetailDTO();
+                    orderDetailDTO.setOrder(order);
+                    orderDetailDTO.setUser(user);
+                    orderDetailDTO.setPayment(payment);
+                    orderDetailDTO.setOrderDetails(orderDetails);
+                    orderDetailDTO.setProducts(productList);
+                    orderDetailDTO.setProductVariants(productVariantList);
+                    orderDetailDTO.setSizes(sizeList);
+                    orderDetailDTO.setTotalBeforeDiscount(totalBeforeDiscount);
+                    orderDetailDTO.setTotalAfterDiscount(order.getTotalAmount());  // Đã áp mã giảm giá
+
+                    orderDetailDTOList.add(orderDetailDTO);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return orderDetailDTOList;
+    }
+
+    public OrderDetailDTO getOrderDetailById(int orderId) {
+        OrderDetailDTO orderDetailDTO = null;
+
+        String sql = "SELECT "
+                + "o.order_id, o.order_date, o.status AS order_status, o.total_amount, "
+                + "o.customer_name, o.phone_number, o.email, o.shipping_address, o.notes, "
+                + "u.fullname AS account_name, u.phone AS account_phone, u.email AS account_email, "
+                + "p.payment_method, p.payment_status, p.payment_date, "
+                + "od.product_id, pdt.product_name, "
+                + "pv.sku, pv.price AS variant_price, "
+                + "s.size_id, s.size_name, "
+                + "od.quantity, od.unit_price "
+                + "FROM Orders o "
+                + "JOIN Users u ON o.user_id = u.user_id "
+                + "LEFT JOIN Payment p ON o.order_id = p.order_id "
+                + "JOIN OrderDetails od ON o.order_id = od.order_id "
+                + "JOIN ProductVariants pv ON od.product_id = pv.product_id AND od.size_id = pv.size_id "
+                + "JOIN Products pdt ON pv.product_id = pdt.product_id "
+                + "JOIN Sizes s ON od.size_id = s.size_id "
+                + "WHERE o.order_id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, orderId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Order order = new Order();
+                    User user = new User();
+                    Payment payment = new Payment();
+                    List<OrderDetail> orderDetails = new ArrayList<>();
+                    List<Products> productList = new ArrayList<>();
+                    List<ProductVariants> productVariantList = new ArrayList<>();
+                    List<Sizes> sizeList = new ArrayList<>();
+
+                    // Lấy thông tin đơn hàng
+                    order.setOrderId(rs.getInt("order_id"));
+                    order.setOrderDate(rs.getTimestamp("order_date"));
+                    order.setStatus(rs.getString("order_status"));
+                    order.setTotalAmount(rs.getBigDecimal("total_amount"));
+                    order.setCustomerName(rs.getString("customer_name"));
+                    order.setPhoneNumber(rs.getString("phone_number"));
+                    order.setEmail(rs.getString("email"));
+                    order.setShippingAddress(rs.getString("shipping_address"));
+                    order.setNotes(rs.getString("notes"));
+
+                    user.setFullname(rs.getString("account_name"));
+                    user.setPhone(rs.getString("account_phone"));
+                    user.setEmail(rs.getString("account_email"));
+
+                    payment.setPaymentMethod(rs.getString("payment_method"));
+                    payment.setPaymentStatus(rs.getString("payment_status"));
+                    payment.setPaymentDate(rs.getTimestamp("payment_date"));
+
+                    // Lấy thông tin chi tiết đơn hàng
+                    do {
+                        OrderDetail orderDetail = new OrderDetail();
+                        orderDetail.setProductId(rs.getInt("product_id"));
+                        orderDetail.setQuantity(rs.getInt("quantity"));
+                        orderDetail.setUnitPrice(rs.getBigDecimal("unit_price"));
+                        orderDetails.add(orderDetail);
+
+                        // Lấy thông tin sản phẩm, biến thể và kích thước
+                        Products product = new Products();
+                        product.setProductId(rs.getInt("product_id"));
+                        product.setProductName(rs.getString("product_name"));
+                        productList.add(product);
+
+                        ProductVariants productVariant = new ProductVariants();
+                        productVariant.setSku(rs.getString("sku"));
+                        productVariant.setPrice(rs.getBigDecimal("variant_price"));
+                        productVariantList.add(productVariant);
+
+                        Sizes size = new Sizes();
+                        size.setSize_id(rs.getInt("size_id"));
+                        size.setSize_name(rs.getString("size_name"));
+                        sizeList.add(size);
+                    } while (rs.next());
+
+                    // Tính tổng tiền trước khi áp mã giảm giá
+                    BigDecimal totalBeforeDiscount = orderDetails.stream()
+                            .map(detail -> detail.getUnitPrice().multiply(BigDecimal.valueOf(detail.getQuantity())))
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                    // Cập nhật DTO
+                    orderDetailDTO = new OrderDetailDTO();
+                    orderDetailDTO.setOrder(order);
+                    orderDetailDTO.setUser(user);
+                    orderDetailDTO.setPayment(payment);
+                    orderDetailDTO.setOrderDetails(orderDetails);
+                    orderDetailDTO.setProducts(productList);
+                    orderDetailDTO.setProductVariants(productVariantList);
+                    orderDetailDTO.setSizes(sizeList);
+                    orderDetailDTO.setTotalBeforeDiscount(totalBeforeDiscount);
+                    orderDetailDTO.setTotalAfterDiscount(order.getTotalAmount());
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return orderDetailDTO;
     }
 
 }

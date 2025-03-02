@@ -50,22 +50,21 @@ public class OrderDiscountDAO extends DBContext {
     }
 
 // 3️⃣ Thêm mã giảm giá vào đơn hàng
-public boolean insertOrderDiscount(OrderDiscount orderDiscount) {
-    String sql = "INSERT INTO OrderDiscounts (order_id, discount_id, applied_discount_percentage, applied_amount, applied_date) VALUES (?, ?, ?, ?, ?)";
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-        stmt.setInt(1, orderDiscount.getOrderId());
-        stmt.setInt(2, orderDiscount.getDiscountId());
-        stmt.setDouble(3, orderDiscount.getAppliedDiscountPercentage());  // Sử dụng BigDecimal
-        stmt.setBigDecimal(4, orderDiscount.getAppliedAmount());  // Sử dụng BigDecimal
-        stmt.setTimestamp(5, Timestamp.valueOf(orderDiscount.getAppliedDate())); // Chuyển đổi từ LocalDateTime
+    public boolean insertOrderDiscount(OrderDiscount orderDiscount) {
+        String sql = "INSERT INTO OrderDiscounts (order_id, discount_id, applied_discount_percentage, applied_amount, applied_date) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, orderDiscount.getOrderId());
+            stmt.setInt(2, orderDiscount.getDiscountId());
+            stmt.setDouble(3, orderDiscount.getAppliedDiscountPercentage());  // Sử dụng BigDecimal
+            stmt.setBigDecimal(4, orderDiscount.getAppliedAmount());  // Sử dụng BigDecimal
+            stmt.setTimestamp(5, Timestamp.valueOf(orderDiscount.getAppliedDate())); // Chuyển đổi từ LocalDateTime
 
-        return stmt.executeUpdate() > 0;
-    } catch (SQLException e) {
-        e.printStackTrace();
-        return false;
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-}
-
 
 // 4️⃣ Cập nhật tổng tiền đơn hàng sau khi áp dụng mã giảm giá
     public void updateTotalAfterDiscount(int orderId) {
@@ -107,7 +106,7 @@ UPDATE Orders
         }
     }
 
-    // 6️⃣ Lấy thông tin giảm giá theo mã
+// 6️⃣ Lấy thông tin giảm giá theo mã
     public Discounts getDiscountByCode(String discountCode) {
         String sql = "SELECT * FROM Discounts WHERE discount_code = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -118,6 +117,13 @@ UPDATE Orders
                     discount.setDiscount_id(rs.getInt("discount_id"));
                     discount.setDiscount_code(rs.getString("discount_code"));
                     discount.setDiscount_percentage(rs.getDouble("discount_percentage"));
+                    discount.setStatus(rs.getString("status"));
+
+                    // Kiểm tra nếu status là null hoặc không phải "Active"
+                    if (discount.getStatus() == null || !discount.getStatus().equals("Active")) {
+                        return null;  // Trả về null nếu mã giảm giá không có trạng thái 'Active'
+                    }
+
                     return discount;
                 }
             }
@@ -125,6 +131,27 @@ UPDATE Orders
             e.printStackTrace();
         }
         return null;
+    }
+
+    public OrderDiscount getExistingOrderDiscount(int orderId) {
+        OrderDiscount orderDiscount = null;
+        String sql = "SELECT * FROM OrderDiscounts WHERE order_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, orderId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                orderDiscount = new OrderDiscount();
+                orderDiscount.setId(rs.getInt("id"));
+                orderDiscount.setOrderId(rs.getInt("order_id"));
+                orderDiscount.setDiscountId(rs.getInt("discount_id"));
+                orderDiscount.setAppliedDiscountPercentage(rs.getDouble("applied_discount_percentage"));
+                orderDiscount.setAppliedAmount(rs.getBigDecimal("applied_amount"));
+                orderDiscount.setAppliedDate(rs.getTimestamp("applied_date").toLocalDateTime());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orderDiscount;
     }
 
     public BigDecimal getTotalAmount(int orderId) {

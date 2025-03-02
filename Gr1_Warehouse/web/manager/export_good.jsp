@@ -123,14 +123,13 @@
                                 <!-- Chiết khấu áp dụng -->
                                 <div class="card mb-4">
                                     <div class="card-body">
-
                                         <h5 class="fw-bold mb-3">Chiết khấu áp dụng</h5>
-                                        <form id="discount-form">
+                                        <form id="discount-form" onsubmit="applyDiscount(); return false;">
                                             <div class="d-flex gap-3 align-items-center mb-3">
                                                 <label for="discount-code" class="form-label mb-0 fs-6" style="min-width: 120px;">Mã giảm giá:</label>
                                                 <input type="text" name="discount_code" id="discount-code" class="form-control flex-grow-1" placeholder="Nhập mã giảm giá" required />
                                                 <input type="hidden" name="order_id" id="order-id" value="${orderDetailDTO.order.orderId}">
-                                                <button type="button" class="btn btn-primary" onclick="applyDiscount();">Áp dụng</button>
+                                                <button type="submit" class="btn btn-primary">Áp dụng</button>
                                             </div>
                                             <div id="error-message" class="text-danger mt-2 d-none"></div>
                                         </form>
@@ -140,7 +139,6 @@
                                             <span class="fw-bold text-danger" id="total-amount">
                                                 <fmt:formatNumber value="${orderDetailDTO.order.totalAmount}" type="currency" currencySymbol="đ" />
                                             </span>
-
                                         </div>
                                         <div class="mt-3 fw-bold">
                                             <label for="note" class="form-label">Ghi chú đơn hàng</label>
@@ -211,7 +209,6 @@
 
             </div>
         </div>
-    </div>
     <script>
         function applyDiscount() {
             console.log("🔹 Bắt đầu gọi API apply-discount");
@@ -271,8 +268,6 @@
                     });
         }
     </script>
-
-
 
     <!-- latest js -->
     <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
