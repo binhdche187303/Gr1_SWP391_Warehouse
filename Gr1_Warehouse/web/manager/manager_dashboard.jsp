@@ -255,7 +255,7 @@
                                             </li>
 
                                             <li>
-                                                <a href="/Gr1_Warehouse/manager/create-product.jsp">Tạo sản phẩm mới</a>
+                                                <a href="/Gr1_Warehouse/createproductgeneral">Tạo sản phẩm mới</a>
                                             </li>
                                         </ul>
                                     </li>

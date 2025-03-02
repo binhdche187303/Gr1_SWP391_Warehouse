@@ -141,6 +141,8 @@ public class ProductDetail extends HttpServlet {
                 // Sử dụng hàm updatePrice đã có
                 boolean success = pd.updatePrice(variantId, price);
                 int productId = pd.getProductIdFromVariant(variantId);
+                System.out.println(variantId);
+                System.out.println(productId);
                 if (success) {
                     request.getSession().setAttribute("success", "Cập nhật thành công");
                     response.sendRedirect("productdetail?product_id=" + productId);

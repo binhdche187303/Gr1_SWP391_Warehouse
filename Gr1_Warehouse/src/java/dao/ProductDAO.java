@@ -887,9 +887,157 @@ public class ProductDAO extends DBContext {
         return success;
     }
 
+    // Hàm kiểm tra Product Name đã tồn tại hay chưa
+    public boolean isProductNameExists(String product_name) {
+        String sql = "SELECT COUNT(*) FROM Products WHERE product_name = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, product_name);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean addNewProduct(Products product) {
+        PreparedStatement stmtProduct = null;
+        PreparedStatement stmtImage = null;
+        PreparedStatement stmtVariant = null;
+        ResultSet rs = null;
+        boolean success = false;
+
+        try {
+
+            // Tắt auto-commit để xử lý transaction
+            connection.setAutoCommit(false);
+
+            // 1. Thêm vào bảng Products
+            String sqlProduct = "INSERT INTO Products (product_name, brand_id, origin, category_id, description) "
+                    + "VALUES (?, ?, ?, ?, ?)";
+
+            stmtProduct = connection.prepareStatement(sqlProduct, Statement.RETURN_GENERATED_KEYS);
+            stmtProduct.setString(1, product.getProductName());
+            stmtProduct.setInt(2, product.getBrand().getBrand_id());
+            stmtProduct.setString(3, product.getOrigin());
+            stmtProduct.setInt(4, product.getCate().getCategory_id());
+            stmtProduct.setString(5, product.getDescription());
+
+            int affectedRows = stmtProduct.executeUpdate();
+
+            if (affectedRows > 0) {
+                // Lấy product_id được tạo tự động
+                rs = stmtProduct.getGeneratedKeys();
+                if (rs.next()) {
+                    int productId = rs.getInt(1);
+                    product.setProductId(productId);
+
+                    // 2. Thêm hình ảnh sản phẩm
+                    List<Images> imageUrls = product.getImages();
+                    String sqlImage = "INSERT INTO Images (product_id, image_url) VALUES (?, ?)";
+                    stmtImage = connection.prepareStatement(sqlImage);
+
+                    for (Images imageUrl : imageUrls) {
+                        stmtImage.setInt(1, productId);
+                        stmtImage.setString(2, imageUrl.getImage_url());
+                        stmtImage.addBatch();
+                    }
+                    stmtImage.executeBatch();
+
+                    // 3. Thêm biến thể sản phẩm
+                    List<ProductVariants> variants = product.getVariants();
+                    String sqlVariant = "INSERT INTO ProductVariants (product_id, size_id, price, sku) "
+                            + "VALUES (?, ?, ?, ?)";
+                    stmtVariant = connection.prepareStatement(sqlVariant);
+
+                    for (ProductVariants variant : variants) {
+                        stmtVariant.setInt(1, productId);
+                        stmtVariant.setInt(2, variant.getSize().getSize_id());
+                        stmtVariant.setBigDecimal(3, variant.getPrice());
+                        stmtVariant.setString(4, variant.getSku());
+                        stmtVariant.addBatch();
+                    }
+                    stmtVariant.executeBatch();
+                }
+
+                // Hoàn tất transaction
+                connection.commit();
+                success = true;
+            }
+
+        } catch (SQLException e) {
+            // Nếu có lỗi, rollback transaction
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+        } finally {
+            // Đóng tất cả các tài nguyên
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmtProduct != null) {
+                    stmtProduct.close();
+                }
+                if (stmtImage != null) {
+                    stmtImage.close();
+                }
+                if (stmtVariant != null) {
+                    stmtVariant.close();
+                }
+                if (connection != null) {
+                    connection.setAutoCommit(true);
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return success;
+    }
+
     public static void main(String[] args) {
         ProductDAO pd = new ProductDAO();
-        System.out.println(pd.isSkuExists("OR0003"));
-        System.out.println(pd.addProductVariant(1, 3, BigDecimal.ONE, "OR00003"));
+        Products p = new Products();
+        
+//        p.setProductName("abc");
+//        Brands brands = new Brands();
+//        brands.setBrand_id(1);
+//        p.setBrand(brands);
+//        p.setOrigin("bcd");
+//        Categories c = new Categories();
+//        c.setCategory_id(1);
+//        p.setCate(c);
+//        p.setDescription("mns");
+//        
+//        List<Images> li = new ArrayList<>();
+//        Images i1 = new Images("123");
+//        Images i2 = new Images("456");
+//        li.add(i1);
+//        li.add(i2);
+//        p.setImages(li);
+//        
+//        List<ProductVariants> lpv = new ArrayList<>();
+//        ProductVariants pv = new ProductVariants();
+//        
+//        pv.setSku("1111111");
+//        Sizes size = new Sizes();
+//        size.setSize_id(1);
+//        pv.setSize(size);
+//        pv.setPrice(BigDecimal.ONE);
+//        lpv.add(pv);
+//        p.setVariants(lpv);
+//        boolean success = pd.addNewProduct(p);
+//        System.out.println(success);
+    pd.updatePrice(154, BigDecimal.valueOf(123));
     }
 }
