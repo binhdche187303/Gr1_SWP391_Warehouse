@@ -67,6 +67,74 @@
         <!-- Template css -->
         <link id="color-link" rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/style.css">
 
+        <style>
+            /* Định dạng container phân trang */
+            .dataTables_paginate {
+                padding: 15px 0;
+                text-align: center !important;
+                margin-top: 15px !important;
+                width: 100%;
+            }
+
+            /* Định dạng các nút phân trang */
+            .dataTables_paginate .paginate_button {
+                padding: 8px 14px !important;
+                margin: 0 3px !important;
+                border: 1px solid #e0e0e0 !important;
+                background: #ffffff !important;
+                border-radius: 4px !important;
+                color: #333 !important;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: inline-block;
+                text-decoration: none !important;
+            }
+
+            /* Hiệu ứng hover trên nút phân trang */
+            .dataTables_paginate .paginate_button:hover {
+                background: #f5f5f5 !important;
+                border-color: #ccc !important;
+                color: #000 !important;
+            }
+
+            /* Định dạng nút trang đang được chọn */
+            .dataTables_paginate .paginate_button.current {
+                background: #0d6efd !important;
+                border-color: #0d6efd !important;
+                color: white !important;
+                font-weight: bold;
+            }
+
+            /* Hiệu ứng hover trên nút trang đang được chọn */
+            .dataTables_paginate .paginate_button.current:hover {
+                background: #0b5ed7 !important;
+                border-color: #0a58ca !important;
+            }
+
+            /* Định dạng nút bị vô hiệu hóa */
+            .dataTables_paginate .paginate_button.disabled {
+                color: #aaa !important;
+                border-color: #e0e0e0 !important;
+                background: #f5f5f5 !important;
+                cursor: not-allowed;
+            }
+
+            /* Định dạng thông tin phân trang "Hiển thị x đến y của z bản ghi" */
+            .dataTables_info {
+                padding: 15px 0;
+                text-align: center;
+                color: #666;
+                font-style: italic;
+                margin-top: 10px;
+                width: 100%;
+            }
+
+            /* Căn chỉnh số trang giữa dòng */
+            .dataTables_wrapper .row:last-child {
+                justify-content: center;
+                align-items: center;
+            }
+        </style>
     </head>
     <body>
 
@@ -78,81 +146,27 @@
                 <div class="page-body">
                     <div class="container-fluid">
                         <div class="row">
-                            <div>
-                                <h5 class="mb-0 text-success">Progress:</h5>
-                                <% int progress = session.getAttribute("progress") != null ? (int) session.getAttribute("progress") : 0; %>
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar" style="width: <%= progress %>%" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100">
-                                        <%= progress %>% Completed
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-12">
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="card">
                                             <div class="card-body">
                                                 <div class="title-header option-title">
-                                                    <h5>Tạo sản phẩm mới</h5>
+                                                    <h5>Tạo thể loại mới</h5>
+                                                    <a href="/Gr1_Warehouse/categorylist" class="btn btn-primary btn-lg shadow-sm">
+                                                        <i class=""></i>Danh sách thể loại
+                                                    </a>
                                                 </div>
                                                 <div class="tab-content" id="pills-tabContent">
                                                     <div class="tab-pane fade show active" id="pills-home" role="tabpanel">
-                                                        <form class="theme-form theme-form-2 mega-form" action="createproductgeneral" method="post">
+                                                        <form class="theme-form theme-form-2 mega-form" action="createcategory" method="post">
                                                             <div class="row">
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label
-                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Tên sản phẩm</label>
+                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Tên thể loại</label>
                                                                     <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="text" name="product_name" required 
-                                                                               value="${requestScope.product_name != null ? requestScope.product_name : ''}">
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="mb-4 row align-items-center">
-                                                                    <label class="col-sm-2 col-form-label form-label-title">Thương hiệu
-                                                                    </label>
-                                                                    <div class="col-sm-10">
-                                                                        <select name="brand">
-                                                                            <c:forEach var="lb" items="${requestScope.listBrands}">
-                                                                                <option value="${lb.brand_id}" ${lb.brand_id == requestScope.brand_id ? 'selected' : ''}>
-                                                                                    ${lb.brand_name}
-                                                                                </option>
-                                                                            </c:forEach>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="mb-4 row align-items-center">
-                                                                    <label
-                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Nguồn gốc</label>
-                                                                    <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="text" name="origin" 
-                                                                               value="${requestScope.origin != null ? requestScope.origin : ''}">
-                                                                    </div>
-                                                                </div>
-
-
-
-                                                                <div class="mb-4 row align-items-center">
-                                                                    <label class="col-sm-2 col-form-label form-label-title">Thể loại
-                                                                    </label>
-                                                                    <div class="col-sm-10">
-                                                                        <select name="category">
-                                                                            <c:forEach var="lc" items="${requestScope.listCategories}">
-                                                                                <option value="${lc.category_id}" ${lc.category_id == requestScope.category_id ? 'selected' : ''}>
-                                                                                    ${lc.category_name}
-                                                                                </option>
-                                                                            </c:forEach>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="mb-4 row align-items-center">
-                                                                    <label
-                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Mô tả</label>
-                                                                    <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="text" name="description" required 
-                                                                               value="${requestScope.description != null ? requestScope.description : ''}">
+                                                                        <input class="form-control" type="text" name="category_name" required 
+                                                                               value="${requestScope.category_name != null ? requestScope.category_name : ''}">
                                                                     </div>
                                                                 </div>
 
@@ -161,15 +175,13 @@
                                                                     <button type="submit" class="btn btn-primary">Gửi</button>
                                                                 </div>
                                                             </div>
-
-
                                                         </form>
                                                         <c:if test="${not empty requestScope.message}">
                                                             <div class="alert alert-dismissible fade show" 
                                                                  role="alert" 
-                                                                 style="margin-top: 10px; background-color: red; color: white; border: 1px solid darkred; font-weight: bold;">
+                                                                 style="background-color: red; color: white; border: 1px solid darkred; font-weight: bold;">
                                                                 ${requestScope.message}
-                                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="filter: invert(1);"></button>
+                                                                <button stype="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="filter: invert(1);"></button>
                                                             </div>
                                                         </c:if>
                                                     </div>
@@ -264,6 +276,7 @@
         <!-- script js -->
         <script src="${pageContext.request.contextPath}/assets/js/script.js"></script>                 
 
+        <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     </body>
 
 </html>

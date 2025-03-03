@@ -37,7 +37,73 @@ public class BrandDAO extends DBContext {
 
         return list;
     }
-    
+
+    public boolean createBrand(String brandName) throws SQLException {
+        String sql = "INSERT INTO Brands (brand_name) VALUES (?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, brandName);
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            throw new SQLException("Tên thương hiệu đã tồn tại!", e);
+        }
+    }
+
+    // Kiểm tra xem tên thương hiệu đã tồn tại chưa
+    public boolean isBrandNameExists(String brandName) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM Brands WHERE brand_name = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, brandName);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0; // Nếu COUNT > 0 tức là đã tồn tại
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean updateBrand(int brandId, String brandName) {
+        boolean result = false;
+        PreparedStatement ps = null;
+
+        try {
+
+            // SQL query to update brand
+            String sql = "UPDATE Brands SET brand_name = ? WHERE brand_id = ?";
+
+            // Create prepared statement
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, brandName);
+            ps.setInt(2, brandId);
+
+            // Execute the query
+            int rowsAffected = ps.executeUpdate();
+
+            // Check if update was successful
+            if (rowsAffected > 0) {
+                result = true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Close resources
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result;
+    }
+
     public static void main(String[] args) {
         BrandDAO bd = new BrandDAO();
         List<Brands> l = bd.getAllBrands();

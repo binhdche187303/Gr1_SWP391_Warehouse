@@ -10,7 +10,6 @@ import model.Categories;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import model.Brands;
 
 /**
  *
@@ -37,6 +36,72 @@ public class CategoryDAO extends DBContext {
         }
 
         return list;
+    }
+
+    public boolean createCategory(String categoryName) throws SQLException {
+        String sql = "INSERT INTO Categories (category_name) VALUES (?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, categoryName);
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            throw new SQLException("Tên thể loại đã tồn tại!", e);
+        }
+    }
+
+    // Kiểm tra xem tên thể loại đã tồn tại chưa
+    public boolean isCategoryNameExists(String categoryName) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM Categories WHERE category_name = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, categoryName);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0; // Nếu COUNT > 0 tức là đã tồn tại
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean updateCategory(int categoryId, String categoryName) {
+        boolean result = false;
+        PreparedStatement ps = null;
+
+        try {
+
+            // SQL query to update category
+            String sql = "UPDATE Categories SET category_name = ? WHERE category_id = ?";
+
+            // Create prepared statement
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, categoryName);
+            ps.setInt(2, categoryId);
+
+            // Execute the query
+            int rowsAffected = ps.executeUpdate();
+
+            // Check if update was successful
+            if (rowsAffected > 0) {
+                result = true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Close resources
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result;
     }
 
     public static void main(String[] args) {

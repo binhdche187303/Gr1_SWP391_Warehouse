@@ -62,48 +62,12 @@
                                         <div class="title-header option-title">
                                             <h5>Danh sách sản phẩm</h5>
 
-
                                             <form class="d-inline-flex">
-
-                                                <button type="button" class="align-items-center btn btn-theme d-flex" data-bs-toggle="modal" data-bs-target="#addSupplierModal">
-                                                    <i data-feather="plus"></i>Tạo sản phẩm mới
-                                                </button>
+                                                <a href="/Gr1_Warehouse/createproductgeneral" class="btn btn-primary btn-lg shadow-sm">
+                                                    <i class="fas fa-plus-circle"></i>Tạo sản phẩm mới
+                                                </a>
                                             </form>
-                                        </div>
 
-
-                                        <!-- Modal -->
-                                        <!-- Modal thêm nhà cung cấp -->
-                                        <div class="modal fade" id="addSupplierModal" tabindex="-1" aria-labelledby="addSupplierModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="addSupplierModalLabel">Thêm Nhà Cung Cấp</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form id="addSupplierForm">
-                                                            <div class="mb-3">
-                                                                <label for="supplierName" class="form-label">Tên Nhà Cung Cấp</label>
-                                                                <input type="text" class="form-control" id="supplierName" name="supplierName" required>
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="phone" class="form-label">Số Điện Thoại</label>
-                                                                <input type="text" class="form-control" id="phone" name="phone" >
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="email" class="form-label">Email</label>
-                                                                <input type="text" class="form-control" id="email" name="email" >
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="address" class="form-label">Địa Chỉ</label>
-                                                                <input type="text" class="form-control" id="address" name="address" >
-                                                            </div>
-                                                            <button type="submit" class="btn btn-primary">Thêm</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
 
                                         <div class="table-responsive table-product">
@@ -115,7 +79,7 @@
                                                         <th style="text-align: center">Thương hiệu</th>
                                                         <th style="text-align: center">Loại</th>
                                                         <th style="text-align: center">Nguồn gốc</th>
-                                                        <th style="text-align: center">Trạng thái</th>
+                                                        <th style="text-align: center">Hành động</th>
                                                     </tr>
                                                 </thead>
 
