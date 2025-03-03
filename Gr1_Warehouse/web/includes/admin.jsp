@@ -349,6 +349,26 @@
                                             </li>
                                         </ul>
                                     </li>
+                                    
+                                    <li class="sidebar-list">
+                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
+                                            <i class="ri-price-tag-3-line"></i>
+                                            <span>Quản lý tồn kho</span>
+                                        </a>
+                                        <ul class="sidebar-submenu">
+                                            <li>
+                                                <a href="/Gr1_Warehouse/manager/inventory_checklist.jsp">Kiểm kho</a>
+                                            </li>
+
+<!--                                            <li>
+                                                <a href="/Gr1_Warehouse/createproductcoupon">Tạo giảm giá</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="/Gr1_Warehouse/listdiscountproducthistory">Lịch sử giảm giá</a>
+                                            </li>-->
+                                        </ul>
+                                    </li>
 
                                     <li class="sidebar-list">
                                         <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/profilesettingadmin">

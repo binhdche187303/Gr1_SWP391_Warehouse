@@ -10,7 +10,6 @@
 --GO
 
 
-
 --drop database SWPV1
 --go
 
@@ -242,12 +241,14 @@ CREATE TABLE PurchaseDetails (
 	FOREIGN KEY (variant_id) REFERENCES ProductVariants(variant_id)
 );
 
+
+	 select * from InventoryCheck
 --Bảng InventoryCheck (Phiếu kiểm kho)
 CREATE TABLE InventoryCheck (
     check_id INT PRIMARY KEY IDENTITY(1,1),
     check_date DATETIME NOT NULL,
     warehouse_id INT NOT NULL,
-    status NVARCHAR(50) DEFAULT 'Pending' CHECK (status IN ('Pending', 'Completed', 'Approved', 'Cancelled')),
+    status NVARCHAR(50) DEFAULT N'Chờ kiểm kho' CHECK (status IN (N'Chờ kiểm kho', N'Đang kiểm kho', N'Đã kiểm kho', N'Đã cân bằng')),
     created_by INT NOT NULL,
     reviewed_by INT,
     FOREIGN KEY (warehouse_id) REFERENCES Warehouses(warehouse_id),
@@ -265,7 +266,8 @@ CREATE TABLE InventoryCheckDetails (
     expected_quantity INT NOT NULL,                 -- Số lượng hệ thống ghi nhận
     actual_quantity INT NOT NULL,                   -- Số lượng thực tế kiểm được
     discrepancy AS (actual_quantity - expected_quantity), -- Chênh lệch
-	discrepancy_status VARCHAR(20) DEFAULT 'Unresolved'	CHECK (discrepancy_status IN ('Unresolved', 'Resolved', 'Approved', 'Cancelled')),
+	discrepancyPrice INT,
+	discrepancy_status VARCHAR(20) DEFAULT N'Sản phẩm mới'	CHECK (discrepancy_status IN (N'Sản phẩm mới', N'Hàng lỗi', N'Hết hạn', N'Khác')),
     reason TEXT,                                   -- Lý do chênh lệch (hỏng, mất, hết hạn, v.v.)
     FOREIGN KEY (check_id) REFERENCES InventoryCheck(check_id),
     FOREIGN KEY (batch_id) REFERENCES InventoryBatches(batch_id),

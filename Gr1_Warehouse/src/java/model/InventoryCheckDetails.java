@@ -13,13 +13,14 @@ public class InventoryCheckDetails {
     private int expectedQuantity;
     private int actualQuantity;
     private int discrepancy;
+    private int discrepancyPrice;
     private String discrepancyStatus;
     private String reason;
 
     public InventoryCheckDetails() {
     }
 
-    public InventoryCheckDetails(int checkDetailId, int checkId, int batchId, int variantId, String sku, int expectedQuantity, int actualQuantity, int discrepancy, String discrepancyStatus, String reason) {
+    public InventoryCheckDetails(int checkDetailId, int checkId, int batchId, int variantId, String sku, int expectedQuantity, int actualQuantity, int discrepancy, int discrepancyPrice, String discrepancyStatus, String reason) {
         this.checkDetailId = checkDetailId;
         this.checkId = checkId;
         this.batchId = batchId;
@@ -28,6 +29,7 @@ public class InventoryCheckDetails {
         this.expectedQuantity = expectedQuantity;
         this.actualQuantity = actualQuantity;
         this.discrepancy = discrepancy;
+        this.discrepancyPrice = discrepancyPrice;
         this.discrepancyStatus = discrepancyStatus;
         this.reason = reason;
     }
@@ -94,6 +96,14 @@ public class InventoryCheckDetails {
 
     public void setDiscrepancy(int discrepancy) {
         this.discrepancy = discrepancy;
+    }
+
+    public int getDiscrepancyPrice() {
+        return discrepancyPrice;
+    }
+
+    public void setDiscrepancyPrice(int discrepancyPrice) {
+        this.discrepancyPrice = discrepancyPrice;
     }
 
     public String getDiscrepancyStatus() {
