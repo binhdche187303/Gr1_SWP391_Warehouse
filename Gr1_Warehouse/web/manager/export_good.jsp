@@ -34,6 +34,7 @@
         <!-- App css -->
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets2/css/style.css">
     </head>
+
     <body>
         <%@ include file="/manager/manager_dashboard.jsp" %>
         <div class="page-wrapper compact-wrapper" id="pageWrapper">
@@ -160,9 +161,32 @@
                                     <div class="card-body text-center">
                                         <h5 class="fw-bold mb-3">Xác Thực Đơn Hàng</h5>
                                         <p class="text-muted">Vui lòng xác thực đơn hàng</p>
-                                        <button class="btn btn-primary w-100">Xác Thực Đơn Hàng</button>
+                                        <!-- Thêm id cho button -->
+                                        <button class="btn btn-primary w-100" id="confirmOrderBtn">Xác Thực Đơn Hàng</button>
                                     </div>
                                 </div>
+
+                                <!-- Modal Xác Nhận -->
+                                <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="confirmModalLabel">Xác nhận đơn hàng</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Bạn có chắc muốn xác nhận đơn hàng <strong id="confirmOrderId"></strong> không?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                <button type="button" class="btn btn-primary" id="confirmOrderSubmit">Xác nhận</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
                                 <!-- Thông tin người mua -->
                                 <div class="card mb-4">
                                     <div class="card-body">
@@ -209,82 +233,151 @@
 
             </div>
         </div>
-    <script>
-        function applyDiscount() {
-            console.log("🔹 Bắt đầu gọi API apply-discount");
 
-            const orderId = document.getElementById("order-id").value; // Lấy giá trị order_id từ input hidden
-            const discountCode = document.getElementById("discount-code").value.trim(); // Lấy giá trị discount_code từ input text
+        <script>
+            function applyDiscount() {
+                console.log("🔹 Bắt đầu gọi API apply-discount");
 
-            // Kiểm tra giá trị orderId và discountCode trước khi gửi request
-            console.log("Order ID:", orderId);
-            console.log("Discount Code:", discountCode);
+                const orderId = document.getElementById("order-id").value; 
+                const discountCode = document.getElementById("discount-code").value.trim(); 
 
-            if (!discountCode) {
-                alert("⚠️ Vui lòng nhập mã giảm giá!");
-                return;
-            }
+                // Kiểm tra giá trị orderId và discountCode trước khi gửi request
+                console.log("Order ID:", orderId);
+                console.log("Discount Code:", discountCode);
 
-            // Log request body trước khi gửi
-            const requestBody = "order_id=" + orderId + "&discount_code=" + discountCode;
-            console.log("Request body:", requestBody);  // In ra request body
+                if (!discountCode) {
+                    alert("⚠️ Vui lòng nhập mã giảm giá!");
+                    return;
+                }
 
-            fetch("/Gr1_Warehouse/apply-discount", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                body: requestBody  // Gửi dữ liệu
-            })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log("Response từ API:", data);
+                // Log request body trước khi gửi
+                const requestBody = "order_id=" + orderId + "&discount_code=" + discountCode;
+                console.log("Request body:", requestBody);  // In ra request body
 
-                        if (data.error) {
-                            document.getElementById("error-message").innerText = data.error;
-                            document.getElementById("error-message").classList.remove("d-none");
-                        } else if (data.success) {
-                            alert(data.success);
+                fetch("/Gr1_Warehouse/apply-discount", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: requestBody  // Gửi dữ liệu
+                })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Response từ API:", data);
 
-                            // Trích xuất giá trị newTotal từ thông báo
-                            let successMessage = data.success;
-                            let newTotal = successMessage.match(/Tổng tiền mới: (\d+(\.\d+)?)/);
+                            if (data.error) {
+                                document.getElementById("error-message").innerText = data.error;
+                                document.getElementById("error-message").classList.remove("d-none");
+                            } else if (data.success) {
+                                alert(data.success);
 
-                            if (newTotal) {
-                                newTotal = newTotal[1];  // Lấy số tiền từ thông báo
-                                document.getElementById("total-amount").innerText = new Intl.NumberFormat().format(newTotal) + " đ";
-                            } else {
-                                console.error("Không thể trích xuất newTotal từ thông báo");
-                                document.getElementById("total-amount").innerText = "Lỗi tính tổng";
+                                // Trích xuất giá trị newTotal từ thông báo
+                                let successMessage = data.success;
+                                let newTotal = successMessage.match(/Tổng tiền mới: (\d+(\.\d+)?)/);
+
+                                if (newTotal) {
+                                    newTotal = newTotal[1];  // Lấy số tiền từ thông báo
+                                    document.getElementById("total-amount").innerText = new Intl.NumberFormat().format(newTotal) + " đ";
+                                } else {
+                                    console.error("Không thể trích xuất newTotal từ thông báo");
+                                    document.getElementById("total-amount").innerText = "Lỗi tính tổng";
+                                }
+
+                                document.getElementById("error-message").classList.add("d-none");
                             }
+                        })
+                        .catch(error => {
+                            console.error("❌ Lỗi:", error);
+                            document.getElementById("error-message").innerText = "⚠️ Không thể áp dụng mã giảm giá!";
+                            document.getElementById("error-message").classList.remove("d-none");
+                        });
+            }
+        </script>
 
-                            document.getElementById("error-message").classList.add("d-none");
-                        }
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const confirmBtn = document.getElementById('confirmOrderBtn');
+                const confirmSubmitBtn = document.getElementById('confirmOrderSubmit');
+
+                let selectedOrderId = null;
+
+                // Khi nhấn nút xác nhận ngoài giao diện
+                confirmBtn.addEventListener('click', function () {
+                    const orderIdElement = document.getElementById("order-id");
+                    if (!orderIdElement) {
+                        alert("⚠️ Không tìm thấy mã đơn hàng!");
+                        return;
+                    }
+
+                    selectedOrderId = orderIdElement.value.trim();
+                    if (!selectedOrderId) {
+                        alert("⚠️ Không có mã đơn hàng!");
+                        return;
+                    }
+
+                    document.getElementById("confirmOrderId").innerText = selectedOrderId;
+                    $('#confirmModal').modal('show');
+                });
+
+                // Khi nhấn "Xác Nhận" trong modal
+                confirmSubmitBtn.addEventListener('click', function () {
+                    if (!selectedOrderId)
+                        return;
+
+                    fetch('/Gr1_Warehouse/manager-confirmOrder', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams({'orderId': selectedOrderId})
                     })
-                    .catch(error => {
-                        console.error("❌ Lỗi:", error);
-                        document.getElementById("error-message").innerText = "⚠️ Không thể áp dụng mã giảm giá!";
-                        document.getElementById("error-message").classList.remove("d-none");
-                    });
-        }
-    </script>
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log("✅ JSON đã xử lý:", data);
 
-    <!-- latest js -->
-    <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
+                                if (data.status === "success") {
+                                    console.log("🎉 Xác nhận thành công!");
 
-    <!-- Bootstrap js -->
-    <script src="${pageContext.request.contextPath}/assets2/js/bootstrap/bootstrap.bundle.min.js"></script>
+                                    // Ẩn modal xác nhận
+                                    $('#confirmModal').modal('hide');
 
-    <!-- tooltip init js -->
-    <script src="${pageContext.request.contextPath}/assets2/js/tooltip-init.js"></script>
+                                    // Hiển thị modal thông báo
+                                    $('#depositModal').modal('show');
 
-    <!-- Plugins JS -->
-    <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
+                                    // 🔥 TỰ ĐỘNG RELOAD SAU 1.5 GIÂY
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 1500);
+                                } else {
+                                    console.log("⚠️ Xác nhận thất bại!");
+                                    alert("Xác nhận đơn hàng thất bại. Vui lòng thử lại!");
+                                }
+                            })
+                            .catch(error => {
+                                console.error("❌ Lỗi:", error);
+                                alert("Có lỗi xảy ra: " + error.message);
+                            });
+                });
+            });
+        </script>
 
-    <!-- slick slider js -->
-    <script src="${pageContext.request.contextPath}/assets2/js/slick.min.js"></script>
-    <script src="${pageContext.request.contextPath}/assets2/js/custom-slick.js"></script>
-</body>
+        <!-- latest js -->
+        <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
+
+        <!-- Bootstrap js -->
+        <script src="${pageContext.request.contextPath}/assets2/js/bootstrap/bootstrap.bundle.min.js"></script>
+
+        <!-- tooltip init js -->
+        <script src="${pageContext.request.contextPath}/assets2/js/tooltip-init.js"></script>
+
+        <!-- Plugins JS -->
+        <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
+
+        <!-- slick slider js -->
+        <script src="${pageContext.request.contextPath}/assets2/js/slick.min.js"></script>
+        <script src="${pageContext.request.contextPath}/assets2/js/custom-slick.js"></script>
+    </body>
 
 </html>
 

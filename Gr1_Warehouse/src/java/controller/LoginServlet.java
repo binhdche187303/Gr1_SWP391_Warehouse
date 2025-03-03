@@ -116,7 +116,7 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect("warehouse/staff/home");
                 break;
             case 5:  // Packing staff
-                response.sendRedirect("packing/staff/dashboard");
+                response.sendRedirect("/Gr1_Warehouse/packing-orders");
                 break;
             default:
                 response.sendRedirect("error");
@@ -245,7 +245,7 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect("warehouse/staff/home");
                 break;
             case 5:  // Packing staff
-                response.sendRedirect("packing/staff/dashboard");
+                response.sendRedirect("/Gr1_Warehouse/packing-orders");
                 break;
             default:
                 System.out.println("Unknown role ID: " + roleId + ". Redirecting to error page.");

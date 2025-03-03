@@ -44,30 +44,33 @@
 
     <div class="container mt-5">
         <div class="order-detail-container">
-            <h2 class="text-center mb-4">Order Details</h2>
+            <h2 class="text-center mb-4">Chi tiết đơn hàng</h2>
 
             <!-- Thông tin đơn hàng -->
             <div class="order-info mb-4">
-                <p><strong>Order ID:</strong> #${orderDetail.order.orderId}</p>
-                <p><strong>Order Date:</strong> ${orderDetail.order.orderDate}</p>
-                <p><strong>Status:</strong> 
+                <p><strong>Mã đơn hàng:</strong> #${orderDetail.order.orderId}</p>
+                <p><strong>Ngày đặt hàng:</strong> ${orderDetail.order.orderDate}</p>
+                <p><strong>Trạng thái:</strong> 
                     <span class="badge ${orderDetail.order.status eq 'Pending' ? 'bg-warning' : 'bg-success'}">
                         ${orderDetail.order.status}
                     </span>
                 </p>
-                <p><strong>Total Amount:</strong> ${orderDetail.order.totalAmount} VND</p>
+                <p><strong>Tổng:</strong> 
+                    <fmt:formatNumber value="${orderDetail.order.totalAmount}" type="currency" currencySymbol="VND" groupingUsed="true"/>
+                </p>
             </div>
+            <input type="hidden" id="order-id" value="${orderDetail.order.orderId}">
 
             <!-- Danh sách sản phẩm -->
             <table class="table table-striped table-bordered">
                 <thead class="table-light">
                     <tr>
-                        <th>Product</th>
+                        <th>Sản phẩm</th>
                         <th>SKU</th>
                         <th>Size</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Total</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Tổng</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -84,22 +87,141 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="5" class="text-end"><strong>Total Before Discount:</strong></td>
+                        <td colspan="5" class="text-end"><strong>Tổng (trước khi giảm giá):</strong></td>
                         <td><strong><fmt:formatNumber value="${orderDetail.totalBeforeDiscount}" type="currency" currencySymbol="VND" groupingUsed="true"/></strong></td>
                     </tr>
                     <tr>
-                        <td colspan="5" class="text-end"><strong>Total After Discount:</strong></td>
+                        <td colspan="5" class="text-end"><strong>Tổng (sau khi giảm giá):</strong></td>
                         <td><strong><fmt:formatNumber value="${orderDetail.order.totalAmount}" type="currency" currencySymbol="VND" groupingUsed="true"/></strong></td>
                     </tr>
+                    <tr>
+                        <td colspan="5" class="text-end"><strong>Tiền cọc:</strong></td>
+                        <td><strong><fmt:formatNumber value="${orderPayment.depositAmount}" type="currency" currencySymbol="VND" groupingUsed="true"/></strong></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="text-end"><strong>Tổng (sau khi cọc 50%):</strong></td>
+                        <td><strong><fmt:formatNumber value="${remainingAmount}" type="currency" currencySymbol="VND" groupingUsed="true"/></strong></td>
+                    </tr>
                 </tfoot>
+
+                <!-- Nút xác nhận đơn hàng, khi nhấn sẽ mở modal -->
+                <button type="button" id="confirmOrderBtn" class="btn btn-warning">Xác nhận đơn hàng</button>
 
             </table>
 
             <!-- Nút quay về lịch sử đơn hàng -->
             <a href="profileSetting" class="btn btn-success">Back to Orders</a>
+            <!-- Modal yêu cầu thanh toán -->
+            <div class="modal fade" id="depositModal" tabindex="-1" role="dialog" aria-labelledby="depositModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="depositModalLabel">Xác Nhận Thanh Toán Cọc</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p id="modalMessage"></p>
+                            <!-- Phần tử chứa QR code -->
+                            <div id="qrCodeContainer"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                            <button type="button" class="btn btn-primary" id="confirmPaymentBtn">Xác nhận thanh toán</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
         </div>
     </div>
+
     <%@ include file="/includes/footer.jsp" %>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('confirmOrderBtn').addEventListener('click', function () {
+                const orderIdElement = document.getElementById("order-id"); // Lấy phần tử order-id
+                if (!orderIdElement) {
+                    alert("⚠️ Không tìm thấy mã đơn hàng!");
+                    return;
+                }
+
+                const orderId = orderIdElement.value; // Lấy giá trị từ input hidden
+                console.log("Order ID:", orderId); // Kiểm tra giá trị orderId
+
+                if (!orderId) {
+                    alert("⚠️ Không có mã đơn hàng!");
+                    return;
+                }
+
+                // Gửi yêu cầu xác nhận đơn hàng tới servlet của Manager
+                fetch('/Gr1_Warehouse/confirmOrder', {
+                    method: 'POST',
+                    body: new URLSearchParams({
+                        'orderId': orderId
+                    })
+                })
+                        .then(response => response.json()) // Đảm bảo phản hồi trả về dưới dạng JSON
+                        .then(data => {
+                            console.log("Dữ liệu nhận được từ server:", data); // Log dữ liệu nhận được từ server
+
+                            // Xử lý phản hồi thành công
+                            if (data.status === "success") {
+                                console.log("Xác nhận thành công: ", data.message); // Log khi xác nhận thành công
+                                document.getElementById('modalMessage').innerText = data.message; // Hiển thị thông báo lên modal
+
+                                // Ẩn phần QR code nếu không cần thiết
+                                document.getElementById("qrCodeContainer").style.display = 'none'; // Ẩn QR code container
+
+                                // Hiển thị modal yêu cầu khách cọc tiền
+                                $('#depositModal').modal('show');
+                            } else {
+                                // Nếu xác nhận thất bại, hiển thị thông báo lỗi
+                                console.log("Xác nhận thất bại: ", data.message); // Log khi xác nhận thất bại
+                                document.getElementById('modalMessage').innerText = data.message; // Hiển thị thông báo lỗi
+                                $('#depositModal').modal('show'); // Hiển thị modal yêu cầu khách cọc tiền
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error); // Log lỗi nếu có
+                            alert('Có lỗi xảy ra. Vui lòng thử lại sau.');
+                        });
+            });
+
+            // Handle confirm payment
+            document.getElementById('confirmPaymentBtn').addEventListener('click', function () {
+                // Update payment status to "50% deposit" when confirm payment button is clicked
+                fetch('/Gr1_Warehouse/updatePaymentStatus', {
+                    method: 'POST',
+                    body: new URLSearchParams({
+                        'orderId': document.getElementById('order-id').value,
+                        'status': 'Thanh toán 50%'
+                    })
+                })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === "success") {
+                                alert("Thanh toán cọc 50% đã được xác nhận!");
+                                $('#depositModal').modal('hide');
+                            } else {
+                                alert("Có lỗi xảy ra khi cập nhật trạng thái thanh toán.");
+                            }
+                        })
+                        .catch(error => {
+                            alert("Có lỗi xảy ra khi cập nhật trạng thái thanh toán.");
+                        });
+            });
+        });
+    </script>
+
+
+
     <style>
         .order-detail-container {
             max-width: 900px;

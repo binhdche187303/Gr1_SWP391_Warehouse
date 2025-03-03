@@ -100,6 +100,38 @@
         <servlet-name>CustomerOrderDetail</servlet-name>
         <servlet-class>controller.CustomerOrderDetail</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ConfirmOrderServlet</servlet-name>
+        <servlet-class>dashboardController.ConfirmOrderServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PaymentServlet</servlet-name>
+        <servlet-class>PaymentController.PaymentServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ReturnUrlServlet</servlet-name>
+        <servlet-class>PaymentController.ReturnUrlServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdatePaymentStatusServlet</servlet-name>
+        <servlet-class>dashboardController.UpdatePaymentStatusServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ConfirmOrderManagerServlet</servlet-name>
+        <servlet-class>controller.ConfirmOrderManagerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PackingOrderServlet</servlet-name>
+        <servlet-class>PackingController.PackingOrderServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AssignPackingOrderServlet</servlet-name>
+        <servlet-class>PackingController.AssignPackingOrderServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MyPackingOrdersServlet</servlet-name>
+        <servlet-class>PackingController.MyPackingOrdersServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ArchiveServlet</servlet-name>
         <url-pattern>/archive</url-pattern>
@@ -207,6 +239,38 @@
     <servlet-mapping>
         <servlet-name>CustomerOrderDetail</servlet-name>
         <url-pattern>/customerOrderDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ConfirmOrderServlet</servlet-name>
+        <url-pattern>/confirmOrder</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PaymentServlet</servlet-name>
+        <url-pattern>/payment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReturnUrlServlet</servlet-name>
+        <url-pattern>/return</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdatePaymentStatusServlet</servlet-name>
+        <url-pattern>/updatePaymentStatus</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ConfirmOrderManagerServlet</servlet-name>
+        <url-pattern>/manager-confirmOrder</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PackingOrderServlet</servlet-name>
+        <url-pattern>/packing-orders</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AssignPackingOrderServlet</servlet-name>
+        <url-pattern>/assignPackingOrder</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MyPackingOrdersServlet</servlet-name>
+        <url-pattern>/my-packing-orders</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login</welcome-file>

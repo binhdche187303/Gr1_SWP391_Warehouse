@@ -5,6 +5,7 @@
 package controller;
 
 import dao.OrderDAO;
+import dao.OrderServiceDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,8 +13,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.util.List;
 import model.OrderDetailDTO;
+import model.OrderPayment;
 import model.User;
 
 /**
@@ -73,7 +76,7 @@ public class CustomerOrderDetail extends HttpServlet {
         try {
             orderId = Integer.parseInt(request.getParameter("orderId"));
         } catch (NumberFormatException e) {
-            response.sendRedirect("pages/cus_detail.jsp.jsp");
+            response.sendRedirect("pages/cus_detail.jsp");
             return;
         }
 
@@ -86,7 +89,29 @@ public class CustomerOrderDetail extends HttpServlet {
                 break;
             }
         }
+
+        // Nếu không tìm thấy đơn hàng, chuyển hướng
+        if (selectedOrder == null) {
+            response.sendRedirect("pages/cus_detail.jsp");
+            return;
+        }
+
+        // 🟢 Lấy thông tin thanh toán từ OrderPayments
+        OrderServiceDAO orderServiceDAO = new OrderServiceDAO();
+        OrderPayment orderPayment = orderServiceDAO.getOrderPaymentByOrderId(orderId);
+
+        // 🟢 Tính số tiền còn lại sau khi đặt cọc
+        BigDecimal remainingAmount = BigDecimal.ZERO;
+        if (orderPayment != null) {
+            BigDecimal totalAmount = selectedOrder.getOrder().getTotalAmount();
+            BigDecimal depositAmount = orderPayment.getDepositAmount() != null ? orderPayment.getDepositAmount() : BigDecimal.ZERO;
+            remainingAmount = totalAmount.subtract(depositAmount);
+        }
+
+        // 🟢 Đặt thông tin vào request để gửi đến JSP
         request.setAttribute("orderDetail", selectedOrder);
+        request.setAttribute("orderPayment", orderPayment);
+        request.setAttribute("remainingAmount", remainingAmount);
         request.getRequestDispatcher("pages/cus_detail.jsp").forward(request, response);
     }
 

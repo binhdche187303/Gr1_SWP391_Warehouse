@@ -80,22 +80,28 @@
                                             <td>${order.customerName}</td>
                                             <td class="text-center">
                                                 <span class="badge
-                                                      ${order.status eq 'Pending' ? 'bg-warning' :
-                                                        order.status eq 'Completed' ? 'bg-success' : 'bg-secondary'}">
+                                                      ${order.status eq 'Pending' ? 'bg-warning' : 
+                                                        order.status eq 'Completed' ? 'bg-success' : 
+                                                        order.status eq 'Cancelled' ? 'bg-danger' : 
+                                                        order.status eq 'Đã xác nhận' ? 'bg-primary' : 'bg-secondary'}">
                                                           ${order.status}
                                                       </span>
                                                 </td>
+
                                                 <td class="text-center">
                                                     <c:set var="payment" value="${paymentMap[order.orderId]}" />
                                                     <span class="badge
-                                                          ${payment.paymentStatus eq 'Pending' ? 'bg-warning' :
-                                                            payment.paymentStatus eq 'Completed' ? 'bg-success' : 'bg-secondary'}">
+                                                          ${payment.paymentStatus eq 'Pending' ? 'bg-warning' : 
+                                                            payment.paymentStatus eq 'Completed' ? 'bg-success' : 
+                                                            payment.paymentStatus eq 'Thanh toán 50%' ? 'bg-info' : 
+                                                            'bg-secondary'}">
                                                               ${payment != null ? payment.paymentStatus : 'Chưa thanh toán'}
                                                           </span>
                                                     </td>
-<td>
-    <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="₫" />
-</td>
+
+                                                    <td>
+                                                        <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="₫" />
+                                                    </td>
                                                     <td class="text-center">
                                                         <a href="order-details?orderId=${order.orderId}">
                                                             <i class="ri-eye-line"></i>

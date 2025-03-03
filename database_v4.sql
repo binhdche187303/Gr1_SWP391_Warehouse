@@ -212,10 +212,6 @@ CREATE TABLE InventoryBatches (
 );
 
 
-select* from InventoryBatches 
-select* from  PurchaseOrder
-select* from PurchaseDetails 
-
 
 --Bảng PurchaseOrder (Phiếu nhập hàng)
 CREATE TABLE PurchaseOrder (
@@ -234,8 +230,6 @@ CREATE TABLE PurchaseOrder (
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
-
-EXEC sp_help 'PurchaseDetails';
 
 --Bảng PurchaseDetails (Phiếu nhập hàng chi tiết)
 CREATE TABLE PurchaseDetails (
@@ -321,6 +315,28 @@ CREATE TABLE OrderDiscounts (
     FOREIGN KEY (order_id) REFERENCES Orders(order_id),
     FOREIGN KEY (discount_id) REFERENCES Discounts(discount_id)
 );
+
+CREATE TABLE OrderPayments (
+    payment_id INT PRIMARY KEY IDENTITY(1,1),
+    order_id INT NOT NULL,
+    deposit_amount DECIMAL(18,2) NOT NULL, -- Số tiền đặt cọc (50%)
+    remaining_amount DECIMAL(18,2) NOT NULL, -- Số tiền còn lại phải thanh toán (50%)
+    payment_status NVARCHAR(50) DEFAULT 'Đã thanh toán 50%', -- Trạng thái thanh toán
+    created_at DATETIME DEFAULT GETDATE(), -- Ngày tạo giao dịch
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id)
+);
+
+
+CREATE TABLE PackingDetails (
+    packing_id INT IDENTITY(1,1) PRIMARY KEY, -- Mã đóng gói
+    order_id INT NOT NULL, -- Mã đơn hàng
+    staff_id INT NOT NULL, -- Nhân viên đóng gói
+    status NVARCHAR(50) DEFAULT 'Chờ xử lý', -- Trạng thái đóng gói
+    packed_at DATETIME DEFAULT GETDATE(), -- Thời gian đóng gói
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+    FOREIGN KEY (staff_id) REFERENCES Users(user_id)
+);
+
 
 CREATE TRIGGER trg_AfterDiscountUpdate
 ON Discounts

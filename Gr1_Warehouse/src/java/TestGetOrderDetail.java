@@ -1,9 +1,11 @@
 
 import dao.OrderDAO;
+import dao.PackingDetailDAO;
 import dao.PurchaseOrderDAO;
 import dao.WarehouseDAO;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import model.Order;
 import model.OrderDetail;
 import model.OrderDetailDTO;
@@ -211,55 +213,81 @@ public class TestGetOrderDetail {
 //        }
 //            
 //            }
-        // Khởi tạo đối tượng DAO (giả sử có lớp OrderDAO)
-        OrderDAO orderDAO = new OrderDAO();
+//---------------------------------------------------------------------------------------------------
+//        // Khởi tạo đối tượng DAO (giả sử có lớp OrderDAO)
+//        OrderDAO orderDAO = new OrderDAO();
+//
+//        // ID đơn hàng cần test
+//        int testOrderId = 17; // Thay bằng ID thực tế trong database
+//
+//        // Gọi hàm lấy chi tiết đơn hàng
+//        OrderDetailDTO orderDetail = orderDAO.getOrderDetailById(testOrderId);
+//
+//        // Kiểm tra kết quả
+//        if (orderDetail != null) {
+//            System.out.println("===== ORDER DETAIL =====");
+//            System.out.println("Order ID: " + orderDetail.getOrder().getOrderId());
+//            System.out.println("Customer Name: " + orderDetail.getOrder().getCustomerName());
+//            System.out.println("Total Amount: " + orderDetail.getTotalAfterDiscount() + " VND");
+//            System.out.println("Order Date: " + orderDetail.getOrder().getOrderDate());
+//            System.out.println("Status: " + orderDetail.getOrder().getStatus());
+//            System.out.println("Shipping Address: " + orderDetail.getOrder().getShippingAddress());
+//            System.out.println("Phone: " + orderDetail.getOrder().getPhoneNumber());
+//            System.out.println("Email: " + orderDetail.getOrder().getEmail());
+//
+//            // Hiển thị thông tin thanh toán
+//            System.out.println("===== PAYMENT INFO =====");
+//            System.out.println("Payment Method: " + orderDetail.getPayment().getPaymentMethod());
+//            System.out.println("Payment Status: " + orderDetail.getPayment().getPaymentStatus());
+//            System.out.println("Payment Date: " + orderDetail.getPayment().getPaymentDate());
+//
+//            // Hiển thị danh sách sản phẩm
+//            System.out.println("===== ORDER ITEMS =====");
+//            for (int i = 0; i < orderDetail.getOrderDetails().size(); i++) {
+//                OrderDetail item = orderDetail.getOrderDetails().get(i);
+//                Products product = orderDetail.getProducts().get(i);
+//                ProductVariants variant = orderDetail.getProductVariants().get(i);
+//                Sizes size = orderDetail.getSizes().get(i);
+//
+//                System.out.println("- Product: " + product.getProductName());
+//                System.out.println("  SKU: " + variant.getSku());
+//                System.out.println("  Size: " + size.getSize_name());
+//                System.out.println("  Quantity: " + item.getQuantity());
+//                System.out.println("  Unit Price: " + item.getUnitPrice() + " VND");
+//                System.out.println("  Total: " + item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())) + " VND");
+//            }
+//
+//            // Tổng tiền trước giảm giá
+//            System.out.println("===== SUMMARY =====");
+//            System.out.println("Total Before Discount: " + orderDetail.getTotalBeforeDiscount() + " VND");
+//            System.out.println("Total After Discount: " + orderDetail.getTotalAfterDiscount() + " VND");
+//        } else {
+//            System.out.println("No order found with ID: " + testOrderId);
+//        }
+//    }
+//    //---------------------------------------------------------------------------------------------------
+//          PackingDetailDAO packingDetailDAO = new PackingDetailDAO();
+//            List<Map<String, Object>> orders = packingDetailDAO.getPendingPackingOrdersWithPaymentStatus();
+//
+//            System.out.println("Danh sách đơn hàng chờ đóng gói với trạng thái thanh toán:");
+//            for (Map<String, Object> order : orders) {
+//                System.out.println(order);
+//            }
 
-        // ID đơn hàng cần test
-        int testOrderId = 4; // Thay bằng ID thực tế trong database
+        // Create an instance of the class containing the getMyPackingOrders method
+        PackingDetailDAO orderService = new PackingDetailDAO();
 
-        // Gọi hàm lấy chi tiết đơn hàng
-        OrderDetailDTO orderDetail = orderDAO.getOrderDetailById(testOrderId);
-
-        // Kiểm tra kết quả
-        if (orderDetail != null) {
-            System.out.println("===== ORDER DETAIL =====");
-            System.out.println("Order ID: " + orderDetail.getOrder().getOrderId());
-            System.out.println("Customer Name: " + orderDetail.getOrder().getCustomerName());
-            System.out.println("Total Amount: " + orderDetail.getTotalAfterDiscount() + " VND");
-            System.out.println("Order Date: " + orderDetail.getOrder().getOrderDate());
-            System.out.println("Status: " + orderDetail.getOrder().getStatus());
-            System.out.println("Shipping Address: " + orderDetail.getOrder().getShippingAddress());
-            System.out.println("Phone: " + orderDetail.getOrder().getPhoneNumber());
-            System.out.println("Email: " + orderDetail.getOrder().getEmail());
-
-            // Hiển thị thông tin thanh toán
-            System.out.println("===== PAYMENT INFO =====");
-            System.out.println("Payment Method: " + orderDetail.getPayment().getPaymentMethod());
-            System.out.println("Payment Status: " + orderDetail.getPayment().getPaymentStatus());
-            System.out.println("Payment Date: " + orderDetail.getPayment().getPaymentDate());
-
-            // Hiển thị danh sách sản phẩm
-            System.out.println("===== ORDER ITEMS =====");
-            for (int i = 0; i < orderDetail.getOrderDetails().size(); i++) {
-                OrderDetail item = orderDetail.getOrderDetails().get(i);
-                Products product = orderDetail.getProducts().get(i);
-                ProductVariants variant = orderDetail.getProductVariants().get(i);
-                Sizes size = orderDetail.getSizes().get(i);
-
-                System.out.println("- Product: " + product.getProductName());
-                System.out.println("  SKU: " + variant.getSku());
-                System.out.println("  Size: " + size.getSize_name());
-                System.out.println("  Quantity: " + item.getQuantity());
-                System.out.println("  Unit Price: " + item.getUnitPrice() + " VND");
-                System.out.println("  Total: " + item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())) + " VND");
-            }
-
-            // Tổng tiền trước giảm giá
-            System.out.println("===== SUMMARY =====");
-            System.out.println("Total Before Discount: " + orderDetail.getTotalBeforeDiscount() + " VND");
-            System.out.println("Total After Discount: " + orderDetail.getTotalAfterDiscount() + " VND");
-        } else {
-            System.out.println("No order found with ID: " + testOrderId);
+        // Test with a sample staff ID (you can change this value as needed)
+        int staffId = 8; // Example staff ID
+        List<Map<String, Object>> orders = orderService.getMyPackingOrders(staffId);
+        
+        // Output the result
+        for (Map<String, Object> order : orders) {
+            System.out.println("Order ID: " + order.get("order_id"));
+            System.out.println("Status: " + order.get("status"));
+            System.out.println("Payment Status: " + order.get("payment_status"));
+            System.out.println("-----------");
         }
+    
     }
 }
