@@ -291,7 +291,23 @@
                                             </li>
                                         </ul>
                                     </li>
-                                    
+
+                                    <li class="sidebar-list">
+                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
+                                            <i class="ri-store-3-line"></i>
+                                            <span>Quản lí kích cỡ sản phẩm</span>
+                                        </a>
+                                        <ul class="sidebar-submenu">
+                                            <li>
+                                                <a href="/Gr1_Warehouse/sizelist">Danh sách kích cỡ</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="/Gr1_Warehouse/createsize">Tạo kích cỡ mới</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
                                     <li class="sidebar-list">
                                         <a class="sidebar-link sidebar-title link-nav" href="reports.html">
                                             <i class="ri-file-chart-line"></i>

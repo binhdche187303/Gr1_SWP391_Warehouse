@@ -4,7 +4,7 @@
  */
 package managerController;
 
-import dao.BrandDAO;
+import dao.SizeDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,13 +15,13 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Brands;
+import model.Sizes;
 
 /**
  *
  * @author admin
  */
-public class CreateBrand extends HttpServlet {
+public class CreateSize extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +40,10 @@ public class CreateBrand extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CreateBrand</title>");
+            out.println("<title>Servlet CreateSize</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CreateBrand at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CreateSize at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,10 +61,10 @@ public class CreateBrand extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        BrandDAO bd = new BrandDAO();
-        List<Brands> listBrands = bd.getAllBrands();
-        request.setAttribute("listBrands", listBrands);
-        request.getRequestDispatcher("/manager/create-brand.jsp").forward(request, response);
+        SizeDAO sd = new SizeDAO();
+        List<Sizes> listSizes = sd.getAllSizes();
+        request.setAttribute("listSizes", listSizes);
+        request.getRequestDispatcher("/manager/create-size.jsp").forward(request, response);
     }
 
     /**
@@ -78,19 +78,19 @@ public class CreateBrand extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        BrandDAO bd = new BrandDAO();
-        String brand_name = request.getParameter("brand_name");
+        SizeDAO sd = new SizeDAO();
+        String size_name = request.getParameter("size_name");
         try {
-            if (bd.isBrandNameExists(brand_name)) {
-                request.setAttribute("brand_name", brand_name);
-                List<Brands> listBrands = bd.getAllBrands();
-                request.setAttribute("listBrands", listBrands);
-                request.setAttribute("message", "Tên thương biệu đã tồn tại");
-                request.getRequestDispatcher("/manager/create-brand.jsp").forward(request, response);
+            if (sd.isSizeNameExists(size_name)) {
+                request.setAttribute("size_name", size_name);
+                List<Sizes> listSizes = sd.getAllSizes();
+                request.setAttribute("listSizes", listSizes);
+                request.setAttribute("message", "Tên kích cỡ đã tồn tại");
+                request.getRequestDispatcher("/manager/create-size.jsp").forward(request, response);
             } else {
-                boolean success = bd.createBrand(brand_name);
-                request.getSession().setAttribute("success", "Tạo thương hiệu mới thành công");
-                response.sendRedirect("brandlist");
+                boolean success = sd.createSize(size_name);
+                request.getSession().setAttribute("success", "Tạo kích cỡ mới thành công");
+                response.sendRedirect("sizelist");
             }
         } catch (SQLException ex) {
             System.out.println(ex);

@@ -112,6 +112,14 @@
         <servlet-name>CreateCategory</servlet-name>
         <servlet-class>managerController.CreateCategory</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SizeList</servlet-name>
+        <servlet-class>managerController.SizeList</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreateSize</servlet-name>
+        <servlet-class>managerController.CreateSize</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ArchiveServlet</servlet-name>
         <url-pattern>/archive</url-pattern>
@@ -231,6 +239,14 @@
     <servlet-mapping>
         <servlet-name>CreateCategory</servlet-name>
         <url-pattern>/createcategory</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SizeList</servlet-name>
+        <url-pattern>/sizelist</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateSize</servlet-name>
+        <url-pattern>/createsize</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login</welcome-file>
