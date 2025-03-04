@@ -132,6 +132,18 @@
         <servlet-name>MyPackingOrdersServlet</servlet-name>
         <servlet-class>PackingController.MyPackingOrdersServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>OrderPackingDetailServlet</servlet-name>
+        <servlet-class>PackingController.OrderPackingDetailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ExportInvoiceServlet</servlet-name>
+        <servlet-class>PackingController.ExportInvoiceServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ConfirmPackingServlet</servlet-name>
+        <servlet-class>PackingController.ConfirmPackingServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ArchiveServlet</servlet-name>
         <url-pattern>/archive</url-pattern>
@@ -271,6 +283,18 @@
     <servlet-mapping>
         <servlet-name>MyPackingOrdersServlet</servlet-name>
         <url-pattern>/my-packing-orders</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrderPackingDetailServlet</servlet-name>
+        <url-pattern>/orderPackingDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExportInvoiceServlet</servlet-name>
+        <url-pattern>/exportInvoice</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ConfirmPackingServlet</servlet-name>
+        <url-pattern>/confirmPackingServlet</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login</welcome-file>

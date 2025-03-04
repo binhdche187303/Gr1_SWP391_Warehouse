@@ -41,7 +41,7 @@
             <c:remove var="message" scope="session"/>
         </c:if>
 
-        <%@ include file="/manager/manager_dashboard.jsp" %>
+        <%@ include file="/packing_staff/packing_dashboard.jsp" %>
         <div class="page-wrapper compact-wrapper" id="pageWrapper">
             <!-- Page Body Start -->
             <div class="page-body-wrapper">

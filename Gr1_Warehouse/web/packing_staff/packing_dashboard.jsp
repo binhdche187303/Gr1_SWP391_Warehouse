@@ -223,46 +223,17 @@
                                         </a>
                                         <ul class="sidebar-submenu">
                                             <li>
-                                                <a href="/Gr1_Warehouse/orderlist">Danh sách đơn hàng</a>
+                                                <a href="/Gr1_Warehouse/packing-orders">Danh sách đơn hàng</a>
                                             </li>
                                             <li>
-                                                <a href="order-tracking.html">Theo dõi đơn hàng</a>
+                                                <a href="/Gr1_Warehouse/my-packing-orders">Đơn hàng của tôi</a>
                                             </li>
                                         </ul>
                                     </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-store-3-line"></i>
-                                            <span>Quản lí tồn kho</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="products.html">Chi tiết tồn kho</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="/Gr1_Warehouse/importGood">Nhập hàng</a>
-                                            </li>
-                                            <li>
-                                                <a href="/Gr1_Warehouse/supplier">Nhà cung cấp</a>
-                                            </li>
-                                            <li>
-                                                <a href="/Gr1_Warehouse/archive">Kho lưu trữ</a>
-                                            </li>
-                                            <li>
-                                                <a href="add-new-product.html">Trả hàng</a>
-                                            </li>
-                                            <li>
-                                                <a href="add-new-product.html">Lịch sử</a>
-                                            </li> 
-                                        </ul>
-                                    </li>
-
                                     <li class="sidebar-list">
                                         <a class="sidebar-link sidebar-title link-nav" href="reports.html">
                                             <i class="ri-file-chart-line"></i>
-                                            <span>Reports</span>
+                                            <span>Báo cáo</span>
                                         </a>
                                     </li>
                                 </ul>

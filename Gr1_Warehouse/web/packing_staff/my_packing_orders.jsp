@@ -41,19 +41,24 @@
             <p>Chưa có đơn hàng nào được nhận.</p>
         </c:if>
 
-        <%@ include file="/manager/manager_dashboard.jsp" %>
+        <%@ include file="/packing_staff/packing_dashboard.jsp" %>
         <div class="page-wrapper compact-wrapper" id="pageWrapper">
             <!-- Page Body Start -->
             <div class="page-body-wrapper">
                 <div class="page-body">
                     <div class="container mt-4">
                         <div class="card shadow-sm p-4">
+                            <h3>Danh sách đơn hàng của tôi</h3><br>
+
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h3>Danh sách đơn hàng đã nhận</h3>
+                                <div class="input-group mb-3">
+                                    <button id="filterButton" class="btn btn-primary">Lọc đơn chưa nhận</button>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <a href="packing-orders" class="btn btn-primary">Quay lại</a>
+                                </div>
                             </div>
-                            <div class="d-flex justify-content-end mt-3">
-                                <a href="packing-orders" class="btn btn-primary">Quay lại</a>
-                            </div><br>
+
 
                             <table class="table table-striped table-bordered">
                                 <thead class="table-light">
@@ -66,25 +71,54 @@
                                 </thead>
                                 <tbody class="text-center">
                                     <c:forEach var="order" items="${myPackingOrders}">
-                                        <tr>
+                                        <tr class="order-row" data-status="${order.status}">
                                             <td>${order.order_id}</td>
                                             <td>${order.status}</td>
                                             <td>${order.payment_status}</td>
                                             <td>
-                                                <a href="order-detail?orderId=${order.order_id}">
+                                                <a href="orderPackingDetail?orderId=${order.order_id}">
                                                     <i class="ri-eye-line"></i>
                                                 </a>
                                             </td>
                                         </tr>
+
                                     </c:forEach>
                                 </tbody>
+
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <script>
+            document.getElementById("filterButton").addEventListener("click", function () {
+                const filterButton = document.getElementById("filterButton");
+                const orderRows = document.querySelectorAll(".order-row");
+                const isFiltered = filterButton.dataset.filtered === "true";
 
+                if (isFiltered) {
+                    orderRows.forEach(row => {
+                        row.style.display = "";
+                    });
+                    filterButton.dataset.filtered = "false";
+                    filterButton.textContent = "Lọc đơn đang đóng gói";
+                } else {
+                    orderRows.forEach(row => {
+                        let status = row.dataset.status.trim();  
+                        if (status === "Đang đóng gói") {
+                            row.style.display = "";
+                        } else {
+                            row.style.display = "none";
+                        }
+                    });
+                    // Thay đổi trạng thái lọc
+                    filterButton.dataset.filtered = "true";
+                    filterButton.textContent = "Hiển thị tất cả";
+                }
+            });
+
+        </script>
         <!-- latest js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
 
