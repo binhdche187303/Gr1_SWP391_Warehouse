@@ -211,52 +211,28 @@
                 }
             }
         </script>
-                <script>
-//                    document.addEventListener("DOMContentLoaded", function () {
-//                        const warehouseDropdown = document.getElementById("warehouseDropdown");
-//                        const openProductModalBtn = document.getElementById("openProductModal");
-//                        const productTableBody = document.getElementById("productTable");
-//                        let selectedWarehouseId = "";
-//        
-//                        warehouseDropdown.addEventListener("change", function () {
-//                            selectedWarehouseId = this.value;
-//                            console.log("✅ Warehouse ID đã chọn:", selectedWarehouseId);
-//                            updateWarehouseDetails(this);
-//                        });
-//        
-//                        function updateWarehouseDetails(select) {
-//                            if (select.value) {
-//                                let warehouse = JSON.parse(select.value);
-//                                document.getElementById('warehouseName').textContent = warehouse.warehouseName;
-//                                document.getElementById('warehouseAddress').textContent = warehouse.address;
-//                                document.getElementById('warehousePhone').textContent = warehouse.phone;
-//                                selectedWarehouseId = warehouse.warehouseId;
-//                                console.log("✅ Warehouse ID cập nhật:", selectedWarehouseId);
-//                            }
-//                        }
-//                    });
-        
-        //Check đủ dữ liệu mới được submit form
-                    document.addEventListener("DOMContentLoaded", function () {
-                        document.getElementById("importForm").addEventListener("submit", function (event) {
-                            let staffDropdown = document.getElementById("staffDropdown");
-                            let warehouseDropdown = document.getElementById("warehouseDropdown");
-        
-                            if (!staffDropdown.value) {
-                                alert("Vui lòng chọn người giám sát kiểm kê.");
-                                event.preventDefault(); // Ngăn form gửi đi
-                                return;
-                            }
-        
-                            if (!warehouseDropdown.value) {
-                                alert("Vui lòng chọn kho lưu trữ.");
-                                event.preventDefault(); // Ngăn form gửi đi
-                                return;
-                            }
-                        });
-                    });
-        
-                </script>
+        <script>
+            //Check đủ dữ liệu mới được submit form
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById("importForm").addEventListener("submit", function (event) {
+                    let staffDropdown = document.getElementById("staffDropdown");
+                    let warehouseDropdown = document.getElementById("warehouseDropdown");
+
+                    if (!staffDropdown.value) {
+                        alert("Vui lòng chọn người giám sát kiểm kê.");
+                        event.preventDefault(); // Ngăn form gửi đi
+                        return;
+                    }
+
+                    if (!warehouseDropdown.value) {
+                        alert("Vui lòng chọn kho lưu trữ.");
+                        event.preventDefault(); // Ngăn form gửi đi
+                        return;
+                    }
+                });
+            });
+
+        </script>
 
         <script>
             // Lấy query string từ URL

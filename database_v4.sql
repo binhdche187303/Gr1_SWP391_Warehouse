@@ -1,16 +1,16 @@
-﻿--CREATE DATABASE SWPV1
+﻿--CREATE DATABASE SWPV3
 --GO
 
---USE SWPV1
+--USE SWPV3
 --GO
 
 --USE master;
 --GO
---ALTER DATABASE SWPV1 SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+--ALTER DATABASE SWPV3 SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 --GO
 
 
---drop database SWPV1
+--drop database SWPV3
 --go
 
 
@@ -240,9 +240,8 @@ CREATE TABLE PurchaseDetails (
     FOREIGN KEY (batch_id) REFERENCES InventoryBatches(batch_id),
 	FOREIGN KEY (variant_id) REFERENCES ProductVariants(variant_id)
 );
+	   select * from InventoryCheck
 
-
-	 select * from InventoryCheck
 --Bảng InventoryCheck (Phiếu kiểm kho)
 CREATE TABLE InventoryCheck (
     check_id INT PRIMARY KEY IDENTITY(1,1),
@@ -255,6 +254,10 @@ CREATE TABLE InventoryCheck (
     FOREIGN KEY (created_by) REFERENCES Users(user_id),
     FOREIGN KEY (reviewed_by) REFERENCES Users(user_id)
 );
+
+
+ALTER TABLE InventoryCheck
+ADD completed_at DATETIME NULL; -- Thời gian nhân viên hoàn thành kiểm kho
 
 --Bảng InventoryCheckDetails (Phiếu kiểm kho chi tiết)
 CREATE TABLE InventoryCheckDetails (
@@ -1925,3 +1928,75 @@ VALUES	(1, 1), -- Nhà phân phối Kinh Đô bán thương hiệu Kinh Đô
 select* from  PurchaseOrder
 select* from PurchaseDetails
 drop table PurchaseOrder
+	select * from Users
+select * from InventoryCheck
+
+SELECT 
+    ic.check_id,
+    ic.check_date,
+    ic.completed_at,
+    w.warehouse_name,
+    ic.status,
+    u1.fullname AS created_by_name,
+    u2.fullname AS reviewed_by_name,
+    COALESCE(SUM(icd.discrepancy), 0) AS total_discrepancy,
+    COALESCE(SUM(icd.discrepancyPrice), 0) AS total_discrepancy_value
+FROM InventoryCheck ic
+LEFT JOIN Warehouses w ON ic.warehouse_id = w.warehouse_id
+LEFT JOIN Users u1 ON ic.created_by = u1.user_id
+LEFT JOIN Users u2 ON ic.reviewed_by = u2.user_id
+LEFT JOIN InventoryCheckDetails icd ON ic.check_id = icd.check_id
+GROUP BY ic.check_id, ic.check_date, ic.completed_at, w.warehouse_name, ic.status, u1.fullname, u2.full_name;
+
+			 SELECT ic.check_id, w.warehouse_name, ic.check_date, 
+       u1.username AS created_by_name, 
+       u2.username AS reviewed_by_name, 
+       ic.status, ic.completed_at
+FROM InventoryCheck ic
+JOIN Warehouses w ON ic.warehouse_id = w.warehouse_id
+JOIN Users u1 ON ic.created_by = u1.user_id
+LEFT JOIN Users u2 ON ic.reviewed_by = u2.user_id
+WHERE ic.check_id = 1;  -- Thay số 1 bằng check_id cần kiểm tra
+
+
+SELECT 
+    ic.check_id AS inventory_check_id,        -- Mã phiếu kiểm kho
+    ic.status AS inventory_check_status,      -- Trạng thái phiếu kiểm kho
+    ic.check_date,                            -- Ngày tạo phiếu kiểm kho
+    ic.completed_at,                          -- Ngày hoàn thành (nếu có)
+    
+    -- Thông tin kho nhập
+    w.warehouse_name,                         -- Tên kho
+    w.address AS warehouse_address,           -- Địa chỉ kho
+    w.phone AS warehouse_phone,               -- Số điện thoại kho
+
+    -- Người tạo phiếu kiểm kho
+	u1.user_id AS created_by_id,
+    u1.username AS created_by_name,           -- Tên người tạo
+    u1.email AS created_by_email,             -- Email người tạo
+    u1.phone AS created_by_phone,             -- Số điện thoại người tạo
+
+    -- Người giám sát (reviewed_by)
+	u2.user_id AS reviewed_by_id,
+    u2.username AS reviewed_by_name,          -- Tên người giám sát
+    u2.email AS reviewed_by_email,            -- Email người giám sát
+    u2.phone AS reviewed_by_phone             -- Số điện thoại người giám sát
+
+FROM InventoryCheck ic
+JOIN Warehouses w ON ic.warehouse_id = w.warehouse_id
+JOIN Users u1 ON ic.created_by = u1.user_id
+LEFT JOIN Users u2 ON ic.reviewed_by = u2.user_id
+
+WHERE ic.check_id = 1;  -- Thay 1 bằng check_id cần kiểm tra
+
+		SELECT p.product_id, p.product_name, pv.variant_id, 
+       s.size_name, pv.sku, ib.batch_id, ib.quantity, ib.unit_price, ib.expiration_date 
+FROM InventoryBatches ib 
+JOIN ProductVariants pv ON ib.variant_id = pv.variant_id 
+JOIN Products p ON pv.product_id = p.product_id 
+JOIN Sizes s ON pv.size_id = s.size_id 
+WHERE ib.warehouse_id = 1 
+ORDER BY pv.variant_id, ib.batch_id;
+
+
+

@@ -672,6 +672,7 @@
 
                 async function fetchVariantId(sku) {
                     try {
+                        console.log(`🔹 Fetching Variant ID for SKU: ${sku}`);
                         const response = await fetch(`/Gr1_Warehouse/getVariantId?sku=${sku}`);
                         if (!response.ok) {
                             throw new Error("Không thể lấy Variant ID từ máy chủ.");
@@ -685,12 +686,15 @@
                 }
 
                 const productRows = document.querySelectorAll(".selected-product");
+                
                 for (const row of productRows) {
+                console.log("Row HTML:", row.innerHTML);
                     const sku = row.querySelector(".col-2:nth-child(2)").textContent.trim();
                     const expirationDate = row.querySelector(".expiry-date").value.trim();
                     let unitPrice = row.querySelector(".price").value.trim();
                     let quantity = row.querySelector(".quantity").value.trim();
                     let variantId = row.getAttribute("data-variant-id") || row.dataset.variantId;
+                    console.log("🔹 Variant ID:", variantId);
 
                     unitPrice = parseFloat(unitPrice);
                     quantity = parseInt(quantity, 10);

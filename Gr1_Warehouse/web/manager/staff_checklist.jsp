@@ -75,6 +75,7 @@
                                                 <th><small>Mã phiếu</small></th>
                                                 <th><small>Kho kiểm</small></th>
                                                 <th><small>Trạng thái</small></th>
+                                                <th><small>Ngày tạo</small></th>
                                                 <th><small>Ngày kiểm</small></th>
                                                 <th><small>Số lượng lệch</small></th>
                                                 <th><small>Tổng giá trị hàng lệch</small></th>
@@ -84,32 +85,53 @@
 
 
                                         <tbody>
-                                            <tr>
-                                                <td><small>IA100903</small></td>
-                                                <td><small>test</small></td>
-                                                <td><small><span class="badge bg-success">Đã cân bằng</span></small></td>
-                                                <td><small>Hôm qua 14:33 CH<br><span class="text-muted">@NVNghi</span></small></td>
-                                                <td><small>0 <i class="fas fa-arrow-up text-success"></i><br>-7 <i class="fas fa-arrow-down text-danger"></i></small></td>
-                                                <td><small>-3,958,019 ₫</small></td>
-                                                <td>
-                                                    <ul class="d-flex align-items-center p-0 m-0" style="list-style: none;">
-                                                        <li class="me-2">
-                                                            <a href="#">
-                                                                <i class="ri-eye-line"></i>
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <form action="/Gr1_Warehouse/editSupplier" method="get">
-                                                                <input class="form-control" type="text" name="supplier_id" value="${supplier.supplierId}" readonly hidden="">
-                                                                <button type="submit" style="background: none; border: none;">
-                                                                    <i class="ri-pencil-line"></i>
-                                                                </button>
-                                                            </form>
-                                                        </li>
-                                                    </ul>
-                                                </td>
+                                            <c:forEach var="check" items= "${inventoryChecks}">
+                                                <tr>
+                                                    <td><small>${check.checkId}</small></td>
+                                                    <td><small>${check.warehouseName}</small></td>
+                                                    <td><small><span class="badge bg-success">${check.status}</span></small></td>
+                                                    <td>
+                                                        <small>
+                                                            ${check.checkDate}
+                                                            <br><span class="text-muted">@${check.createdBy}</span>
+                                                        </small>
+                                                    </td>
+                                                    <td>
+                                                        <small>
+                                                            <c:choose>
+                                                                <c:when test="${not empty check.completeDate}">
+                                                                    <fmt:formatDate value="${check.completeDate}" pattern="dd/MM/yyyy HH:mm a" />
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <span class="text-muted">Chưa xong</span>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                            <br><span class="text-muted">@${check.reviewedBy}</span>
+                                                        </small>
+                                                    </td>
+                                                    <td><small>0 <i class="fas fa-arrow-up text-success"></i><br>-7 <i class="fas fa-arrow-down text-danger"></i></small></td>
+                                                    <td><small>-3,958,019 ₫</small></td>
+                                                    <td>
+                                                        <ul class="d-flex align-items-center p-0 m-0" style="list-style: none;">
+                                                            <li class="me-2">
+                                                                <a href="#">
+                                                                    <i class="ri-eye-line"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <form action="/Gr1_Warehouse/staff-checklist-details" method="get">
+                                                                    <input type="hidden" name="checkId" value="${check.checkId}">
+                                                                    <button type="submit" style="background: none; border: none;">
+                                                                        <i class="ri-pencil-line"></i>
+                                                                    </button>
+                                                                </form>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
 
-                                            </tr>
+                                                </tr>
+                                            </c:forEach>
+
                                             <!-- Repeat rows as needed -->
                                         </tbody>
                                     </table>

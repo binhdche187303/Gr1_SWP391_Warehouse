@@ -4,24 +4,29 @@
  */
 package model;
 
+import java.sql.Timestamp;
+
 public class InventoryCheck {
     private int checkId;
-    private String checkDate;
-    private int warehouseId;
     private String status;
-    private int createdBy;
-    private Integer reviewedBy;
+    private Timestamp checkDate;
+    private Timestamp completedAt;
+    private Warehouse warehouse;
+    private User createdBy;
+    private User reviewedBy;
 
-    public InventoryCheck() {
-    }
-
-    public InventoryCheck(int checkId, String checkDate, int warehouseId, String status, int createdBy, Integer reviewedBy) {
+    public InventoryCheck(int checkId, String status, Timestamp checkDate, Timestamp completedAt,
+                          Warehouse warehouse, User createdBy, User reviewedBy) {
         this.checkId = checkId;
-        this.checkDate = checkDate;
-        this.warehouseId = warehouseId;
         this.status = status;
+        this.checkDate = checkDate;
+        this.completedAt = completedAt;
+        this.warehouse = warehouse;
         this.createdBy = createdBy;
         this.reviewedBy = reviewedBy;
+    }
+
+    public InventoryCheck() {
     }
 
     public int getCheckId() {
@@ -32,22 +37,6 @@ public class InventoryCheck {
         this.checkId = checkId;
     }
 
-    public String getCheckDate() {
-        return checkDate;
-    }
-
-    public void setCheckDate(String checkDate) {
-        this.checkDate = checkDate;
-    }
-
-    public int getWarehouseId() {
-        return warehouseId;
-    }
-
-    public void setWarehouseId(int warehouseId) {
-        this.warehouseId = warehouseId;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -56,19 +45,43 @@ public class InventoryCheck {
         this.status = status;
     }
 
-    public int getCreatedBy() {
+    public Timestamp getCheckDate() {
+        return checkDate;
+    }
+
+    public void setCheckDate(Timestamp checkDate) {
+        this.checkDate = checkDate;
+    }
+
+    public Timestamp getCompletedAt() {
+        return completedAt;
+    }
+
+    public void setCompletedAt(Timestamp completedAt) {
+        this.completedAt = completedAt;
+    }
+
+    public Warehouse getWarehouse() {
+        return warehouse;
+    }
+
+    public void setWarehouse(Warehouse warehouse) {
+        this.warehouse = warehouse;
+    }
+
+    public User getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(int createdBy) {
+    public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
     }
 
-    public Integer getReviewedBy() {
+    public User getReviewedBy() {
         return reviewedBy;
     }
 
-    public void setReviewedBy(Integer reviewedBy) {
+    public void setReviewedBy(User reviewedBy) {
         this.reviewedBy = reviewedBy;
     }
 }

@@ -113,7 +113,7 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect("warehouse/manager/dashboard");
                 break;
             case 4:  // Warehouse staff
-                response.sendRedirect("warehouse/staff/home");
+                response.sendRedirect("/Gr1_Warehouse/staff-checklist");
                 break;
             case 5:  // Packing staff
                 response.sendRedirect("packing/staff/dashboard");
@@ -242,7 +242,7 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect("warehouse/manager/dashboard");
                 break;
             case 4:  // Warehouse staff
-                response.sendRedirect("warehouse/staff/home");
+                response.sendRedirect("/Gr1_Warehouse/staff-checklist");
                 break;
             case 5:  // Packing staff
                 response.sendRedirect("packing/staff/dashboard");
