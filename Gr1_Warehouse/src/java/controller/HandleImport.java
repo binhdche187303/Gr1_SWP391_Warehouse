@@ -114,7 +114,7 @@ public class HandleImport extends HttpServlet {
 
             System.out.println("Số lượng sản phẩm: " + variantIds.length);
 
-// Lấy file ảnh hóa đơn từ request
+            // Lấy file ảnh hóa đơn từ request
             Part billImgPart = request.getPart("billImgUrl");
             String billImgUrl = null;
 

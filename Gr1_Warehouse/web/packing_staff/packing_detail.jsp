@@ -204,75 +204,75 @@
             </div>
         </div>
         <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const confirmBtn = document.getElementById('confirmOrderBtn');
-    const confirmSubmitBtn = document.getElementById('confirmOrderSubmit');
+            document.addEventListener('DOMContentLoaded', function () {
+                const confirmBtn = document.getElementById('confirmOrderBtn');
+                const confirmSubmitBtn = document.getElementById('confirmOrderSubmit');
 
-    let selectedOrderId = null;
+                let selectedOrderId = null;
 
-    confirmBtn.addEventListener('click', function () {
-        const orderIdElement = document.getElementById("order-id");
-        console.log("orderIdElement:", orderIdElement); // Check if it's accessible
+                confirmBtn.addEventListener('click', function () {
+                    const orderIdElement = document.getElementById("order-id");
+                    console.log("orderIdElement:", orderIdElement); // Check if it's accessible
 
-        if (!orderIdElement) {
-            alert("⚠️ Không tìm thấy mã đơn hàng!");
-            return;
-        }
+                    if (!orderIdElement) {
+                        alert("⚠️ Không tìm thấy mã đơn hàng!");
+                        return;
+                    }
 
-        selectedOrderId = orderIdElement.value.trim();
-        console.log("Selected Order ID:", selectedOrderId); // Log it here to check
+                    selectedOrderId = orderIdElement.value.trim();
+                    console.log("Selected Order ID:", selectedOrderId); // Log it here to check
 
-        if (!selectedOrderId) {
-            alert("⚠️ Không có mã đơn hàng!");
-            return;
-        }
+                    if (!selectedOrderId) {
+                        alert("⚠️ Không có mã đơn hàng!");
+                        return;
+                    }
 
-        document.getElementById("confirmOrderId").innerText = selectedOrderId;
-        $('#confirmModal').modal('show');
+                    document.getElementById("confirmOrderId").innerText = selectedOrderId;
+                    $('#confirmModal').modal('show');
 
-        // Log the orderId before sending the request
-        console.log("Sending orderId:", selectedOrderId);  // Log the orderId being sent
-    });
+                    // Log the orderId before sending the request
+                    console.log("Sending orderId:", selectedOrderId);  // Log the orderId being sent
+                });
 
-    confirmSubmitBtn.addEventListener('click', function () {
-        if (!selectedOrderId)
-            return;
+                confirmSubmitBtn.addEventListener('click', function () {
+                    if (!selectedOrderId)
+                        return;
 
-        fetch("/Gr1_Warehouse/confirmPackingServlet", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({'orderId': selectedOrderId})
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log("✅ JSON đã xử lý:", data);
+                    fetch("/Gr1_Warehouse/confirmPackingServlet", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams({'orderId': selectedOrderId})
+                    })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log("✅ JSON đã xử lý:", data);
 
-            if (data.success === true) {
-                console.log("🎉 Xác nhận thành công!");
+                                if (data.success === true) {
+                                    console.log("🎉 Xác nhận thành công!");
 
-                // Ẩn modal xác nhận
-                $('#confirmModal').modal('hide');
+                                    // Ẩn modal xác nhận
+                                    $('#confirmModal').modal('hide');
 
-                // Hiển thị modal thông báo
-                $('#depositModal').modal('show');
+                                    // Hiển thị modal thông báo
+                                    $('#depositModal').modal('show');
 
-                // 🔥 TỰ ĐỘNG RELOAD SAU 1.5 GIÂY
-                setTimeout(() => {
-                    location.reload();
-                }, 1500);
-            } else {
-                console.log("⚠️ Xác nhận thất bại!");
-                alert("Xác nhận đơn hàng thất bại. Vui lòng thử lại!");
-            }
-        })
-        .catch(error => {
-            console.error("❌ Lỗi:", error);
-            alert("Có lỗi xảy ra: " + error.message);
-        });
-    });
-});
+                                    // 🔥 TỰ ĐỘNG RELOAD SAU 1.5 GIÂY
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 1500);
+                                } else {
+                                    console.log("⚠️ Xác nhận thất bại!");
+                                    alert("Xác nhận đơn hàng thất bại. Vui lòng thử lại!");
+                                }
+                            })
+                            .catch(error => {
+                                console.error("❌ Lỗi:", error);
+                                alert("Có lỗi xảy ra: " + error.message);
+                            });
+                });
+            });
         </script>
 
 

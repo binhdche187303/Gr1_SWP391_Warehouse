@@ -77,7 +77,17 @@ public class UpdatePaymentStatusServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
+        // Lấy trạng thái hiện tại của đơn hàng
+        String currentStatus = orderService.getOrderStatus(orderId);
+
+        // Kiểm tra nếu trạng thái thanh toán đã là "Thanh toán 50%"
+        if ("Thanh toán 50%".equals(currentStatus)) {
+            response.getWriter().write("{\"status\": \"error\", \"message\": \"Đơn hàng đã thanh toán 50% rồi.\"}");
+            return; // Dừng xử lý nếu trạng thái đã là "Thanh toán 50%"
+        }
+
         if ("Thanh toán 50%".equals(status)) {
+            // Cập nhật trạng thái và lưu đặt cọc vào bảng OrderPayments
             boolean isUpdated = orderService.updatePaymentStatus(orderId, status);
             boolean isInserted = orderService.insertOrderDeposit(orderId); // Thêm đặt cọc vào bảng OrderPayments
 

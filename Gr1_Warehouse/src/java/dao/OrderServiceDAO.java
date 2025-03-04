@@ -48,7 +48,6 @@ public class OrderServiceDAO extends DBContext {
                 System.err.println("❌ Không tìm thấy đơn hàng ID: " + orderId);
                 return "Không tìm thấy đơn hàng. Vui lòng thử lại sau.";
             }
-
             // Tạo thông báo yêu cầu thanh toán cọc 50%
             String message = "Đơn hàng #" + orderId + " của bạn đã được xác nhận. Vui lòng thanh toán cọc 50%. Cảm ơn bạn đã mua hàng!";
             return message;
@@ -151,6 +150,25 @@ public class OrderServiceDAO extends DBContext {
             e.printStackTrace();
         }
         return null;
+    }
+
+// Phương thức để lấy trạng thái hiện tại của đơn hàng
+    public String getOrderStatus(int orderId) {
+        String status = "";
+        String sql = "SELECT payment_status FROM Payment WHERE order_id = ?";  // Sửa lại để đúng với trường `order_id`
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setInt(1, orderId);  // Sử dụng `orderId` làm tham số truy vấn
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                status = rs.getString("payment_status");  // Truyền đúng tên cột `payment_status` vào
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return status;
     }
 
 }

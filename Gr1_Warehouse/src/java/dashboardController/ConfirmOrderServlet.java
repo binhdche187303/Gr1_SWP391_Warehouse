@@ -84,9 +84,7 @@ public class ConfirmOrderServlet extends HttpServlet {
         // Trả về JSON
         if (isConfirmed) {
             try {
-                // Gửi thông báo yêu cầu thanh toán cọc 50% mà không kèm link thanh toán
                 String notificationMessage = orderService.sendDepositNotification(orderId);
-
                 // Trả về thông báo dưới dạng JSON, không cần trả về QR code hay link MoMo
                 response.getWriter().write("{\"status\": \"success\", \"message\": \"" + notificationMessage + "\"}");
             } catch (Exception e) {

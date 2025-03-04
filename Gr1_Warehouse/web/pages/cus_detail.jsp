@@ -50,11 +50,17 @@
             <div class="order-info mb-4">
                 <p><strong>Mã đơn hàng:</strong> #${orderDetail.order.orderId}</p>
                 <p><strong>Ngày đặt hàng:</strong> ${orderDetail.order.orderDate}</p>
-                <p><strong>Trạng thái:</strong> 
+                <p><strong>Trạng thái đơn hàng:</strong> 
                     <span class="badge ${orderDetail.order.status eq 'Pending' ? 'bg-warning' : 'bg-success'}">
                         ${orderDetail.order.status}
                     </span>
                 </p>
+                <p><strong>Trạng thái thanh toán:</strong> 
+                    <span class="badge ${paymentStatus eq 'Thanh toán 50%' ? 'bg-info' : (paymentStatus eq 'Đã thanh toán' ? 'bg-success' : 'bg-danger')}">
+                        ${paymentStatus}
+                    </span>
+                </p>
+
                 <p><strong>Tổng:</strong> 
                     <fmt:formatNumber value="${orderDetail.order.totalAmount}" type="currency" currencySymbol="VND" groupingUsed="true"/>
                 </p>
@@ -133,20 +139,44 @@
                     </div>
                 </div>
             </div>
-
-
-
-
-
-
         </div>
     </div>
 
     <%@ include file="/includes/footer.jsp" %>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Lắng nghe sự kiện click trên nút xác nhận đơn hàng
             document.getElementById('confirmOrderBtn').addEventListener('click', function () {
                 const orderIdElement = document.getElementById("order-id"); // Lấy phần tử order-id
+                const orderStatusElement = document.querySelector(".badge"); // Lấy phần tử chứa trạng thái đơn hàng
+
+                if (orderStatusElement) {
+                    const orderStatus = orderStatusElement.textContent.trim(); // Lấy nội dung trạng thái đơn hàng và loại bỏ dấu cách thừa
+                    console.log("Trạng thái đơn hàng:", orderStatus);
+
+                    // Kiểm tra nếu trạng thái đơn hàng đang đóng gói
+                    if (orderStatus === 'Đang đóng gói') {
+                        alert("⚠️ Đơn hàng của bạn đang được đóng gói!");
+                        return; // Ngừng thực thi nếu trạng thái là 'Đang đóng gói'
+                    }
+
+                    // Kiểm tra nếu trạng thái đơn hàng đã gửi hàng
+                    if (orderStatus === 'Đã gửi hàng') {
+                        alert("⚠️ Đơn hàng của bạn đã được gửi đi. Bạn không thể xác nhận đơn hàng nữa.");
+                        return; // Ngừng thực thi nếu trạng thái là 'Đã gửi hàng'
+                    }
+
+                    // Kiểm tra nếu trạng thái đơn hàng chưa xác nhận
+                    if (orderStatus !== 'Đã xác nhận') {
+                        alert("⚠️ Đơn hàng chưa được xác nhận! Bạn không thể xác nhận đơn hàng khi trạng thái chưa xác nhận.");
+                        return; // Ngừng thực thi nếu trạng thái không phải 'Đã xác nhận'
+                    }
+                } else {
+                    alert("⚠️ Không tìm thấy trạng thái đơn hàng.");
+                    return;
+                }
+
+                // Kiểm tra nếu không tìm thấy mã đơn hàng
                 if (!orderIdElement) {
                     alert("⚠️ Không tìm thấy mã đơn hàng!");
                     return;
@@ -156,7 +186,7 @@
                 console.log("Order ID:", orderId); // Kiểm tra giá trị orderId
 
                 if (!orderId) {
-                    alert("⚠️ Không có mã đơn hàng!");
+                    alert("⚠️ Không có mã đơn hàng!"); // Nếu orderId rỗng, hiển thị cảnh báo
                     return;
                 }
 
@@ -164,61 +194,74 @@
                 fetch('/Gr1_Warehouse/confirmOrder', {
                     method: 'POST',
                     body: new URLSearchParams({
-                        'orderId': orderId
+                        'orderId': orderId // Truyền orderId vào body của yêu cầu POST
                     })
                 })
                         .then(response => response.json()) // Đảm bảo phản hồi trả về dưới dạng JSON
                         .then(data => {
-                            console.log("Dữ liệu nhận được từ server:", data); // Log dữ liệu nhận được từ server
+                            console.log("Dữ liệu nhận được từ server:", data);
 
                             // Xử lý phản hồi thành công
                             if (data.status === "success") {
-                                console.log("Xác nhận thành công: ", data.message); // Log khi xác nhận thành công
-                                document.getElementById('modalMessage').innerText = data.message; // Hiển thị thông báo lên modal
+                                console.log("Xác nhận thành công: ", data.message);
+                                document.getElementById('modalMessage').innerText = data.message;
 
                                 // Ẩn phần QR code nếu không cần thiết
-                                document.getElementById("qrCodeContainer").style.display = 'none'; // Ẩn QR code container
+                                document.getElementById("qrCodeContainer").style.display = 'none';
 
                                 // Hiển thị modal yêu cầu khách cọc tiền
                                 $('#depositModal').modal('show');
                             } else {
                                 // Nếu xác nhận thất bại, hiển thị thông báo lỗi
-                                console.log("Xác nhận thất bại: ", data.message); // Log khi xác nhận thất bại
-                                document.getElementById('modalMessage').innerText = data.message; // Hiển thị thông báo lỗi
-                                $('#depositModal').modal('show'); // Hiển thị modal yêu cầu khách cọc tiền
+                                console.log("Xác nhận thất bại: ", data.message);
+                                document.getElementById('modalMessage').innerText = data.message;
+                                $('#depositModal').modal('show');
                             }
                         })
                         .catch(error => {
-                            console.error('Error:', error); // Log lỗi nếu có
+                            console.error('Error:', error);
                             alert('Có lỗi xảy ra. Vui lòng thử lại sau.');
                         });
             });
+        });
 
-            // Handle confirm payment
-            document.getElementById('confirmPaymentBtn').addEventListener('click', function () {
-                // Update payment status to "50% deposit" when confirm payment button is clicked
-                fetch('/Gr1_Warehouse/updatePaymentStatus', {
-                    method: 'POST',
-                    body: new URLSearchParams({
-                        'orderId': document.getElementById('order-id').value,
-                        'status': 'Thanh toán 50%'
-                    })
+
+        // Xử lý xác nhận thanh toán
+        document.getElementById('confirmPaymentBtn').addEventListener('click', function () {
+
+            // Cập nhật trạng thái thanh toán thành "50% deposit" khi nút xác nhận thanh toán được click
+            fetch('/Gr1_Warehouse/updatePaymentStatus', {
+                method: 'POST',
+                body: new URLSearchParams({
+                    'orderId': document.getElementById('order-id').value, // Lấy giá trị orderId từ input hidden
+                    'status': 'Thanh toán 50%' // Cập nhật trạng thái thanh toán
                 })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status === "success") {
-                                alert("Thanh toán cọc 50% đã được xác nhận!");
-                                $('#depositModal').modal('hide');
-                            } else {
-                                alert("Có lỗi xảy ra khi cập nhật trạng thái thanh toán.");
-                            }
-                        })
-                        .catch(error => {
-                            alert("Có lỗi xảy ra khi cập nhật trạng thái thanh toán.");
-                        });
+            })
+                    .then(response => response.json()) // Đảm bảo phản hồi trả về dưới dạng JSON
+                    .then(data => {
+                        // Nếu cập nhật thành công
+                        if (data.status === "success") {
+                            alert("Thanh toán cọc 50% đã được xác nhận!"); // Thông báo thanh toán thành công
+                            $('#depositModal').modal('hide'); // Đóng modal sau khi thanh toán thành công
+                        } else {
+                            // Nếu đã thanh toán 50% rồi
+                            alert("Đã thanh toán 50% giá trị đơn hàng!"); // Thông báo rằng thanh toán 50% đã được xác nhận
+                        }
+                    })
+                    .catch(error => {
+                        // Nếu có lỗi xảy ra trong quá trình cập nhật trạng thái
+                        alert("Có lỗi xảy ra khi cập nhật trạng thái thanh toán."); // Hiển thị thông báo lỗi
+                    });
+        });
+
+
+        document.querySelectorAll('[data-dismiss="modal"]').forEach(function (button) {
+            button.addEventListener('click', function () {
+                $('#depositModal').modal('hide');
             });
         });
     </script>
+
 
 
 

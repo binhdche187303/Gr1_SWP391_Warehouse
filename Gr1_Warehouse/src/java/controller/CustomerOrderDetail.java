@@ -107,11 +107,15 @@ public class CustomerOrderDetail extends HttpServlet {
             BigDecimal depositAmount = orderPayment.getDepositAmount() != null ? orderPayment.getDepositAmount() : BigDecimal.ZERO;
             remainingAmount = totalAmount.subtract(depositAmount);
         }
+        String paymentStatus = orderPayment != null ? orderPayment.getPaymentStatus() : "Chưa có trạng thái thanh toán";
+
 
         // 🟢 Đặt thông tin vào request để gửi đến JSP
         request.setAttribute("orderDetail", selectedOrder);
         request.setAttribute("orderPayment", orderPayment);
         request.setAttribute("remainingAmount", remainingAmount);
+        request.setAttribute("paymentStatus", paymentStatus);
+
         request.getRequestDispatcher("pages/cus_detail.jsp").forward(request, response);
     }
 
