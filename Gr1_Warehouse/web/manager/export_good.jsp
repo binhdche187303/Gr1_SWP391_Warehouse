@@ -237,9 +237,19 @@
         <script>
             function applyDiscount() {
                 console.log("🔹 Bắt đầu gọi API apply-discount");
+                // Lấy trạng thái đơn hàng
+                const orderStatus = document.querySelector(".badge.bg-primary.p-2").innerText.trim();
 
-                const orderId = document.getElementById("order-id").value; 
-                const discountCode = document.getElementById("discount-code").value.trim(); 
+                // Danh sách trạng thái không cho phép áp dụng mã giảm giá
+                const restrictedStatuses = ["Đã xác nhận", "Đang đóng gói", "Đã gửi hàng"];
+
+                if (restrictedStatuses.includes(orderStatus)) {
+                    alert("🚫 Đơn hàng đã được xử lý (" + orderStatus + "), không thể áp dụng mã giảm giá!");
+                    return;
+                }
+
+                const orderId = document.getElementById("order-id").value;
+                const discountCode = document.getElementById("discount-code").value.trim();
 
                 // Kiểm tra giá trị orderId và discountCode trước khi gửi request
                 console.log("Order ID:", orderId);
@@ -302,29 +312,43 @@
 
                 let selectedOrderId = null;
 
-                // Khi nhấn nút xác nhận ngoài giao diện
                 confirmBtn.addEventListener('click', function () {
                     const orderIdElement = document.getElementById("order-id");
-                    if (!orderIdElement) {
-                        alert("⚠️ Không tìm thấy mã đơn hàng!");
+                    const orderStatusElement = document.querySelector(".badge.bg-primary.p-2");
+
+                    if (!orderIdElement || !orderStatusElement) {
+                        alert("⚠️ Không tìm thấy thông tin đơn hàng!");
                         return;
                     }
 
                     selectedOrderId = orderIdElement.value.trim();
+                    const orderStatus = orderStatusElement.innerText.trim();
+
                     if (!selectedOrderId) {
                         alert("⚠️ Không có mã đơn hàng!");
                         return;
                     }
 
+                    // Kiểm tra trạng thái đơn hàng và hiển thị thông báo tương ứng
+                    if (orderStatus === "Đã gửi hàng") {
+                        alert("🚚 Đơn hàng đã được gửi, không thể xác nhận lại!");
+                        return;
+                    } else if (orderStatus === "Đang đóng gói") {
+                        alert("📦 Đơn hàng đang được đóng gói, không thể xác nhận lại!");
+                        return;
+                    } else if (orderStatus === "Đã xác nhận") {
+                        alert("✅ Đơn hàng đã được xác nhận trước đó!");
+                        return;
+                    }
+
+                    // Nếu trạng thái hợp lệ, hiển thị modal xác nhận
                     document.getElementById("confirmOrderId").innerText = selectedOrderId;
                     $('#confirmModal').modal('show');
                 });
 
-                // Khi nhấn "Xác Nhận" trong modal
                 confirmSubmitBtn.addEventListener('click', function () {
                     if (!selectedOrderId)
                         return;
-
                     fetch('/Gr1_Warehouse/manager-confirmOrder', {
                         method: 'POST',
                         headers: {
@@ -335,16 +359,12 @@
                             .then(response => response.json())
                             .then(data => {
                                 console.log("✅ JSON đã xử lý:", data);
-
                                 if (data.status === "success") {
                                     console.log("🎉 Xác nhận thành công!");
-
                                     // Ẩn modal xác nhận
                                     $('#confirmModal').modal('hide');
-
                                     // Hiển thị modal thông báo
                                     $('#depositModal').modal('show');
-
                                     // 🔥 TỰ ĐỘNG RELOAD SAU 1.5 GIÂY
                                     setTimeout(() => {
                                         location.reload();
@@ -359,7 +379,8 @@
                                 alert("Có lỗi xảy ra: " + error.message);
                             });
                 });
-            });
+            }
+            );
         </script>
 
         <!-- latest js -->

@@ -62,53 +62,114 @@
                                         <div class="title-header option-title">
                                             <h5>Danh sách phiếu nhập hàng</h5>
                                             <div class="d-inline-flex gap-2">
+                                                <!-- Tạo phiếu nhập kho button -->
                                                 <a href="/Gr1_Warehouse/handleImport" class="btn btn-solid">Tạo phiếu nhập kho</a>
                                             </div>
                                         </div>
-                                        <div>
-                                            <div>
-                                                <table class="table all-package order-table theme-table" id="table_id">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Mã tham chiếu</th>
-                                                            <th>Thời gian nhập</th>
-                                                            <th>Nhà cung cấp</th>
-                                                            <th>Trạng thái</th>
-                                                            <th>Tổng tiền</th>
-                                                            <th>Chi tiết</th>
-                                                        </tr>
-                                                    </thead>
-
-                                                    <tbody>
-                                                        <c:forEach var="order" items="${orders}">
-                                                            <tr>
-                                                                <td>${order.referenceCode}</td>
-                                                                <td>
-                                                                    <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy"/>
-                                                                </td>                                                                <td>${order.supplierId}</td>
-                                                                <td>${order.status}</td>
-                                                                <td>${order.formattedTotalAmount}</td>
-                                                                <td>
-                                                                    <a href="importGoodDetail?order_id=${order.orderId}">
-                                                                        <i class="ri-eye-line"></i>
-                                                                    </a>  
-                                                                </td>
-                                                            </tr>
-                                                        </c:forEach>
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                        <div class="d-inline-flex align-items-center gap-2 mb-3">
+                                            <!-- Label for sorting -->
+                                            <h7 class="mb-0" style="font-size: 1rem;">Sắp xếp theo ngày nhập kho:</h7>
+                                            <select id="sortDateDropdown" class="form-control form-control-sm w-auto" style="font-size: 0.875rem;">
+                                                <option value="none">Tất cả đơn hàng</option>
+                                                <option value="asc">Sắp xếp tăng dần</option>
+                                                <option value="desc">Sắp xếp giảm dần</option>
+                                            </select>
                                         </div>
+
+
+
+
+                                        <table class="table all-package order-table theme-table" id="table_id">
+                                            <thead>
+                                                <tr>
+                                                    <th>Mã tham chiếu</th>
+                                                    <th>Thời gian nhập</th>
+                                                    <th>Nhà cung cấp</th>
+                                                    <th>Trạng thái</th>
+                                                    <th>Tổng tiền</th>
+                                                    <th>Chi tiết</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                <c:forEach var="order" items="${orders}">
+                                                    <tr>
+                                                        <td>${order.referenceCode}</td>
+                                                        <td>
+                                                            <fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy"/>
+                                                        </td>                                                                <td>${order.supplierId}</td>
+                                                        <td>${order.status}</td>
+                                                        <td>${order.formattedTotalAmount}</td>
+                                                        <td>
+                                                            <a href="importGoodDetail?order_id=${order.orderId}">
+                                                                <i class="ri-eye-line"></i>
+                                                            </a>  
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Table End -->
                 </div>
-                <!-- Page Body End -->
             </div>
+            <!-- Table End -->
         </div>
+        <!-- Page Body End -->
+
+
+        <script>
+            // Function to handle the sorting logic
+            document.getElementById('sortDateDropdown').addEventListener('change', function () {
+                var sortOrder = this.value; // Get the selected value (asc, desc, or none)
+                sortTable(sortOrder); // Call the sorting function
+            });
+
+            // Function to sort the table based on the selected order
+            function sortTable(sortOrder) {
+                var table = document.getElementById("table_id");
+                var rows = Array.from(table.rows).slice(1); // Get all rows except the header row
+                var sortedRows;
+
+                // Reset if no sort option is selected
+                if (sortOrder === "none") {
+                    location.reload(); // Reload the page to reset all rows (or you can filter rows manually if you prefer)
+                    return;
+                }
+
+                // Sorting logic
+                if (sortOrder === "asc") {
+                    sortedRows = rows.sort((a, b) => {
+                        var dateA = parseDate(a.cells[1].innerText); // Assuming the "Date" is in the second column
+                        var dateB = parseDate(b.cells[1].innerText);
+                        return dateA - dateB; // Sort in ascending order
+                    });
+                } else if (sortOrder === "desc") {
+                    sortedRows = rows.sort((a, b) => {
+                        var dateA = parseDate(a.cells[1].innerText);
+                        var dateB = parseDate(b.cells[1].innerText);
+                        return dateB - dateA; // Sort in descending order
+                    });
+                }
+
+                // Append the sorted rows back to the table
+                sortedRows.forEach(row => table.appendChild(row));
+            }
+
+            // Helper function to parse the date in dd/MM/yyyy format to a Date object
+            function parseDate(dateString) {
+                var parts = dateString.split('/');
+                // Date format: dd/MM/yyyy -> new Date(year, month, day)
+                return new Date(parts[2], parts[1] - 1, parts[0]);
+            }
+        </script>
+
+
+
+
 
         <!-- latest js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>

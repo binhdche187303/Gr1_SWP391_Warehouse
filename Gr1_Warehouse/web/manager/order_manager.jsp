@@ -43,21 +43,59 @@
                 <div class="page-body">
                     <div class="container mt-4">
                         <div class="card shadow-sm p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h1 class="h4">Danh sách đơn hàng</h1>
-                                <div class="d-flex">
-                                    <button class="btn btn-outline-secondary me-2">Xuất dữ liệu</button>
-                                    <button class="btn btn-primary">Tạo đơn hàng</button>
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <!-- Cột bên trái: Tiêu đề + Lọc trạng thái + Lọc thanh toán -->
+                                <div class="d-flex flex-column gap-2">
+                                    <!-- Tiêu đề -->
+                                    <h4 class="mb-0">Danh sách đơn hàng</h4>
+
+                                    <!-- Lọc trạng thái đơn hàng -->
+                                    <div class="d-flex align-items-center gap-2">
+                                        <label class="fw-bold me-2">Lọc trạng thái:</label>
+                                        <div class="btn-group d-flex flex-wrap" role="group">
+                                            <input type="checkbox" class="btn-check order-status-filter" id="status1" value="Chờ xác nhận">
+                                            <label class="btn btn-outline-primary" for="status1">Chờ xác nhận</label>
+
+                                            <input type="checkbox" class="btn-check order-status-filter" id="status2" value="Đã xác nhận">
+                                            <label class="btn btn-outline-primary" for="status2">Đã xác nhận</label>
+
+                                            <input type="checkbox" class="btn-check order-status-filter" id="status3" value="Đang đóng gói">
+                                            <label class="btn btn-outline-primary" for="status3">Đang đóng gói</label>
+
+                                            <input type="checkbox" class="btn-check order-status-filter" id="status4" value="Đã gửi hàng">
+                                            <label class="btn btn-outline-primary" for="status4">Đã gửi hàng</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Lọc trạng thái thanh toán -->
+                                    <div class="d-flex align-items-center gap-2">
+                                        <label class="fw-bold me-2">Thanh toán:</label>
+                                        <div class="btn-group d-flex flex-wrap" role="group">
+                                            <input type="checkbox" class="btn-check payment-status-filter" id="payment1" value="Chờ xác nhận">
+                                            <label class="btn btn-outline-success" for="payment1">Chờ xác nhận</label>
+
+                                            <input type="checkbox" class="btn-check payment-status-filter" id="payment2" value="Thanh toán 50%">
+                                            <label class="btn btn-outline-success" for="payment2">Thanh toán 50%</label>
+
+                                            <input type="checkbox" class="btn-check payment-status-filter" id="payment3" value="Thanh toán 100%">
+                                            <label class="btn btn-outline-success" for="payment3">Thanh toán 100%</label>
+                                        </div>
+                                    </div>
                                 </div>
 
+                                <!-- Dropdown sắp xếp (luôn nằm bên phải) -->
+                                <div class="dropdown ms-auto">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown">
+                                        <i class="ri-sort-asc"></i> Ngày tạo
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><button class="dropdown-item" id="sortAsc">Sắp xếp tăng</button></li>
+                                        <li><button class="dropdown-item" id="sortDesc">Sắp xếp giảm</button></li>
+                                    </ul>
+                                </div>
                             </div>
-                            <div class="input-group mb-3">
-                                <button class="btn btn-outline-secondary">
-                                    <i class="fas fa-filter"></i> Thêm điều kiện lọc
-                                </button>
-                                <input type="text" class="form-control" placeholder="Tìm kiếm">
-                                <button class="btn btn-outline-secondary">Lưu bộ lọc</button>
-                            </div>
+
+
                             <table class="table table-striped table-bordered">
                                 <thead class="table-light">
                                     <tr class="small fw-light">
@@ -82,7 +120,7 @@
                                                 <span class="badge
                                                       ${order.status eq 'Pending' ? 'bg-warning' : 
                                                         order.status eq 'Completed' ? 'bg-success' : 
-                                                        order.status eq 'Cancelled' ? 'bg-danger' : 
+                                                        order.status eq 'Đã gửi hàng' ? 'bg-danger' : 
                                                         order.status eq 'Đã xác nhận' ? 'bg-primary' : 'bg-secondary'}">
                                                           ${order.status}
                                                       </span>
@@ -114,12 +152,140 @@
 
                                         </tbody>
                                     </table>
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        <span id="pagination-info" class="small fw-light"></span>
+                                        <nav>
+                                            <ul class="pagination pagination-sm mb-0">
+                                                <li class="page-item">
+                                                    <button class="page-link small fw-light" id="prevPage">Trước</button>
+                                                </li>
+                                                <li class="page-item">
+                                                    <ul id="pagination-list" class="pagination pagination-sm mb-0 mx-2"></ul>
+                                                </li>
+                                                <li class="page-item">
+                                                    <button class="page-link small fw-light" id="nextPage">Sau</button>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+
                                 </div>
                             </div>
 
                         </div>
                     </div>
                 </div>
+
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        document.querySelectorAll(".order-status-filter, .payment-status-filter").forEach(checkbox => {
+                            checkbox.addEventListener("change", filterOrders);
+                        });
+                    });
+                    function filterOrders() {
+                        let selectedOrderStatuses = Array.from(document.querySelectorAll(".order-status-filter:checked")).map(cb => cb.value);
+                        let selectedPaymentStatuses = Array.from(document.querySelectorAll(".payment-status-filter:checked")).map(cb => cb.value);
+                        document.querySelectorAll("tbody tr").forEach(row => {
+                            let orderStatusElement = row.querySelector("td:nth-child(4) span");
+                            let paymentStatusElement = row.querySelector("td:nth-child(5) span");
+                            let orderStatus = orderStatusElement ? orderStatusElement.textContent.trim() : "";
+                            let paymentStatus = paymentStatusElement ? paymentStatusElement.textContent.trim() : "";
+                            let matchOrderStatus = selectedOrderStatuses.length === 0 || selectedOrderStatuses.includes(orderStatus);
+                            let matchPaymentStatus = selectedPaymentStatuses.length === 0 || selectedPaymentStatuses.includes(paymentStatus);
+                            row.style.display = (matchOrderStatus && matchPaymentStatus) ? "" : "none";
+                        });
+                    }
+                </script>
+
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        let rowsPerPage = 7;
+                        let currentPage = 1;
+                        let tableRows = document.querySelectorAll("tbody tr");
+                        let totalPages = Math.ceil(tableRows.length / rowsPerPage);
+
+                        function showPage(page) {
+                            currentPage = page;
+                            let start = (currentPage - 1) * rowsPerPage;
+                            let end = start + rowsPerPage;
+                            tableRows.forEach((row, index) => {
+                                row.style.display = (index >= start && index < end) ? "" : "none";
+                            });
+                            updatePaginationButtons();
+                        }
+
+                        function updatePaginationButtons() {
+                            let paginationList = document.getElementById("pagination-list");
+                            paginationList.innerHTML = "";
+                            for (let i = 1; i <= totalPages; i++) {
+                                let pageItem = document.createElement("li");
+                                pageItem.classList.add("page-item");
+                                let pageButton = document.createElement("button");
+                                pageButton.classList.add("page-link");
+                                pageButton.textContent = i;
+                                if (i === currentPage) {
+                                    pageItem.classList.add("active");
+                                }
+                                pageButton.addEventListener("click", function () {
+                                    showPage(i);
+                                });
+                                pageItem.appendChild(pageButton);
+                                paginationList.appendChild(pageItem);
+                            }
+                            document.getElementById("prevPage").disabled = (currentPage === 1);
+                            document.getElementById("nextPage").disabled = (currentPage === totalPages);
+                        }
+
+                        document.getElementById("prevPage").addEventListener("click", function () {
+                            if (currentPage > 1)
+                                showPage(currentPage - 1);
+                        });
+
+                        document.getElementById("nextPage").addEventListener("click", function () {
+                            if (currentPage < totalPages)
+                                showPage(currentPage + 1);
+                        });
+
+                        showPage(1);
+                    });
+                </script>              
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const tableBody = document.querySelector("tbody");
+                        const rows = Array.from(tableBody.querySelectorAll("tr"));
+
+                        function sortTable(ascending) {
+                            rows.sort((a, b) => {
+                                const dateA = new Date(a.cells[1].textContent.trim());
+                                const dateB = new Date(b.cells[1].textContent.trim());
+                                return ascending ? dateA - dateB : dateB - dateA;
+                            });
+
+                            tableBody.innerHTML = ""; // Xóa bảng cũ
+                            rows.forEach(row => tableBody.appendChild(row)); // Thêm hàng đã sắp xếp
+                        }
+
+                        document.getElementById("sortAsc").addEventListener("click", () => sortTable(true));
+                        document.getElementById("sortDesc").addEventListener("click", () => sortTable(false));
+                    });
+
+                </script>
+                <style>
+                    .pagination {
+                        display: flex;
+                        list-style: none;
+                        padding: 0;
+                    }
+                    .pagination .page-item {
+                        margin: 0 3px;
+                    }
+
+                </style>
+
+
 
                 <!-- latest js -->
                 <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>

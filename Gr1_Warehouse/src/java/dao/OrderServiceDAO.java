@@ -68,7 +68,7 @@ public class OrderServiceDAO extends DBContext {
                 if (rs.next()) {
                     order = new Order();
                     order.setOrderId(rs.getInt("order_id")); // Cột trong cơ sở dữ liệu
-                    order.setTotalAmount(rs.getBigDecimal("totalAmount"));
+                    order.setTotalAmount(rs.getBigDecimal("total_amount")); // ✅ Đúng
                     // Nếu cần, bạn có thể lấy thêm thông tin userId từ đơn hàng
                     order.setUserId(rs.getInt("user_id")); // Cập nhật từ cơ sở dữ liệu
                 }

@@ -153,7 +153,6 @@ CREATE TABLE Orders (
     notes NVARCHAR(MAX) NULL
 );
 
-
 -- Bảng OrderDetails (Chi tiết đơn hàng)
 CREATE TABLE OrderDetails (
     order_detail_id INT PRIMARY KEY IDENTITY(1,1),
@@ -220,7 +219,7 @@ CREATE TABLE PurchaseOrder (
     supplier_id INT NOT NULL,
     total_amount DECIMAL(10,2) NOT NULL,
 	bill_img_url VARCHAR(255) NULL,
-    status NVARCHAR(50) DEFAULT 'Pending' CHECK (status IN ('Pending', 'Confirmed', 'Cancelled')),
+    status NVARCHAR(50) DEFAULT N'Chờ nhập kho' CHECK (status IN (N'Chờ nhập kho', N'Đã nhập kho', N'Đã hủy')),
     notes NVARCHAR(MAX),
     warehouse_id INT NOT NULL,
     user_id INT NOT NULL,
@@ -229,7 +228,6 @@ CREATE TABLE PurchaseOrder (
     FOREIGN KEY (warehouse_id) REFERENCES Warehouses(warehouse_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
-
 
 --Bảng PurchaseDetails (Phiếu nhập hàng chi tiết)
 CREATE TABLE PurchaseDetails (

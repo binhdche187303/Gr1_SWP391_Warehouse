@@ -207,33 +207,37 @@
             document.addEventListener('DOMContentLoaded', function () {
                 const confirmBtn = document.getElementById('confirmOrderBtn');
                 const confirmSubmitBtn = document.getElementById('confirmOrderSubmit');
-
                 let selectedOrderId = null;
-
                 confirmBtn.addEventListener('click', function () {
                     const orderIdElement = document.getElementById("order-id");
-                    console.log("orderIdElement:", orderIdElement); // Check if it's accessible
+                    const orderStatusElement = document.querySelector(".badge.bg-primary.p-2"); // Lấy trạng thái đơn hàng
 
-                    if (!orderIdElement) {
-                        alert("⚠️ Không tìm thấy mã đơn hàng!");
+                    if (!orderIdElement || !orderStatusElement) {
+                        alert("⚠️ Không tìm thấy thông tin đơn hàng!");
                         return;
                     }
 
                     selectedOrderId = orderIdElement.value.trim();
-                    console.log("Selected Order ID:", selectedOrderId); // Log it here to check
+                    const orderStatus = orderStatusElement.innerText.trim(); // Lấy trạng thái đơn hàng
 
+                    console.log("Selected Order ID:", selectedOrderId);
+                    console.log("Order Status:", orderStatus);
                     if (!selectedOrderId) {
                         alert("⚠️ Không có mã đơn hàng!");
                         return;
                     }
 
+                    // Kiểm tra trạng thái đơn hàng
+                    if (orderStatus === "Đã gửi hàng") {
+                        alert("🚚 Đơn hàng đã được gửi, không thể xác nhận lại!");
+                        return;
+                    }
+
+                    // Nếu trạng thái hợp lệ, hiển thị modal xác nhận
                     document.getElementById("confirmOrderId").innerText = selectedOrderId;
                     $('#confirmModal').modal('show');
-
-                    // Log the orderId before sending the request
-                    console.log("Sending orderId:", selectedOrderId);  // Log the orderId being sent
+                    console.log("Sending orderId:", selectedOrderId);
                 });
-
                 confirmSubmitBtn.addEventListener('click', function () {
                     if (!selectedOrderId)
                         return;
@@ -248,16 +252,12 @@
                             .then(response => response.json())
                             .then(data => {
                                 console.log("✅ JSON đã xử lý:", data);
-
                                 if (data.success === true) {
                                     console.log("🎉 Xác nhận thành công!");
-
                                     // Ẩn modal xác nhận
                                     $('#confirmModal').modal('hide');
-
                                     // Hiển thị modal thông báo
                                     $('#depositModal').modal('show');
-
                                     // 🔥 TỰ ĐỘNG RELOAD SAU 1.5 GIÂY
                                     setTimeout(() => {
                                         location.reload();

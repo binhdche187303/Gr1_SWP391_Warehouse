@@ -116,7 +116,7 @@
             </table>
 
             <!-- Nút quay về lịch sử đơn hàng -->
-            <a href="profileSetting" class="btn btn-success">Back to Orders</a>
+            <a href="profileSetting" class="btn btn-success">Quay trở lại </a>
             <!-- Modal yêu cầu thanh toán -->
             <div class="modal fade" id="depositModal" tabindex="-1" role="dialog" aria-labelledby="depositModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -156,19 +156,19 @@
 
                     // Kiểm tra nếu trạng thái đơn hàng đang đóng gói
                     if (orderStatus === 'Đang đóng gói') {
-                        alert("⚠️ Đơn hàng của bạn đang được đóng gói!");
+                        alert("📦️ Đơn hàng của bạn đang được đóng gói!");
                         return; // Ngừng thực thi nếu trạng thái là 'Đang đóng gói'
                     }
 
                     // Kiểm tra nếu trạng thái đơn hàng đã gửi hàng
                     if (orderStatus === 'Đã gửi hàng') {
-                        alert("⚠️ Đơn hàng của bạn đã được gửi đi. Bạn không thể xác nhận đơn hàng nữa.");
+                        alert("🚚️ Đơn hàng của bạn đã được gửi đi. Bạn không thể xác nhận đơn hàng nữa.");
                         return; // Ngừng thực thi nếu trạng thái là 'Đã gửi hàng'
                     }
 
                     // Kiểm tra nếu trạng thái đơn hàng chưa xác nhận
                     if (orderStatus !== 'Đã xác nhận') {
-                        alert("⚠️ Đơn hàng chưa được xác nhận! Bạn không thể xác nhận đơn hàng khi trạng thái chưa xác nhận.");
+                        alert("✅️ Đơn hàng chưa được xác nhận! Bạn không thể xác nhận đơn hàng khi trạng thái chưa xác nhận.");
                         return; // Ngừng thực thi nếu trạng thái không phải 'Đã xác nhận'
                     }
                 } else {
@@ -243,9 +243,17 @@
                         if (data.status === "success") {
                             alert("Thanh toán cọc 50% đã được xác nhận!"); // Thông báo thanh toán thành công
                             $('#depositModal').modal('hide'); // Đóng modal sau khi thanh toán thành công
+                            // 🔥 Reload trang sau 1.5 giây để cập nhật trạng thái
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
                         } else {
-                            // Nếu đã thanh toán 50% rồi
-                            alert("Đã thanh toán 50% giá trị đơn hàng!"); // Thông báo rằng thanh toán 50% đã được xác nhận
+                            alert("Đã thanh toán 50% giá trị đơn hàng!"); // Hiển thị thông báo
+                            $('#depositModal').modal('hide'); // Đóng modal trước khi reload
+                            setTimeout(() => {
+                                location.reload(); // Reload sau 1.5 giây
+                            }, 1500);
+
                         }
                     })
                     .catch(error => {
