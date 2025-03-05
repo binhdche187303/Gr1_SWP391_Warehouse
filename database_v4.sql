@@ -240,7 +240,6 @@ CREATE TABLE PurchaseDetails (
     FOREIGN KEY (batch_id) REFERENCES InventoryBatches(batch_id),
 	FOREIGN KEY (variant_id) REFERENCES ProductVariants(variant_id)
 );
-	   select * from InventoryCheck
 
 --Bảng InventoryCheck (Phiếu kiểm kho)
 CREATE TABLE InventoryCheck (
@@ -250,32 +249,34 @@ CREATE TABLE InventoryCheck (
     status NVARCHAR(50) DEFAULT N'Chờ kiểm kho' CHECK (status IN (N'Chờ kiểm kho', N'Đang kiểm kho', N'Đã kiểm kho', N'Đã cân bằng')),
     created_by INT NOT NULL,
     reviewed_by INT,
+	warehouse_staff NVARCHAR(255) NULL, -- Nhân viên kho phụ trách (Tên)
+	total_difference_up INT DEFAULT 0, -- Tổng chênh lệch tăng
+    total_difference_down INT DEFAULT 0, -- Tổng chênh lệch giảm
+    total_price_difference_up DECIMAL(18,2) DEFAULT 0, -- Tổng giá trị chênh lệch tăng
+    total_price_difference_down DECIMAL(18,2) DEFAULT 0, -- Tổng giá trị chênh lệch giảm
+    notes NVARCHAR(MAX) NULL, -- Ghi chú kiểm kho
+	completed_at DATETIME NULL,
     FOREIGN KEY (warehouse_id) REFERENCES Warehouses(warehouse_id),
     FOREIGN KEY (created_by) REFERENCES Users(user_id),
     FOREIGN KEY (reviewed_by) REFERENCES Users(user_id)
 );
 
-
-ALTER TABLE InventoryCheck
-ADD completed_at DATETIME NULL; -- Thời gian nhân viên hoàn thành kiểm kho
-
---Bảng InventoryCheckDetails (Phiếu kiểm kho chi tiết)
 CREATE TABLE InventoryCheckDetails (
     check_detail_id INT PRIMARY KEY IDENTITY(1,1),  -- ID chi tiết kiểm kho
     check_id INT NOT NULL,                          -- ID phiếu kiểm kho
     batch_id INT NOT NULL,                          -- ID lô hàng được kiểm
     variant_id INT NOT NULL,                        -- ID biến thể sản phẩm
-    sku NVARCHAR(50) NOT NULL,                       -- Mã SKU
-    expected_quantity INT NOT NULL,                 -- Số lượng hệ thống ghi nhận
+    sku NVARCHAR(50) NOT NULL,                      -- Mã SKU
+    recorded_quantity INT NOT NULL,                 -- Số lượng trong hệ thống
     actual_quantity INT NOT NULL,                   -- Số lượng thực tế kiểm được
-    discrepancy AS (actual_quantity - expected_quantity), -- Chênh lệch
-	discrepancyPrice INT,
-	discrepancy_status VARCHAR(20) DEFAULT N'Sản phẩm mới'	CHECK (discrepancy_status IN (N'Sản phẩm mới', N'Hàng lỗi', N'Hết hạn', N'Khác')),
-    reason TEXT,                                   -- Lý do chênh lệch (hỏng, mất, hết hạn, v.v.)
+    discrepancy AS (actual_quantity - recorded_quantity), -- Chênh lệch số lượng
+    difference_price DECIMAL(18,2) NOT NULL,        -- Chênh lệch giá trị
+    reason NVARCHAR(255) DEFAULT N'Sản phẩm mới' CHECK (reason IN (N'Sản phẩm mới', N'Hàng lỗi', N'Hết hạn', N'Khác')),
     FOREIGN KEY (check_id) REFERENCES InventoryCheck(check_id),
     FOREIGN KEY (batch_id) REFERENCES InventoryBatches(batch_id),
     FOREIGN KEY (variant_id) REFERENCES ProductVariants(variant_id)
 );
+
 
 --Bảng InventoryAdjustments (Điều chỉnh tồn kho)
 CREATE TABLE InventoryAdjustments (
@@ -1958,7 +1959,7 @@ JOIN Users u1 ON ic.created_by = u1.user_id
 LEFT JOIN Users u2 ON ic.reviewed_by = u2.user_id
 WHERE ic.check_id = 1;  -- Thay số 1 bằng check_id cần kiểm tra
 
-
+   
 SELECT 
     ic.check_id AS inventory_check_id,        -- Mã phiếu kiểm kho
     ic.status AS inventory_check_status,      -- Trạng thái phiếu kiểm kho
@@ -1998,5 +1999,32 @@ JOIN Sizes s ON pv.size_id = s.size_id
 WHERE ib.warehouse_id = 1 
 ORDER BY pv.variant_id, ib.batch_id;
 
+SELECT 
+    ic.check_id, 
+    ic.check_date, 
+    ic.completed_at, 
+    w.warehouse_name, 
+    ic.status, 
+    u1.fullname AS created_by_name, 
+    u2.fullname AS reviewed_by_name, 
+    COALESCE(SUM(icd.discrepancy), 0) AS total_discrepancy, 
+    COALESCE(SUM(icd.difference_price), 0) AS total_discrepancy_value
+FROM InventoryCheck ic
+LEFT JOIN Warehouses w ON ic.warehouse_id = w.warehouse_id
+LEFT JOIN Users u1 ON ic.created_by = u1.user_id
+LEFT JOIN Users u2 ON ic.reviewed_by = u2.user_id
+LEFT JOIN InventoryCheckDetails icd ON ic.check_id = icd.check_id
+WHERE ic.reviewed_by = 6
+GROUP BY 
+    ic.check_id, 
+    ic.check_date, 
+    ic.completed_at, 
+    w.warehouse_name, 
+    ic.status, 
+    u1.fullname, 
+    u2.fullname;
+			   UPDATE InventoryCheck SET completed_at = GETDATE(), status = N'Đã kiểm kho' WHERE check_id = 2
+			   EXEC sp_helpconstraint 'InventoryCheck';
 
+			   SELECT DISTINCT status FROM InventoryCheck;
 

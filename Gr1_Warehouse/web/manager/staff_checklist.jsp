@@ -100,7 +100,7 @@
                                                         <small>
                                                             <c:choose>
                                                                 <c:when test="${not empty check.completeDate}">
-                                                                    <fmt:formatDate value="${check.completeDate}" pattern="dd/MM/yyyy HH:mm a" />
+                                                                    ${check.completeDate}
                                                                 </c:when>
                                                                 <c:otherwise>
                                                                     <span class="text-muted">Chưa xong</span>

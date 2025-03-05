@@ -19,28 +19,21 @@ import model.User;
 import model.Warehouse;
 
 public class InventoryDAO extends DBContext {
-    public boolean insertInventoryDetails(int inventoryCheckId, int productId, double differenceUp, double differenceDown, double priceDifferenceUp, double priceDifferenceDown, String notes) {
-    String sql = "INSERT INTO InventoryDetails (inventory_check_id, product_id, difference_up, difference_down, price_difference_up, price_difference_down, notes) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-        stmt.setInt(1, inventoryCheckId);  // Sử dụng inventory_check_id từ request
-        stmt.setInt(2, productId);
-        stmt.setDouble(3, differenceUp);
-        stmt.setDouble(4, differenceDown);
-        stmt.setDouble(5, priceDifferenceUp);
-        stmt.setDouble(6, priceDifferenceDown);
-        stmt.setString(7, notes);
-        int rowsInserted = stmt.executeUpdate();
-        return rowsInserted > 0;
-    } catch (SQLException e) {
-        e.printStackTrace();
-        return false;
-    }
-}
+    public boolean updateInventoryCheck(int checkId, String warehouseStaff, int totalDifferenceUp, int totalDifferenceDown,
+                                    double totalPriceDifferenceUp, double totalPriceDifferenceDown, String notes) {
+    String sql = "UPDATE InventoryCheck SET warehouse_staff = ?, total_difference_up = ?, total_difference_down = ?, " +
+                 "total_price_difference_up = ?, total_price_difference_down = ?, notes = ? " +
+                 "WHERE check_id = ?";
 
-    public boolean updateInventoryCheckStatus(int inventoryCheckId) {
-    String sql = "UPDATE InventoryCheck SET completed_at = GETDATE(), status = 'Đã kiểm kho' WHERE inventory_check_id = ?";
     try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-        stmt.setInt(1, inventoryCheckId);
+        stmt.setString(1, warehouseStaff);
+        stmt.setInt(2, totalDifferenceUp);
+        stmt.setInt(3, totalDifferenceDown);
+        stmt.setDouble(4, totalPriceDifferenceUp);
+        stmt.setDouble(5, totalPriceDifferenceDown);
+        stmt.setString(6, notes);
+        stmt.setInt(7, checkId);
+
         int rowsUpdated = stmt.executeUpdate();
         return rowsUpdated > 0;
     } catch (SQLException e) {
@@ -49,7 +42,39 @@ public class InventoryDAO extends DBContext {
     }
 }
 
-  
+
+    public boolean insertInventoryDetails(int checkId, int batchId, int variantId, String sku, int recordedQuantity, int actualQuantity, double differencePrice, String reason) {
+        String sql = "INSERT INTO InventoryCheckDetails (check_id, batch_id, variant_id, sku, recorded_quantity, actual_quantity, difference_price, reason) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, checkId);
+            stmt.setInt(2, batchId);
+            stmt.setInt(3, variantId);
+            stmt.setString(4, sku);
+            stmt.setInt(5, recordedQuantity);
+            stmt.setInt(6, actualQuantity);
+            stmt.setDouble(7, differencePrice);
+            stmt.setString(8, reason);
+
+            int rowsInserted = stmt.executeUpdate();
+            return rowsInserted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updateInventoryCheckStatus(int inventoryCheckId) {
+        String sql = "UPDATE InventoryCheck SET completed_at = GETDATE(), status = N'Đã kiểm kho' WHERE check_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, inventoryCheckId);
+            int rowsUpdated = stmt.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public InventoryCheck getInventoryCheckDetails(int checkId) {
         InventoryCheck check = null;
         String sql = "SELECT \n"
@@ -93,7 +118,6 @@ public class InventoryDAO extends DBContext {
                         rs.getString("created_by_name"),
                         rs.getString("created_by_phone"),
                         rs.getString("created_by_email")
-                        
                 );
 
                 // Tạo object User cho người giám sát (nếu có)
@@ -126,17 +150,30 @@ public class InventoryDAO extends DBContext {
 
     public List<InventoryCheckDTO> getAllInventoryCheckByStaffId(int staffId) {
         List<InventoryCheckDTO> list = new ArrayList<>();
-        String sql = "SELECT ic.check_id, ic.check_date, ic.completed_at, w.warehouse_name, ic.status, "
-                + "u1.fullname AS created_by_name, u2.fullname AS reviewed_by_name, "
-                + "COALESCE(SUM(icd.discrepancy), 0) AS total_discrepancy, "
-                + "COALESCE(SUM(icd.discrepancyPrice), 0) AS total_discrepancy_value "
-                + "FROM InventoryCheck ic "
-                + "LEFT JOIN Warehouses w ON ic.warehouse_id = w.warehouse_id "
-                + "LEFT JOIN Users u1 ON ic.created_by = u1.user_id "
-                + "LEFT JOIN Users u2 ON ic.reviewed_by = u2.user_id "
-                + "LEFT JOIN InventoryCheckDetails icd ON ic.check_id = icd.check_id "
-                + "WHERE ic.reviewed_by = ? "
-                + "GROUP BY ic.check_id, ic.check_date, ic.completed_at, w.warehouse_name, ic.status, u1.fullname, u2.fullname";
+        String sql = "SELECT \n"
+                + "    ic.check_id, \n"
+                + "    ic.check_date, \n"
+                + "    ic.completed_at, \n"
+                + "    w.warehouse_name, \n"
+                + "    ic.status, \n"
+                + "    u1.fullname AS created_by_name, \n"
+                + "    u2.fullname AS reviewed_by_name, \n"
+                + "    COALESCE(SUM(icd.discrepancy), 0) AS total_discrepancy, \n"
+                + "    COALESCE(SUM(icd.difference_price), 0) AS total_discrepancy_value\n"
+                + "FROM InventoryCheck ic\n"
+                + "LEFT JOIN Warehouses w ON ic.warehouse_id = w.warehouse_id\n"
+                + "LEFT JOIN Users u1 ON ic.created_by = u1.user_id\n"
+                + "LEFT JOIN Users u2 ON ic.reviewed_by = u2.user_id\n"
+                + "LEFT JOIN InventoryCheckDetails icd ON ic.check_id = icd.check_id\n"
+                + "WHERE ic.reviewed_by = ?\n"
+                + "GROUP BY \n"
+                + "    ic.check_id, \n"
+                + "    ic.check_date, \n"
+                + "    ic.completed_at, \n"
+                + "    w.warehouse_name, \n"
+                + "    ic.status, \n"
+                + "    u1.fullname, \n"
+                + "    u2.fullname;";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, staffId);

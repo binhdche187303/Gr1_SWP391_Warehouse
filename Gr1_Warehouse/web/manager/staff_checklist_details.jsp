@@ -65,7 +65,7 @@
                                                     <h3>Phiếu kiểm kho</h3>
                                                     <br/>
                                                     <p class="text-muted d-inline">
-                                                        Mã phiếu: <strong>#${inventoryCheckDetails.checkId}</strong>
+                                                        Mã phiếu: <strong class="checkId">#${inventoryCheckDetails.checkId}</strong>
                                                         <span class="separator"> | </span>
                                                         Trạng thái: <strong>${inventoryCheckDetails.status}</strong>
                                                     </p>
@@ -300,12 +300,12 @@
                         console.log(`🔹 Sản phẩm ${index + 1}:`, product);
 
                         product.inventoryBatches.forEach((batch) => {
-                           const tr = document.createElement("tr");
-                           console.log("variantId:", product.variantId);
-                           tr.setAttribute("data-variant-id", product.variantId || "");
-                            
+                            const tr = document.createElement("tr");
+                            console.log("variantId:", product.variantId);
+                            tr.setAttribute("data-variant-id", product.variantId || "");
 
-                           tr.innerHTML = `
+
+                            tr.innerHTML = `
 <td><input type="checkbox" class="product-checkbox" value="\${product.variantId || ''}"></td>
 <td>\${product.product?.productName || "N/A"}</td>
 <td>\${product.size?.size_name || "N/A"}</td>
@@ -567,6 +567,8 @@
                 // Lấy thông tin từ biến backend đã load sẵn
                 const staffId = "${inventoryCheckDetails.reviewedBy.userId}";
                 const warehouseId = "${inventoryCheckDetails.warehouse.warehouseId}";
+                //const checkId = document.getElementById("checkId").textContent.replace("#", "").trim();
+                const checkId = "${inventoryCheckDetails.checkId}";
 
                 if (!staffId || staffId === "null") {
                     alert("Không tìm thấy thông tin người giám sát.");
@@ -579,7 +581,7 @@
 
                 console.log("🔹 Staff ID (Người giám sát):", staffId);
                 console.log("🔹 Warehouse ID (Kho nhập):", warehouseId);
-
+                console.log("🔹 Check ID (Mã phiếu):", checkId);
 
                 // Lấy tổng số lượng và tổng tiền chênh lệch
                 const totalDifferenceUp = parseInt(document.getElementById("totalDifferenceUp")?.textContent.trim() || "0", 10);
@@ -656,6 +658,7 @@
                         continue; // Bỏ qua sản phẩm này
                     }
 
+                    const reason = row.children[6]?.querySelector("select")?.value.trim();
 
                     const batch = row.children[1]?.textContent.trim(); // Lấy Batch từ cột thứ hai
                     let recordedQuantity = row.children[2]?.textContent.trim(); // Lấy tồn kho ghi nhận (stock)
@@ -665,15 +668,13 @@
                     let variantId = row.dataset.variantId || row.getAttribute("data-variant-id");
                     console.log("Dataset của row:", row.dataset);
                     console.log("🔹 SKU:", sku);
+                    console.log("🔹 Reason:", reason);
                     console.log("🔹 Batch:", batch);
                     console.log("🔹 Recorded Quantity:", recordedQuantity);
                     console.log("🔹 Actual Quantity:", actualQuantity);
                     console.log("🔹 Difference:", difference);
                     console.log("🔹 Difference Price:", differencePrice);
                     console.log("🔹 Variant ID:", variantId);
-                    console.log("Row HTML:", row.outerHTML);
-                    console.log("Dataset của row:", row.dataset);
-                    console.log("Variant ID:", row.dataset.variantId);
 
                     if (!sku || !actualQuantity || !recordedQuantity || !difference || !differencePrice) {
                         alert("Vui lòng kiểm tra lại thông tin sản phẩm.");
@@ -699,10 +700,12 @@
                         recordedQuantity,
                         difference,
                         differencePrice,
-                        variantId
+                        variantId,
+                        batch,
+                        reason
                     });
                 }
-
+                console.log("Dữ liệu gửi lên server:", inventoryData);
                 if (inventoryData.length === 0) {
                     alert("Không có sản phẩm nào để kiểm kho.");
                     return;
@@ -718,18 +721,24 @@
                     totalPriceDifferenceUp,
                     totalPriceDifferenceDown,
                     notes,
+                    checkId: checkId,
                     inventoryItems: inventoryData
                 };
 
-                // Gửi dữ liệu lên server
+// Gửi dữ liệu lên server
                 try {
+                    console.log("Dữ liệu gửi lên server:", requestData);
+
                     const response = await fetch("/Gr1_Warehouse/complete-inventory-check", {
                         method: "POST",
                         headers: {"Content-Type": "application/json"},
                         body: JSON.stringify(requestData)
                     });
 
+                    console.log("Response status:", response.status);
+
                     const responseData = await response.json();
+                    console.log("Response data:", responseData);
 
                     if (response.ok && responseData.status === "success") {
                         alert("Kiểm kho thành công!");
@@ -738,6 +747,7 @@
                         alert("Có lỗi xảy ra: " + responseData.message);
                     }
                 } catch (error) {
+                    console.error("Lỗi kết nối:", error);
                     alert("Lỗi kết nối: " + error.message);
                 }
             });
