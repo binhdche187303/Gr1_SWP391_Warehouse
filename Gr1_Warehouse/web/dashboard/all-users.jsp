@@ -123,17 +123,16 @@
                             <div class="col-sm-12">
                                 <div class="card card-table">
                                     <div class="card-body">
-                                        <div class="table-responsive table-product">
+                                        <div class="table-product">
                                             <table class="table all-package theme-table" id="table_id">
                                                 <thead>
                                                     <tr>
-                                                        <th>User Name</th>
-                                                        <th>Full Name</th>
-                                                        <th>Phone</th>
+                                                        <th>Tài khoản</th>
+                                                        <th>Họ và tên</th>
+                                                        <th>SĐT</th>
                                                         <th>Email</th>
-                                                        <th>Address</th>
-                                                        <th>Status</th>
-
+                                                        <th>Địa chỉ</th>
+                                                        <th>Trạng thái</th>
                                                     </tr>
                                                 </thead>
 
@@ -178,7 +177,169 @@
             <!-- Page Body End -->
         </div>
 
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // Tạo các phần tử lọc theo phương pháp thuần JavaScript
+                var createFilterContainer = function () {
+                    // Tạo container chính
+                    var filterForm = document.createElement('div');
+                    filterForm.className = 'row mb-3';
 
+                    // Hàm tạo input filter
+                    var createFilterInput = function (id, placeholder) {
+                        var col = document.createElement('div');
+                        col.className = 'col-md-2 mb-2';
+
+                        var input = document.createElement('input');
+                        input.type = 'text';
+                        input.id = id;
+                        input.className = 'form-control';
+                        input.placeholder = placeholder;
+
+                        col.appendChild(input);
+                        return col;
+                    };
+
+                    // Tạo select filter cho status
+                    var createStatusSelect = function () {
+                        var col = document.createElement('div');
+                        col.className = 'col-md-2 mb-2';
+
+                        var select = document.createElement('select');
+                        select.id = 'statusFilterDropdown';
+                        select.className = 'form-control';
+
+                        // Tạo các option
+                        var options = [
+                            {value: '', text: 'Tất cả trạng thái'},
+                            {value: 'Active', text: 'Active'},
+                            {value: 'Deactive', text: 'Deactive'}
+                        ];
+
+                        options.forEach(function (optionData) {
+                            var option = document.createElement('option');
+                            option.value = optionData.value;
+                            option.textContent = optionData.text;
+                            select.appendChild(option);
+                        });
+
+                        col.appendChild(select);
+                        return col;
+                    };
+
+                    // Thêm các phần tử vào filter form
+                    filterForm.appendChild(createFilterInput('fullnameFilter', 'Tìm theo Họ và Tên'));
+                    filterForm.appendChild(createFilterInput('phoneFilter', 'Tìm theo SĐT'));
+                    filterForm.appendChild(createFilterInput('emailFilter', 'Tìm theo Email'));
+                    filterForm.appendChild(createFilterInput('addressFilter', 'Tìm theo Địa chỉ'));
+                    filterForm.appendChild(createStatusSelect());
+
+                    return filterForm;
+                };
+
+                // Chèn bộ lọc ngay trước bảng
+                var tableElement = document.getElementById("table_id");
+                tableElement.parentNode.insertBefore(createFilterContainer(), tableElement);
+
+                // Debug function to log table structure
+                function logTableStructure(table) {
+                    console.log("Table Columns:", table.columns().header().toArray().map(header => header.textContent));
+                    console.log("Total Rows:", table.rows().count());
+                    table.rows().every(function (rowIdx, tableLoop, rowLoop) {
+                        var data = this.data();
+                        console.log(`Row ${rowIdx}:`, data);
+                    });
+                }
+
+                // Khởi tạo DataTable với custom search cho cột status
+                var table = new DataTable("#table_id", {
+                    paging: true,
+                    searching: true,
+                    ordering: true,
+                    info: true,
+                    pageLength: 10,
+                    lengthChange: false,
+                    language: {
+                        url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/vi.json",
+                        emptyTable: "Không có dữ liệu trong hệ thống",
+                        zeroRecords: "Không tìm thấy kết quả phù hợp",
+                        info: "Hiển thị _START_ đến _END_ của _TOTAL_ người dùng",
+                        infoEmpty: "Hiển thị 0 đến 0 của 0 người dùng",
+                        infoFiltered: "(lọc từ _MAX_ người dùng)",
+                        paginate: {
+                            first: "Đầu tiên",
+                            last: "Cuối cùng",
+                            next: "Tiếp theo",
+                            previous: "Trước đó"
+                        }
+                    },
+                    columnDefs: [
+                        {orderable: true, targets: "_all"}
+                    ],
+                    initComplete: function () {
+                        // Log table structure after initialization
+                        console.log("DataTable Initialized");
+                        logTableStructure(table);
+
+                        var filterElement = document.querySelector(".dataTables_filter");
+                        if (filterElement) {
+                            filterElement.style.display = "none";
+                        }
+                    }
+                });
+
+                // Thêm sự kiện lọc dữ liệu cho các cột
+                function addFilterEvent(inputId, columnIndex) {
+                    var inputElement = document.getElementById(inputId);
+                    if (inputElement) {
+                        inputElement.addEventListener("keyup", function () {
+                            table.columns(columnIndex).search(this.value.trim()).draw();
+                        });
+                    }
+                }
+
+                addFilterEvent("fullnameFilter", 1); // Tìm theo Full Name
+                addFilterEvent("phoneFilter", 2); // Tìm theo Phone
+                addFilterEvent("emailFilter", 3); // Tìm theo Email
+                addFilterEvent("addressFilter", 4); // Tìm theo Địa chỉ
+
+                // Lọc theo trạng thái với debug
+                document.querySelectorAll("#table_id tbody tr").forEach(function (row) {
+                    var selectElement = row.querySelector("select[name='status']");
+                    var status = selectElement.value;
+                    row.setAttribute("data-status", status);
+                });
+
+                // Lọc dữ liệu khi thay đổi dropdown lọc
+                var statusFilterElement = document.getElementById("statusFilterDropdown");
+                statusFilterElement.addEventListener("change", function () {
+                    var selectedStatus = this.options[this.selectedIndex].value.trim();
+                    console.log("Selected Status:", selectedStatus);
+
+                    document.querySelectorAll("#table_id tbody tr").forEach(function (row) {
+                        var status = row.getAttribute("data-status");
+                        if (selectedStatus === '' || status === selectedStatus) {
+                            row.style.display = ""; // Hiện hàng
+                        } else {
+                            row.style.display = "none"; // Ẩn hàng
+                        }
+                    });
+                });
+            });
+
+// Giữ nguyên hàm xác nhận thay đổi trạng thái
+            function confirmStatusChange(selectElement) {
+                var originalStatus = selectElement.getAttribute("data-original").trim();
+                var newStatus = selectElement.value.trim();
+
+                if (!confirm("Bạn có chắc muốn đổi trạng thái của khách hàng từ \"" + originalStatus + "\" sang \"" + newStatus + "\" không?")) {
+                    selectElement.value = originalStatus; // Giữ nguyên trạng thái cũ nếu hủy
+                } else {
+                    selectElement.closest("form").submit();
+                }
+            }
+
+        </script>
 
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/bootstrap/bootstrap.bundle.min.js"></script>
@@ -191,22 +352,12 @@
         <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
 <!--        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
-<!--        <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script>
+        <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script><!--
         <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>-->
         <script src="${pageContext.request.contextPath}/assets2/js/checkbox-all-check.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
 
-
-        <script>
-                                                                            function confirmStatusChange(selectElement) {
-                                                                                if (confirm('Bạn có chắc chắn muốn thay đổi trạng thái của khách hàng?')) {
-                                                                                    selectElement.form.submit();
-                                                                                } else {
-                                                                                    selectElement.value = selectElement.getAttribute('data-original');
-                                                                                }
-                                                                            }
-        </script>
     </body>
 
 </html>
