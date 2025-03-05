@@ -203,7 +203,7 @@
                     // Tạo select filter cho status
                     var createStatusSelect = function () {
                         var col = document.createElement('div');
-                        col.className = 'col-md-2 mb-2';
+                        col.className = 'col-md-3 mb-2';
 
                         var select = document.createElement('select');
                         select.id = 'statusFilterDropdown';
