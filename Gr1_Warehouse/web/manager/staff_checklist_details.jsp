@@ -153,6 +153,7 @@
                                                                 <th style="font-size: 16px; text-align: center">Tồn thực tế</th>
                                                                 <th style="font-size: 16px; text-align: center">Lệch</th>
                                                                 <th style="font-size: 16px; text-align: center">Giá trị lệch</th>
+                                                                <th style="font-size: 16px; text-align: center">Ngày hết hạn</th>
                                                                 <th style="font-size: 16px; text-align: center">Lý do</th>
                                                                 <th style="font-size: 16px">Xóa</th>
                                                             </tr>
@@ -180,6 +181,7 @@
                                                                             <td>Số lô</td>
                                                                             <td>Tồn</td>
                                                                             <td>Giá nhập</td>
+                                                                            <td>Ngày hết hạn</td>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody id="productTable"></tbody> <!-- JS sẽ render sản phẩm vào đây -->
@@ -313,6 +315,7 @@
 <td>\${batch.batchId || "N/A"}</td>
 <td>\${batch.quantity || "0"}</td>
 <td>\${batch.unitPrice ? new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(batch.unitPrice) : "N/A"}</td>
+<td>\${batch.expirationDate || "N/A"}</td>
 `;
 
                             productTableBody.appendChild(tr);
@@ -351,7 +354,7 @@
 
                     checkedProducts.forEach(checkbox => {
                         const row = checkbox.closest("tr");
-                        if (!row || row.children.length < 6) { // Đảm bảo có đủ cột dữ liệu
+                        if (!row || row.children.length < 7) { // Đảm bảo có đủ cột dữ liệu
                             console.error("⚠️ Lỗi: Không tìm thấy hàng hoặc số cột không đủ!");
                             return;
                         }
@@ -361,7 +364,8 @@
                         const sku = row.children[3]?.textContent.trim() || "Không có SKU";
                         const batch = row.children[4]?.textContent.trim() || "Không có Batch"; // Lấy batch từ cột 5
                         const stock = row.children[5]?.textContent.trim() || "0";
-                        const price = row.children[6]?.textContent.trim() || "0"; // Lấy tồn kho từ cột 6
+                        const price = row.children[6]?.textContent.trim() || "0"; 
+                        const expirationDate = row.children[7]?.textContent.trim() || "Không có ngày hết hạn"; 
                         const variantId = row.dataset.variantId || "Không có Variant ID"; // Lấy Variant ID
 
                         const productInfo = productName + " - " + sizeName + " - " + sku;
@@ -427,8 +431,11 @@
                         priceCol.style.width = "120px";
                         priceCol.style.textAlign = "center";
 
-
-
+                        const expCol = document.createElement("td");
+                        expCol.textContent = expirationDate;
+                        expCol.style.width = "120px";
+                        expCol.style.textAlign = "center";
+                        
                         const reasonCol = document.createElement("td");
                         const reasonSelect = document.createElement("select");
                         reasonSelect.classList.add("form-control");
@@ -458,6 +465,7 @@
                         productRow.appendChild(actualStockCol);
                         productRow.appendChild(differenceCol);
                         productRow.appendChild(priceCol);
+                        productRow.appendChild(expCol);
                         productRow.appendChild(reasonCol);
                         productRow.appendChild(removeCol);
                         selectedProductContainer.appendChild(productRow);
@@ -658,13 +666,14 @@
                         continue; // Bỏ qua sản phẩm này
                     }
 
-                    const reason = row.children[6]?.querySelector("select")?.value.trim();
+                    const reason = row.children[7]?.querySelector("select")?.value.trim();
 
                     const batch = row.children[1]?.textContent.trim(); // Lấy Batch từ cột thứ hai
                     let recordedQuantity = row.children[2]?.textContent.trim(); // Lấy tồn kho ghi nhận (stock)
                     let actualQuantity = row.children[3]?.querySelector("input")?.value.trim(); // Lấy số lượng thực nhập từ input
                     let difference = row.children[4]?.querySelector(".difference")?.textContent.trim(); // Lấy chênh lệch số lượng
                     let differencePrice = row.children[5]?.querySelector(".price-diff")?.textContent.trim(); // Lấy giá trị chênh lệch
+                    let expirationDate = row.children[6]?.textContent.trim();
                     let variantId = row.dataset.variantId || row.getAttribute("data-variant-id");
                     console.log("Dataset của row:", row.dataset);
                     console.log("🔹 SKU:", sku);
@@ -674,6 +683,7 @@
                     console.log("🔹 Actual Quantity:", actualQuantity);
                     console.log("🔹 Difference:", difference);
                     console.log("🔹 Difference Price:", differencePrice);
+                    console.log("🔹 Expiration Date", expirationDate);
                     console.log("🔹 Variant ID:", variantId);
 
                     if (!sku || !actualQuantity || !recordedQuantity || !difference || !differencePrice) {
@@ -700,6 +710,7 @@
                         recordedQuantity,
                         difference,
                         differencePrice,
+                        expirationDate,
                         variantId,
                         batch,
                         reason
@@ -767,7 +778,7 @@
             }
 
             .modal-dialog {
-                max-width: 1100px; /* Giới hạn chiều rộng modal */
+                max-width: 1300px; /* Giới hạn chiều rộng modal */
             }
 
             .modal-content {

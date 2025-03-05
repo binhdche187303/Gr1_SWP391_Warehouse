@@ -271,6 +271,7 @@ CREATE TABLE InventoryCheckDetails (
     actual_quantity INT NOT NULL,                   -- Số lượng thực tế kiểm được
     discrepancy AS (actual_quantity - recorded_quantity), -- Chênh lệch số lượng
     difference_price DECIMAL(18,2) NOT NULL,        -- Chênh lệch giá trị
+	expiration_date NVARCHAR(255),
     reason NVARCHAR(255) DEFAULT N'Sản phẩm mới' CHECK (reason IN (N'Sản phẩm mới', N'Hàng lỗi', N'Hết hạn', N'Khác')),
     FOREIGN KEY (check_id) REFERENCES InventoryCheck(check_id),
     FOREIGN KEY (batch_id) REFERENCES InventoryBatches(batch_id),
@@ -1931,6 +1932,7 @@ select* from PurchaseDetails
 drop table PurchaseOrder
 	select * from Users
 select * from InventoryCheck
+select * from InventoryCheckDetails
 
 SELECT 
     ic.check_id,

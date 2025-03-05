@@ -131,15 +131,16 @@ public class CompleteInventoryCheck extends HttpServlet {
             double differencePrice = item.getDouble("differencePrice");
             int variantId = item.getInt("variantId");
             int batchId = item.getInt("batch");
+            String expirationDate = item.getString("expirationDate");
             String reason = item.getString("reason");
 
             System.out.println("SKU: " + sku + ", Variant ID: " + variantId + ", actualQuantity: " + actualQuantity
-                    + ", recordedQuantity: " + recordedQuantity + ", differencePrice: " + differencePrice
+                    + ", recordedQuantity: " + recordedQuantity + ", differencePrice: " + differencePrice + ", expirationDate: " + expirationDate
                     + ", batchId: " + batchId + ", reason: " + reason);
 
             // Gọi DAO để chèn dữ liệu vào database
             boolean isInserted = dao.insertInventoryDetails(
-                    inventoryCheckId, batchId, variantId, sku, recordedQuantity, actualQuantity, differencePrice, reason
+                    inventoryCheckId, batchId, variantId, sku, recordedQuantity, actualQuantity, differencePrice, expirationDate, reason
             );
 
             // Kiểm tra nếu có lỗi khi chèn vào DB

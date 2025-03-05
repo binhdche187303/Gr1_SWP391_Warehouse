@@ -43,8 +43,8 @@ public class InventoryDAO extends DBContext {
 }
 
 
-    public boolean insertInventoryDetails(int checkId, int batchId, int variantId, String sku, int recordedQuantity, int actualQuantity, double differencePrice, String reason) {
-        String sql = "INSERT INTO InventoryCheckDetails (check_id, batch_id, variant_id, sku, recorded_quantity, actual_quantity, difference_price, reason) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    public boolean insertInventoryDetails(int checkId, int batchId, int variantId, String sku, int recordedQuantity, int actualQuantity, double differencePrice, String expirationDate, String reason) {
+        String sql = "INSERT INTO InventoryCheckDetails (check_id, batch_id, variant_id, sku, recorded_quantity, actual_quantity, difference_price, expiration_date, reason) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, checkId);
             stmt.setInt(2, batchId);
@@ -53,7 +53,8 @@ public class InventoryDAO extends DBContext {
             stmt.setInt(5, recordedQuantity);
             stmt.setInt(6, actualQuantity);
             stmt.setDouble(7, differencePrice);
-            stmt.setString(8, reason);
+            stmt.setString(8, expirationDate);
+            stmt.setString(9, reason);
 
             int rowsInserted = stmt.executeUpdate();
             return rowsInserted > 0;
