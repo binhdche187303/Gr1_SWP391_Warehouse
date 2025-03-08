@@ -359,5 +359,3 @@
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
 
     </body>
-
-</html>

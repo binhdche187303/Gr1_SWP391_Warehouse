@@ -142,16 +142,13 @@ CREATE TABLE Orders (
     order_date DATETIME NOT NULL DEFAULT GETDATE(),
     total_amount DECIMAL(18, 2) NOT NULL,
     status NVARCHAR(50) DEFAULT 'Pending',
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
-);
-
-ALTER TABLE Orders
-ADD
-    customer_name NVARCHAR(255) NULL,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+	customer_name NVARCHAR(255) NULL,
     phone_number NVARCHAR(15) NULL,
     email NVARCHAR(255) NULL,
     shipping_address NVARCHAR(MAX) NULL,
-    notes NVARCHAR(MAX) NULL;
+    notes NVARCHAR(MAX) NULL
+);
 
 -- Bảng OrderDetails (Chi tiết đơn hàng)
 CREATE TABLE OrderDetails (
@@ -214,11 +211,12 @@ CREATE TABLE PurchaseOrder (
     order_date DATETIME NOT NULL,
     supplier_id INT NOT NULL,
     total_amount DECIMAL(10,2) NOT NULL,
-	bill_img_url VARCHAR(255),
-    status NVARCHAR(50) DEFAULT 'Pending' CHECK (status IN ('Pending', 'Confirmed', 'Cancelled')),
+	bill_img_url VARCHAR(255) NULL,
+    status NVARCHAR(50) DEFAULT N'Chờ nhập kho' CHECK (status IN (N'Chờ nhập kho', N'Đã nhập kho', N'Đã hủy')),
     notes NVARCHAR(MAX),
     warehouse_id INT NOT NULL,
     user_id INT NOT NULL,
+	reference_code NVARCHAR(50) UNIQUE NOT NULL,
     FOREIGN KEY (supplier_id) REFERENCES Suppliers(supplier_id),
     FOREIGN KEY (warehouse_id) REFERENCES Warehouses(warehouse_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
@@ -228,8 +226,7 @@ CREATE TABLE PurchaseOrder (
 CREATE TABLE PurchaseDetails (
     detail_id INT PRIMARY KEY IDENTITY(1,1),  -- ID chi tiết nhập hàng
     order_id INT NOT NULL,                     -- ID phiếu nhập hàng
-    variant_id INT NOT NULL,                   -- ID biến thể sản phẩm
-    sku NVARCHAR(50) NOT NULL,                  -- Mã SKU
+    variant_id INT NOT NULL,          
     quantity INT NOT NULL,                     -- Số lượng nhập
     unit_price DECIMAL(10,2) NOT NULL,          -- Giá nhập mỗi đơn vị
     total_price AS (quantity * unit_price),    -- Tổng tiền (tự tính)
@@ -237,9 +234,9 @@ CREATE TABLE PurchaseDetails (
     warehouse_id INT NOT NULL,                 -- Kho lưu trữ
     batch_id INT,                             -- ID lô hàng (nếu đã có)
     FOREIGN KEY (order_id) REFERENCES PurchaseOrder(order_id),
-    FOREIGN KEY (variant_id) REFERENCES ProductVariants(variant_id),
     FOREIGN KEY (warehouse_id) REFERENCES Warehouses(warehouse_id),
-    FOREIGN KEY (batch_id) REFERENCES InventoryBatches(batch_id)
+    FOREIGN KEY (batch_id) REFERENCES InventoryBatches(batch_id),
+	FOREIGN KEY (variant_id) REFERENCES ProductVariants(variant_id)
 );
 
 --Bảng InventoryCheck (Phiếu kiểm kho)
@@ -295,6 +292,38 @@ CREATE TABLE SupplierBrand (
     brand_id INT NOT NULL,
     FOREIGN KEY (supplier_id) REFERENCES Suppliers(supplier_id),
     FOREIGN KEY (brand_id) REFERENCES Brands(brand_id)
+);
+
+CREATE TABLE OrderDiscounts (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    order_id INT NOT NULL,
+    discount_id INT NOT NULL,
+    applied_discount_percentage DECIMAL(5,2) NOT NULL,
+    applied_amount DECIMAL(18,2) NOT NULL,
+    applied_date DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+    FOREIGN KEY (discount_id) REFERENCES Discounts(discount_id)
+);
+
+CREATE TABLE OrderPayments (
+    payment_id INT PRIMARY KEY IDENTITY(1,1),
+    order_id INT NOT NULL,
+    deposit_amount DECIMAL(18,2) NOT NULL, -- Số tiền đặt cọc (50%)
+    remaining_amount DECIMAL(18,2) NOT NULL, -- Số tiền còn lại phải thanh toán (50%)
+    payment_status NVARCHAR(50) DEFAULT 'Đã thanh toán 50%', -- Trạng thái thanh toán
+    created_at DATETIME DEFAULT GETDATE(), -- Ngày tạo giao dịch
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id)
+);
+
+
+CREATE TABLE PackingDetails (
+    packing_id INT IDENTITY(1,1) PRIMARY KEY, -- Mã đóng gói
+    order_id INT NOT NULL, -- Mã đơn hàng
+    staff_id INT NOT NULL, -- Nhân viên đóng gói
+    status NVARCHAR(50) DEFAULT 'Chờ xử lý', -- Trạng thái đóng gói
+    packed_at DATETIME DEFAULT GETDATE(), -- Thời gian đóng gói
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+    FOREIGN KEY (staff_id) REFERENCES Users(user_id)
 );
 
 CREATE TRIGGER trg_AfterDiscountUpdate
