@@ -147,7 +147,6 @@
                                                                 <td class="theme-color">${ld.min_order_value}</td>
 
                                                                 <fmt:parseDate value="${ld.start_date}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedStartDate" />
-                                                                <fmt:parseDate value="${ld.end_date}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedEndDate" />
 
                                                                 <td class="menu-status">
                                                                     <span class="success">
@@ -155,9 +154,19 @@
                                                                     </span>
                                                                 </td>
                                                                 <td class="menu-status">
-                                                                    <span class="danger">
-                                                                        <fmt:formatDate value="${parsedEndDate}" pattern="dd/MM/yyyy"/>
-                                                                    </span>
+                                                                    <c:choose>
+                                                                        <c:when test="${ld.end_date != null && ld.end_date != ''}">
+                                                                            <fmt:parseDate value="${ld.end_date}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedEndDate" />
+                                                                            <span class="danger">
+                                                                                <fmt:formatDate value="${parsedEndDate}" pattern="dd/MM/yyyy"/>
+                                                                            </span>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <span>
+                                                                                <!-- Empty span with no class -->
+                                                                            </span>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
                                                                 </td>
 
                                                                 <td>
@@ -419,6 +428,78 @@
                 $("#edit-discount").modal("show");
             });
 
+
+//Check end date
+// Function to add warning icons/indicators to discount end dates
+            document.addEventListener('DOMContentLoaded', function () {
+                // Get all rows in the discount table
+                const tableRows = document.querySelectorAll('#table_id tbody tr');
+                const currentDate = new Date();
+
+                // Set the warning threshold (7 days before expiration)
+                const warningThreshold = 7;
+
+                tableRows.forEach(function (row) {
+                    // Get the end date cell (6th column, index 5)
+                    const endDateCell = row.querySelector('td:nth-child(6)');
+                    if (!endDateCell)
+                        return;
+
+                    // Extract the date from the span inside the cell
+                    const dateSpan = endDateCell.querySelector('span');
+                    if (!dateSpan)
+                        return;
+
+                    const dateText = dateSpan.textContent.trim();
+                    if (!dateText)
+                        return;
+
+                    // Parse the date (format: dd/MM/yyyy)
+                    const dateParts = dateText.split('/');
+                    const day = parseInt(dateParts[0], 10);
+                    const month = parseInt(dateParts[1], 10);
+                    const year = parseInt(dateParts[2], 10);
+                    const endDate = new Date(year, month - 1, day); // Month is 0-based in JavaScript
+
+                    // Calculate days difference
+                    const differenceInTime = endDate.getTime() - currentDate.getTime();
+                    const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
+
+                    // Create warning element
+                    const warningElement = document.createElement('span');
+                    warningElement.style.marginLeft = '10px';
+                    warningElement.style.fontWeight = 'bold';
+                    warningElement.style.borderRadius = '3px';
+                    warningElement.style.padding = '2px 6px';
+
+                    // Apply different styles based on urgency
+                    if (differenceInDays < 0) {
+                        // Past expiration
+                        warningElement.textContent = 'Đã hết hạn';
+                        warningElement.style.backgroundColor = '#ffcccc';
+                        warningElement.style.color = '#d9534f';
+                    } else if (differenceInDays <= warningThreshold) {
+                        // Approaching expiration
+                        warningElement.textContent = 'Còn ' + differenceInDays + ' ngày';
+                        warningElement.style.backgroundColor = '#fff3cd';
+                        warningElement.style.color = '#ffc107';
+                    } else {
+                        // No warning needed for dates far in the future
+                        return;
+                    }
+
+                    // Add warning element to the cell
+                    dateSpan.appendChild(warningElement);
+
+                    // Also highlight the entire row for expired discounts
+                    if (differenceInDays < 0) {
+                        row.style.backgroundColor = 'rgba(255, 204, 204, 0.2)';
+                    } else if (differenceInDays <= warningThreshold) {
+                        row.style.backgroundColor = 'rgba(255, 243, 205, 0.2)';
+                    }
+                });
+
+            });
         </script>
 
     </body>
