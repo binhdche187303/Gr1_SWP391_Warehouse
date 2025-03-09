@@ -22,36 +22,23 @@ public class test {
         // Nhập warehouseId cần kiểm tra
         
         InventoryDAO dao = new InventoryDAO(); 
-    int checkId = 1; // Thay đổi checkId phù hợp với dữ liệu trong DB
-            InventoryCheck inventoryCheck = dao.getInventoryCheckDetails(checkId);
+  
+            List<InventoryCheckDTO> checks = dao.getAllInventoryCheck();
 
-            // Kiểm tra kết quả
-            if (inventoryCheck != null) {
-                System.out.println("===== Inventory Check Details =====");
-                System.out.println("Check ID: " + inventoryCheck.getCheckId());
-                System.out.println("Status: " + inventoryCheck.getStatus());
-                System.out.println("Check Date: " + inventoryCheck.getCheckDate());
-                System.out.println("Completed At: " + inventoryCheck.getCompletedAt());
-
-                // Thông tin kho
-                Warehouse warehouse = inventoryCheck.getWarehouse();
-                System.out.println("Warehouse: " + warehouse.getWarehouseName());
-                System.out.println("Address: " + warehouse.getAddress());
-                System.out.println("Phone: " + warehouse.getPhone());
-
-                // Người tạo phiếu
-                User createdBy = inventoryCheck.getCreatedBy();
-                System.out.println("Created By: " + createdBy.getFullname()+ " (" + createdBy.getPhone() + createdBy.getEmail() + ")");
-
-                // Người giám sát (có thể null)
-                User reviewedBy = inventoryCheck.getReviewedBy();
-                if (reviewedBy != null) {
-                    System.out.println("Reviewed By: " + reviewedBy.getFullname()+ " (" + reviewedBy.getPhone() + reviewedBy.getEmail() + ")");
-                } else {
-                    System.out.println("Reviewed By: None");
-                }
-            } else {
-                System.out.println("❌ Không tìm thấy Inventory Check với ID: " + checkId);
+            // In kết quả kiểm tra tồn kho
+            for (InventoryCheckDTO check : checks) {
+                System.out.println("Check ID: " + check.getCheckId());
+                System.out.println("Warehouse: " + check.getWarehouseName());
+                System.out.println("Status: " + check.getStatus());
+                System.out.println("Completed At: " + check.getCompleteDate());
+                System.out.println("Created By: " + check.getCreatedBy());
+                System.out.println("Reviewed By: " + check.getReviewedBy());
+                System.out.println("Total Difference Up: " + check.getTotalDifferenceUp());
+                System.out.println("Total Difference Down: " + check.getTotalDifferenceDown());
+                System.out.println("Total Price Difference Up: " + check.getTotalPriceDifferenceUp());
+                System.out.println("Total Price Difference Down: " + check.getTotalPriceDifferenceDown());
+                System.out.println("---------------------------------");
+            }
             
     }
-}}
+}

@@ -364,8 +364,8 @@
                         const sku = row.children[3]?.textContent.trim() || "Không có SKU";
                         const batch = row.children[4]?.textContent.trim() || "Không có Batch"; // Lấy batch từ cột 5
                         const stock = row.children[5]?.textContent.trim() || "0";
-                        const price = row.children[6]?.textContent.trim() || "0"; 
-                        const expirationDate = row.children[7]?.textContent.trim() || "Không có ngày hết hạn"; 
+                        const price = row.children[6]?.textContent.trim() || "0";
+                        const expirationDate = row.children[7]?.textContent.trim() || "Không có ngày hết hạn";
                         const variantId = row.dataset.variantId || "Không có Variant ID"; // Lấy Variant ID
 
                         const productInfo = productName + " - " + sizeName + " - " + sku;
@@ -377,6 +377,9 @@
                             console.warn(`⚠️ Sản phẩm "${productName}" (SKU: ${sku}, Batch: ${batch}) đã tồn tại, không thêm lại!`);
                             return;
                         }
+
+
+
 
                         console.log("📌 Dữ liệu trước khi thêm vào UI:", {productName, sizeName, sku, batch, stock, price, variantId});
                         // ✅ Tạo hàng sản phẩm (tr)
@@ -405,15 +408,22 @@
                         stockCol.style.width = "120px";
                         stockCol.style.textAlign = "center";
 
+                        const today = new Date();
+                        const expDate = new Date(expirationDate);
+                        console.log("📅 Ngày hết hạn:", expDate);
+                        console.log("📅 Hôm nay:", today);
+                        const isExpired = expDate < today;
 
                         const actualStockCol = document.createElement("td");
                         const actualStockInput = document.createElement("input");
                         actualStockCol.style.width = "120px";
                         actualStockInput.type = "number";
                         actualStockInput.classList.add("form-control");
+                        actualStockInput.value = "1";
+                        actualStockInput.value = isExpired ? stock : "";
+                        console.log(`📦 Số lượng tồn sản phẩm:` + stock);
                         actualStockInput.placeholder = "Số lượng";
                         actualStockInput.min = "1"; // Số lượng phải lớn hơn 0
-                        actualStockInput.value = "1";
                         actualStockCol.appendChild(actualStockInput);
 
 
@@ -435,7 +445,7 @@
                         expCol.textContent = expirationDate;
                         expCol.style.width = "120px";
                         expCol.style.textAlign = "center";
-                        
+
                         const reasonCol = document.createElement("td");
                         const reasonSelect = document.createElement("select");
                         reasonSelect.classList.add("form-control");
@@ -448,6 +458,11 @@
                             option.textContent = reason;
                             reasonSelect.appendChild(option);
                         });
+                        // Kiểm tra và cập nhật nếu hết hạn
+                        if (isExpired) {
+                            reasonSelect.value = "Hết hạn";
+                            console.log(`✅ Đã đặt lý do mặc định thành "Hết hạn" cho sản phẩm ${productName}`);
+                        }
                         reasonCol.appendChild(reasonSelect);
 
 

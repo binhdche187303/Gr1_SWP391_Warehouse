@@ -79,7 +79,7 @@
                                                 <th><small>Ngày kiểm</small></th>
                                                 <th><small>Số lượng lệch</small></th>
                                                 <th><small>Tổng giá trị hàng lệch</small></th>
-                                                <th><small></small></th>
+                                                <th><small>Tùy chọn</small></th>
                                             </tr>
                                         </thead>
 
@@ -109,8 +109,19 @@
                                                             <br><span class="text-muted">@${check.reviewedBy}</span>
                                                         </small>
                                                     </td>
-                                                    <td><small>0 <i class="fas fa-arrow-up text-success"></i><br>-7 <i class="fas fa-arrow-down text-danger"></i></small></td>
-                                                    <td><small>-3,958,019 ₫</small></td>
+                                                    <td><small><c:if test="${check.totalDifferenceUp != 0}">
+                                                                ${check.totalDifferenceUp} <i class="fas fa-arrow-up text-success"></i><br>
+                                                            </c:if>
+                                                            <c:if test="${check.totalDifferenceDown != 0}">
+                                                                ${check.totalDifferenceDown} <i class="fas fa-arrow-down text-danger"></i>
+                                                            </c:if></small></td>
+
+                                                    <td><small><c:if test="${check.totalPriceDifferenceUp != 0}">
+                                                                ${check.totalPriceDifferenceUp} <i class="fas fa-arrow-up text-success"></i><br>
+                                                            </c:if>
+                                                            <c:if test="${check.totalPriceDifferenceDown != 0}">
+                                                                ${check.totalPriceDifferenceDown} <i class="fas fa-arrow-down text-danger"></i>
+                                                            </c:if></small></td>
                                                     <td>
                                                         <ul class="d-flex align-items-center p-0 m-0" style="list-style: none;">
                                                             <li class="me-2">

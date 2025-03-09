@@ -14,7 +14,7 @@ public class InventoryCheck {
     private Warehouse warehouse;
     private User createdBy;
     private User reviewedBy;
-
+    
     public InventoryCheck(int checkId, String status, Timestamp checkDate, Timestamp completedAt,
                           Warehouse warehouse, User createdBy, User reviewedBy) {
         this.checkId = checkId;

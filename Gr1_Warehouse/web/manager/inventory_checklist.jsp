@@ -81,18 +81,62 @@
                                                 <th><small>Ngày cân bằng</small></th>
                                                 <th><small>Số lượng lệch</small></th>
                                                 <th><small>Tổng giá trị hàng lệch</small></th>
+                                                <th><small>Chi tiết</small></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td><small>IA100903</small></td>
-                                                <td><small>test</small></td>
-                                                <td><small><span class="badge bg-success">Đã cân bằng</span></small></td>
-                                                <td><small>Hôm qua 14:33 CH<br><span class="text-muted">@NVNghi</span></small></td>
-                                                <td><small>Hôm qua 14:33 CH<br><span class="text-muted">@NVNghi</span></small></td>
-                                                <td><small>0 <i class="fas fa-arrow-up text-success"></i><br>-7 <i class="fas fa-arrow-down text-danger"></i></small></td>
-                                                <td><small>-3,958,019 ₫</small></td>
-                                            </tr>
+                                            <c:forEach var="check" items= "${inventoryAll}">
+                                                <tr>
+                                                    <td><small>${check.checkId}</small></td>
+                                                    <td><small>${check.warehouseName}</small></td>
+                                                    <td><small><span class="badge bg-success">${check.status}</span></small></td>
+                                                    <td>
+                                                        <small>
+                                                            <c:choose>
+                                                                <c:when test="${not empty check.completeDate}">
+                                                                    ${check.completeDate}
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <span class="text-muted">Chưa xong</span>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                            <br><span class="text-muted">@${check.reviewedBy}</span>
+                                                        </small>
+                                                    </td>
+                                                    <td>
+                                                        <small>
+                                                            <br><span class="text-muted">@${check.createdBy}</span>
+                                                        </small>
+                                                    </td>
+                                                    <td><small><c:if test="${check.totalDifferenceUp != 0}">
+                                                                ${check.totalDifferenceUp} <i class="fas fa-arrow-up text-success"></i><br>
+                                                            </c:if>
+                                                            <c:if test="${check.totalDifferenceDown != 0}">
+                                                                ${check.totalDifferenceDown} <i class="fas fa-arrow-down text-danger"></i>
+                                                            </c:if></small></td>
+
+                                                    <td><small><c:if test="${check.totalPriceDifferenceUp != 0}">
+                                                                ${check.totalPriceDifferenceUp} <i class="fas fa-arrow-up text-success"></i><br>
+                                                            </c:if>
+                                                            <c:if test="${check.totalPriceDifferenceDown != 0}">
+                                                                ${check.totalPriceDifferenceDown} <i class="fas fa-arrow-down text-danger"></i>
+                                                            </c:if></small></td>
+                                                    <td>
+                                                        <ul class="d-flex align-items-center p-0 m-0" style="list-style: none;">
+                                                            <li>
+                                                                <form action="/Gr1_Warehouse/#" method="get">
+                                                                    <input type="hidden" name="checkId" value="${check.checkId}">
+                                                                    <button type="submit" style="background: none; border: none;">
+                                                                        <i class="ri-eye-line"></i>
+                                                                    </button>
+                                                                </form>
+                                                            </li>
+                                                        </ul>
+                                                    </td>
+
+                                                </tr>
+                                            </c:forEach>
+                                            
                                             <!-- Repeat rows as needed -->
                                         </tbody>
                                     </table>

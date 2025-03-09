@@ -19,29 +19,70 @@ import model.User;
 import model.Warehouse;
 
 public class InventoryDAO extends DBContext {
-    public boolean updateInventoryCheck(int checkId, String warehouseStaff, int totalDifferenceUp, int totalDifferenceDown,
-                                    double totalPriceDifferenceUp, double totalPriceDifferenceDown, String notes) {
-    String sql = "UPDATE InventoryCheck SET warehouse_staff = ?, total_difference_up = ?, total_difference_down = ?, " +
-                 "total_price_difference_up = ?, total_price_difference_down = ?, notes = ? " +
-                 "WHERE check_id = ?";
+ public List<InventoryCheckDTO> getAllInventoryCheck() {
+    List<InventoryCheckDTO> list = new ArrayList<>();
+    String sql = "SELECT \n"
+            + "    ic.check_id, \n"
+            + "    ic.completed_at, \n"
+            + "    w.warehouse_name, \n"
+            + "    ic.status, \n"
+            + "    u1.fullname AS created_by_name, \n"
+            + "    u2.fullname AS reviewed_by_name, \n"
+            + "    ic.total_difference_up, \n"
+            + "    ic.total_difference_down, \n"
+            + "    ic.total_price_difference_up, \n"
+            + "    ic.total_price_difference_down \n"
+            + "FROM InventoryCheck ic \n"
+            + "LEFT JOIN Warehouses w ON ic.warehouse_id = w.warehouse_id \n"
+            + "LEFT JOIN Users u1 ON ic.created_by = u1.user_id \n"
+            + "LEFT JOIN Users u2 ON ic.reviewed_by = u2.user_id;";
 
-    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-        stmt.setString(1, warehouseStaff);
-        stmt.setInt(2, totalDifferenceUp);
-        stmt.setInt(3, totalDifferenceDown);
-        stmt.setDouble(4, totalPriceDifferenceUp);
-        stmt.setDouble(5, totalPriceDifferenceDown);
-        stmt.setString(6, notes);
-        stmt.setInt(7, checkId);
+    try (PreparedStatement ps = connection.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
 
-        int rowsUpdated = stmt.executeUpdate();
-        return rowsUpdated > 0;
+        while (rs.next()) {
+            InventoryCheckDTO check = new InventoryCheckDTO();
+            check.setCheckId(rs.getInt("check_id"));
+            check.setWarehouseName(rs.getString("warehouse_name"));
+            check.setStatus(rs.getString("status"));
+            check.setCompleteDate(rs.getTimestamp("completed_at"));
+            check.setCreatedBy(rs.getString("created_by_name"));
+            check.setReviewedBy(rs.getString("reviewed_by_name"));
+            check.setTotalDifferenceUp(rs.getInt("total_difference_up"));
+            check.setTotalDifferenceDown(rs.getInt("total_difference_down"));
+            check.setTotalPriceDifferenceUp(rs.getDouble("total_price_difference_up"));
+            check.setTotalPriceDifferenceDown(rs.getDouble("total_price_difference_down"));
+            list.add(check);
+        }
     } catch (SQLException e) {
         e.printStackTrace();
-        return false;
     }
+    return list;
 }
 
+
+    public boolean updateInventoryCheck(int checkId, String warehouseStaff, int totalDifferenceUp, int totalDifferenceDown,
+            double totalPriceDifferenceUp, double totalPriceDifferenceDown, String notes) {
+        String sql = "UPDATE InventoryCheck SET warehouse_staff = ?, total_difference_up = ?, total_difference_down = ?, "
+                + "total_price_difference_up = ?, total_price_difference_down = ?, notes = ? "
+                + "WHERE check_id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, warehouseStaff);
+            stmt.setInt(2, totalDifferenceUp);
+            stmt.setInt(3, totalDifferenceDown);
+            stmt.setDouble(4, totalPriceDifferenceUp);
+            stmt.setDouble(5, totalPriceDifferenceDown);
+            stmt.setString(6, notes);
+            stmt.setInt(7, checkId);
+
+            int rowsUpdated = stmt.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public boolean insertInventoryDetails(int checkId, int batchId, int variantId, String sku, int recordedQuantity, int actualQuantity, double differencePrice, String expirationDate, String reason) {
         String sql = "INSERT INTO InventoryCheckDetails (check_id, batch_id, variant_id, sku, recorded_quantity, actual_quantity, difference_price, expiration_date, reason) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -159,22 +200,15 @@ public class InventoryDAO extends DBContext {
                 + "    ic.status, \n"
                 + "    u1.fullname AS created_by_name, \n"
                 + "    u2.fullname AS reviewed_by_name, \n"
-                + "    COALESCE(SUM(icd.discrepancy), 0) AS total_discrepancy, \n"
-                + "    COALESCE(SUM(icd.difference_price), 0) AS total_discrepancy_value\n"
-                + "FROM InventoryCheck ic\n"
-                + "LEFT JOIN Warehouses w ON ic.warehouse_id = w.warehouse_id\n"
-                + "LEFT JOIN Users u1 ON ic.created_by = u1.user_id\n"
-                + "LEFT JOIN Users u2 ON ic.reviewed_by = u2.user_id\n"
-                + "LEFT JOIN InventoryCheckDetails icd ON ic.check_id = icd.check_id\n"
-                + "WHERE ic.reviewed_by = ?\n"
-                + "GROUP BY \n"
-                + "    ic.check_id, \n"
-                + "    ic.check_date, \n"
-                + "    ic.completed_at, \n"
-                + "    w.warehouse_name, \n"
-                + "    ic.status, \n"
-                + "    u1.fullname, \n"
-                + "    u2.fullname;";
+                + "    ic.total_difference_up, \n"
+                + "    ic.total_difference_down, \n"
+                + "    ic.total_price_difference_up, \n"
+                + "    ic.total_price_difference_down \n"
+                + "FROM InventoryCheck ic \n"
+                + "LEFT JOIN Warehouses w ON ic.warehouse_id = w.warehouse_id \n"
+                + "LEFT JOIN Users u1 ON ic.created_by = u1.user_id \n"
+                + "LEFT JOIN Users u2 ON ic.reviewed_by = u2.user_id \n"
+                + "WHERE ic.reviewed_by = ?;";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, staffId);
@@ -188,8 +222,10 @@ public class InventoryDAO extends DBContext {
                 check.setCompleteDate(rs.getTimestamp("completed_at"));
                 check.setCreatedBy(rs.getString("created_by_name"));
                 check.setReviewedBy(rs.getString("reviewed_by_name"));
-                check.setTotalDiscrepancy(rs.getInt("total_discrepancy"));
-                check.setTotalDiscrepancyValue(rs.getDouble("total_discrepancy_value"));
+                check.setTotalDifferenceUp(rs.getInt("total_difference_up"));
+                check.setTotalDifferenceDown(rs.getInt("total_difference_down"));
+                check.setTotalPriceDifferenceUp(rs.getDouble("total_price_difference_up"));
+                check.setTotalPriceDifferenceDown(rs.getDouble("total_price_difference_down"));
                 list.add(check);
             }
         } catch (SQLException e) {

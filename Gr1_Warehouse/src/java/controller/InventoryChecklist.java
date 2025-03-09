@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package staff;
+package controller;
 
 import dao.InventoryDAO;
 import java.io.IOException;
@@ -12,16 +12,15 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import model.InventoryCheckDTO;
-import model.User;
 
 /**
  *
  * @author Huy Nam
  */
-public class StaffChecklist extends HttpServlet {
+public class InventoryChecklist extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -38,10 +37,10 @@ public class StaffChecklist extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet StaffChecklist</title>");  
+            out.println("<title>Servlet InventoryChecklist</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet StaffChecklist at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet InventoryChecklist at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,42 +59,11 @@ public class StaffChecklist extends HttpServlet {
     throws ServletException, IOException {
     
     InventoryDAO dao = new InventoryDAO();
-    HttpSession session = request.getSession();
-    User user = (User) session.getAttribute("acc");
-
-    if (user == null) {
-        response.sendRedirect("login");
-        return;
-    }
-
-    int staffId = user.getUserId();
-    System.out.println("🔍 staffId nhận được: " + staffId);
-
-    // Gọi hàm lấy danh sách kiểm kho
-    List<InventoryCheckDTO> inventoryChecks = dao.getAllInventoryCheckByStaffId(staffId);
-
-    // Kiểm tra danh sách có dữ liệu không
-    if (inventoryChecks.isEmpty()) {
-        System.out.println("⚠️ Không có dữ liệu kiểm kho nào cho nhân viên ID: " + staffId);
-    } else {
-        System.out.println("✅ Danh sách kiểm kho của nhân viên ID: " + staffId);
-        for (InventoryCheckDTO check : inventoryChecks) {
-            System.out.println("------------------------------------");
-            System.out.println("Check ID: " + check.getCheckId());
-            System.out.println("Kho: " + check.getWarehouseName());
-            System.out.println("Trạng thái: " + check.getStatus());
-            System.out.println("Ngày kiểm kho: " + check.getCheckDate());
-            System.out.println("Ngày hoàn thành: " + check.getCompleteDate());
-            System.out.println("Lệch số lượng tăng: " + check.getTotalDifferenceUp());
-            System.out.println("Lệch số lượng giảm: " + check.getTotalDifferenceDown());
-            System.out.println("Lệch giá trị giảm: " + check.getTotalPriceDifferenceDown());
-            System.out.println("Lệch giá trị tăng: " + check.getTotalPriceDifferenceUp());
-        }
-    }
-
-    request.setAttribute("inventoryChecks", inventoryChecks);
-    request.getRequestDispatcher("manager/staff_checklist.jsp").forward(request, response);
+    List<InventoryCheckDTO> inventoryChecks = dao.getAllInventoryCheck();
+    request.setAttribute("inventoryAll", inventoryChecks);
+    request.getRequestDispatcher("manager/inventory_checklist.jsp").forward(request, response);
 }
+
 
     /** 
      * Handles the HTTP <code>POST</code> method.

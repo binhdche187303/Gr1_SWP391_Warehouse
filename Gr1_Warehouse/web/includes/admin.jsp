@@ -357,7 +357,7 @@
                                         </a>
                                         <ul class="sidebar-submenu">
                                             <li>
-                                                <a href="/Gr1_Warehouse/manager/inventory_checklist.jsp">Kiểm kho</a>
+                                                <a href="/Gr1_Warehouse/inventory-checklist">Kiểm kho</a>
                                             </li>
 
 <!--                                            <li>

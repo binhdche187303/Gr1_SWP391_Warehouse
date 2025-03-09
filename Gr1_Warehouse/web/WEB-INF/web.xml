@@ -96,6 +96,10 @@
         <servlet-name>CompleteInventoryCheck</servlet-name>
         <servlet-class>staff.CompleteInventoryCheck</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>InventoryChecklist</servlet-name>
+        <servlet-class>controller.InventoryChecklist</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ArchiveServlet</servlet-name>
         <url-pattern>/archive</url-pattern>
@@ -199,6 +203,10 @@
     <servlet-mapping>
         <servlet-name>CompleteInventoryCheck</servlet-name>
         <url-pattern>/complete-inventory-check</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InventoryChecklist</servlet-name>
+        <url-pattern>/inventory-checklist</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login</welcome-file>
