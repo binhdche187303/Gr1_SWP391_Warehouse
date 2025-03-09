@@ -144,6 +144,26 @@
         <servlet-name>ConfirmPackingServlet</servlet-name>
         <servlet-class>PackingController.ConfirmPackingServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ShippingOrderServlet</servlet-name>
+        <servlet-class>ShipController.ShippingOrderServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AssignShippingOrderServlet</servlet-name>
+        <servlet-class>ShipController.AssignShippingOrderServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MyShippingOrdersServlet</servlet-name>
+        <servlet-class>ShipController.MyShippingOrdersServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OrderShippingDetailServlet</servlet-name>
+        <servlet-class>ShipController.OrderShippingDetailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ConfirmShippingServlet</servlet-name>
+        <servlet-class>ShipController.ConfirmShippingServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ArchiveServlet</servlet-name>
         <url-pattern>/archive</url-pattern>
@@ -295,6 +315,26 @@
     <servlet-mapping>
         <servlet-name>ConfirmPackingServlet</servlet-name>
         <url-pattern>/confirmPackingServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShippingOrderServlet</servlet-name>
+        <url-pattern>/ship-orders</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AssignShippingOrderServlet</servlet-name>
+        <url-pattern>/assignShippingOrder</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MyShippingOrdersServlet</servlet-name>
+        <url-pattern>/my-shipping-orders</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrderShippingDetailServlet</servlet-name>
+        <url-pattern>/orderShippingDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ConfirmShippingServlet</servlet-name>
+        <url-pattern>/confirmShippingServlet</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login</welcome-file>

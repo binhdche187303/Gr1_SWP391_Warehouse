@@ -15,9 +15,6 @@
 --go
 
 
-
-
-
 -- Bảng Roles (Vai trò người dùng)
 CREATE TABLE Roles (
     role_id INT PRIMARY KEY IDENTITY(1,1),
@@ -194,23 +191,19 @@ CREATE TABLE TokenForgetPassword (
     FOREIGN KEY (user_id) REFERENCES Users(user_id) -- Khóa ngoại liên kết bảng Users
 );
 
-
-
+--Bảng IventoryBatches (Lô hàng)
 CREATE TABLE InventoryBatches (
-    batch_id INT PRIMARY KEY IDENTITY(1,1),   
-    sku NVARCHAR(255) NOT NULL,
-    quantity INT NOT NULL,                    
-    unit_price DECIMAL(10,2) NOT NULL,        
-    expiration_date DATE,                     
-    received_date DATETIME NOT NULL,          
-    warehouse_id INT NOT NULL,                
-    status NVARCHAR(20) NOT NULL DEFAULT 'In Stock' 
-        CHECK (status IN ('In Stock', 'Sold Out', 'Expired')),  
-    FOREIGN KEY (sku) REFERENCES ProductVariants(sku),
+    batch_id INT PRIMARY KEY IDENTITY(1,1),   -- ID của lô hàng
+    variant_id INT NOT NULL,                   -- ID biến thể sản phẩm
+    quantity INT NOT NULL,                     -- Số lượng tồn trong lô
+    unit_price DECIMAL(10,2) NOT NULL,          -- Giá nhập của lô hàng
+    expiration_date DATE,                      -- Ngày hết hạn (nếu có)
+    received_date DATETIME NOT NULL,            -- Ngày nhập kho
+    warehouse_id INT NOT NULL,                 -- Kho lưu trữ
+    status NVARCHAR(20) NOT NULL DEFAULT 'In Stock' CHECK (status IN ('In Stock', 'Sold Out', 'Expired')) -- Trạng thái lô hàng
+    FOREIGN KEY (variant_id) REFERENCES ProductVariants(variant_id),
     FOREIGN KEY (warehouse_id) REFERENCES Warehouses(warehouse_id)
 );
-
-
 
 --Bảng PurchaseOrder (Phiếu nhập hàng)
 CREATE TABLE PurchaseOrder (
@@ -245,8 +238,6 @@ CREATE TABLE PurchaseDetails (
     FOREIGN KEY (batch_id) REFERENCES InventoryBatches(batch_id),
 	FOREIGN KEY (variant_id) REFERENCES ProductVariants(variant_id)
 );
-
-
 
 --Bảng InventoryCheck (Phiếu kiểm kho)
 CREATE TABLE InventoryCheck (
@@ -335,6 +326,15 @@ CREATE TABLE PackingDetails (
     FOREIGN KEY (staff_id) REFERENCES Users(user_id)
 );
 
+CREATE TABLE ShippingDetails (
+    shipping_id INT IDENTITY(1,1) PRIMARY KEY, -- Mã vận chuyển
+    order_id INT NOT NULL, -- Mã đơn hàng
+    staff_id INT NOT NULL, -- Nhân viên giao hàng
+    status NVARCHAR(50) DEFAULT 'Đã giao hàng', -- Trạng thái giao hàng
+    shipped_at DATETIME DEFAULT GETDATE(), -- Thời gian giao hàng 
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+    FOREIGN KEY (staff_id) REFERENCES Users(user_id)
+);
 
 CREATE TRIGGER trg_AfterDiscountUpdate
 ON Discounts
@@ -372,13 +372,17 @@ BEGIN
     FROM Discounts
     JOIN inserted ON Discounts.discount_id = inserted.discount_id;
 END;
+
 INSERT INTO dbo.Roles(role_name)
 VALUES
 (N'Admin system'),
 (N'Customer'),
 (N'Warehouse manager'),
 (N'Warehouse staffs'),
-(N'Packing staffs');
+(N'Packing staffs'),
+(N'Shipper'),
+(N'Saler';
+
 
 INSERT INTO dbo.Users(username, password, fullname, phone, email, role_id, status)
 VALUES
@@ -1334,8 +1338,6 @@ SELECT
     'In Stock' AS status
 FROM ProductVariants
 WHERE variant_id between 1 and 143;
-
-
 SELECT
     pv.variant_id,
     p.product_name,
@@ -1424,6 +1426,7 @@ BEGIN
         OR i.status <> d.status;
 END;
 
+select* from ProductQuantityDiscounts
 INSERT INTO dbo.ProductQuantityDiscounts
 (product_id, min_quantity,discount_percentage,created_at,status)
 VALUES

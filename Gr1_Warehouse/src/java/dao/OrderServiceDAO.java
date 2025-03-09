@@ -171,4 +171,9 @@ public class OrderServiceDAO extends DBContext {
         return status;
     }
 
+    public static void main(String[] args) {
+        OrderServiceDAO osd= new OrderServiceDAO();
+        OrderPayment op= osd.getOrderPaymentByOrderId(1);
+        System.out.println(op.getPaymentStatus());
+    }
 }
