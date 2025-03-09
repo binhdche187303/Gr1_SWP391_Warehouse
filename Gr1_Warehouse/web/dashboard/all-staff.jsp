@@ -230,7 +230,7 @@
             <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit Staff</h5>
+                        <h5 class="modal-title">Chỉnh sửa nhân viên</h5>
                     </div>
                     <div class="modal-body">
                         <form action="allstaff" method="POST">
@@ -238,13 +238,13 @@
                             <!-- Username -->
                             <div class="form-floating mb-3">
                                 <input type="text" class="form-control" id="username" name="username" readonly />
-                                <label for="username">Username</label>
+                                <label for="username">Tài khoản</label>
                             </div>
 
                             <!-- Full Name -->
                             <div class="form-floating mb-3">
                                 <input type="text" class="form-control" id="fullname" name="fullname" readonly required />
-                                <label for="fullname">Full Name</label>
+                                <label for="fullname">Họ và tên</label>
                             </div>
 
                             <!-- Role Name -->
@@ -256,13 +256,13 @@
                                         </c:if>
                                     </c:forEach>
                                 </select>
-                                <label for="rolename">Role Name</label>
+                                <label for="rolename">Vai trò</label>
                             </div>
 
                             <!-- Phone -->
                             <div class="form-floating mb-3">
                                 <input type="tel" class="form-control" id="phone" name="phone" readonly required />
-                                <label for="phone">Phone</label>
+                                <label for="phone">SĐT</label>
                             </div>
 
                             <!-- Email -->
@@ -279,7 +279,7 @@
 
                             <!-- Status -->
                             <div class="mb-3">
-                                <label for="status" class="form-label">Status</label>
+                                <label for="status" class="form-label">Trạng thái</label>
                                 <select id="status" name="status" class="form-select">
                                     <option value="Active">Active</option>
                                     <option value="Deactive">Deactive</option>
@@ -288,8 +288,8 @@
 
                             <!-- Modal Footer -->
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                             </div>
                         </form>
                     </div>

@@ -66,7 +66,7 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <div class="title-header option-title">
-                                                    <h5>Create Coupon</h5>
+                                                    <h5>Tạo mã giảm giá</h5>
                                                 </div>
                                                 <div class="tab-content" id="pills-tabContent">
                                                     <div class="tab-pane fade show active" id="pills-home" role="tabpanel">
@@ -75,8 +75,7 @@
 
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label
-                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Coupon
-                                                                        Code</label>
+                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Mã giảm giá</label>
                                                                     <div class="col-md-9 col-lg-10">
                                                                         <input class="form-control" type="text" name="discount_code" required value="${requestScope.discount_code}">
                                                                     </div>
@@ -84,7 +83,7 @@
 
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label
-                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Discount (%)</label>
+                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Giảm giá (%)</label>
                                                                     <div class="col-md-9 col-lg-10">
                                                                         <input class="form-control" type="number" name="discount_percentage" min="0.1" max="99.9" step="0.1" 
                                                                                value="${requestScope.discount_percentage}" required>
@@ -93,7 +92,7 @@
 
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label
-                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Min Quantity</label>
+                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Số lượng tối thiểu</label>
                                                                     <div class="col-md-9 col-lg-10">
                                                                         <input class="form-control" type="number" name="min_quantity" min="0"  value="${requestScope.min_quantity}" >
                                                                     </div>
@@ -101,7 +100,7 @@
 
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label
-                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Min Order Value</label>
+                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Giá trị đơn hàng tối thiểu</label>
                                                                     <div class="col-md-9 col-lg-10">
                                                                         <input class="form-control" type="number" name="min_order_value" min="0"  value="${requestScope.min_order_value}" >
                                                                     </div>
@@ -109,8 +108,7 @@
 
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label
-                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Start
-                                                                        Date</label>
+                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Ngày bắt đầu</label>
                                                                     <div class="col-md-9 col-lg-10">
                                                                         <input class="form-control" type="date" name="start_date" value="${requestScope.start_date}" required>
                                                                     </div>
@@ -118,8 +116,7 @@
 
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label
-                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">End
-                                                                        Date</label>
+                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Ngày kết thúc</label>
                                                                     <div class="col-md-9 col-lg-10">
                                                                         <input class="form-control" type="date" name="end_date" value="${requestScope.end_date}">
                                                                     </div>
@@ -127,14 +124,14 @@
 
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label
-                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Quantity</label>
+                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Số lượng mã</label>
                                                                     <div class="col-md-9 col-lg-10">
                                                                         <input class="form-control" type="number" name="max_uses" min="1" value="${requestScope.max_uses}">
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="mb-4 row align-items-center">
-                                                                    <label class="col-sm-2 col-form-label form-label-title">Status
+                                                                    <label class="col-sm-2 col-form-label form-label-title">Trạng thái
                                                                     </label>
                                                                     <div class="col-sm-10">
                                                                         <select name="status">

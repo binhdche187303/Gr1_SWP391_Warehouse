@@ -102,7 +102,7 @@ public class DiscountProductDetail extends HttpServlet {
                 String product_name = listDiscountProduct.get(0).getProduct().getProductName();
                 request.setAttribute("product_name", product_name);
                 request.setAttribute("listDiscountProduct", listDiscountProduct);
-
+                request.setAttribute("product_id", product_id);
                 List<DiscountProductHistory> listDiscountProductHistory = dpd.getAllDiscountsHistoryById(product_discount_id);
                 request.setAttribute("listDiscountProductHistory", listDiscountProductHistory);
                 request.getRequestDispatcher("/dashboard/coupon-product-detail.jsp").forward(request, response);

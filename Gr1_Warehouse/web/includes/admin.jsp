@@ -273,14 +273,6 @@
                                             <li>
                                                 <a href="/Gr1_Warehouse/couponproductlist">Danh sách giảm giá</a>
                                             </li>
-
-                                            <li>
-                                                <a href="/Gr1_Warehouse/createproductcoupon">Tạo giảm giá</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="/Gr1_Warehouse/listdiscountproducthistory">Lịch sử giảm giá</a>
-                                            </li>
                                         </ul>
                                     </li>
 

@@ -122,7 +122,7 @@
                                 <div class="card card-table">
                                     <div class="card-body">
                                         <div class="title-header option-title">
-                                            <h5>Coupon Product List Order</h5>
+                                            <h5>Danh sách sản phẩm</h5>
                                             <div class="right-options">
                                                 <ul>
                                                     <li>
@@ -180,81 +180,6 @@
         </div>
         <!-- page-wrapper End -->
 
-        <!-- Edit Discount Modal -->
-        <div class="modal fade theme-modal" id="edit-discount" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Edit Discount</h5>
-                    </div>
-                    <div class="modal-body">
-                        <form action="couponlist" method="POST">
-                            <input type="hidden" name="discount_id" value="" />
-
-                            <!-- Discount Code -->
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="discount_code" name="discount_code" value="" readonly />
-                                <label for="discount_code">Coupon Code</label>
-                            </div>
-
-                            <!-- Discount % -->
-                            <div class="form-floating mb-3">
-                                <input type="number" 
-                                       class="form-control" 
-                                       id="discount_percentage" 
-                                       name="discount_percentage" 
-                                       min="0.1" 
-                                       max="99.9" 
-                                       step="0.1" 
-                                       value="" 
-                                       required/>
-                                <label for="discount_percentage">Discount (%)</label>
-                            </div>  
-
-                            <!-- Start Date & End Date cùng hàng -->
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <input type="date" class="form-control" id="start_date" name="start_date" value="" required readonly />
-                                        <label for="start_date">Start Date</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating mb-3">
-                                        <input type="date" class="form-control" id="end_date" name="end_date" value="" required readonly />
-                                        <label for="end_date">End Date</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Quantity -->
-                            <div class="form-floating mb-3">
-                                <input type="number" class="form-control" id="max_uses" name="max_uses" value="" />
-                                <label for="max_uses">Quantity</label>
-                            </div>
-
-                            <!-- Status -->
-                            <div class="mb-3">
-                                <label for="status" class="form-label">Status</label>
-                                <select id="status" name="status" class="form-select">
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                </select>
-                            </div>
-
-                            <!-- Modal Footer -->
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Save Changes</button>
-                            </div>
-
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Edit Profile Modal End -->
 
         <!-- latest js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>

@@ -108,7 +108,7 @@ public class CreateCoupon extends HttpServlet {
             // Check if discount code exists
             DiscountDAO discountDAO = new DiscountDAO();
             if (discountDAO.isDiscountCodeExists(discountCode)) {
-                request.setAttribute("message", "Discount code already exists! Please use another code.");
+                request.setAttribute("message", "Mã giảm giá đã tồn tại! Vui lòng tạo mã khác.");
                 request.getRequestDispatcher("/dashboard/create-coupon.jsp").forward(request, response);
                 return;
             }
@@ -124,7 +124,7 @@ public class CreateCoupon extends HttpServlet {
 
             // Validate discount percentage range
             if (discountPercentage <= 0 || discountPercentage >= 100) {
-                request.setAttribute("message", "Discount percentage must be between 0 and 100.");
+                request.setAttribute("message", "% giảm giá phải nằm trong khoảng từ 0 đến 100.");
                 request.getRequestDispatcher("/dashboard/create-coupon.jsp").forward(request, response);
                 return;
             }
@@ -137,7 +137,7 @@ public class CreateCoupon extends HttpServlet {
 
             // Validate date range
             if (endDate != null && startDate.isAfter(endDate)) {
-                request.setAttribute("message", "Start date cannot be after end date.");
+                request.setAttribute("message", "Ngày bắt đầu không được sau ngày kết thúc.");
                 request.getRequestDispatcher("/dashboard/create-coupon.jsp").forward(request, response);
                 return;
             }
