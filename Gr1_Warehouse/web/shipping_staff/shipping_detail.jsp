@@ -122,14 +122,6 @@
                             <!-- Cột phụ (Xác thực đơn hàng & Thông tin khách hàng) -->
                             <div class="col-lg-4">
                                 <div class="col-lg-4 d-flex justify-content-end">
-                                    <button class="btn btn-success position-absolute" 
-                                            style="right: 120px; top: 0; margin-right: 10px;" 
-                                            onclick="window.location.href = '${pageContext.request.contextPath}/exportInvoice?order_id=${orderDetail.order_id}'">
-                                        In đơn hàng
-                                    </button>
-
-
-
                                     <button class="btn btn-primary position-absolute" 
                                             style="right: 10px; top: 0;" 
                                             onclick="window.location.href = '${pageContext.request.contextPath}/my-shipping-orders'">
@@ -141,7 +133,7 @@
                                 <div class="card mb-4" style="margin-top: 105px;">
                                     <div class="card-body text-center">
                                         <h5 class="fw-bold">Xác nhận đơn hàng</h5>
-                                        <p class="text-muted">Vui lòng xác thực đơn hàng khi đã đóng gói xong.</p>
+                                        <p class="text-muted">Vui lòng xác thực đơn hàng khi đã giao hàng xong.</p>
                                         <button class="btn btn-primary w-100" id="confirmOrderBtn">Xác nhận đơn hàng</button>
                                     </div>
                                 </div>
