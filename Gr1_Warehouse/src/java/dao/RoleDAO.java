@@ -51,6 +51,20 @@ public class RoleDAO extends DBContext {
         }
     }
 
+
+    public boolean isRoleNameExists(String roleName) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM Roles WHERE role_name = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, roleName);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0; // Nếu COUNT > 0 tức là đã tồn tại
+                }
+            }
+        }
+        return false;
+    }
+            
     public static void main(String[] args) {
         RoleDAO rd = new RoleDAO();
         rd.updateRole("Cuss", 2);

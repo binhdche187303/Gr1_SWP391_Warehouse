@@ -12,7 +12,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Role;
 
 /**
@@ -77,14 +80,27 @@ public class RoleServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String roleId = request.getParameter("roleId");
-        String roleName = request.getParameter("roleName");
-        RoleDAO rd = new RoleDAO();
-        rd.updateRole(roleName, Integer.parseInt(roleId));
-        List<Role> listRole = rd.getAllRole();
-        request.setAttribute("listRole", listRole);
-        request.setAttribute("success", "Update successfully");
-        request.getRequestDispatcher("/dashboard/role.jsp").forward(request, response);
+        try {
+            String roleId = request.getParameter("roleId");
+            String roleName = request.getParameter("roleName");
+            RoleDAO rd = new RoleDAO();
+
+            boolean success = rd.isRoleNameExists(roleName);
+            if (success) {
+                request.setAttribute("roleId", roleId);
+                request.setAttribute("roleName", roleName);
+                request.setAttribute("error", "Vai trò " + roleName + " đã tồn tại.");
+                 request.setAttribute("showEditModal", "true");
+            } else {
+                rd.updateRole(roleName, Integer.parseInt(roleId));
+                request.setAttribute("success", "Cập nhật thành công");
+            }
+            List<Role> listRole = rd.getAllRole();
+            request.setAttribute("listRole", listRole);
+            request.getRequestDispatcher("/dashboard/role.jsp").forward(request, response);
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
     }
 
     /**

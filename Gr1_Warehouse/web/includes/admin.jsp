@@ -245,24 +245,6 @@
                                     </li>
 
                                     <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-archive-line"></i>
-                                            <span>Orders</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="order-list.html">Order List</a>
-                                            </li>
-                                            <li>
-                                                <a href="order-detail.html">Order Detail</a>
-                                            </li>
-                                            <li>
-                                                <a href="order-tracking.html">Order Tracking</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="sidebar-list">
                                         <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
                                             <i class="ri-price-tag-3-line"></i>
                                             <span>Giảm giá hóa đơn</span>

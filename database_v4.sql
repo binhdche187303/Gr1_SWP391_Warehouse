@@ -326,6 +326,16 @@ CREATE TABLE PackingDetails (
     FOREIGN KEY (staff_id) REFERENCES Users(user_id)
 );
 
+CREATE TABLE ShippingDetails (
+    shipping_id INT IDENTITY(1,1) PRIMARY KEY, -- Mã vận chuyển
+    order_id INT NOT NULL, -- Mã đơn hàng
+    staff_id INT NOT NULL, -- Nhân viên giao hàng
+    status NVARCHAR(50) DEFAULT 'Đã giao hàng', -- Trạng thái giao hàng
+    shipped_at DATETIME DEFAULT GETDATE(), -- Thời gian giao hàng 
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+    FOREIGN KEY (staff_id) REFERENCES Users(user_id)
+);
+
 CREATE TRIGGER trg_AfterDiscountUpdate
 ON Discounts
 AFTER UPDATE, INSERT
@@ -369,7 +379,10 @@ VALUES
 (N'Customer'),
 (N'Warehouse manager'),
 (N'Warehouse staffs'),
-(N'Packing staffs');
+(N'Packing staffs'),
+(N'Shipper'),
+(N'Saler';
+
 
 INSERT INTO dbo.Users(username, password, fullname, phone, email, role_id, status)
 VALUES
