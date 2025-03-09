@@ -247,6 +247,7 @@
         const dropdown = document.getElementById("supplierDropdown"); // Dropdown chọn nhà cung cấp
         const openProductModalBtn = document.getElementById("openProductModal"); // Nút mở modal sản phẩm
         const productTableBody = document.getElementById("productTable"); // Body của bảng hiển thị sản phẩm
+        const selectedProductContainer = document.getElementById("selectedProductContainer"); // Container hiển thị sản phẩm đã chọn
         let selectedSupplierCode = ""; // Lưu supplierCode được chọn
 
         // 🔹 Gọi API lấy danh sách nhà cung cấp
@@ -271,8 +272,27 @@
 
         // 🔹 Xử lý khi chọn nhà cung cấp
         dropdown.addEventListener("change", function () {
+            // ✅ Xóa sạch sản phẩm đã chọn khi đổi nhà cung cấp
+            clearSelectedProducts();
+
+            // ✅ Làm rỗng bảng sản phẩm để tránh hiển thị dữ liệu cũ
+            productTableBody.innerHTML = "";
+
+            // Cập nhật thông tin nhà cung cấp
             updateSupplierDetails(this);
         });
+
+        // 🔹 Hàm xóa sạch sản phẩm đã chọn
+        function clearSelectedProducts() {
+            if (selectedProductContainer) {
+                selectedProductContainer.innerHTML = "";
+                console.log("✅ Đã xóa sạch danh sách sản phẩm đã chọn");
+            }
+
+            // Cập nhật tổng số lượng và tổng tiền về 0
+            document.getElementById("totalQuantity").textContent = "0";
+            document.getElementById("totalAmount").textContent = "0 VND";
+        }
 
         // 🔹 Khi nhấn vào nút mở danh sách sản phẩm
         openProductModalBtn.addEventListener("click", function () {
@@ -280,7 +300,8 @@
                 alert("Vui lòng chọn nhà cung cấp trước!");
                 return;
             }
-
+            // 🔹 Reset bảng sản phẩm trước khi tải dữ liệu mới
+            productTableBody.innerHTML = "";
             const apiUrl = `/Gr1_Warehouse/productbrand?supplierCode=` + selectedSupplierCode;
             console.log("📡 Gọi API lấy sản phẩm:", apiUrl);
 
@@ -297,6 +318,16 @@
         function updateSupplierDetails(select) {
             if (!select.value) {
                 console.error("❌ Không có giá trị nào được chọn!");
+                selectedSupplierCode = ""; // ✅ Đặt lại giá trị khi không có nhà cung cấp được chọn
+
+                // ✅ Ẩn nút "Xem danh sách sản phẩm" khi không có nhà cung cấp
+                openProductModalBtn.style.display = "none";
+
+                // ✅ Xóa thông tin nhà cung cấp
+                document.getElementById("supplierName").textContent = "";
+                document.getElementById("supplierAddress").textContent = "";
+                document.getElementById("supplierPhone").textContent = "";
+                document.getElementById("supplierEmail").textContent = "";
                 return;
             }
 
@@ -321,7 +352,6 @@
             document.getElementById("supplierAddress").textContent = supplier.address || "N/A";
             document.getElementById("supplierPhone").textContent = supplier.phone || "N/A";
             document.getElementById("supplierEmail").textContent = supplier.email || "N/A";
-            //document.getElementById("supplierCode").textContent = supplier.supplierCode || "N/A";
 
             // ✅ Hiển thị nút "Xem danh sách sản phẩm"
             openProductModalBtn.style.display = "inline-block";
@@ -334,11 +364,13 @@
                 return;
             }
 
+            console.log("🗑️ Đã reset bảng sản phẩm trước khi cập nhật:", productTableBody.innerHTML);
             productTableBody.innerHTML = "";
+            console.log("✅ Sau khi reset, productTableBody:", productTableBody.innerHTML);
 
             if (!Array.isArray(products) || products.length === 0) {
                 console.warn("⚠️ Cảnh báo: Dữ liệu sản phẩm không hợp lệ hoặc rỗng.", products);
-                productTableBody.innerHTML = "<tr><td colspan='3' class='text-center text-muted'>Không có sản phẩm nào!</td></tr>";
+                productTableBody.innerHTML = "<tr><td colspan='4' class='text-center text-muted'>Không có sản phẩm nào!</td></tr>";
                 return;
             }
 
@@ -360,6 +392,7 @@
                 const checkbox = document.createElement("input");
                 checkbox.type = "checkbox";
                 checkbox.classList.add("product-checkbox");
+                checkbox.dataset.productId = product.variantId || ""; // Lưu ID sản phẩm để xử lý sau
                 tdCheckbox.appendChild(checkbox);
 
                 const tdName = document.createElement("td");
@@ -368,18 +401,13 @@
                 const tdSku = document.createElement("td");
                 tdSku.textContent = product.sku || "N/A";
 
-
                 const tdVariantId = document.createElement("td");
                 tdVariantId.textContent = product.variantId || "N/A";
 
-                // Add sizeName column
-                const tdSizeName = document.createElement("td");
-                tdSizeName.textContent = product.sizeName || "N/A";
                 tr.appendChild(tdCheckbox);
                 tr.appendChild(tdName);
                 tr.appendChild(tdSku);
                 tr.appendChild(tdVariantId);
-                tr.appendChild(tdSizeName);
                 productTableBody.appendChild(tr);
             });
 
@@ -393,8 +421,26 @@
             }
         }
 
+        // 🔹 Thêm xử lý cho nút hoàn tất chọn trong modal
+        const completeSelectionBtn = document.querySelector("#searchProductModal .modal-footer .btn-primary");
+        if (completeSelectionBtn) {
+            completeSelectionBtn.addEventListener("click", function () {
+                const selectedCheckboxes = document.querySelectorAll("#productTable .product-checkbox:checked");
+
+                // Xử lý các sản phẩm được chọn ở đây (thêm vào selectedProductContainer)
+                // ...
+
+                // Đóng modal sau khi hoàn tất
+                const modalElement = document.getElementById("searchProductModal");
+                const modal = bootstrap.Modal.getInstance(modalElement);
+                if (modal) {
+                    modal.hide();
+                }
+            });
+        }
     });
 </script>
+
 
 <!--Chọn nhân viên xử lí-->
 <script>
