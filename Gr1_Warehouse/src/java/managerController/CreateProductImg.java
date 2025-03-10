@@ -127,7 +127,6 @@ public class CreateProductImg extends HttpServlet {
 
             // Lưu lại vào session
             session.setAttribute("product", product);
-            session.setAttribute("progress", 66);
             response.sendRedirect("createproductvariants");
         } catch (Exception e) {
             e.printStackTrace();

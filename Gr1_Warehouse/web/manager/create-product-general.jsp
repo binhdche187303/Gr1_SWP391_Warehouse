@@ -79,13 +79,7 @@
                     <div class="container-fluid">
                         <div class="row">
                             <div>
-                                <h5 class="mb-0 text-success">Progress:</h5>
-                                <% int progress = session.getAttribute("progress") != null ? (int) session.getAttribute("progress") : 0; %>
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar" style="width: <%= progress %>%" aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100">
-                                        <%= progress %>% Completed
-                                    </div>
-                                </div>
+                                <h2 class="mb-0 text-success">Bước 1</h2>
                             </div>
                             <div class="col-12">
                                 <div class="row">

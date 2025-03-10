@@ -122,7 +122,6 @@ public class CreateProductGeneral extends HttpServlet {
             } else {
                 HttpSession session = request.getSession();
                 session.setAttribute("product", p);
-                session.setAttribute("progress", 33);
                 System.out.println(p.getProductName());
                 response.sendRedirect("createproductimg");
             }
