@@ -1,5 +1,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
@@ -61,8 +62,8 @@
                             <div class="container mt-4">
                                 <!-- Action Buttons -->
                                 <div class="d-flex align-items-center mb-4">
-                                    <button class="btn btn-primary me-2" onclick="window.location.href='/Gr1_Warehouse/create-inventory-check'">
-                                            <i class="fas fa-plus"></i>Tạo phiếu kiểm
+                                    <button class="btn btn-primary me-2" onclick="window.location.href = '/Gr1_Warehouse/create-inventory-check'">
+                                        <i class="fas fa-plus"></i>Tạo phiếu kiểm
                                     </button>
                                     <button class="btn btn-outline-secondary me-2">Tất cả</button>
                                     <button class="btn btn-outline-secondary me-2">Thêm điều kiện lọc</button>
@@ -116,10 +117,12 @@
                                                             </c:if></small></td>
 
                                                     <td><small><c:if test="${check.totalPriceDifferenceUp != 0}">
-                                                                ${check.totalPriceDifferenceUp} <i class="fas fa-arrow-up text-success"></i><br>
+                                                                <fmt:formatNumber value="${check.totalPriceDifferenceUp}" type="currency" currencySymbol="₫"/> 
+                                                                <i class="fas fa-arrow-up text-success"></i><br>
                                                             </c:if>
                                                             <c:if test="${check.totalPriceDifferenceDown != 0}">
-                                                                ${check.totalPriceDifferenceDown} <i class="fas fa-arrow-down text-danger"></i>
+                                                                <fmt:formatNumber value="${check.totalPriceDifferenceDown}" type="currency" currencySymbol="₫"/> 
+                                                                <i class="fas fa-arrow-down text-danger"></i>
                                                             </c:if></small></td>
                                                     <td>
                                                         <ul class="d-flex align-items-center p-0 m-0" style="list-style: none;">
@@ -136,7 +139,7 @@
 
                                                 </tr>
                                             </c:forEach>
-                                            
+
                                             <!-- Repeat rows as needed -->
                                         </tbody>
                                     </table>
