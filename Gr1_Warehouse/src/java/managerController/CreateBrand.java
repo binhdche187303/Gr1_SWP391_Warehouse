@@ -2,24 +2,26 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller;
+package managerController;
 
-import com.google.gson.Gson;
-import dao.WarehouseDAO;
+import dao.BrandDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.SQLException;
 import java.util.List;
-import model.Warehouse;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.Brands;
 
 /**
  *
- * @author Dell
+ * @author admin
  */
-public class GetArchiveServlet extends HttpServlet {
+public class CreateBrand extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +40,10 @@ public class GetArchiveServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet GetArchiveServlet</title>");
+            out.println("<title>Servlet CreateBrand</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet GetArchiveServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CreateBrand at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -57,40 +59,12 @@ public class GetArchiveServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            WarehouseDAO warehouseDAO = new WarehouseDAO();
-
-            // Thêm tham số để xác định lấy tất cả kho hay chỉ kho Active
-            String filter = request.getParameter("filter");
-            List<Warehouse> warehouse;
-
-            if ("Active".equals(filter)) {
-                // Thêm phương thức mới để lấy chỉ kho Active
-                warehouse = warehouseDAO.getActiveWarehouses();
-            } else {
-                // Nếu không có filter hoặc filter khác, lấy tất cả kho
-                warehouse = warehouseDAO.getAllWarehouse();
-            }
-
-            if (warehouse.isEmpty()) {
-                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                response.getWriter().write("[]"); // Trả về JSON rỗng để tránh lỗi JS
-                return;
-            }
-
-            Gson gson = new Gson();
-            String json = gson.toJson(warehouse);
-            System.out.println("Dữ liệu JSON gửi đi: " + json); // Debug
-
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8"); // Đảm bảo không lỗi font
-            response.getWriter().write(json);
-        } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"error\":\"" + e.getMessage() + "\"}");
-            e.printStackTrace(); // In lỗi trong server log
-        }
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        BrandDAO bd = new BrandDAO();
+        List<Brands> listBrands = bd.getAllBrands();
+        request.setAttribute("listBrands", listBrands);
+        request.getRequestDispatcher("/manager/create-brand.jsp").forward(request, response);
     }
 
     /**
@@ -104,7 +78,23 @@ public class GetArchiveServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        BrandDAO bd = new BrandDAO();
+        String brand_name = request.getParameter("brand_name");
+        try {
+            if (bd.isBrandNameExists(brand_name)) {
+                request.setAttribute("brand_name", brand_name);
+                List<Brands> listBrands = bd.getAllBrands();
+                request.setAttribute("listBrands", listBrands);
+                request.setAttribute("message", "Tên thương biệu đã tồn tại");
+                request.getRequestDispatcher("/manager/create-brand.jsp").forward(request, response);
+            } else {
+                boolean success = bd.createBrand(brand_name);
+                request.getSession().setAttribute("success", "Tạo thương hiệu mới thành công");
+                response.sendRedirect("brandlist");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
     }
 
     /**

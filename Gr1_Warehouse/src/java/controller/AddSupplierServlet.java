@@ -71,40 +71,30 @@ public class AddSupplierServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String supplierName = request.getParameter("supplierName");
         String phone = request.getParameter("phone");
         String email = request.getParameter("email");
         String address = request.getParameter("address");
+        String status = request.getParameter("status");
+        int brandId = Integer.parseInt(request.getParameter("brandId"));
 
-        System.out.println("Received supplier data:");
-        System.out.println("Supplier Name: " + supplierName);
-        System.out.println("Phone: " + phone);
-        System.out.println("Email: " + email);
-        System.out.println("Address: " + address);
-
-        if (supplierName == null || supplierName.trim().isEmpty()) {
-            System.out.println("Error: supplierName is required");
-            response.getWriter().write("error: supplierName is required");
-            return;
-        }
+        System.out.println("Received data for supplier: " + supplierName + ", Brand ID: " + brandId);
 
         Suppliers supplier = new Suppliers();
         supplier.setSupplierName(supplierName);
         supplier.setPhone(phone);
         supplier.setEmail(email);
         supplier.setAddress(address);
+        supplier.setStatus(status);
 
-        System.out.println("Supplier object created: " + supplier);
+        // Thêm nhà cung cấp và thương hiệu
+        boolean isAdded = supplierDAO.addSupplierWithBrand(supplier, brandId);
 
-        boolean success = supplierDAO.addSupplier(supplier);
-        if (success) {
-            System.out.println("Supplier added successfully");
+        if (isAdded) {
             response.getWriter().write("success");
         } else {
-            System.out.println("Error: Failed to add supplier");
-            response.getWriter().write("error");
+            response.getWriter().write("❌ Không thể thêm nhà cung cấp vì thương hiệu đã có nhà cung cấp phân phối.");
         }
     }
 

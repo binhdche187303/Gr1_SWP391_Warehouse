@@ -40,7 +40,7 @@ public class WarehouseDAO extends DBContext {
 
     public List<Warehouse> getActiveWarehouses() {
         List<Warehouse> warehouses = new ArrayList<>();
-        String sql = "SELECT warehouse_id, warehouse_name, phone, address, status FROM Warehouses WHERE status = 'Active'";
+        String sql = "SELECT * FROM Warehouses WHERE status = 'Active'";
 
         try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {

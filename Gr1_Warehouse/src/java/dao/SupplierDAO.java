@@ -21,7 +21,7 @@ public class SupplierDAO extends DBContext {
                 supplier.setPhone(rs.getString("phone"));
                 supplier.setEmail(rs.getString("email"));
                 supplier.setAddress(rs.getString("address"));
-                supplier.setStatus(rs.getString("status"));  // Lấy giá trị status
+                supplier.setStatus(rs.getString("status"));
                 suppliers.add(supplier);
             }
         } catch (SQLException e) {
@@ -31,31 +31,110 @@ public class SupplierDAO extends DBContext {
         return suppliers;
     }
 
-    public boolean addSupplier(Suppliers supplier) {
+    public List<Suppliers> getActiveSuppliers() {
+        List<Suppliers> suppliers = new ArrayList<>();
+        String sql = "SELECT * FROM Suppliers WHERE status = 'Active'";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Suppliers supplier = new Suppliers();
+                supplier.setSupplierId(rs.getInt("supplier_id"));
+                supplier.setSupplierName(rs.getString("supplier_name"));
+                supplier.setSupplierCode(rs.getString("supplier_code"));
+                supplier.setPhone(rs.getString("phone"));
+                supplier.setEmail(rs.getString("email"));
+                supplier.setAddress(rs.getString("address"));
+                supplier.setStatus(rs.getString("status"));
+                suppliers.add(supplier);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return suppliers;
+    }
+
+    public boolean addSupplierWithBrand(Suppliers supplier, int brandId) {
+        System.out.println("Adding supplier " + supplier.getSupplierName() + " with brand ID " + brandId);
+
+        // Kiểm tra xem có nhà cung cấp nào phân phối thương hiệu này chưa
+        boolean exists = checkSupplierWithBrand(brandId);
+        if (exists) {
+            System.out.println("Không thể thêm nhà cung cấp vì thương hiệu này đã có nhà cung cấp phân phối.");
+            return false;
+        }
+
         String lastCodeQuery = "SELECT MAX(supplier_code) FROM Suppliers";
-        String insertQuery = "INSERT INTO Suppliers (supplier_name, supplier_code, phone, email, address, status) VALUES (?, ?, ?, ?, ?, ?)";
+        String insertSupplierQuery = "INSERT INTO Suppliers (supplier_name, supplier_code, phone, email, address, status) VALUES (?, ?, ?, ?, ?, ?)";
+        String insertSupplierBrandQuery = "INSERT INTO SupplierBrand (supplier_id, brand_id) VALUES (?, ?)";
 
-        try (PreparedStatement psLastCode = connection.prepareStatement(lastCodeQuery); ResultSet rs = psLastCode.executeQuery()) {
+        try {
+            connection.setAutoCommit(false); // Bắt đầu transaction
 
+            // 1️⃣ Lấy mã supplier_code mới
             String supplierCode = "A";
-
-            if (rs.next() && rs.getString(1) != null) {
-                supplierCode = generateNextSupplierCode(rs.getString(1));
+            try (PreparedStatement psLastCode = connection.prepareStatement(lastCodeQuery); ResultSet rs = psLastCode.executeQuery()) {
+                if (rs.next() && rs.getString(1) != null) {
+                    supplierCode = generateNextSupplierCode(rs.getString(1));
+                }
             }
 
-            try (PreparedStatement psInsert = connection.prepareStatement(insertQuery)) {
+            // 2️⃣ Thêm nhà cung cấp vào bảng Suppliers
+            int supplierId = -1;
+            try (PreparedStatement psInsert = connection.prepareStatement(insertSupplierQuery, Statement.RETURN_GENERATED_KEYS)) {
                 psInsert.setString(1, supplier.getSupplierName());
                 psInsert.setString(2, supplierCode);
                 psInsert.setString(3, supplier.getPhone());
                 psInsert.setString(4, supplier.getEmail());
                 psInsert.setString(5, supplier.getAddress());
-                psInsert.setString(6, supplier.getStatus() != null ? supplier.getStatus() : "Active"); // Set giá trị status
+                psInsert.setString(6, supplier.getStatus() != null ? supplier.getStatus() : "Active");
 
                 int rowsAffected = psInsert.executeUpdate();
-                return rowsAffected > 0;
+                if (rowsAffected == 0) {
+                    connection.rollback();
+                    return false;
+                }
+
+                // 3️⃣ Lấy supplier_id vừa được tạo
+                try (ResultSet generatedKeys = psInsert.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        supplierId = generatedKeys.getInt(1);
+                    } else {
+                        connection.rollback();
+                        return false;
+                    }
+                }
             }
+
+            // 4️⃣ Thêm dữ liệu vào bảng SupplierBrand
+            try (PreparedStatement psInsertBrand = connection.prepareStatement(insertSupplierBrandQuery)) {
+                psInsertBrand.setInt(1, supplierId);
+                psInsertBrand.setInt(2, brandId);
+
+                int brandRowsAffected = psInsertBrand.executeUpdate();
+                if (brandRowsAffected == 0) {
+                    connection.rollback();
+                    return false;
+                }
+            }
+
+            // ✅ Commit transaction
+            connection.commit();
+            System.out.println("Supplier added successfully with brand ID " + brandId);
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            try {
+                connection.rollback(); // Rollback nếu có lỗi
+            } catch (SQLException rollbackEx) {
+                rollbackEx.printStackTrace();
+            }
+        } finally {
+            try {
+                connection.setAutoCommit(true); // Bật lại commit tự động
+            } catch (SQLException autoCommitEx) {
+                autoCommitEx.printStackTrace();
+            }
         }
         return false;
     }
@@ -152,4 +231,23 @@ public class SupplierDAO extends DBContext {
         return null;
     }
 
+    public boolean checkSupplierWithBrand(int brandId) {
+        String checkBrandSql = "SELECT COUNT(*) FROM SupplierBrand WHERE brand_id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(checkBrandSql)) {
+            stmt.setInt(1, brandId); // Kiểm tra brand_id có phân phối hay chưa
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next() && rs.getInt(1) > 0) {
+                System.out.println("Có nhà cung cấp phân phối thương hiệu " + brandId);
+                return true;  // Đã có nhà cung cấp phân phối thương hiệu này
+            } else {
+                System.out.println("Chưa có nhà cung cấp phân phối thương hiệu " + brandId);
+            }
+        } catch (SQLException e) {
+            System.out.println("Lỗi kiểm tra nhà cung cấp với thương hiệu: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false; // Chưa có nhà cung cấp phân phối thương hiệu
+    }
 }

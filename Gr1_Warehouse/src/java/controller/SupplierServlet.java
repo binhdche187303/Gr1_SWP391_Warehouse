@@ -4,6 +4,7 @@
  */
 package controller;
 
+import dao.BrandDAO;
 import dao.SupplierDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import model.Brands;
 import model.Suppliers;
 
 /**
@@ -68,12 +70,17 @@ public class SupplierServlet extends HttpServlet {
 
         if ("updateStatus".equals(action)) {
             int supplierId = Integer.parseInt(request.getParameter("supplierId"));
-            String status = request.getParameter("status"); 
+            String status = request.getParameter("status");
             supplierDAO.updateSupplierStatus(supplierId, status);
             response.sendRedirect("supplier");
         } else {
             List<Suppliers> suppliers = supplierDAO.getAllSuppliers();
+            BrandDAO brandDAO = new BrandDAO(); // Thêm đoạn này
+            List<Brands> brands = brandDAO.getAllBrands(); // Lấy danh sách thương hiệu
+
             request.setAttribute("suppliers", suppliers);
+            request.setAttribute("brands", brands); // Gửi danh sách brands sang JSP
+
             request.getRequestDispatcher("manager/suppliers.jsp").forward(request, response);
         }
     }

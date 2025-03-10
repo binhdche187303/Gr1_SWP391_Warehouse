@@ -63,7 +63,18 @@ public class GetWarehousesServlet extends HttpServlet {
             throws ServletException, IOException {
         try {
             SupplierDAO supplierDAO = new SupplierDAO();
-            List<Suppliers> suppliers = supplierDAO.getAllSuppliers();
+
+            // Thêm tham số để xác định lấy tất cả nhà cung cấp hay chỉ nhà cung cấp Active
+            String filter = request.getParameter("filter");
+            List<Suppliers> suppliers;
+
+            if ("Active".equals(filter)) {
+                // Gọi phương thức mới để lấy chỉ nhà cung cấp Active
+                suppliers = supplierDAO.getActiveSuppliers();
+            } else {
+                // Nếu không có filter hoặc filter khác, lấy tất cả nhà cung cấp
+                suppliers = supplierDAO.getAllSuppliers();
+            }
 
             // Kiểm tra nếu không có nhà cung cấp nào
             if (suppliers == null || suppliers.isEmpty()) {
@@ -71,18 +82,14 @@ public class GetWarehousesServlet extends HttpServlet {
                 response.getWriter().write("[]"); // Trả về mảng rỗng nếu không có dữ liệu
                 return;
             }
-
             // Chuyển đổi danh sách nhà cung cấp thành mảng JSON
             Gson gson = new Gson();
             String json = gson.toJson(suppliers); // Đây sẽ là một chuỗi JSON của mảng
-
             // Debug: kiểm tra dữ liệu JSON gửi đi
             System.out.println("Dữ liệu JSON gửi đi: " + json);
-
             // Đặt các header của response
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-
             // Trả về mảng JSON
             response.getWriter().write(json);
         } catch (Exception e) {

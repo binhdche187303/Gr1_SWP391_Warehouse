@@ -92,7 +92,7 @@
                                 <p class="fw-semibold">Tên: ${orderDetail.staff_name}</p>
                                 <ul class="list-unstyled text-muted">
                                     <li>• Mã nhân viên: ${orderDetail.staff_id}</li>
-                                    <li>• Ngày nhận đơn: ${orderDetail.packed_at}</li>
+                                    <li>• Ngày đóng gói: ${orderDetail.packed_at}</li>
                                 </ul>
                             </c:when>
                             <c:otherwise>

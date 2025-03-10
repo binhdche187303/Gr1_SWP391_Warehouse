@@ -200,7 +200,7 @@ CREATE TABLE InventoryBatches (
     batch_id INT PRIMARY KEY IDENTITY(1,1),   
     sku NVARCHAR(255) NOT NULL,
     quantity INT NOT NULL,                    
-    unit_price DECIMAL(10,2) NOT NULL,        
+    unit_price DECIMAL(18,0) NOT NULL,        
     expiration_date DATE,                     
     received_date DATETIME NOT NULL,          
     warehouse_id INT NOT NULL,                
@@ -217,7 +217,7 @@ CREATE TABLE PurchaseOrder (
     order_id INT PRIMARY KEY IDENTITY(1,1),
     order_date DATETIME NOT NULL,
     supplier_id INT NOT NULL,
-    total_amount DECIMAL(10,2) NOT NULL,
+    total_amount DECIMAL(18,0) NOT NULL,
 	bill_img_url VARCHAR(255) NULL,
     status NVARCHAR(50) DEFAULT N'Chờ nhập kho' CHECK (status IN (N'Chờ nhập kho', N'Đã nhập kho', N'Đã hủy')),
     notes NVARCHAR(MAX),
@@ -228,14 +228,13 @@ CREATE TABLE PurchaseOrder (
     FOREIGN KEY (warehouse_id) REFERENCES Warehouses(warehouse_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
-
 --Bảng PurchaseDetails (Phiếu nhập hàng chi tiết)
 CREATE TABLE PurchaseDetails (
     detail_id INT PRIMARY KEY IDENTITY(1,1),  -- ID chi tiết nhập hàng
     order_id INT NOT NULL,                     -- ID phiếu nhập hàng
     variant_id INT NOT NULL,          
     quantity INT NOT NULL,                     -- Số lượng nhập
-    unit_price DECIMAL(10,2) NOT NULL,          -- Giá nhập mỗi đơn vị
+    unit_price DECIMAL(18,0) NOT NULL,          -- Giá nhập mỗi đơn vị
     total_price AS (quantity * unit_price),    -- Tổng tiền (tự tính)
     expiration_date DATE,                      -- Ngày hết hạn (nếu có)
     warehouse_id INT NOT NULL,                 -- Kho lưu trữ

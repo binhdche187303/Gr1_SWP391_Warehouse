@@ -67,7 +67,6 @@
                                         </div>
 
 
-                                        <!-- Modal -->
                                         <!-- Modal thêm nhà cung cấp -->
                                         <div class="modal fade" id="addSupplierModal" tabindex="-1" aria-labelledby="addSupplierModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
@@ -81,6 +80,15 @@
                                                             <div class="mb-3">
                                                                 <label for="supplierName" class="form-label">Tên Nhà Cung Cấp</label>
                                                                 <input type="text" class="form-control" id="supplierName" name="supplierName" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="brandId" class="form-label">Thương Hiệu</label>
+                                                                <select class="form-select" id="brandId" name="brandId" required>
+                                                                    <option value="">-- Chọn thương hiệu --</option>
+                                                                    <c:forEach var="brand" items="${brands}">
+                                                                        <option value="${brand.brand_id}">${brand.brand_name}</option>
+                                                                    </c:forEach>
+                                                                </select>
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label for="phone" class="form-label">Số Điện Thoại</label>
@@ -163,42 +171,8 @@
                 <!-- All User Table Ends-->
             </div>                
         </div>
+
         <script>
-//            document.getElementById("addSupplierForm").addEventListener("submit", function (event) {
-//                if (!this.checkValidity()) {
-//                    event.preventDefault(); 
-//
-//                    let invalidFields = this.querySelectorAll(":invalid");
-//                    invalidFields.forEach(function (field) {
-//                        field.classList.add("is-invalid"); 
-//                    });
-//
-//                    alert("Vui lòng nhập đầy đủ và chính xác thông tin."); 
-//                } else {
-//                    event.preventDefault(); 
-//
-//                    let formData = new URLSearchParams(new FormData(this));
-//
-//                    let xhr = new XMLHttpRequest();
-//                    xhr.open("POST", "addSupplier", true);
-//
-//                    xhr.onload = function () {
-//                        if (xhr.status === 200) {
-//                            let result = xhr.responseText;
-//                            console.log("Server response:", result);
-//                            if (result === "success") {
-//                                alert("Thêm nhà cung cấp thành công!");
-//                                location.reload();
-//                            } else {
-//                                alert("Có lỗi xảy ra: " + result);
-//                            }
-//                        } else {
-//                            alert("Lỗi kết nối: " + xhr.status);
-//                        }
-//                    };
-//                    xhr.send(formData);
-//                }
-//            });
             document.getElementById("addSupplierForm").addEventListener("submit", function (event) {
                 event.preventDefault();
 
@@ -234,6 +208,16 @@
                     alert("Địa chỉ không được để trống.");
                 }
 
+                // Kiểm tra chọn thương hiệu
+                let brandField = document.getElementById("brandId");
+                let brandValue = brandField.value;
+                if (!brandValue) {
+                    brandField.classList.add("is-invalid");
+                    isValid = false;
+                    alert("Vui lòng chọn thương hiệu.");
+                }
+
+
                 if (isValid) {
                     let formData = new URLSearchParams(new FormData(this));
 
@@ -248,8 +232,8 @@
                             if (result === "success") {
                                 alert("Thêm nhà cung cấp thành công!");
                                 location.reload();
-                            } else {
-                                alert("Có lỗi xảy ra: " + result);
+                            }else {
+                                alert(result);
                             }
                         } else {
                             alert("Lỗi kết nối: " + xhr.status);

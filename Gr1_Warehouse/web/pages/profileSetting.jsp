@@ -1195,6 +1195,13 @@
                                                             .then(function (orderList) {
                                                                 console.log("✅ Orders received:", orderList);
 
+                                                                // Sắp xếp đơn hàng theo ngày (mới nhất lên đầu)
+                                                                orderList.sort(function (a, b) {
+                                                                    var dateA = new Date(a.order.orderDate);
+                                                                    var dateB = new Date(b.order.orderDate);
+                                                                    return dateB - dateA; // Sắp xếp giảm dần
+                                                                });
+                                                                
                                                                 var orderHTML = "";
                                                                 if (orderList.length === 0) {
                                                                     orderHTML = "<p class='text-danger'>🚨 Bạn chưa có đơn hàng nào!</p>";

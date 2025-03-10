@@ -150,7 +150,25 @@
 
                                             </div>
                                         </div>
-                                        <div id="selectedProductContainer" class="mt-3"></div>
+                                        <div class="mt-3">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr >
+                                                        <th style="font-size: 16px; text-align: center">Tên sản phẩm</th>
+                                                        <th style="font-size: 16px; text-align: center">Phân loại</th>
+                                                        <th style="font-size: 16px; text-align: center">SKU</th>
+                                                        <th style="font-size: 16px; text-align: center">Hạn sử dụng</th>
+                                                        <th style="font-size: 16px; text-align: center">Giá</th>
+                                                        <th style="font-size: 16px; text-align: center">Số lượng</th>
+                                                        <th style="font-size: 16px; text-align: center">Tổng</th>
+                                                        <th style="font-size: 16px">Xóa</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="selectedProductContainer">
+                                                    <!-- Các hàng sản phẩm sẽ được thêm vào đây -->
+                                                </tbody>
+                                            </table>
+                                        </div>                                        
                                         <div class="modal fade" id="searchProductModal" tabindex="-1">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
@@ -251,7 +269,7 @@
         let selectedSupplierCode = ""; // Lưu supplierCode được chọn
 
         // 🔹 Gọi API lấy danh sách nhà cung cấp
-        fetch('/Gr1_Warehouse/getSuppliers')
+        fetch('/Gr1_Warehouse/getSuppliers?filter=Active')
                 .then(response => response.json())
                 .then(suppliers => {
                     if (!Array.isArray(suppliers)) {
@@ -401,12 +419,16 @@
                 const tdSku = document.createElement("td");
                 tdSku.textContent = product.sku || "N/A";
 
+                const tdSizeName = document.createElement("td");
+                tdSizeName.textContent = product.sizeName || "N/A";
+
                 const tdVariantId = document.createElement("td");
                 tdVariantId.textContent = product.variantId || "N/A";
 
                 tr.appendChild(tdCheckbox);
                 tr.appendChild(tdName);
                 tr.appendChild(tdSku);
+                tr.appendChild(tdSizeName);
                 tr.appendChild(tdVariantId);
                 productTableBody.appendChild(tr);
             });
@@ -470,71 +492,91 @@
         const completeSelectionBtn = document.querySelector(".modal-footer .btn-primary");
         const selectedProductContainer = document.getElementById("selectedProductContainer");
         const totalAmount = document.getElementById("totalAmount");
-
         if (!completeSelectionBtn || !selectedProductContainer || !totalAmount) {
             console.error("❌ Lỗi: Không tìm thấy phần tử cần thiết");
             return;
         }
-
         completeSelectionBtn.addEventListener("click", function () {
             console.log("✅ Nút Hoàn tất chọn đã được ấn!");
-
             const checkedProducts = document.querySelectorAll("#productTable input[type='checkbox']:checked");
             if (checkedProducts.length === 0) {
                 alert("Vui lòng chọn ít nhất một sản phẩm!");
                 return;
             }
-
             checkedProducts.forEach(checkbox => {
                 const row = checkbox.closest("tr");
-
-                if (!row || row.children.length < 3) {
+                if (!row || row.children.length < 4) {
                     console.error("⚠️ Lỗi: Không tìm thấy hàng hoặc số cột không đủ!");
+
                     return;
                 }
-
                 const productName = row.children[1]?.textContent.trim() || "Không có tên";
                 const sku = row.children[2]?.textContent.trim() || "Không có SKU";
-                const variantId = row.children[3]?.textContent.trim() || "";
+                const sizeName = row.children[3]?.textContent.trim() || "Không có size name";
+                const variantId = checkbox.dataset.productId || "Không có VariantID";
+                console.log(`🔍 Kiểm tra variantId: ${variantId}`);
 
-                // Kiểm tra sản phẩm đã tồn tại chưa
+
+
+// Kiểm tra sản phẩm đã tồn tại chưa
                 const existingProduct = [...document.querySelectorAll(".selected-product")]
                         .find(product => product.dataset.sku === sku);
-
                 if (existingProduct) {
                     console.warn(`⚠️ Sản phẩm "${productName}" đã tồn tại, không thêm lại!`);
                     return;
                 }
-
                 console.log("📌 Dữ liệu trước khi thêm vào UI:", {productName, sku});
 
-                // ✅ Tạo sản phẩm hiển thị đúng
-                const productRow = document.createElement("div");
-                productRow.classList.add("selected-product", "row", "align-items-center", "mb-2");
+// ✅ Tạo sản phẩm hiển thị đúng
+
+                const productRow = document.createElement("tr");
+                productRow.classList.add("selected-product");
                 productRow.dataset.sku = sku; // Lưu SKU để kiểm tra trùng
-                productRow.dataset.variantId = variantId; // Lưu variant_id vào dataset
+                productRow.dataset.variantId = variantId; // <-- Đảm bảo gán giá trị này
+                productRow.dataset.sizeName = sizeName;
 
-                // Cột: Tên sản phẩm
-                const nameCol = document.createElement("div");
-                nameCol.classList.add("col-2");
+// Cột: Tên sản phẩm
+
+                const nameCol = document.createElement("td");
                 nameCol.textContent = productName;
-
-                // Cột: SKU
-                const skuCol = document.createElement("div");
-                skuCol.classList.add("col-2");
+                nameCol.style.textAlign = "center";
+// Thêm phần tử hiển thị số ngày còn lại
+                const daysLeftMessage = document.createElement("div"); // Sử dụng div để xuống dòng
+                daysLeftMessage.classList.add("days-left-message");
+                daysLeftMessage.style.color = "red"; // Đặt màu đỏ cho văn bản
+                daysLeftMessage.textContent = ""; // Bắt đầu với thông báo rỗng
+                nameCol.appendChild(daysLeftMessage); // Thêm vào cột tên sản phẩm
+                const sizeCol = document.createElement("td");
+                sizeCol.textContent = sizeName;
+                sizeCol.style.textAlign = "center";
+// Cột: SKU
+                const skuCol = document.createElement("td");
                 skuCol.textContent = sku;
-
-                // 🟢 Cột: Hạn sử dụng
-                const expiryCol = document.createElement("div");
-                expiryCol.classList.add("col-2");
+                skuCol.style.textAlign = "center";
+// 🟢 Cột: Hạn sử dụng
+                const expiryCol = document.createElement("td");
                 const expiryInput = document.createElement("input");
                 expiryInput.type = "date";
                 expiryInput.classList.add("form-control", "expiry-date");
                 expiryCol.appendChild(expiryInput);
+                expiryCol.style.width = "120px";
+                expiryCol.style.textAlign = "center";
+                expiryInput.min = new Date().toISOString().split("T")[0]; // Chặn nhập ngày quá khứ
+// Cập nhật số ngày còn lại khi chọn ngày hết hạn
+                expiryInput.addEventListener("change", function () {
+                    const selectedDate = new Date(expiryInput.value);
+                    const today = new Date();
+                    const timeDiff = selectedDate - today;
+                    const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                    if (daysLeft > 0) {
+                        daysLeftMessage.textContent = "Lô hàng còn " + daysLeft + " ngày hết hạn";
+                    } else {
+                        daysLeftMessage.textContent = "Lô hàng hôm nay hết hạn";
+                    }
+                });
+// Cột: Giá
 
-                // Cột: Giá
-                const priceCol = document.createElement("div");
-                priceCol.classList.add("col-2");
+                const priceCol = document.createElement("td");
                 const priceInput = document.createElement("input");
                 priceInput.type = "number";
                 priceInput.classList.add("form-control", "price");
@@ -542,10 +584,12 @@
                 priceInput.min = "1"; // Giá phải lớn hơn 0
                 priceInput.value = "1";
                 priceCol.appendChild(priceInput);
+                priceCol.style.width = "120px";
+                priceCol.style.textAlign = "center";
 
-                // Cột: Số lượng
-                const quantityCol = document.createElement("div");
-                quantityCol.classList.add("col-1");
+// Cột: Số lượng
+
+                const quantityCol = document.createElement("td");
                 const quantityInput = document.createElement("input");
                 quantityInput.type = "number";
                 quantityInput.classList.add("form-control", "quantity");
@@ -553,53 +597,52 @@
                 quantityInput.min = "1"; // Số lượng phải lớn hơn 0
                 quantityInput.value = "1";
                 quantityCol.appendChild(quantityInput);
+                quantityCol.style.width = "120px";
+                quantityCol.style.textAlign = "center";
 
-                // Cột: Tổng giá
-                const totalPriceCol = document.createElement("div");
-                totalPriceCol.classList.add("col-2");
+// Cột: Tổng giá
+                const totalPriceCol = document.createElement("td");
                 const totalPriceSpan = document.createElement("span");
                 totalPriceSpan.classList.add("total-price");
                 totalPriceSpan.textContent = "0 VND";
                 totalPriceCol.appendChild(totalPriceSpan);
-
-                // Cột: Nút xóa
-                const removeCol = document.createElement("div");
-                removeCol.classList.add("col-1", "text-center");
+                totalPriceCol.style.textAlign = "center";
+// Cột: Nút xóa
+                const removeCol = document.createElement("td");
+                removeCol.classList.add("text-center");
                 const removeBtn = document.createElement("button");
                 removeBtn.type = "button";
                 removeBtn.classList.add("btn", "btn-danger", "btn-sm", "remove-product");
                 removeBtn.textContent = "X";
                 removeCol.appendChild(removeBtn);
 
-                // 🛠️ Thêm tất cả vào `productRow`
+// 🛠️ Thêm tất cả vào `productRow`
                 productRow.appendChild(nameCol);
+                productRow.appendChild(sizeCol);
                 productRow.appendChild(skuCol);
                 productRow.appendChild(expiryCol);
                 productRow.appendChild(priceCol);
                 productRow.appendChild(quantityCol);
                 productRow.appendChild(totalPriceCol);
                 productRow.appendChild(removeCol);
-
                 selectedProductContainer.appendChild(productRow);
                 console.log("📌 Đã thêm sản phẩm vào selectedProductContainer!", selectedProductContainer);
-
-                // 🟢 Thêm sự kiện cập nhật tổng tiền khi nhập số lượng hoặc giá
+// 🟢 Thêm sự kiện cập nhật tổng tiền khi nhập số lượng hoặc giá
                 priceInput.addEventListener("input", validateAndUpdateTotal);
                 quantityInput.addEventListener("input", validateAndUpdateTotal);
                 removeBtn.addEventListener("click", function () {
                     productRow.remove();
                     updateTotalPrice();
                 });
+
             });
 
-            // 🔹 Đóng modal sau khi chọn sản phẩm
+// 🔹 Đóng modal sau khi chọn sản phẩm
             const modal = bootstrap.Modal.getInstance(document.getElementById("searchProductModal"));
             modal.hide();
-
             updateTotalPrice(); // Cập nhật tổng giá sau khi chọn xong
         });
-
-        // 🔹 Hàm kiểm tra giá trị nhập vào phải lớn hơn 0 và cập nhật tổng giá
+// 🔹 Hàm kiểm tra giá trị nhập vào phải lớn hơn 0 và cập nhật tổng giá
         function validateAndUpdateTotal(event) {
             const input = event.target;
             if (parseFloat(input.value) <= 0 || isNaN(input.value)) {
@@ -608,7 +651,7 @@
             updateTotalPrice();
         }
 
-        // 🔹 Hàm cập nhật tổng giá từng sản phẩm và tổng cộng
+// 🔹 Hàm cập nhật tổng giá từng sản phẩm và tổng cộng
 
         function updateTotalPrice() {
             let totalAll = 0;
@@ -618,22 +661,17 @@
                 const quantity = parseFloat(productRow.querySelector(".quantity").value) || 0;
                 const price = parseFloat(productRow.querySelector(".price").value) || 0;
                 const totalPrice = quantity * price;
-
-                productRow.querySelector(".total-price").textContent = totalPrice.toLocaleString("vi-VN") + "            VND";
-
+                productRow.querySelector(".total-price").textContent = totalPrice.toLocaleString("vi-VN") + " VND";
                 totalAll += totalPrice;
                 totalQuantity += quantity; // Cộng dồn tổng số lượng nhập
             });
-
-            totalAmount.textContent = "" + totalAll.toLocaleString("vi-VN") + "            VND";
-
-            // Hiển thị tổng số lượng nhập
+            totalAmount.textContent = "" + totalAll.toLocaleString("vi-VN") + " VND";
+// Hiển thị tổng số lượng nhập
             const totalQuantityElement = document.querySelector(".d-flex span:last-child");
             if (totalQuantityElement) {
                 totalQuantityElement.textContent = totalQuantity.toLocaleString("vi-VN");
             }
         }
-
     });
 </script>
 
@@ -641,7 +679,8 @@
 <!--Chọn kho lưu trữ-->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        fetch('/Gr1_Warehouse/getArchive')
+        // Thêm tham số filter=active vào URL để chỉ lấy các kho có trạng thái Active
+        fetch('/Gr1_Warehouse/getArchive?filter=Active')
                 .then(response => {
                     if (!response.ok) {
                         throw new Error("Lỗi khi lấy dữ liệu kho lưu trữ");
@@ -650,10 +689,8 @@
                 })
                 .then(warehouses => {
                     const dropdown = document.getElementById('warehouseDropdown');
-
                     // Xóa các option cũ (nếu có)
                     dropdown.innerHTML = '<option value="" disabled selected>Chọn kho lưu trữ</option>';
-
                     warehouses.forEach(warehouse => {
                         let option = document.createElement('option');
                         option.value = JSON.stringify(warehouse); // Lưu dữ liệu JSON trong value
@@ -718,6 +755,11 @@
         const variantIds = [];
 
         let isValid = true;
+        console.log("supplierId:", supplierId);
+        console.log("warehouseId:", warehouseId);
+        console.log("warehouseStaffId:", warehouseStaffId);
+        console.log("totalAmount:", totalAmount);
+        console.log("totalQuantity:", totalQuantity);
 
         async function fetchVariantId(sku) {
             try {
@@ -735,11 +777,11 @@
 
         const productRows = document.querySelectorAll(".selected-product");
         for (const row of productRows) {
-            const sku = row.querySelector(".col-2:nth-child(2)").textContent.trim();
+            let variantId = row.getAttribute("data-variant-id") || row.dataset.variantId;
+            const sku = row.querySelector("td:nth-child(3)").textContent.trim();
             const expirationDate = row.querySelector(".expiry-date").value.trim();
             let unitPrice = row.querySelector(".price").value.trim();
             let quantity = row.querySelector(".quantity").value.trim();
-            let variantId = row.getAttribute("data-variant-id") || row.dataset.variantId;
 
             unitPrice = parseFloat(unitPrice);
             quantity = parseInt(quantity, 10);
