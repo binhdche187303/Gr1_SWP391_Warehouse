@@ -284,7 +284,7 @@
                                     </li>                                 
 
                                     <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="/dashboard/report.jsp">
+                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/dashboard/report.jsp">
                                             <i class="ri-file-chart-line"></i>
                                             <span>Báo cáo</span>
                                         </a>

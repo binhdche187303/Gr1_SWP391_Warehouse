@@ -1005,10 +1005,29 @@ public class ProductDAO extends DBContext {
         return success;
     }
 
+    public int getAllProductDashboard() {
+        int numberOfProduct = 0;
+        String sql = "SELECT COUNT(*)AS numberOfproduct FROM dbo.Products";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                numberOfProduct = rs.getInt("numberOfproduct");
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return numberOfProduct;
+    }
+
     public static void main(String[] args) {
         ProductDAO pd = new ProductDAO();
         Products p = new Products();
-        
+
+        int i = pd.getAllProductDashboard();
+        System.out.println(i);
 //        p.setProductName("abc");
 //        Brands brands = new Brands();
 //        brands.setBrand_id(1);
@@ -1038,6 +1057,6 @@ public class ProductDAO extends DBContext {
 //        p.setVariants(lpv);
 //        boolean success = pd.addNewProduct(p);
 //        System.out.println(success);
-    pd.updatePrice(154, BigDecimal.valueOf(123));
+//        pd.updatePrice(154, BigDecimal.valueOf(123));
     }
 }

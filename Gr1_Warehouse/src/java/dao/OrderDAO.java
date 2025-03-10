@@ -171,4 +171,37 @@ public class OrderDAO extends DBContext {
         return 0;
     }
 
+    public int getAllOrderDashboard() {
+        int numberOfOrders = 0;
+        String sql = "SELECT COUNT(*)AS numberOfOrders FROM dbo.Orders";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                numberOfOrders = rs.getInt("numberOfOrders");
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return numberOfOrders;
+    }
+
+    public Integer getAllOrderAmountDashboard() {
+        Integer numberOfAmount = 0;
+        String sql = "SELECT SUM(total_amount)AS numberOfAmount FROM dbo.Orders";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                numberOfAmount = rs.getObject("numberOfAmount",Integer.class);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return numberOfAmount;
+    }
 }

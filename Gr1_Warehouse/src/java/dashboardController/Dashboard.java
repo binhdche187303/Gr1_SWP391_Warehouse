@@ -4,6 +4,7 @@
  */
 package dashboardController;
 
+import dao.OrderDAO;
 import dao.ProductDAO;
 import dao.UserDAO;
 import java.io.IOException;
@@ -62,17 +63,18 @@ public class Dashboard extends HttpServlet {
             throws ServletException, IOException {
         ProductDAO pd = new ProductDAO();
         UserDAO ud = new UserDAO();
-        List<Products> listProduct = pd.getAllProducts();
-        List<User> listUser = ud.getAllUser();
-        List<User> listStaff = ud.getAllStaff();
+        OrderDAO od = new OrderDAO();
+        int totalOrder = od.getAllOrderDashboard();
+        int totalProduct = pd.getAllProductDashboard();
+        int totalUser = ud.getAllCusDashboard();
+        int totalStaff = ud.getAllStaffDashboard();
+        Integer totalAmount = od.getAllOrderAmountDashboard();
 
-        int totalProduct = listProduct.size();
-        int totalUser = listUser.size();
-        int totalStaff = listStaff.size();
-
+        request.setAttribute("totalOrder", totalOrder);
         request.setAttribute("totalProduct", totalProduct);
         request.setAttribute("totalUser", totalUser);
         request.setAttribute("totalStaff", totalStaff);
+        request.setAttribute("totalAmount", totalAmount);
 
         request.getRequestDispatcher("/dashboard/dashboard.jsp").forward(request, response);
     }
