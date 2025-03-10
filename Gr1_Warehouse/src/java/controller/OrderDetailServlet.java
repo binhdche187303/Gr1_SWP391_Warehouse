@@ -5,6 +5,7 @@
 package controller;
 
 import dao.OrderDAO;
+import dao.SaleDAO;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,6 +21,7 @@ import model.OrderDetailDTO;
 import model.Payment;
 import model.ProductVariants;
 import model.Products;
+import model.Sale;
 import model.Sizes;
 import model.User;
 
@@ -136,6 +138,9 @@ public class OrderDetailServlet extends HttpServlet {
         System.out.println("💰 Tổng tiền đơn hàng: " + totalAmount);
 
         // 🟢 Chuyển dữ liệu sang JSP
+        SaleDAO sd = new SaleDAO();
+        Sale s = sd.getSaleByOrderId(orderId);
+        request.setAttribute("sale", s);
         request.setAttribute("totalAmount", totalAmount);
         request.setAttribute("orderDetailDTO", orderDetailDTO);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/manager/export_good.jsp");

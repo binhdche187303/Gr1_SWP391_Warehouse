@@ -141,9 +141,10 @@
                                                 <fmt:formatNumber value="${orderDetailDTO.order.totalAmount}" type="currency" currencySymbol="đ" />
                                             </span>
                                         </div>
+                                        <c:set var="sale" value="${sale}"/>
                                         <div class="mt-3 fw-bold">
-                                            <label for="note" class="form-label">Ghi chú đơn hàng</label>
-                                            <textarea id="note" class="form-control" rows="3" placeholder="Nhập ghi chú về đơn hàng..."></textarea>
+                                            <label for="note" class="form-label">Ghi chú đơn hàng bởi ${sale.user.fullname}</label>
+                                            <textarea id="note" class="form-control" rows="3" placeholder="Nhập ghi chú về đơn hàng..." readonly>${sale.noteSale}</textarea>
                                         </div>
                                     </div>
                                 </div>

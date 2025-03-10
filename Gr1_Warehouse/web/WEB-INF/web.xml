@@ -164,6 +164,26 @@
         <servlet-name>ConfirmShippingServlet</servlet-name>
         <servlet-class>ShipController.ConfirmShippingServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SaleOrderServlet</servlet-name>
+        <servlet-class>SaleController.SaleOrderServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AssignSaleOrder</servlet-name>
+        <servlet-class>SaleController.AssignSaleOrder</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MySaleOrders</servlet-name>
+        <servlet-class>SaleController.MySaleOrders</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OrderSaleDetail</servlet-name>
+        <servlet-class>SaleController.OrderSaleDetail</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ConfirmSale</servlet-name>
+        <servlet-class>SaleController.ConfirmSale</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ArchiveServlet</servlet-name>
         <url-pattern>/archive</url-pattern>
@@ -335,6 +355,26 @@
     <servlet-mapping>
         <servlet-name>ConfirmShippingServlet</servlet-name>
         <url-pattern>/confirmShippingServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SaleOrderServlet</servlet-name>
+        <url-pattern>/sale-orders</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AssignSaleOrder</servlet-name>
+        <url-pattern>/assignSaleOrder</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MySaleOrders</servlet-name>
+        <url-pattern>/my-sale-orders</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrderSaleDetail</servlet-name>
+        <url-pattern>/orderSaleDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ConfirmSale</servlet-name>
+        <url-pattern>/confirmSale</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login</welcome-file>
