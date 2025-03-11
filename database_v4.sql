@@ -379,11 +379,6 @@ VALUES
 (N'Warehouse staffs'),
 (N'Packing staffs');
 
-INSERT INTO dbo.Users(username, password, fullname, phone, email, role_id, status)
-VALUES
-(N'cus1', 'pass1', N'Customer 1', '0123456789', 'customer1@gmail.com', 2, 'Active'),
-(N'ad1', 'pass1', N'Admin 1', '0987654321', 'admin1@gmail.com', 1, 'Active');
-
 INSERT INTO dbo.Brands(brand_name)
 VALUES
 (N'Orion'),

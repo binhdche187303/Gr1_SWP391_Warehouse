@@ -38,7 +38,34 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         String code = request.getParameter("code");
 
+//        if (code == null || code.trim().isEmpty()) {
+//            request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
+//            return;
+//        }
+
         if (code == null || code.trim().isEmpty()) {
+            Cookie[] cookies = request.getCookies();
+            String decodedPassword = "";
+            String savedIdentifier = "";
+
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("identifier".equals(cookie.getName())) {
+                        savedIdentifier = cookie.getValue();
+                    }
+                    if ("password".equals(cookie.getName())) {
+                        try {
+                            decodedPassword = new String(Base64.getDecoder().decode(cookie.getValue()));
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Error decoding password: " + e.getMessage());
+                        }
+                    }
+                }
+            }
+
+            request.setAttribute("savedIdentifier", savedIdentifier);
+            request.setAttribute("decodedPassword", decodedPassword);
+
             request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
             return;
         }
@@ -83,7 +110,7 @@ public class LoginServlet extends HttpServlet {
 
             Role role = new Role();
             role.setRoleId(2);  // Role id 2 là Customer
-            user.setRole(role); 
+            user.setRole(role);
             user.setStatus("Active");
 
             try {
@@ -207,9 +234,13 @@ public class LoginServlet extends HttpServlet {
             System.out.println("Identifier and password saved in cookies for 7 days.");
         } else {
             Cookie emailCookie = new Cookie("identifier", "");
+            Cookie passwordCookie = new Cookie("password", "");
             emailCookie.setMaxAge(0);
             emailCookie.setPath("/");
             response.addCookie(emailCookie);
+            passwordCookie.setMaxAge(0);
+            passwordCookie.setPath("/");
+            response.addCookie(passwordCookie);
             System.out.println("Identifier cookie deleted.");
         }
 

@@ -122,49 +122,46 @@
 
 
         <script>
-            // Function to handle the sorting logic
             document.getElementById('sortDateDropdown').addEventListener('change', function () {
-                var sortOrder = this.value; // Get the selected value (asc, desc, or none)
-                sortTable(sortOrder); // Call the sorting function
+                var sortOrder = this.value;
+                sortTable(sortOrder);
             });
 
-            // Function to sort the table based on the selected order
             function sortTable(sortOrder) {
-                var table = document.getElementById("table_id");
-                var rows = Array.from(table.rows).slice(1); // Get all rows except the header row
-                var sortedRows;
+                var table = document.querySelector(".table.all-package.order-table.theme-table");
+                var tbody = table.querySelector("tbody");
+                var rows = Array.from(tbody.rows);
 
-                // Reset if no sort option is selected
                 if (sortOrder === "none") {
-                    location.reload(); // Reload the page to reset all rows (or you can filter rows manually if you prefer)
+                    location.reload();
                     return;
                 }
 
-                // Sorting logic
-                if (sortOrder === "asc") {
-                    sortedRows = rows.sort((a, b) => {
-                        var dateA = parseDate(a.cells[1].innerText); // Assuming the "Date" is in the second column
-                        var dateB = parseDate(b.cells[1].innerText);
-                        return dateA - dateB; // Sort in ascending order
-                    });
-                } else if (sortOrder === "desc") {
-                    sortedRows = rows.sort((a, b) => {
-                        var dateA = parseDate(a.cells[1].innerText);
-                        var dateB = parseDate(b.cells[1].innerText);
-                        return dateB - dateA; // Sort in descending order
-                    });
-                }
+                var sortedRows = rows.sort((a, b) => {
+                    var dateA = parseDate(a.cells[1].innerText.trim());
+                    var dateB = parseDate(b.cells[1].innerText.trim());
 
-                // Append the sorted rows back to the table
-                sortedRows.forEach(row => table.appendChild(row));
+                    if (isNaN(dateA) || isNaN(dateB)) {
+                        console.error("Lỗi chuyển đổi ngày tháng:", a.cells[1].innerText, b.cells[1].innerText);
+                        return 0; // Không thay đổi vị trí nếu lỗi
+                    }
+
+                    return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
+                });
+
+                tbody.innerHTML = ""; // Xóa tbody cũ
+                sortedRows.forEach(row => tbody.appendChild(row)); // Thêm lại hàng đã sắp xếp
             }
 
-            // Helper function to parse the date in dd/MM/yyyy format to a Date object
             function parseDate(dateString) {
                 var parts = dateString.split('/');
-                // Date format: dd/MM/yyyy -> new Date(year, month, day)
-                return new Date(parts[2], parts[1] - 1, parts[0]);
+                if (parts.length !== 3)
+                    return NaN; // Kiểm tra nếu format sai
+
+                return new Date(parseInt(parts[2], 10), parseInt(parts[1], 10) - 1, parseInt(parts[0], 10));
             }
+
+
         </script>
 
 

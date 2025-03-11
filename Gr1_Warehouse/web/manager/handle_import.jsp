@@ -66,7 +66,7 @@
                                         <div class="card-body">
                                             <div class="title-header option-title">
                                                 <h5>Phiếu nhập hàng</h5>
-                                                <button class="btn btn-danger" onclick="window.location.href = 'http://localhost:8080/Gr1_Warehouse/importGood'">Hủy</button>
+                                                <button class="btn btn-danger" onclick="window.location.href = 'http://localhost:8080/Gr1_Warehouse/importGood'">Quay lại</button>
                                             </div>
                                         </div>
 
@@ -127,25 +127,11 @@
                                 <div class="container mt-4">
                                     <div class="border border-gray-300 rounded-lg shadow-sm p-4 bg-white">
                                         <div class="border-bottom pb-2 mb-2">
-                                            <h3 class="text-lg font-semibold">Sản phẩm</h3>
+                                            <h3 class="text-lg font-semibold">Danh sách sản phẩm</h3>
                                         </div>
                                         <div class="mb-4">
                                             <div class="row">
-                                                <div class="col-md-9 d-flex align-items-center">
-                                                    <div class="input-group w-100">
-                                                        <div class="input-group-prepend">
-                                                            <select class="form-control">
-                                                                <option value="sku">Tìm kiếm SKU</option>
-                                                            </select>
-                                                        </div>
-                                                        <input type="text" class="form-control flex-grow-2" placeholder="Tìm kiếm sản phẩm">
-                                                    </div>
-                                                </div>
                                                 <div class="col-md-3 d-flex align-items-center">
-                                                    <!-- Button mở modal -->
-                                                    <button class="btn btn-outline-primary w-auto">
-                                                        Tìm kiếm
-                                                    </button>
                                                 </div>
 
                                             </div>
@@ -177,6 +163,7 @@
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                     </div>
                                                     <div class="modal-body">
+                                                        <input type="text" id="searchSkuInput" class="form-control mb-2" style="font-size: 16px;" placeholder="Nhập SKU để tìm kiếm...">
                                                         <table class="table">
                                                             <thead>
                                                                 <tr>
@@ -316,6 +303,7 @@
         openProductModalBtn.addEventListener("click", function () {
             if (!selectedSupplierCode) {
                 alert("Vui lòng chọn nhà cung cấp trước!");
+                event.preventDefault(); // Ngăn chặn điều hướng
                 return;
             }
             // 🔹 Reset bảng sản phẩm trước khi tải dữ liệu mới
@@ -327,6 +315,10 @@
                     .then(response => response.json())
                     .then(products => {
                         console.log("✅ Dữ liệu sản phẩm nhận được:", products);
+                        if (!Array.isArray(products) || products.length === 0) {
+                            alert("⚠️ Nhà cung cấp hiện chưa cung cấp sản phẩm nào vui lòng chọn nhà cung cấp khác!");
+                            return; // Dừng lại, không mở modal
+                        }
                         displayProductList(products); // 🛠 Gọi hàm hiển thị danh sách sản phẩm
                     })
                     .catch(error => console.error("❌ Lỗi khi lấy danh sách sản phẩm:", error));
@@ -424,6 +416,7 @@
 
                 const tdVariantId = document.createElement("td");
                 tdVariantId.textContent = product.variantId || "N/A";
+                tdVariantId.classList.add("hidden-column"); // Thêm class để ẩn
 
                 tr.appendChild(tdCheckbox);
                 tr.appendChild(tdName);
@@ -463,7 +456,6 @@
     });
 </script>
 
-
 <!--Chọn nhân viên xử lí-->
 <script>
     function loadWarehouseStaffs() {
@@ -499,8 +491,11 @@
         completeSelectionBtn.addEventListener("click", function () {
             console.log("✅ Nút Hoàn tất chọn đã được ấn!");
             const checkedProducts = document.querySelectorAll("#productTable input[type='checkbox']:checked");
+            // Check slect minimize one products
             if (checkedProducts.length === 0) {
                 alert("Vui lòng chọn ít nhất một sản phẩm!");
+                event.preventDefault();  // Ngăn chặn hành động mặc định (chỉ cần nếu có form)
+                event.stopPropagation(); // Ngăn modal bị đóng nếu có sự kiện lan truyền
                 return;
             }
             checkedProducts.forEach(checkbox => {
@@ -514,20 +509,19 @@
                 const sku = row.children[2]?.textContent.trim() || "Không có SKU";
                 const sizeName = row.children[3]?.textContent.trim() || "Không có size name";
                 const variantId = checkbox.dataset.productId || "Không có VariantID";
-                console.log(`🔍 Kiểm tra variantId: ${variantId}`);
 
 
 
-// Kiểm tra sản phẩm đã tồn tại chưa
+                // Kiểm tra sản phẩm đã tồn tại chưa
                 const existingProduct = [...document.querySelectorAll(".selected-product")]
                         .find(product => product.dataset.sku === sku);
                 if (existingProduct) {
-                    console.warn(`⚠️ Sản phẩm "${productName}" đã tồn tại, không thêm lại!`);
+                    alert("⚠️ Sản phẩm \"" + productName + "\" đã tồn tại, không thêm lại!");
                     return;
                 }
                 console.log("📌 Dữ liệu trước khi thêm vào UI:", {productName, sku});
 
-// ✅ Tạo sản phẩm hiển thị đúng
+                // ✅ Tạo sản phẩm hiển thị đúng
 
                 const productRow = document.createElement("tr");
                 productRow.classList.add("selected-product");
@@ -535,12 +529,12 @@
                 productRow.dataset.variantId = variantId; // <-- Đảm bảo gán giá trị này
                 productRow.dataset.sizeName = sizeName;
 
-// Cột: Tên sản phẩm
+                // Cột: Tên sản phẩm
 
                 const nameCol = document.createElement("td");
                 nameCol.textContent = productName;
                 nameCol.style.textAlign = "center";
-// Thêm phần tử hiển thị số ngày còn lại
+                // Thêm phần tử hiển thị số ngày còn lại
                 const daysLeftMessage = document.createElement("div"); // Sử dụng div để xuống dòng
                 daysLeftMessage.classList.add("days-left-message");
                 daysLeftMessage.style.color = "red"; // Đặt màu đỏ cho văn bản
@@ -549,20 +543,20 @@
                 const sizeCol = document.createElement("td");
                 sizeCol.textContent = sizeName;
                 sizeCol.style.textAlign = "center";
-// Cột: SKU
+                // Cột: SKU
                 const skuCol = document.createElement("td");
                 skuCol.textContent = sku;
                 skuCol.style.textAlign = "center";
-// 🟢 Cột: Hạn sử dụng
+                // 🟢 Cột: Hạn sử dụng
                 const expiryCol = document.createElement("td");
                 const expiryInput = document.createElement("input");
                 expiryInput.type = "date";
                 expiryInput.classList.add("form-control", "expiry-date");
                 expiryCol.appendChild(expiryInput);
-                expiryCol.style.width = "120px";
+                expiryCol.style.width = "80px";
                 expiryCol.style.textAlign = "center";
                 expiryInput.min = new Date().toISOString().split("T")[0]; // Chặn nhập ngày quá khứ
-// Cập nhật số ngày còn lại khi chọn ngày hết hạn
+                // Cập nhật số ngày còn lại khi chọn ngày hết hạn
                 expiryInput.addEventListener("change", function () {
                     const selectedDate = new Date(expiryInput.value);
                     const today = new Date();
@@ -574,7 +568,7 @@
                         daysLeftMessage.textContent = "Lô hàng hôm nay hết hạn";
                     }
                 });
-// Cột: Giá
+                // Cột: Giá
 
                 const priceCol = document.createElement("td");
                 const priceInput = document.createElement("input");
@@ -587,7 +581,7 @@
                 priceCol.style.width = "120px";
                 priceCol.style.textAlign = "center";
 
-// Cột: Số lượng
+                // Cột: Số lượng
 
                 const quantityCol = document.createElement("td");
                 const quantityInput = document.createElement("input");
@@ -600,14 +594,14 @@
                 quantityCol.style.width = "120px";
                 quantityCol.style.textAlign = "center";
 
-// Cột: Tổng giá
+                // Cột: Tổng giá
                 const totalPriceCol = document.createElement("td");
                 const totalPriceSpan = document.createElement("span");
                 totalPriceSpan.classList.add("total-price");
                 totalPriceSpan.textContent = "0 VND";
                 totalPriceCol.appendChild(totalPriceSpan);
                 totalPriceCol.style.textAlign = "center";
-// Cột: Nút xóa
+                // Cột: Nút xóa
                 const removeCol = document.createElement("td");
                 removeCol.classList.add("text-center");
                 const removeBtn = document.createElement("button");
@@ -616,7 +610,7 @@
                 removeBtn.textContent = "X";
                 removeCol.appendChild(removeBtn);
 
-// 🛠️ Thêm tất cả vào `productRow`
+                // 🛠️ Thêm tất cả vào `productRow`
                 productRow.appendChild(nameCol);
                 productRow.appendChild(sizeCol);
                 productRow.appendChild(skuCol);
@@ -627,7 +621,7 @@
                 productRow.appendChild(removeCol);
                 selectedProductContainer.appendChild(productRow);
                 console.log("📌 Đã thêm sản phẩm vào selectedProductContainer!", selectedProductContainer);
-// 🟢 Thêm sự kiện cập nhật tổng tiền khi nhập số lượng hoặc giá
+                // 🟢 Thêm sự kiện cập nhật tổng tiền khi nhập số lượng hoặc giá
                 priceInput.addEventListener("input", validateAndUpdateTotal);
                 quantityInput.addEventListener("input", validateAndUpdateTotal);
                 removeBtn.addEventListener("click", function () {
@@ -637,12 +631,12 @@
 
             });
 
-// 🔹 Đóng modal sau khi chọn sản phẩm
+            // 🔹 Đóng modal sau khi chọn sản phẩm
             const modal = bootstrap.Modal.getInstance(document.getElementById("searchProductModal"));
             modal.hide();
             updateTotalPrice(); // Cập nhật tổng giá sau khi chọn xong
         });
-// 🔹 Hàm kiểm tra giá trị nhập vào phải lớn hơn 0 và cập nhật tổng giá
+        // 🔹 Hàm kiểm tra giá trị nhập vào phải lớn hơn 0 và cập nhật tổng giá
         function validateAndUpdateTotal(event) {
             const input = event.target;
             if (parseFloat(input.value) <= 0 || isNaN(input.value)) {
@@ -651,7 +645,7 @@
             updateTotalPrice();
         }
 
-// 🔹 Hàm cập nhật tổng giá từng sản phẩm và tổng cộng
+        // 🔹 Hàm cập nhật tổng giá từng sản phẩm và tổng cộng
 
         function updateTotalPrice() {
             let totalAll = 0;
@@ -666,7 +660,7 @@
                 totalQuantity += quantity; // Cộng dồn tổng số lượng nhập
             });
             totalAmount.textContent = "" + totalAll.toLocaleString("vi-VN") + " VND";
-// Hiển thị tổng số lượng nhập
+            // Hiển thị tổng số lượng nhập
             const totalQuantityElement = document.querySelector(".d-flex span:last-child");
             if (totalQuantityElement) {
                 totalQuantityElement.textContent = totalQuantity.toLocaleString("vi-VN");
@@ -675,6 +669,42 @@
     });
 </script>
 
+<!--Tìm kiếm trong modal-->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchSkuInput = document.getElementById("searchSkuInput");
+        const productTableBody = document.getElementById("productTable");
+
+        if (!searchSkuInput || !productTableBody) {
+            console.error("❌ Không tìm thấy phần tử tìm kiếm hoặc bảng sản phẩm!");
+            return;
+        }
+
+        // 🔍 Hàm tìm kiếm SKU
+        function filterProductsBySku() {
+            const searchValue = searchSkuInput.value.trim().toLowerCase();
+            const rows = productTableBody.querySelectorAll("tr");
+
+            rows.forEach(row => {
+                const skuCell = row.querySelector("td:nth-child(3)"); // Cột SKU (thứ 3)
+                if (skuCell) {
+                    const skuText = skuCell.textContent.trim().toLowerCase();
+                    row.style.display = skuText.includes(searchValue) ? "" : "none";
+                }
+            });
+        }
+
+        // ⌨️ Lắng nghe sự kiện nhập để lọc sản phẩm
+        searchSkuInput.addEventListener("input", filterProductsBySku);
+
+        // Ngăn Enter submit form hoặc đóng modal
+        searchSkuInput.addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+            }
+        });
+    });
+</script>
 
 <!--Chọn kho lưu trữ-->
 <script>
@@ -795,11 +825,39 @@
                 }
             }
 
-            if (!sku || !expirationDate || isNaN(quantity) || quantity <= 0 || isNaN(unitPrice) || unitPrice <= 0) {
-                alert("Vui lòng kiểm tra thông tin sản phẩm.");
+            const today = new Date().toISOString().split("T")[0]; // Lấy ngày hôm nay ở định dạng YYYY-MM-DD
+
+            if (!sku) {
+                alert("Vui lòng nhập SKU.");
                 isValid = false;
                 break;
             }
+
+            if (!expirationDate) {
+                alert("Vui lòng nhập ngày hết hạn.");
+                isValid = false;
+                break;
+            }
+
+            if (isNaN(quantity) || quantity <= 0) {
+                alert("Số lượng không hợp lệ. Vui lòng nhập số lượng lớn hơn 0.");
+                isValid = false;
+                break;
+            }
+
+            if (isNaN(unitPrice) || unitPrice <= 0) {
+                alert("Đơn giá không hợp lệ. Vui lòng nhập đơn giá lớn hơn 0.");
+                isValid = false;
+                break;
+            }
+
+            // Kiểm tra nếu có lô hàng hết hạn trong hôm nay
+            if (expirationDate === today) {
+                alert("⚠️ Có lô hàng hết hạn trong hôm nay!");
+                isValid = false;
+                break;
+            }
+
 
             skus.push(sku);
             quantities.push(quantity);
@@ -811,7 +869,10 @@
         if (!isValid || skus.length === 0) {
             return;
         }
-
+        if (!billImgFile) {
+            alert("Vui lòng tải lên ảnh hóa đơn trước khi nhập hàng.");
+            return;
+        }
         // Kiểm tra định dạng ảnh trước khi gửi
         if (billImgFile) {
             const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
@@ -860,8 +921,6 @@
     });
 </script>
 
-
-
 <style>
     .modal-dialog {
         max-width: 800px; /* Giới hạn chiều rộng modal */
@@ -881,7 +940,11 @@
         max-width: 100%; /* Giữ bảng trong modal */
     }
 
+    .hidden-column {
+        display: none;
+    }
 </style>
+
 <!-- latest js -->
 <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
 
@@ -924,5 +987,4 @@
 <!-- ratio js -->
 <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>
 </body>
-
 </html>

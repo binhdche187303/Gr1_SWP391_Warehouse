@@ -1,4 +1,5 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -84,14 +85,17 @@
                                 <form class="row g-4" method="post" action="${pageContext.request.contextPath}/login">
                                     <div class="col-12">
                                         <div class="form-floating theme-form-floating log-in-form">
-                                            <input type="text" class="form-control" id="identifier" name="identifier" placeholder="Email or Username" required>
+                                            <input type="text" class="form-control" id="identifier" name="identifier" 
+                                                   placeholder="Email or Username" 
+                                                   value="${savedIdentifier != null ? savedIdentifier : ''}" required>
                                             <label for="identifier">Email hoặc tên tài khoản</label>
                                         </div>
                                     </div>
 
                                     <div class="col-12">
                                         <div class="form-floating theme-form-floating log-in-form">
-                                            <input type="password" class="form-control" id="password" name="pass" placeholder="Password" required>
+                                            <input type="password" class="form-control" id="password" name="pass" 
+                                                   placeholder="Password" value="${decodedPassword != null ? decodedPassword : ''}" required>
                                             <label for="password">Mật khẩu</label>
                                         </div>
                                     </div>
@@ -99,7 +103,8 @@
                                     <div class="col-12">
                                         <div class="forgot-box">
                                             <div class="form-check ps-0 m-0 remember-box">
-                                                <input class="checkbox_animated check-box" type="checkbox" id="flexCheckDefault" name="save-pass">
+                                                <input class="checkbox_animated check-box" type="checkbox" id="flexCheckDefault" name="save-pass" 
+                                                       ${cookie.identifier.value != null ? "checked" : ""}>
                                                 <label class="form-check-label" for="flexCheckDefault">Ghi nhớ tài khoản</label>
                                             </div>
                                             <a href="${pageContext.request.contextPath}/request" class="forgot-password">Quên mật khẩu?</a>
@@ -110,7 +115,6 @@
                                         <button class="btn btn-animation w-100 justify-content-center" type="submit">Đăng nhập</button>
                                     </div>
                                 </form>
-
                             </div>
 
                             <div class="other-log-in">
@@ -124,11 +128,6 @@
                                             <img src="${pageContext.request.contextPath}/assets/images/inner-page/google.png" class="blur-up lazyload" alt=""> Đăng nhập với google
 
 
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="https://www.facebook.com/" class="btn google-button w-100">
-                                            <img src="${pageContext.request.contextPath}/assets/images/inner-page/facebook.png" class="blur-up lazyload" alt=""> Log In with Facebook
                                         </a>
                                     </li>
                                 </ul>
