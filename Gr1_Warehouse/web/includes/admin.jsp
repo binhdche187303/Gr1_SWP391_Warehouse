@@ -223,19 +223,10 @@
                                     </li>
 
                                     <li class="sidebar-list">
-                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
+                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/financialmanagement">
                                             <i class="ri-store-3-line"></i>
                                             <span>Quản lý thu chi</span>
                                         </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="/Gr1_Warehouse/financialmanagement">Thu chi</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="/Gr1_Warehouse/dashboard/debt.jsp">Công nợ</a>
-                                            </li>
-                                        </ul>
                                     </li>
 
                                     <li class="sidebar-list">
