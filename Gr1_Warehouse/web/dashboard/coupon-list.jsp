@@ -103,30 +103,38 @@
                                 <div class="card card-table">
                                     <div class="card-body">
                                         <div class="title-header option-title">
-                                            <h5>Coupon List</h5>
+                                            <h5>Danh sách mã giảm giá</h5>
                                             <div class="right-options">
                                                 <ul>
                                                     <li>
-                                                        <a class="btn btn-solid" href="/Gr1_Warehouse/createcoupon">Add Coupon</a>
+                                                        <a class="btn btn-solid" href="/Gr1_Warehouse/createcoupon">Tạo mã giảm giá</a>
                                                     </li>
                                                 </ul>
                                             </div>
                                         </div>
                                         <div>
+                                            <div class="d-flex justify-content-between mb-3">
+                                                <input type="text" id="searchCode" class="form-control w-25" placeholder="Tìm theo mã giảm giá">
+                                                <select id="filterStatus" class="form-select w-25">
+                                                    <option value="">Tất cả trạng thái</option>
+                                                    <option value="Active">Active</option>
+                                                    <option value="Inactive">Inactive</option>
+                                                </select>
+                                            </div>
                                             <div class="table-responsive">
                                                 <table class="table all-package coupon-list-table table-hover theme-table" id="table_id">
                                                     <thead>
                                                         <tr>
-                                                            <th>Code</th>
-                                                            <th>Discount</th>
-                                                            <th>Min Quantity</th>
-                                                            <th>Min Order Value</th>
-                                                            <th>Start Date</th>
-                                                            <th>End Date</th>
-                                                            <th>Quantity</th>
-                                                            <th>Last Updated</th>
-                                                            <th>Status</th>
-                                                            <th>Action</th>
+                                                            <th>Mã</th>
+                                                            <th>% giảm</th>
+                                                            <th>Số lượng tối thiểu</th>
+                                                            <th>Giá trị đơn hàng tối thiểu</th>
+                                                            <th>Ngày bắt đầu</th>
+                                                            <th>Ngày kết thúc</th>
+                                                            <th>Số lượng mã</th>
+                                                            <th>Cập nhật lần cuôí</th>
+                                                            <th>Trạng thái</th>
+                                                            <th>Hành động</th>
                                                         </tr>
                                                     </thead>
 
@@ -139,7 +147,6 @@
                                                                 <td class="theme-color">${ld.min_order_value}</td>
 
                                                                 <fmt:parseDate value="${ld.start_date}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedStartDate" />
-                                                                <fmt:parseDate value="${ld.end_date}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedEndDate" />
 
                                                                 <td class="menu-status">
                                                                     <span class="success">
@@ -147,15 +154,25 @@
                                                                     </span>
                                                                 </td>
                                                                 <td class="menu-status">
-                                                                    <span class="danger">
-                                                                        <fmt:formatDate value="${parsedEndDate}" pattern="dd/MM/yyyy"/>
-                                                                    </span>
+                                                                    <c:choose>
+                                                                        <c:when test="${ld.end_date != null && ld.end_date != ''}">
+                                                                            <fmt:parseDate value="${ld.end_date}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedEndDate" />
+                                                                            <span class="danger">
+                                                                                <fmt:formatDate value="${parsedEndDate}" pattern="dd/MM/yyyy"/>
+                                                                            </span>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <span>
+                                                                                <!-- Empty span with no class -->
+                                                                            </span>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
                                                                 </td>
 
                                                                 <td>
                                                                     <c:choose>
                                                                         <c:when test="${ld.max_uses == null}">
-                                                                            Infinity
+
                                                                         </c:when>
                                                                         <c:otherwise>
                                                                             ${ld.max_uses}
@@ -226,7 +243,7 @@
             <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Edit Discount</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa mã giảm giá</h5>
                     </div>
                     <div class="modal-body">
                         <form action="couponlist" method="POST">
@@ -235,7 +252,7 @@
                             <!-- Discount Code -->
                             <div class="form-floating mb-3">
                                 <input type="text" class="form-control" id="discount_code" name="discount_code" value="" readonly />
-                                <label for="discount_code">Coupon Code</label>
+                                <label for="discount_code">Mã giảm giá</label>
                             </div>
 
                             <!-- Discount % -->
@@ -249,7 +266,7 @@
                                        step="0.1" 
                                        value="" 
                                        required/>
-                                <label for="discount_percentage">Discount (%)</label>
+                                <label for="discount_percentage">Giảm giá(%)</label>
                             </div>  
 
                             <!-- Start Date & End Date cùng hàng -->
@@ -257,13 +274,13 @@
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
                                         <input type="date" class="form-control" id="start_date" name="start_date" value="" required readonly />
-                                        <label for="start_date">Start Date</label>
+                                        <label for="start_date">Ngày bắt đầu</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
                                         <input type="date" class="form-control" id="end_date" name="end_date" value="" required readonly />
-                                        <label for="end_date">End Date</label>
+                                        <label for="end_date">Ngày kết thúc</label>
                                     </div>
                                 </div>
                             </div>
@@ -271,12 +288,12 @@
                             <!-- Quantity -->
                             <div class="form-floating mb-3">
                                 <input type="number" class="form-control" id="max_uses" name="max_uses" value="" />
-                                <label for="max_uses">Quantity</label>
+                                <label for="max_uses">Số lượng mã</label>
                             </div>
 
                             <!-- Status -->
                             <div class="mb-3">
-                                <label for="status" class="form-label">Status</label>
+                                <label for="status" class="form-label">Trạng thái</label>
                                 <select id="status" name="status" class="form-select">
                                     <option value="Active">Active</option>
                                     <option value="Inactive">Inactive</option>
@@ -285,8 +302,8 @@
 
                             <!-- Modal Footer -->
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                             </div>
 
                         </form>
@@ -323,7 +340,7 @@
         <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
 
         <!-- Data table js -->
-<!--        <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script>
+        <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script><!--
         <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>-->
 
         <!-- all checkbox select js -->
@@ -336,6 +353,42 @@
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
 
         <script>
+            //Datatable
+            $(document).ready(function () {
+                // Khởi tạo DataTable
+                var table = $("#table_id").DataTable({
+                    "paging": true, // Bật phân trang
+                    "ordering": true, // Cho phép sắp xếp
+                    "info": true, // Hiển thị thông tin số dòng
+                    "searching": true, // Vẫn cho phép tìm kiếm nhưng ẩn ô tìm kiếm mặc định
+                    "dom": "tip", // Ẩn lengthMenu và ô tìm kiếm mặc định
+                    "language": {
+                        "zeroRecords": "Không tìm thấy dữ liệu",
+                        "info": "Hiển thị _PAGE_ của _PAGES_",
+                        "infoEmpty": "Không có dữ liệu",
+                        "infoFiltered": "(lọc từ _MAX_ dòng)",
+                        "paginate": {
+                            "first": "Đầu",
+                            "last": "Cuối",
+                            "next": "Tiếp",
+                            "previous": "Trước"
+                        }
+                    }
+                });
+
+
+                // Tìm kiếm theo mã giảm giá
+                $("#searchCode").on("keyup", function () {
+                    table.columns(0).search(this.value).draw();
+                });
+
+                // Lọc theo trạng thái
+                $("#filterStatus").on("change", function () {
+                    table.columns(8).search(this.value).draw();
+                });
+            });
+
+//
             $(document).on("click", ".edit-discount-btn", function () {
                 var id = $(this).data("id");
                 var code = $(this).data("code");
@@ -375,9 +428,79 @@
                 $("#edit-discount").modal("show");
             });
 
+
+//Check end date
+// Function to add warning icons/indicators to discount end dates
+            document.addEventListener('DOMContentLoaded', function () {
+                // Get all rows in the discount table
+                const tableRows = document.querySelectorAll('#table_id tbody tr');
+                const currentDate = new Date();
+
+                // Set the warning threshold (7 days before expiration)
+                const warningThreshold = 7;
+
+                tableRows.forEach(function (row) {
+                    // Get the end date cell (6th column, index 5)
+                    const endDateCell = row.querySelector('td:nth-child(6)');
+                    if (!endDateCell)
+                        return;
+
+                    // Extract the date from the span inside the cell
+                    const dateSpan = endDateCell.querySelector('span');
+                    if (!dateSpan)
+                        return;
+
+                    const dateText = dateSpan.textContent.trim();
+                    if (!dateText)
+                        return;
+
+                    // Parse the date (format: dd/MM/yyyy)
+                    const dateParts = dateText.split('/');
+                    const day = parseInt(dateParts[0], 10);
+                    const month = parseInt(dateParts[1], 10);
+                    const year = parseInt(dateParts[2], 10);
+                    const endDate = new Date(year, month - 1, day); // Month is 0-based in JavaScript
+
+                    // Calculate days difference
+                    const differenceInTime = endDate.getTime() - currentDate.getTime();
+                    const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
+
+                    // Create warning element
+                    const warningElement = document.createElement('span');
+                    warningElement.style.marginLeft = '10px';
+                    warningElement.style.fontWeight = 'bold';
+                    warningElement.style.borderRadius = '3px';
+                    warningElement.style.padding = '2px 6px';
+
+                    // Apply different styles based on urgency
+                    if (differenceInDays < 0) {
+                        // Past expiration
+                        warningElement.textContent = 'Đã hết hạn';
+                        warningElement.style.backgroundColor = '#ffcccc';
+                        warningElement.style.color = '#d9534f';
+                    } else if (differenceInDays <= warningThreshold) {
+                        // Approaching expiration
+                        warningElement.textContent = 'Còn ' + differenceInDays + ' ngày';
+                        warningElement.style.backgroundColor = '#fff3cd';
+                        warningElement.style.color = '#ffc107';
+                    } else {
+                        // No warning needed for dates far in the future
+                        return;
+                    }
+
+                    // Add warning element to the cell
+                    dateSpan.appendChild(warningElement);
+
+                    // Also highlight the entire row for expired discounts
+                    if (differenceInDays < 0) {
+                        row.style.backgroundColor = 'rgba(255, 204, 204, 0.2)';
+                    } else if (differenceInDays <= warningThreshold) {
+                        row.style.backgroundColor = 'rgba(255, 243, 205, 0.2)';
+                    }
+                });
+
+            });
         </script>
-
-
 
     </body>
 

@@ -2,26 +2,26 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package dashboardController;
+package managerController;
 
-import dao.OrderDAO;
-import dao.ProductDAO;
-import dao.UserDAO;
+import dao.CategoryDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.SQLException;
 import java.util.List;
-import model.Products;
-import model.User;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.Categories;
 
 /**
  *
  * @author admin
  */
-public class Dashboard extends HttpServlet {
+public class CreateCategory extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +40,10 @@ public class Dashboard extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Dashboard</title>");
+            out.println("<title>Servlet CreateCategory</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Dashboard at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CreateCategory at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,22 +61,10 @@ public class Dashboard extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ProductDAO pd = new ProductDAO();
-        UserDAO ud = new UserDAO();
-        OrderDAO od = new OrderDAO();
-        int totalOrder = od.getAllOrderDashboard();
-        int totalProduct = pd.getAllProductDashboard();
-        int totalUser = ud.getAllCusDashboard();
-        int totalStaff = ud.getAllStaffDashboard();
-        Integer totalAmount = od.getAllOrderAmountDashboard();
-
-        request.setAttribute("totalOrder", totalOrder);
-        request.setAttribute("totalProduct", totalProduct);
-        request.setAttribute("totalUser", totalUser);
-        request.setAttribute("totalStaff", totalStaff);
-        request.setAttribute("totalAmount", totalAmount);
-
-        request.getRequestDispatcher("/dashboard/dashboard.jsp").forward(request, response);
+        CategoryDAO cd = new CategoryDAO();
+        List<Categories> listCategories = cd.getAllCategories();
+        request.setAttribute("listCategories", listCategories);
+        request.getRequestDispatcher("/manager/create-category.jsp").forward(request, response);
     }
 
     /**
@@ -90,7 +78,23 @@ public class Dashboard extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        CategoryDAO cd = new CategoryDAO();
+        String category_name = request.getParameter("category_name");
+        try {
+            if (cd.isCategoryNameExists(category_name)) {
+                request.setAttribute("category_name", category_name);
+                List<Categories> listCategories = cd.getAllCategories();
+                request.setAttribute("listCategories", listCategories);
+                request.setAttribute("message", "Tên thương hiệu đã tồn tại");
+                request.getRequestDispatcher("/manager/create-category.jsp").forward(request, response);
+            } else {
+                boolean success = cd.createCategory(category_name);
+                request.getSession().setAttribute("success", "Tạo thương hiệu mới thành công");
+                response.sendRedirect("categorylist");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
     }
 
     /**

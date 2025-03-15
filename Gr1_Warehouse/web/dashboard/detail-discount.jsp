@@ -104,10 +104,10 @@
                                 <div class="card card-table">
                                     <div class="card-body">
                                         <div class="title-header option-title">
-                                            <h5>Coupon</h5>
+                                            <h5>Giảm giá</h5>
                                             <ul>
                                                 <li>
-                                                    <a class="btn btn-solid" href="/Gr1_Warehouse/couponlist">View All Coupon</a>
+                                                    <a class="btn btn-solid" href="/Gr1_Warehouse/couponlist">Xem tất cả mã giảm giá</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -116,16 +116,16 @@
                                                 <table class="table all-package coupon-list-table table-hover theme-table" id="table_id">
                                                     <thead>
                                                         <tr>
-                                                            <th>Code</th>
-                                                            <th>Discount</th>
-                                                            <th>Min Quantity</th>
-                                                            <th>Min Order Value</th>
-                                                            <th>Start Date</th>
-                                                            <th>End Date</th>
-                                                            <th>Quantity</th>
-                                                            <th>Last Updated</th>
-                                                            <th>Status</th>
-                                                            <th>Action</th>
+                                                            <th>Mã</th>
+                                                            <th>% giảm</th>
+                                                            <th>Số lượng tối thiểu</th>
+                                                            <th>Giá trị đơn hàng tối thiểu</th>
+                                                            <th>Ngày bắt đầu</th>
+                                                            <th>Ngày kết thúc</th>
+                                                            <th>Số lượng mã</th>
+                                                            <th>Cập nhật lần cuôí</th>
+                                                            <th>Trạng thái</th>
+                                                            <th>Hành động</th>
                                                         </tr>
                                                     </thead>
 
@@ -223,8 +223,8 @@
                                                             <th>% Giảm mới</th>
                                                             <th>Trạng thái cũ</th>
                                                             <th>Trạng thái mới</th>
-                                                            <th>Max Uses cũ</th>
-                                                            <th>Max Uses mới</th>
+                                                            <th>Số lượng mã cũ</th>
+                                                            <th>Số lượng mã mới</th>
                                                             <th>Người thay đổi</th>
                                                         </tr>
                                                     </thead>
@@ -278,7 +278,7 @@
             <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Edit Discount</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa mã giảm giá</h5>
                     </div>
                     <div class="modal-body">
                         <form action="listdiscounthistory" method="POST">
@@ -287,7 +287,7 @@
                             <!-- Discount Code -->
                             <div class="form-floating mb-3">
                                 <input type="text" class="form-control" id="discount_code" name="discount_code" value="" readonly />
-                                <label for="discount_code">Coupon Code</label>
+                                <label for="discount_code">Mã giảm giá</label>
                             </div>
 
                             <!-- Discount % -->
@@ -301,7 +301,7 @@
                                        step="0.1" 
                                        value="" 
                                        required/>
-                                <label for="discount_percentage">Discount (%)</label>
+                                <label for="discount_percentage">Giảm giá (%)</label>
                             </div>  
 
                             <!-- Start Date & End Date cùng hàng -->
@@ -309,13 +309,13 @@
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
                                         <input type="date" class="form-control" id="start_date" name="start_date" value="" required readonly />
-                                        <label for="start_date">Start Date</label>
+                                        <label for="start_date">Ngày bắt đầu</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
                                         <input type="date" class="form-control" id="end_date" name="end_date" value="" required readonly />
-                                        <label for="end_date">End Date</label>
+                                        <label for="end_date">Ngày kết thúc</label>
                                     </div>
                                 </div>
                             </div>
@@ -323,12 +323,12 @@
                             <!-- Quantity -->
                             <div class="form-floating mb-3">
                                 <input type="number" class="form-control" id="max_uses" name="max_uses" value="" required />
-                                <label for="max_uses">Quantity</label>
+                                <label for="max_uses">Số lượng mã</label>
                             </div>
 
                             <!-- Status -->
                             <div class="mb-3">
-                                <label for="status" class="form-label">Status</label>
+                                <label for="status" class="form-label">Trạng thái</label>
                                 <select id="status" name="status" class="form-select">
                                     <option value="Active">Active</option>
                                     <option value="Inactive">Inactive</option>
@@ -337,8 +337,8 @@
 
                             <!-- Modal Footer -->
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                             </div>
 
                         </form>
@@ -377,7 +377,7 @@
 
         <!-- Data table js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>
+<!--        <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>-->
 
         <!-- all checkbox select js -->
         <script src="${pageContext.request.contextPath}/assets2/js/checkbox-all-check.js"></script>
@@ -427,9 +427,6 @@
 
                 $("#edit-discount").modal("show");
             });
-
-
-
         </script>
 
     </body>

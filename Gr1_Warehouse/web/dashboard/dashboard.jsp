@@ -1,5 +1,7 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
@@ -77,7 +79,8 @@
                                         <div class="media align-items-center static-top-widget">
                                             <div class="media-body p-0">
                                                 <span class="m-0">Tổng doanh thu</span>
-                                                <h4 class="mb-0 counter">$6659
+                                                <h4 class="mb-0 counter">
+                                                    <fmt:formatNumber value="${requestScope.totalAmount}" type="currency" currencyCode="VND" maxFractionDigits="0" />
                                                 </h4>
                                             </div>
                                         </div>
@@ -91,7 +94,7 @@
                                         <div class="media static-top-widget">
                                             <div class="media-body p-0">
                                                 <span class="m-0">Tổng hóa đơn</span>
-                                                <h4 class="mb-0 counter">9856
+                                                <h4 class="mb-0 counter">${requestScope.totalOrder}
 
                                                 </h4>
                                             </div>
@@ -650,79 +653,6 @@
                                 </div>
                             </div>
                             <!-- visitors chart end-->
-
-
-                            <!-- To Do List start-->
-                            <div class="col-xxl-4 col-md-6">
-                                <div class="card o-hidden card-hover">
-                                    <div class="card-header border-0">
-                                        <div class="card-header-title">
-                                            <h4>To Do List</h4>
-                                        </div>
-                                    </div>
-
-                                    <div class="card-body pt-0">
-                                        <ul class="to-do-list">
-                                            <li class="to-do-item">
-                                                <div class="form-check user-checkbox">
-                                                    <input class="checkbox_animated check-it" type="checkbox" value=""
-                                                           id="flexCheckDefault">
-                                                </div>
-                                                <div class="to-do-list-name">
-                                                    <strong>Pick up kids from school</strong>
-                                                    <p>8 Hours</p>
-                                                </div>
-                                            </li>
-                                            <li class="to-do-item">
-                                                <div class="form-check user-checkbox">
-                                                    <input class="checkbox_animated check-it" type="checkbox" value=""
-                                                           id="flexCheckDefault1">
-                                                </div>
-                                                <div class="to-do-list-name">
-                                                    <strong>Prepare or presentation.</strong>
-                                                    <p>8 Hours</p>
-                                                </div>
-                                            </li>
-                                            <li class="to-do-item">
-                                                <div class="form-check user-checkbox">
-                                                    <input class="checkbox_animated check-it" type="checkbox" value=""
-                                                           id="flexCheckDefault2">
-                                                </div>
-                                                <div class="to-do-list-name">
-                                                    <strong>Create invoice</strong>
-                                                    <p>8 Hours</p>
-                                                </div>
-                                            </li>
-                                            <li class="to-do-item">
-                                                <div class="form-check user-checkbox">
-                                                    <input class="checkbox_animated check-it" type="checkbox" value=""
-                                                           id="flexCheckDefault3">
-                                                </div>
-                                                <div class="to-do-list-name">
-                                                    <strong>Meeting with Alisa</strong>
-                                                    <p>8 Hours</p>
-                                                </div>
-                                            </li>
-
-                                            <li class="to-do-item">
-                                                <form class="row g-2">
-                                                    <div class="col-8">
-                                                        <input type="text" class="form-control" id="name"
-                                                               placeholder="Enter Task Name">
-                                                    </div>
-                                                    <div class="col-4">
-                                                        <button type="submit" class="btn btn-primary w-100 h-100">Add
-                                                            task</button>
-                                                    </div>
-                                                </form>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- To Do List end-->
-
-
                         </div>
                     </div>
                     <!-- Container-fluid Ends-->

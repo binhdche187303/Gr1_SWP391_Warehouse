@@ -216,7 +216,7 @@
                                     <li class="back-btn"></li>
 
                                     <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/dashboardAdmin">
+                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/dashboard">
                                             <i class="ri-home-line"></i>
                                             <span>Dashboard</span>
                                         </a>
@@ -228,55 +228,7 @@
                                             <span>Quản lý thu chi</span>
                                         </a>
                                     </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-store-3-line"></i>
-                                            <span>Product</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="products.html">Prodcts</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="add-new-product.html">Add New Products</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-list-check-2"></i>
-                                            <span>Category</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="category.html">Category List</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="add-new-category.html">Add New Category</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-list-settings-line"></i>
-                                            <span>Attributes</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="attributes.html">Attributes</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="add-new-attributes.html">Add Attributes</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-
+                                    
                                     <li class="sidebar-list">
                                         <a class="sidebar-link sidebar-title" href="javascript:void(0)">
                                             <i class="ri-user-3-line"></i>
@@ -297,24 +249,6 @@
                                             <i class="ri-star-line"></i>
                                             <span>Vai trò</span>
                                         </a>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-archive-line"></i>
-                                            <span>Orders</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="order-list.html">Order List</a>
-                                            </li>
-                                            <li>
-                                                <a href="order-detail.html">Order Detail</a>
-                                            </li>
-                                            <li>
-                                                <a href="order-tracking.html">Order Tracking</a>
-                                            </li>
-                                        </ul>
                                     </li>
 
                                     <li class="sidebar-list">
@@ -346,14 +280,6 @@
                                             <li>
                                                 <a href="/Gr1_Warehouse/couponproductlist">Danh sách giảm giá</a>
                                             </li>
-
-                                            <li>
-                                                <a href="/Gr1_Warehouse/createproductcoupon">Tạo giảm giá</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="/Gr1_Warehouse/listdiscountproducthistory">Lịch sử giảm giá</a>
-                                            </li>
                                         </ul>
                                     </li>
 
@@ -365,7 +291,7 @@
                                     </li>                                 
 
                                     <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="/dashboard/report.jsp">
+                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/dashboard/report.jsp">
                                             <i class="ri-file-chart-line"></i>
                                             <span>Báo cáo</span>
                                         </a>
@@ -420,7 +346,7 @@
         <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/custom.js"></script>
 
         <!-- Sidebar jquery -->
-        <script src="${pageContext.request.contextPath}/assets2/js/config.js"></script>
+<!--        <script src="${pageContext.request.contextPath}/assets2/js/config.js"></script>-->
 
         <!-- tooltip init js -->
         <script src="${pageContext.request.contextPath}/assets2/js/tooltip-init.js"></script>

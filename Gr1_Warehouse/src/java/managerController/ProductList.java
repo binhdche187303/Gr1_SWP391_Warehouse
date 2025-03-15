@@ -2,11 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package dashboardController;
+package managerController;
 
-import dao.OrderDAO;
 import dao.ProductDAO;
-import dao.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,13 +13,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.Products;
-import model.User;
 
 /**
  *
  * @author admin
  */
-public class Dashboard extends HttpServlet {
+public class ProductList extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +37,10 @@ public class Dashboard extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Dashboard</title>");
+            out.println("<title>Servlet ProductList</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Dashboard at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ProductList at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -62,21 +59,9 @@ public class Dashboard extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ProductDAO pd = new ProductDAO();
-        UserDAO ud = new UserDAO();
-        OrderDAO od = new OrderDAO();
-        int totalOrder = od.getAllOrderDashboard();
-        int totalProduct = pd.getAllProductDashboard();
-        int totalUser = ud.getAllCusDashboard();
-        int totalStaff = ud.getAllStaffDashboard();
-        Integer totalAmount = od.getAllOrderAmountDashboard();
-
-        request.setAttribute("totalOrder", totalOrder);
-        request.setAttribute("totalProduct", totalProduct);
-        request.setAttribute("totalUser", totalUser);
-        request.setAttribute("totalStaff", totalStaff);
-        request.setAttribute("totalAmount", totalAmount);
-
-        request.getRequestDispatcher("/dashboard/dashboard.jsp").forward(request, response);
+        List<Products> listProducts = pd.getAllProductsManager();
+        request.setAttribute("listProducts", listProducts);
+        request.getRequestDispatcher("/manager/product_list.jsp").forward(request, response);
     }
 
     /**

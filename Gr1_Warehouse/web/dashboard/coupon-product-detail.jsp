@@ -128,7 +128,7 @@
                                                     Tạo giảm giá sản phẩm
                                                 </a>
 
-                                                <a class="btn btn-solid" href="/Gr1_Warehouse/couponproductlist">View All Discount Product</a>
+                                                <a class="btn btn-solid" href="/Gr1_Warehouse/couponproductlist">Quay lại</a>
                                             </div>
 
                                         </div>
@@ -195,7 +195,7 @@
                                                                         <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
                                                                             <div class="modal-content">
                                                                                 <div class="modal-header">
-                                                                                    <h5 class="modal-title">Edit Product Discount</h5>
+                                                                                    <h5 class="modal-title">Chỉnh sửa giảm giá sản phẩm</h5>
                                                                                 </div>
                                                                                 <div class="modal-body">
                                                                                     <form action="discountproductdetail" method="POST">
@@ -213,12 +213,12 @@
                                                                                                    step="0.1" 
                                                                                                    value="" 
                                                                                                    required/>
-                                                                                            <label for="discount_percentage">Discount (%)</label>
+                                                                                            <label for="discount_percentage">Giảm giá (%)</label>
                                                                                         </div>  
 
                                                                                         <div class="form-floating mb-3">
                                                                                             <input type="number" class="form-control" id="min_quantity" name="min_quantity" value="" required />
-                                                                                            <label for="max_uses">Quantity</label>
+                                                                                            <label for="max_uses">Số lượng</label>
                                                                                         </div>
 
                                                                                         <div class="mb-3">
@@ -229,8 +229,8 @@
                                                                                         </div>
 
                                                                                         <div class="modal-footer">
-                                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                                                            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                                                                                         </div>
                                                                                     </form>
                                                                                 </div>
@@ -269,7 +269,7 @@
                                 <div class="card card-table">
                                     <div class="card-body">
                                         <div class="title-header option-title">
-                                            <h5>Discount Product List Detail</h5>
+                                            <h5>Danh sách sản phẩm giảm giá chi tiết</h5>
                                         </div>
                                         <div>
                                             <div class="table-responsive">
@@ -328,61 +328,6 @@
         </div>
         <!-- page-wrapper End -->
 
-        <!-- Edit Product Discount Modal -->
-        <div class="modal fade theme-modal" id="edit-discount-product" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Edit Product Discount</h5>
-                    </div>
-                    <div class="modal-body">
-                        <form action="discountproductdetail" method="POST">
-                            <input type="hidden" name="product_discount_id" value="" />
-                            <input type="hidden" name="action" value="edit" />
-                            <!-- Discount % -->
-                            <div class="form-floating mb-3">
-                                <input type="number" 
-                                       class="form-control" 
-                                       id="discount_percentage" 
-                                       name="discount_percentage" 
-                                       min="0.1" 
-                                       max="99.9" 
-                                       step="0.1" 
-                                       value="" 
-                                       required/>
-                                <label for="discount_percentage">Discount (%)</label>
-                            </div>  
-
-                            <!-- Quantity -->
-                            <div class="form-floating mb-3">
-                                <input type="number" class="form-control" id="min_quantity" name="min_quantity" value="" required />
-                                <label for="max_uses">Quantity</label>
-                            </div>
-
-                            <!-- Status -->
-                            <div class="mb-3">
-                                <label for="status" class="form-label">Status</label>
-                                <select id="status" name="status" class="form-select">
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                </select>
-                            </div>
-
-                            <!-- Modal Footer -->
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Save Changes</button>
-                            </div>
-
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Edit Profile Modal End -->
-
-
         <!-- latest js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
 
@@ -409,8 +354,8 @@
         <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
 
         <!-- Data table js -->
-<!--            <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>-->
+        <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script><!--
+    <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>-->
 
         <!-- all checkbox select js -->
         <script src="${pageContext.request.contextPath}/assets2/js/checkbox-all-check.js"></script>
@@ -422,6 +367,36 @@
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
 
         <script>
+            $(document).ready(function () {
+                $("#table_id").DataTable({
+                    "paging": true, // Bật phân trang
+                    "ordering": true, // Cho phép sắp xếp
+                    "info": true, // Hiển thị thông tin số dòng
+                    "searching": true, // Bật tìm kiếm
+                    "order": [[0, "asc"]],
+                    "pageLength": 5,
+                    "dom": "tip", // Sắp xếp cột STT tăng dần
+                    "columnDefs": [
+                        {"orderable": false, "targets": [5]} // Vô hiệu hóa sắp xếp cột "Hành động"
+                    ],
+                    "language": {
+                        "zeroRecords": "Không tìm thấy dữ liệu",
+                        "info": "Hiển thị _START_ đến _END_ trong _TOTAL_ mục",
+                        "infoEmpty": "Không có dữ liệu",
+                        "infoFiltered": "(lọc từ _MAX_ dòng)",
+                        "paginate": {
+                            "first": "Đầu",
+                            "last": "Cuối",
+                            "next": "Tiếp",
+                            "previous": "Trước"
+                        }
+                    }
+                });
+            });
+
+
+
+
             $(document).on("click", ".edit-discount-product-btn", function () {
                 // Lấy các giá trị từ data attributes
                 var productDiscountId = $(this).data("product-discount-id");

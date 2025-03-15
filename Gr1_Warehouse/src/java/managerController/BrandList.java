@@ -2,26 +2,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package dashboardController;
+package managerController;
 
-import dao.OrderDAO;
-import dao.ProductDAO;
-import dao.UserDAO;
+import dao.BrandDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.SQLException;
 import java.util.List;
-import model.Products;
-import model.User;
+import model.Brands;
 
 /**
  *
  * @author admin
  */
-public class Dashboard extends HttpServlet {
+public class BrandList extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +38,10 @@ public class Dashboard extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Dashboard</title>");
+            out.println("<title>Servlet BrandList</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Dashboard at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet BrandList at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,22 +59,10 @@ public class Dashboard extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ProductDAO pd = new ProductDAO();
-        UserDAO ud = new UserDAO();
-        OrderDAO od = new OrderDAO();
-        int totalOrder = od.getAllOrderDashboard();
-        int totalProduct = pd.getAllProductDashboard();
-        int totalUser = ud.getAllCusDashboard();
-        int totalStaff = ud.getAllStaffDashboard();
-        Integer totalAmount = od.getAllOrderAmountDashboard();
-
-        request.setAttribute("totalOrder", totalOrder);
-        request.setAttribute("totalProduct", totalProduct);
-        request.setAttribute("totalUser", totalUser);
-        request.setAttribute("totalStaff", totalStaff);
-        request.setAttribute("totalAmount", totalAmount);
-
-        request.getRequestDispatcher("/dashboard/dashboard.jsp").forward(request, response);
+        BrandDAO bd = new BrandDAO();
+        List<Brands> listBrands = bd.getAllBrands();
+        request.setAttribute("listBrands", listBrands);
+        request.getRequestDispatcher("/manager/brand-list.jsp").forward(request, response);
     }
 
     /**
@@ -90,7 +76,26 @@ public class Dashboard extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        BrandDAO bd = new BrandDAO();
+        String brand_id_raw = request.getParameter("brand_id");
+        String brand_name = request.getParameter("brand_name");
+        try {
+            int brand_id = Integer.parseInt(brand_id_raw);
+            if (bd.isBrandNameExists(brand_name)) {
+                request.setAttribute("brand_name", brand_name);
+                List<Brands> listBrands = bd.getAllBrands();
+                request.setAttribute("listBrands", listBrands);
+                request.setAttribute("message", "Tên thương hiệu đã tồn tại");
+                request.getRequestDispatcher("/manager/brand-list.jsp").forward(request, response);
+            } else {
+                bd.updateBrand(brand_id, brand_name);
+                request.getSession().setAttribute("success", "Cập nhật tên thương hiệu thành công");
+                response.sendRedirect("brandlist");
+            }
+        } catch (ServletException | IOException | NumberFormatException | SQLException e) {
+            System.out.println(e);
+        }
+
     }
 
     /**

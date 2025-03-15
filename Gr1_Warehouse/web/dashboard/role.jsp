@@ -69,21 +69,16 @@
                                     <!-- Table Start -->
                                     <div class="card-body">
                                         <div class="title-header option-title">
-                                            <h5>Role List</h5>
-                                            <form class="d-inline-flex">
-                                                <a href="create-role.html" class="align-items-center btn btn-theme d-flex">
-                                                    <i data-feather="plus"></i>Add Role
-                                                </a>
-                                            </form>
+                                            <h5>Danh sách vai trò</h5>
                                         </div>
                                         <div>
                                             <div class="table-responsive">
                                                 <table id="table_id" class="table role-table all-package theme-table">
                                                     <thead>
                                                         <tr>
-                                                            <th>No</th>
-                                                            <th>Name</th>
-                                                            <th>Options</th>
+                                                            <th>STT</th>
+                                                            <th>Tên</th>
+                                                            <th>Hành động</th>
                                                         </tr>
                                                     </thead>
 
@@ -143,16 +138,22 @@
                         <h5 class="modal-title" id="exampleModalLabel">Edit Role Name</h5>
                     </div>
                     <div class="modal-body">
+
+
                         <form action="role" method="POST">
                             <!-- Hidden input lưu roleId -->
-                            <input type="hidden" name="roleId"/>
+                            <input type="hidden" name="roleId" value="${roleId}" />
 
                             <!-- Input chỉnh sửa roleName -->
                             <div class="form-floating mb-4 theme-form-floating">
-                                <input type="text" class="form-control" id="roleName" name="roleName" placeholder="Enter RoleName" required />
+                                <input type="text" class="form-control" id="roleName" name="roleName" 
+                                       placeholder="Enter RoleName" value="${roleName}" required />
                                 <label for="roleName">RoleName</label>
                             </div>
-
+                            <!-- Hiển thị thông báo lỗi nếu có -->
+                            <c:if test="${not empty error}">
+                                <div class="alert alert-danger">${error}</div>
+                            </c:if>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary btn-md" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn theme-bg-color btn-md text-white">Save changes</button>
@@ -192,7 +193,7 @@
 
         <!-- Data table js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>
+<!--        <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>-->
 
         <!-- all checkbox select js -->
         <script src="${pageContext.request.contextPath}/assets2/js/checkbox-all-check.js"></script>
@@ -203,20 +204,82 @@
         <!-- Theme js -->
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
         <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                // Lấy tất cả các nút "Edit"
-                const editButtons = document.querySelectorAll(".edit-role-btn");
+            $(document).ready(function () {
+                $('#table_id').DataTable({
+                    // Basic configuration
+                    searching: true, // Enable search functionality
+                    ordering: true, // Enable column sorting
+                    paging: true, // Enable pagination
+                    info: true, // Show info about table (entries)
 
+                    // Customize the display
+                    lengthChange: false,
+                    
+                    pageLength: 10, // Default number of rows per page
+
+                    // Column specific settings
+                    columnDefs: [
+                        {orderable: false, targets: 2}, // Disable sorting on action column (third column)
+                        {searchable: false, targets: [0, 2]} // Disable search on first and third columns
+                    ],
+
+                    // Customize the language for Vietnamese
+                    language: {
+                        search: "Tìm kiếm:",
+                        lengthMenu: "Hiển thị _MENU_ dòng",
+                        info: "Hiển thị _START_ đến _END_ của _TOTAL_ vai trò",
+                        infoEmpty: "",
+                        infoFiltered: "",
+                        paginate: {
+                            first: "Đầu",
+                            last: "Cuối",
+                            next: "Tiếp",
+                            previous: "Trước"
+                        },
+                        emptyTable: "Không có dữ liệu trong bảng",
+                        zeroRecords: "Không tìm thấy kết quả phù hợp"
+                    }
+                });
+            });
+
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const editButtons = document.querySelectorAll(".edit-role-btn");
+                const editRoleModal = document.getElementById("editRoleName");
+                const modalInstance = new bootstrap.Modal(editRoleModal);
+
+                // Set up edit button click handlers
                 editButtons.forEach(button => {
                     button.addEventListener("click", function () {
-                        // Lấy roleId và roleName từ thuộc tính data của nút
                         const roleId = this.getAttribute("data-roleid");
                         const roleName = this.getAttribute("data-rolename");
-
-                        // Gán giá trị vào modal
                         document.querySelector("#editRoleName input[name='roleId']").value = roleId;
                         document.querySelector("#editRoleName input[name='roleName']").value = roleName;
+                        modalInstance.show();
                     });
+                });
+
+                // Fix for close button
+                const closeButton = editRoleModal.querySelector(".btn-secondary");
+                if (closeButton) {
+                    closeButton.addEventListener("click", function () {
+                        modalInstance.hide();
+                    });
+                }
+
+                // Check if modal needs to be shown due to servlet error
+                if ("${showEditModal}" === "true") {
+                    modalInstance.show();
+                }
+
+                // When modal is hidden, clear error messages and optionally reset input
+                editRoleModal.addEventListener("hidden.bs.modal", function () {
+                    const errorAlert = editRoleModal.querySelector(".alert-danger");
+                    if (errorAlert) {
+                        errorAlert.remove();
+                    }
+                    // If you want to clear the input (optional)
+                    // editRoleModal.querySelector("input[name='roleName']").value = "";
                 });
             });
         </script>

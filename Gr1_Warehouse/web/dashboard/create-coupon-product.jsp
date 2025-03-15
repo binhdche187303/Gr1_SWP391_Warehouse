@@ -110,7 +110,7 @@
 
                                                                 <div class="col-lg-2 col-md-3 mb-4"></div>
                                                                 <div class="col-md-9 col-lg-10">
-                                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                                    <button type="submit" class="btn btn-primary">Gửi</button>
                                                                 </div>
                                                             </div>
                                                         </form>

@@ -466,6 +466,42 @@ public class UserDAO extends DBContext {
         return staffList;
     }
 
+     public int getAllStaffDashboard() {
+        int numberOfStaff = 0;
+        String sql = "SELECT COUNT(*)AS numberOfStaff FROM dbo.Users\n"
+                + "WHERE role_id NOT IN (1,2) AND status =N'Active'";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                numberOfStaff = rs.getInt("numberOfStaff");
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return numberOfStaff;
+    }
+
+        public int getAllCusDashboard() {
+        int numberOfCus = 0;
+        String sql = "SELECT COUNT(*)AS numberOfCus FROM dbo.Users\n"
+                + "WHERE role_id = 2 AND status =N'Active'";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                numberOfCus = rs.getInt("numberOfCus");
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return numberOfCus;
+    }
+    
      public static void main(String[] args) {
         try {
             // 2. Khởi tạo UserDAO

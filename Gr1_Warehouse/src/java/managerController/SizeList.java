@@ -2,26 +2,26 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package dashboardController;
+package managerController;
 
-import dao.OrderDAO;
-import dao.ProductDAO;
-import dao.UserDAO;
+import dao.SizeDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.SQLException;
 import java.util.List;
-import model.Products;
-import model.User;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.Sizes;
 
 /**
  *
  * @author admin
  */
-public class Dashboard extends HttpServlet {
+public class SizeList extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +40,10 @@ public class Dashboard extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Dashboard</title>");
+            out.println("<title>Servlet SizeList</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Dashboard at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SizeList at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,22 +61,10 @@ public class Dashboard extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ProductDAO pd = new ProductDAO();
-        UserDAO ud = new UserDAO();
-        OrderDAO od = new OrderDAO();
-        int totalOrder = od.getAllOrderDashboard();
-        int totalProduct = pd.getAllProductDashboard();
-        int totalUser = ud.getAllCusDashboard();
-        int totalStaff = ud.getAllStaffDashboard();
-        Integer totalAmount = od.getAllOrderAmountDashboard();
-
-        request.setAttribute("totalOrder", totalOrder);
-        request.setAttribute("totalProduct", totalProduct);
-        request.setAttribute("totalUser", totalUser);
-        request.setAttribute("totalStaff", totalStaff);
-        request.setAttribute("totalAmount", totalAmount);
-
-        request.getRequestDispatcher("/dashboard/dashboard.jsp").forward(request, response);
+        SizeDAO sd = new SizeDAO();
+        List<Sizes> listSizes = sd.getAllSizes();
+        request.setAttribute("listSizes", listSizes);
+        request.getRequestDispatcher("/manager/size-list.jsp").forward(request, response);
     }
 
     /**
@@ -90,7 +78,25 @@ public class Dashboard extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        SizeDAO bd = new SizeDAO();
+        String size_id_raw = request.getParameter("size_id");
+        String size_name = request.getParameter("size_name");
+        try {
+            int size_id = Integer.parseInt(size_id_raw);
+            if (bd.isSizeNameExists(size_name)) {
+                request.setAttribute("size_name", size_name);
+                List<Sizes> listSizes = bd.getAllSizes();
+                request.setAttribute("listSizes", listSizes);
+                request.setAttribute("message", "Tên kích cỡ đã tồn tại");
+                request.getRequestDispatcher("/manager/size-list.jsp").forward(request, response);
+            } else {
+                bd.updateSize(size_id, size_name);
+                request.getSession().setAttribute("success", "Cập nhật tên kích cỡ thành công");
+                response.sendRedirect("sizelist");
+            }
+        } catch (ServletException | IOException | NumberFormatException | SQLException e) {
+            System.out.println(e);
+        }
     }
 
     /**
