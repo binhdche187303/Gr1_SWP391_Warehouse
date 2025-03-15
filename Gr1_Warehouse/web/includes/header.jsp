@@ -151,7 +151,7 @@
                                     </span>
                                 </button>
                                 <a href="index.html" class="web-logo nav-logo">
-                                    <img src="${pageContext.request.contextPath}/assets/images/logo/1.png" class="img-fluid blur-up lazyload" alt="">
+                                    <img src="${pageContext.request.contextPath}/assets/images/logo_1.png" class="img-fluid blur-up lazyload" alt="">
                                 </a>
 
                                 <div class="middle-box">

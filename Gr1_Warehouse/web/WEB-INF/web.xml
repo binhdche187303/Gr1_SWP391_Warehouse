@@ -152,6 +152,10 @@
         <servlet-name>CreateBrand</servlet-name>
         <servlet-class>managerController.CreateBrand</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Vnpay</servlet-name>
+        <servlet-class>controller.Vnpay</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ArchiveServlet</servlet-name>
         <url-pattern>/archive</url-pattern>
@@ -311,6 +315,10 @@
     <servlet-mapping>
         <servlet-name>CreateBrand</servlet-name>
         <url-pattern>/createbrand</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Vnpay</servlet-name>
+        <url-pattern>/vnpay</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login</welcome-file>
