@@ -127,7 +127,7 @@
                                                     <td>
                                                         <ul class="d-flex align-items-center p-0 m-0" style="list-style: none;">
                                                             <li>
-                                                                <form action="/Gr1_Warehouse/#" method="get">
+                                                                <form action="/Gr1_Warehouse/inventory-checklist-detail?checkId=${check.checkId}" method="get">
                                                                     <input type="hidden" name="checkId" value="${check.checkId}">
                                                                     <button type="submit" style="background: none; border: none;">
                                                                         <i class="ri-eye-line"></i>

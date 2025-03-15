@@ -118,27 +118,40 @@
                                                             </c:if></small></td>
 
                                                     <td><small><c:if test="${check.totalPriceDifferenceUp != 0}">
-    <fmt:formatNumber value="${check.totalPriceDifferenceUp}" type="currency" currencySymbol="₫"/> 
-    <i class="fas fa-arrow-up text-success"></i><br>
-</c:if>
-<c:if test="${check.totalPriceDifferenceDown != 0}">
-    <fmt:formatNumber value="${check.totalPriceDifferenceDown}" type="currency" currencySymbol="₫"/> 
-    <i class="fas fa-arrow-down text-danger"></i>
-</c:if></small></td>
+                                                                <fmt:formatNumber value="${check.totalPriceDifferenceUp}" type="currency" currencySymbol="₫"/> 
+                                                                <i class="fas fa-arrow-up text-success"></i><br>
+                                                            </c:if>
+                                                            <c:if test="${check.totalPriceDifferenceDown != 0}">
+                                                                <fmt:formatNumber value="${check.totalPriceDifferenceDown}" type="currency" currencySymbol="₫"/> 
+                                                                <i class="fas fa-arrow-down text-danger"></i>
+                                                            </c:if></small></td>
                                                     <td>
                                                         <ul class="d-flex align-items-center p-0 m-0" style="list-style: none;">
                                                             <li class="me-2">
-                                                                <a href="#">
-                                                                    <i class="ri-eye-line"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <form action="/Gr1_Warehouse/staff-checklist-details" method="get">
+                                                                <form action="/Gr1_Warehouse/inventory-checklist-detail?checkId=${check.checkId}" method="get">
                                                                     <input type="hidden" name="checkId" value="${check.checkId}">
                                                                     <button type="submit" style="background: none; border: none;">
-                                                                        <i class="ri-pencil-line"></i>
+                                                                        <i class="ri-eye-line"></i>
                                                                     </button>
                                                                 </form>
+                                                            </li>
+                                                            <li>
+                                                                <c:choose>
+                                                                    <c:when test="${check.status eq 'Đã kiểm kho'}">
+                                                                        <button type="button" style="background: none; border: none; cursor: not-allowed; opacity: 0.5;"
+                                                                                onclick="alert('Phiếu kiểm kho này đã hoàn thành, không thể chỉnh sửa!');">
+                                                                            <i class="ri-pencil-line text-muted"></i>
+                                                                        </button>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <form action="/Gr1_Warehouse/staff-checklist-details" method="get">
+                                                                            <input type="hidden" name="checkId" value="${check.checkId}">
+                                                                            <button type="submit" style="background: none; border: none;">
+                                                                                <i class="ri-pencil-line"></i>
+                                                                            </button>
+                                                                        </form>
+                                                                    </c:otherwise>
+                                                                </c:choose>
                                                             </li>
                                                         </ul>
                                                     </td>

@@ -8,6 +8,7 @@ import java.util.List;
 import model.InventoryBatches;
 import model.InventoryCheck;
 import model.InventoryCheckDTO;
+import model.InventoryCheckDetailDTO;
 import model.ProductVariants;
 import model.User;
 import model.Warehouse;
@@ -22,23 +23,28 @@ public class test {
         // Nhập warehouseId cần kiểm tra
         
         InventoryDAO dao = new InventoryDAO(); 
-  
-            List<InventoryCheckDTO> checks = dao.getAllInventoryCheck();
+        int testCheckId = 3;
+        
+  List<InventoryCheckDetailDTO> list = dao.getInventoryCheckDetail(testCheckId);
 
-            // In kết quả kiểm tra tồn kho
-            for (InventoryCheckDTO check : checks) {
-                System.out.println("Check ID: " + check.getCheckId());
-                System.out.println("Warehouse: " + check.getWarehouseName());
-                System.out.println("Status: " + check.getStatus());
-                System.out.println("Completed At: " + check.getCompleteDate());
-                System.out.println("Created By: " + check.getCreatedBy());
-                System.out.println("Reviewed By: " + check.getReviewedBy());
-                System.out.println("Total Difference Up: " + check.getTotalDifferenceUp());
-                System.out.println("Total Difference Down: " + check.getTotalDifferenceDown());
-                System.out.println("Total Price Difference Up: " + check.getTotalPriceDifferenceUp());
-                System.out.println("Total Price Difference Down: " + check.getTotalPriceDifferenceDown());
-                System.out.println("---------------------------------");
+ if (list.isEmpty()) {
+            System.out.println("Không có dữ liệu kiểm kê nào cho check_id = " + testCheckId);
+        } else {
+            for (InventoryCheckDetailDTO dto : list) {
+                System.out.println("==========================================");
+                System.out.println("Check ID: " + dto.getCheckId());
+                System.out.println("Trạng thái: " + dto.getStatus());
+                System.out.println("Ngày hoàn thành: " + dto.getCompletedAt());
+                System.out.println("Người kiểm kê: " + dto.getFullname() + " | " + dto.getUserPhone() + " | " + dto.getUserEmail());
+                System.out.println("Kho: " + dto.getWarehouseName() + " | " + dto.getWarehouseAddress() + " | " + dto.getWarehousePhone());
+                System.out.println("Sản phẩm: " + dto.getProductName() + " (SKU: " + dto.getSku() + " | Size: " + dto.getSizeName() + ")");
+                System.out.println("Batch ID: " + dto.getBatchId() + " | Hạn sử dụng: " + dto.getExpirationDate());
+                System.out.println("SL ghi nhận: " + dto.getRecordedQuantity() + " | SL thực tế: " + dto.getActualQuantity());
+                System.out.println("Chênh lệch: " + dto.getDiscrepancy() + " | Chênh lệch giá: " + dto.getDifferencePrice());
+                System.out.println("Lý do: " + dto.getReason());
+                System.out.println("Nhân viên kho: " + dto.getWarehouseStaff());
+                System.out.println("Ghi chú: " + dto.getNotes());
+                System.out.println("==========================================\n");
             }
-            
-    }
+        }}
 }

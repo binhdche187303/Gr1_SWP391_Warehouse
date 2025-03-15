@@ -1949,6 +1949,46 @@ FROM InventoryCheck ic
 LEFT JOIN Warehouses w ON ic.warehouse_id = w.warehouse_id 
 LEFT JOIN Users u1 ON ic.created_by = u1.user_id 
 LEFT JOIN Users u2 ON ic.reviewed_by = u2.user_id 
-WHERE ic.reviewed_by = 6;
+--WHERE ic.reviewed_by = 6;
+WHERE ic.check_id = 1;
+
+SELECT 
+    ic.check_id,
+    ic.status,
+    ic.completed_at,
+    u.fullname,
+    u.phone,
+    u.email,
+    w.warehouse_name,
+    w.address,
+    w.phone,
+    p.product_name,
+    pv.sku, -- Lấy thêm SKU từ bảng ProductVariants
+    s.size_name, -- Lấy thêm size_name từ bảng Sizes
+    ib.batch_id,
+    icd.recorded_quantity,
+    icd.actual_quantity,
+    icd.discrepancy,
+    icd.difference_price,
+    ib.expiration_date,
+    icd.reason,
+    ic.warehouse_staff,
+    ic.notes,
+    ic.total_difference_up,
+	ic.total_difference_down,
+	ic.total_price_difference_up,
+	ic.total_price_difference_down
+FROM InventoryCheck ic
+JOIN Users u ON ic.reviewed_by = u.user_id
+JOIN Warehouses w ON ic.warehouse_id = w.warehouse_id
+JOIN InventoryCheckDetails icd ON ic.check_id = icd.check_id
+JOIN InventoryBatches ib ON icd.batch_id = ib.batch_id
+JOIN ProductVariants pv ON icd.variant_id = pv.variant_id
+JOIN Products p ON pv.product_id = p.product_id
+JOIN Sizes s ON pv.size_id = s.size_id -- Thêm JOIN với bảng Sizes để lấy size_name
+WHERE ic.check_id = 3;
+
+select * from Roles	 r join Users u on r.role_id = u.role_id
+
 
 

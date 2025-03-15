@@ -709,7 +709,7 @@
                     actualQuantity = parseInt(actualQuantity, 10);
                     recordedQuantity = parseInt(recordedQuantity, 10);
                     difference = parseInt(difference, 10);
-                    differencePrice = parseFloat(differencePrice);
+                    differencePrice = parseFloat(differencePrice.replace(/\./g, "").replace(",", "."));
 
                     if (!variantId || parseInt(variantId) <= 0) {
                         variantId = await fetchVariantId(sku);
