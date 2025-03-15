@@ -184,6 +184,10 @@
         <servlet-name>ConfirmSale</servlet-name>
         <servlet-class>SaleController.ConfirmSale</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FinancialManagement</servlet-name>
+        <servlet-class>dashboardController.FinancialManagement</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ArchiveServlet</servlet-name>
         <url-pattern>/archive</url-pattern>
@@ -375,6 +379,10 @@
     <servlet-mapping>
         <servlet-name>ConfirmSale</servlet-name>
         <url-pattern>/confirmSale</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FinancialManagement</servlet-name>
+        <url-pattern>/financialmanagement</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login</welcome-file>

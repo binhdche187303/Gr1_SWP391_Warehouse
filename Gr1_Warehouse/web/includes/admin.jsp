@@ -225,6 +225,22 @@
                                     <li class="sidebar-list">
                                         <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
                                             <i class="ri-store-3-line"></i>
+                                            <span>Quản lý thu chi</span>
+                                        </a>
+                                        <ul class="sidebar-submenu">
+                                            <li>
+                                                <a href="/Gr1_Warehouse/financialmanagement">Thu chi</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="/Gr1_Warehouse/dashboard/debt.jsp">Công nợ</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="sidebar-list">
+                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
+                                            <i class="ri-store-3-line"></i>
                                             <span>Product</span>
                                         </a>
                                         <ul class="sidebar-submenu">
@@ -419,7 +435,7 @@
         <script src="${pageContext.request.contextPath}/assets2/js/tooltip-init.js"></script>
 
         <!-- Plugins JS -->
-        <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
+<!--        <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>-->
 <!--        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
 

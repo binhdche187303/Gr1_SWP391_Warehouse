@@ -3,12 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/SWP/Gr1_Warehouse/src/java/ShipController/OrderShippingDetailServlet.java</file>
-            <file>file:/D:/SWP/Gr1_Warehouse/src/java/ShipController/AssignShippingOrderServlet.java</file>
-            <file>file:/D:/SWP/Gr1_Warehouse/src/java/dao/ShippingDetailDAO.java</file>
-            <file>file:/D:/SWP/Gr1_Warehouse/src/java/SaleController/AssignSaleOrder.java</file>
-            <file>file:/D:/SWP/Gr1_Warehouse/src/java/dao/SaleDAO.java</file>
-            <file>file:/D:/SWP/Gr1_Warehouse/src/java/SaleController/SaleOrderServlet.java</file>
+            <file>file:/D:/SWP/Gr1_Warehouse/src/java/dao/OrderDAO.java</file>
+            <file>file:/D:/SWP/Gr1_Warehouse/src/java/dashboardController/Dashboard.java</file>
         </group>
     </open-files>
 </project-private>
