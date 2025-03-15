@@ -545,4 +545,35 @@ public class OrderDAO extends DBContext {
         return orderDetailDTO;
     }
 
+    public boolean updatePaymentStatus(int orderId, String paymentStatus) {
+        String sql = "UPDATE Payment SET payment_status = ? WHERE order_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, paymentStatus);
+            stmt.setInt(2, orderId);
+            int rowsUpdated = stmt.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean insertOrderDeposit(int orderId) {
+        boolean isInserted = false;
+        String sql = "INSERT INTO OrderPayments (order_id, deposit_amount, remaining_amount, payment_status) "
+                + "SELECT ?, total_amount * 0.5, total_amount * 0.5, 'Đã thanh toán 50%' "
+                + "FROM Orders WHERE order_id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, orderId);
+            ps.setInt(2, orderId);
+
+            int rowsInserted = ps.executeUpdate();
+            isInserted = rowsInserted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isInserted;
+    }
+
 }

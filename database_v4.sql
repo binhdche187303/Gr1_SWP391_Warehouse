@@ -144,7 +144,7 @@ CREATE TABLE Orders (
     user_id INT NOT NULL,
     order_date DATETIME NOT NULL DEFAULT GETDATE(),
     total_amount DECIMAL(18, 2) NOT NULL,
-    status NVARCHAR(50) DEFAULT 'Pending',
+    status NVARCHAR(50) DEFAULT N'Chờ xử lý',
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
 	customer_name NVARCHAR(255) NULL,
     phone_number NVARCHAR(15) NULL,
@@ -152,6 +152,7 @@ CREATE TABLE Orders (
     shipping_address NVARCHAR(MAX) NULL,
     notes NVARCHAR(MAX) NULL
 );
+
 
 -- Bảng OrderDetails (Chi tiết đơn hàng)
 CREATE TABLE OrderDetails (
