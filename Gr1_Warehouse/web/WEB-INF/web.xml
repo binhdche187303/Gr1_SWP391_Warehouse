@@ -232,6 +232,10 @@
         <servlet-name>SizeList</servlet-name>
         <servlet-class>dashboardController.SizeList</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CreateStaff</servlet-name>
+        <servlet-class>dashboardController.CreateStaff</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ArchiveServlet</servlet-name>
         <url-pattern>/archive</url-pattern>
@@ -471,6 +475,10 @@
     <servlet-mapping>
         <servlet-name>SizeList</servlet-name>
         <url-pattern>/sizelist</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateStaff</servlet-name>
+        <url-pattern>/createstaff</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login</welcome-file>

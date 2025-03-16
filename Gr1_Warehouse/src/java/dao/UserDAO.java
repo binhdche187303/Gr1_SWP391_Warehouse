@@ -144,7 +144,12 @@ public class UserDAO extends DBContext {
         return null;
     }
 
-    public void create(User user) throws SQLException {
+    public boolean create(User user) throws SQLException {
+        // Kiểm tra nếu email hoặc username đã tồn tại
+        if (isEmailExist(user.getEmail()) || isUserNameExist(user.getUsername())) {
+            return false; // Trả về false nếu tài khoản đã tồn tại
+        }
+
         String sql = "INSERT INTO users (username, fullname, email, password, role_id, status, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -163,11 +168,7 @@ public class UserDAO extends DBContext {
             }
 
             int rowsInserted = ps.executeUpdate();
-            if (rowsInserted > 0) {
-                System.out.println("A new user was inserted successfully.");
-            } else {
-                System.out.println("Failed to insert new user.");
-            }
+            return rowsInserted > 0; // Trả về true nếu thêm thành công, false nếu thất bại
         }
     }
 
@@ -466,7 +467,7 @@ public class UserDAO extends DBContext {
         return staffList;
     }
 
-     public int getAllStaffDashboard() {
+    public int getAllStaffDashboard() {
         int numberOfStaff = 0;
         String sql = "SELECT COUNT(*)AS numberOfStaff FROM dbo.Users\n"
                 + "WHERE role_id NOT IN (1,2) AND status =N'Active'";
@@ -484,7 +485,7 @@ public class UserDAO extends DBContext {
         return numberOfStaff;
     }
 
-        public int getAllCusDashboard() {
+    public int getAllCusDashboard() {
         int numberOfCus = 0;
         String sql = "SELECT COUNT(*)AS numberOfCus FROM dbo.Users\n"
                 + "WHERE role_id = 2 AND status =N'Active'";
@@ -501,30 +502,21 @@ public class UserDAO extends DBContext {
         }
         return numberOfCus;
     }
-    
-     public static void main(String[] args) {
-        try {
-            // 2. Khởi tạo UserDAO
-            UserDAO userDAO = new UserDAO();
 
-            // 3. Tạo tài khoản admin
-            User newAdmin = new User();
-            newAdmin.setUsername("sale1");
-            newAdmin.setFullname("Tuan");
-            newAdmin.setEmail("Tuan@example.com");
-            newAdmin.setRole(new Role(7)); // role_id = 1 (Admin)
-            newAdmin.setStatus("Active");
-            newAdmin.setAddress("123 Trụ sở chính");
+    // Kiểm tra ussername đã tồn tại chưa
+    public boolean isUserNameExist(String username) {
+        String sql = "SELECT COUNT(*) FROM Users WHERE username = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
 
-      
-            userDAO.create(newAdmin);
-            System.out.println("✅ Tạo tài khoản admin thành công!");
-
-        } catch (Exception e) {
-            System.out.println("❌ Lỗi khi tạo tài khoản admin: " + e.getMessage());
+            if (rs.next() && rs.getInt(1) > 0) {
+                return true;
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
-    
-    
+
 }

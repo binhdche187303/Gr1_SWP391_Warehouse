@@ -4,24 +4,24 @@
  */
 package dashboardController;
 
+import dao.RoleDAO;
 import dao.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import java.sql.SQLException;
+import java.util.List;
+import model.Role;
 import model.User;
-import ulti.MD5Hash;
 
 /**
  *
  * @author admin
  */
-@WebServlet(name = "ProfileSetting", urlPatterns = {"/profilesettingadmin"})
-public class ProfileSetting extends HttpServlet {
+public class CreateStaff extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +40,10 @@ public class ProfileSetting extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ProfileSetting</title>");
+            out.println("<title>Servlet CreateStaff</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ProfileSetting at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CreateStaff at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,7 +61,10 @@ public class ProfileSetting extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/dashboard/profile-setting.jsp").forward(request, response);
+        RoleDAO rd = new RoleDAO();
+        List<Role> listRoles = rd.getAllRoleStaff();
+        request.setAttribute("listRoles", listRoles);
+        request.getRequestDispatcher("/dashboard/create-staff.jsp").forward(request, response);
     }
 
     /**
@@ -73,51 +76,39 @@ public class ProfileSetting extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        User u = (User) session.getAttribute("acc");
-
         UserDAO ud = new UserDAO();
+        User u = new User();
+        String username = request.getParameter("username");
+        String email = request.getParameter("email");
+        String roleId_raw = request.getParameter("roleId");
 
-        String action = request.getParameter("action");
-        String userID = request.getParameter("userId");
+        try {
+            int roleId = Integer.parseInt(roleId_raw);
+            u.setUsername(username);
+            u.setEmail(email);
+            u.setRole(new Role(roleId));
+            u.setRole(new Role(roleId));
+            u.setStatus("Active");
 
-        //Change profile
-        if (Integer.parseInt(action) == 0) {
-            String fullname = request.getParameter("fullname");
-            String phone = request.getParameter("phone");
-            String address = request.getParameter("address");
-            ud.updateUser(fullname, phone, address, Integer.parseInt(userID));
-
-            request.setAttribute("successprofile", "Change profile successfully");
-        } else //Change password
-        {
-            String currentpassword = request.getParameter("currentpassword");
-            String newpassword = request.getParameter("newpassword");
-            String confirmpassword = request.getParameter("confirmpassword");
-
-            String hashedCurrentPassword = MD5Hash.hash(currentpassword);
-
-            if (!hashedCurrentPassword.equals(u.getPassword())) {
-                request.setAttribute("error", "Current password is incorrect!");
-                request.getRequestDispatcher("/dashboard/profile-setting.jsp").forward(request, response);
-                return;
+            if (ud.create(u)) {
+                request.getSession().setAttribute("message", "Nhân viên đã được tạo thành công!");
+                response.sendRedirect("/Gr1_Warehouse/allstaff");
+            } else {
+                RoleDAO rd = new RoleDAO();
+                List<Role> listRoles = rd.getAllRoleStaff();
+                request.setAttribute("listRoles", listRoles);
+                request.setAttribute("username", username);
+                request.setAttribute("email", email);
+                request.setAttribute("roleId", roleId);
+                request.setAttribute("message", "Tên tài khoản hoặc email đã tồn tại!");
+                request.getRequestDispatcher("/dashboard/create-staff.jsp").forward(request, response);
             }
-
-            if (!newpassword.equals(confirmpassword)) {
-                request.setAttribute("error", "New password and confirm password do not match!");
-                request.getRequestDispatcher("/dashboard/profile-setting.jsp").forward(request, response);
-                return;
-            }
-            String hashedNewPassword = MD5Hash.hash(newpassword);
-            ud.updatePassword(hashedNewPassword, userID);
-            
-            request.setAttribute("success", "Change password successfully");
+        } catch (NumberFormatException | SQLException e) {
+            request.setAttribute("message", "Lỗi khi tạo người dùng: " + e.getMessage());
         }
-        User nuser = ud.getUserById(u.getUserId());
-        session.setAttribute("acc", nuser);
-        request.getRequestDispatcher("/dashboard/profile-setting.jsp").forward(request, response);
 
     }
 

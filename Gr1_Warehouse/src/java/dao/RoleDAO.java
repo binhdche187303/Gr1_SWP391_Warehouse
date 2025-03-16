@@ -51,6 +51,28 @@ public class RoleDAO extends DBContext {
         }
     }
 
+    public List<Role> getAllRoleStaff() {
+
+        List<Role> list = new ArrayList<>();
+        String sql = "SELECT * FROM dbo.Roles\n"
+                + "WHERE role_id NOT IN (1,2)";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Role role = new Role();
+                role.setRoleId(rs.getInt("role_id"));
+                role.setRoleName(rs.getString("role_name"));
+                list.add(role);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
     public static void main(String[] args) {
         RoleDAO rd = new RoleDAO();
         rd.updateRole("Cuss", 2);

@@ -125,7 +125,7 @@
                                         <div class="title-header option-title d-flex justify-content-between align-items-center">
                                             <h5>Danh sách nhân viên</h5>
                                             <form class="d-inline-flex">
-                                                <a href="add-new-user.html" class="align-items-center btn btn-theme d-flex">
+                                                <a href="createstaff" class="align-items-center btn btn-theme d-flex">
                                                     <i data-feather="plus"></i>Thêm nhân viên mới
                                                 </a>
                                             </form>
@@ -299,8 +299,12 @@
 
         <!-- Edit Staff Modal End -->
 
-
-
+        <c:if test="${not empty sessionScope.message}">
+            <script>
+                alert("${sessionScope.message}");
+                <% session.removeAttribute("message"); %>
+            </script>
+        </c:if>
 
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/bootstrap/bootstrap.bundle.min.js"></script>
@@ -321,152 +325,152 @@
 
 
         <script>
-            $(document).on("click", ".edit-staff", function () {
-                // Get data from clicked element
-                var id = $(this).data("id");
-                var username = $(this).data("username");
-                var fullname = $(this).data("fullname");
-                var roleid = $(this).data("roleid");
-                var rolename = $(this).data("rolename");
-                var phone = $(this).data("phone");
-                var email = $(this).data("email");
-                var address = $(this).data("address");
-                var status = $(this).data("status");
+                $(document).on("click", ".edit-staff", function () {
+                    // Get data from clicked element
+                    var id = $(this).data("id");
+                    var username = $(this).data("username");
+                    var fullname = $(this).data("fullname");
+                    var roleid = $(this).data("roleid");
+                    var rolename = $(this).data("rolename");
+                    var phone = $(this).data("phone");
+                    var email = $(this).data("email");
+                    var address = $(this).data("address");
+                    var status = $(this).data("status");
 
-                // Populate modal fields
-                $("#edit-staff input[name='user_id']").val(id);
-                $("#edit-staff input[name='username']").val(username);
-                $("#edit-staff input[name='fullname']").val(fullname);
-                $("#edit-staff select[name='rolename']").val(roleid);
-                $("#edit-staff input[name='rolename']").val(rolename);
-                $("#edit-staff input[name='phone']").val(phone);
-                $("#edit-staff input[name='email']").val(email);
-                $("#edit-staff input[name='address']").val(address);
-                $("#edit-staff select[name='status']").val(status);
+                    // Populate modal fields
+                    $("#edit-staff input[name='user_id']").val(id);
+                    $("#edit-staff input[name='username']").val(username);
+                    $("#edit-staff input[name='fullname']").val(fullname);
+                    $("#edit-staff select[name='rolename']").val(roleid);
+                    $("#edit-staff input[name='rolename']").val(rolename);
+                    $("#edit-staff input[name='phone']").val(phone);
+                    $("#edit-staff input[name='email']").val(email);
+                    $("#edit-staff input[name='address']").val(address);
+                    $("#edit-staff select[name='status']").val(status);
 
-                // Show the modal
-                $("#edit-staff").modal("show");
-            });
-
-
-            //Filter
-            $(document).ready(function () {
-                // Lấy danh sách các role name duy nhất từ bảng
-                var roleNames = {};
-                $('#table_id tbody tr').each(function () {
-                    var role = $(this).find('td:eq(2)').text().trim(); // Cột 2: Role Name
-                    if (role && !roleNames[role]) {
-                        roleNames[role] = true;
-                    }
+                    // Show the modal
+                    $("#edit-staff").modal("show");
                 });
 
-                // Tạo dropdown Role Name thủ công
-                var roleFilter = '<option value="">Tất cả vai trò</option>';
-                for (var role in roleNames) {
-                    if (roleNames.hasOwnProperty(role)) {
-                        roleFilter += '<option value="' + role + '">' + role + '</option>';
-                    }
-                }
 
-                // Lấy danh sách các trạng thái duy nhất từ bảng
-                var statusOptions = {};
-                $('#table_id tbody tr').each(function () {
-                    var status = $(this).find('td:eq(6)').text().trim(); // Cột 6: Trạng thái
-                    if (status && !statusOptions[status]) {
-                        statusOptions[status] = true;
-                    }
-                });
-
-                // Tạo dropdown trạng thái
-                var statusFilter = '<option value="">Tất cả trạng thái</option>' +
-                        '<option value="Active">Active</option>' +
-                        '<option value="Deactive">Deactive</option>';
-
-                // Cập nhật form filter
-                var filterForm =
-                        '<div class="card-body">' +
-                        '<div class="row mb-4">' +
-                        '<div class="col-md-2 mb-2">' +
-                        '<input type="text" id="fullnameFilter" class="form-control" placeholder="Tìm theo Họ và Tên">' +
-                        '</div>' +
-                        '<div class="col-md-2 mb-2">' +
-                        '<select id="roleFilter" class="form-control">' + roleFilter + '</select>' +
-                        '</div>' +
-                        '<div class="col-md-2 mb-2">' +
-                        '<input type="text" id="emailFilter" class="form-control" placeholder="Tìm theo Email">' +
-                        '</div>' +
-                        '<div class="col-md-2 mb-2">' +
-                        '<input type="text" id="addressFilter" class="form-control" placeholder="Tìm theo Địa chỉ">' +
-                        '</div>' +
-                        '<div class="col-md-2 mb-2">' +
-                        '<select id="statusFilter" class="form-control">' + statusFilter + '</select>' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>';
-
-                $('.title-header').after(filterForm);
-
-                // Khởi tạo DataTable
-                var table = $('#table_id').DataTable({
-                    paging: true,
-                    searching: true,
-                    ordering: true,
-                    info: true,
-                    pageLength: 10,
-                    lengthChange: false,
-                    language: {
-                        url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/vi.json',
-                        emptyTable: "Không có dữ liệu trong hệ thống",
-                        zeroRecords: "Không tìm thấy kết quả phù hợp",
-                        info: "Hiển thị _START_ đến _END_ của _TOTAL_ nhân viên",
-                        infoEmpty: "Hiển thị 0 đến 0 của 0 nhân viên",
-                        infoFiltered: "(lọc từ _MAX_ nhân viên)",
-                        paginate: {
-                            first: "Đầu tiên",
-                            last: "Cuối cùng",
-                            next: "Tiếp theo",
-                            previous: "Trước đó"
+                //Filter
+                $(document).ready(function () {
+                    // Lấy danh sách các role name duy nhất từ bảng
+                    var roleNames = {};
+                    $('#table_id tbody tr').each(function () {
+                        var role = $(this).find('td:eq(2)').text().trim(); // Cột 2: Role Name
+                        if (role && !roleNames[role]) {
+                            roleNames[role] = true;
                         }
-                    },
-                    columnDefs: [
-                        {orderable: true, targets: '_all'}
-                    ],
-                    initComplete: function () {
-                        $('.dataTables_filter').hide();
+                    });
+
+                    // Tạo dropdown Role Name thủ công
+                    var roleFilter = '<option value="">Tất cả vai trò</option>';
+                    for (var role in roleNames) {
+                        if (roleNames.hasOwnProperty(role)) {
+                            roleFilter += '<option value="' + role + '">' + role + '</option>';
+                        }
                     }
-                });
 
-                // Xử lý tìm kiếm theo Full Name
-                document.getElementById("fullnameFilter").addEventListener("keyup", function () {
-                    table.columns(1).search(this.value.trim()).draw(); // Cột 1: Full Name
-                });
+                    // Lấy danh sách các trạng thái duy nhất từ bảng
+                    var statusOptions = {};
+                    $('#table_id tbody tr').each(function () {
+                        var status = $(this).find('td:eq(6)').text().trim(); // Cột 6: Trạng thái
+                        if (status && !statusOptions[status]) {
+                            statusOptions[status] = true;
+                        }
+                    });
 
-                // Xử lý tìm kiếm theo Email
-                document.getElementById("emailFilter").addEventListener("keyup", function () {
-                    table.columns(4).search(this.value.trim()).draw(); // Cột 4: Email
-                });
+                    // Tạo dropdown trạng thái
+                    var statusFilter = '<option value="">Tất cả trạng thái</option>' +
+                            '<option value="Active">Active</option>' +
+                            '<option value="Deactive">Deactive</option>';
 
-                // Xử lý tìm kiếm theo Địa chỉ
-                document.getElementById("addressFilter").addEventListener("keyup", function () {
-                    table.columns(5).search(this.value.trim()).draw(); // Cột 5: Address
-                });
+                    // Cập nhật form filter
+                    var filterForm =
+                            '<div class="card-body">' +
+                            '<div class="row mb-4">' +
+                            '<div class="col-md-2 mb-2">' +
+                            '<input type="text" id="fullnameFilter" class="form-control" placeholder="Tìm theo Họ và Tên">' +
+                            '</div>' +
+                            '<div class="col-md-2 mb-2">' +
+                            '<select id="roleFilter" class="form-control">' + roleFilter + '</select>' +
+                            '</div>' +
+                            '<div class="col-md-2 mb-2">' +
+                            '<input type="text" id="emailFilter" class="form-control" placeholder="Tìm theo Email">' +
+                            '</div>' +
+                            '<div class="col-md-2 mb-2">' +
+                            '<input type="text" id="addressFilter" class="form-control" placeholder="Tìm theo Địa chỉ">' +
+                            '</div>' +
+                            '<div class="col-md-2 mb-2">' +
+                            '<select id="statusFilter" class="form-control">' + statusFilter + '</select>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
 
-                // Xử lý lọc theo Role Name bằng Select
-                document.getElementById("roleFilter").addEventListener("change", function () {
-                    table.columns(2).search(this.value.trim()).draw(); // Cột 2: Role Name
-                });
+                    $('.title-header').after(filterForm);
 
-                // Xử lý lọc theo Trạng thái
-                document.getElementById("statusFilter").addEventListener("change", function () {
-                    var status = this.value.trim();
-                    if (status) {
-                        table.columns(6).search("^" + status + "$", true, false).draw(); // Tìm chính xác
-                    } else {
-                        table.columns(6).search("").draw(); // Xóa bộ lọc nếu chọn "Tất cả trạng thái"
-                    }
-                });
+                    // Khởi tạo DataTable
+                    var table = $('#table_id').DataTable({
+                        paging: true,
+                        searching: true,
+                        ordering: true,
+                        info: true,
+                        pageLength: 10,
+                        lengthChange: false,
+                        language: {
+                            url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/vi.json',
+                            emptyTable: "Không có dữ liệu trong hệ thống",
+                            zeroRecords: "Không tìm thấy kết quả phù hợp",
+                            info: "Hiển thị _START_ đến _END_ của _TOTAL_ nhân viên",
+                            infoEmpty: "Hiển thị 0 đến 0 của 0 nhân viên",
+                            infoFiltered: "(lọc từ _MAX_ nhân viên)",
+                            paginate: {
+                                first: "Đầu tiên",
+                                last: "Cuối cùng",
+                                next: "Tiếp theo",
+                                previous: "Trước đó"
+                            }
+                        },
+                        columnDefs: [
+                            {orderable: true, targets: '_all'}
+                        ],
+                        initComplete: function () {
+                            $('.dataTables_filter').hide();
+                        }
+                    });
 
-            });
+                    // Xử lý tìm kiếm theo Full Name
+                    document.getElementById("fullnameFilter").addEventListener("keyup", function () {
+                        table.columns(1).search(this.value.trim()).draw(); // Cột 1: Full Name
+                    });
+
+                    // Xử lý tìm kiếm theo Email
+                    document.getElementById("emailFilter").addEventListener("keyup", function () {
+                        table.columns(4).search(this.value.trim()).draw(); // Cột 4: Email
+                    });
+
+                    // Xử lý tìm kiếm theo Địa chỉ
+                    document.getElementById("addressFilter").addEventListener("keyup", function () {
+                        table.columns(5).search(this.value.trim()).draw(); // Cột 5: Address
+                    });
+
+                    // Xử lý lọc theo Role Name bằng Select
+                    document.getElementById("roleFilter").addEventListener("change", function () {
+                        table.columns(2).search(this.value.trim()).draw(); // Cột 2: Role Name
+                    });
+
+                    // Xử lý lọc theo Trạng thái
+                    document.getElementById("statusFilter").addEventListener("change", function () {
+                        var status = this.value.trim();
+                        if (status) {
+                            table.columns(6).search("^" + status + "$", true, false).draw(); // Tìm chính xác
+                        } else {
+                            table.columns(6).search("").draw(); // Xóa bộ lọc nếu chọn "Tất cả trạng thái"
+                        }
+                    });
+
+                });
 
         </script>
     </body>
