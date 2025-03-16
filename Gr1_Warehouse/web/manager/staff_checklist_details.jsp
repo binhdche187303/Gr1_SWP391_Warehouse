@@ -395,35 +395,39 @@
                         nameCol.style.wordWrap = "break-word";
                         nameCol.style.whiteSpace = "normal";
                         nameCol.style.width = "250px";
-
-
                         const batchCol = document.createElement("td");
                         batchCol.textContent = batch;
                         batchCol.style.width = "120px";
                         batchCol.style.textAlign = "center";
-
-
                         const stockCol = document.createElement("td");
                         stockCol.textContent = stock;
                         stockCol.style.width = "120px";
                         stockCol.style.textAlign = "center";
+
 
                         const today = new Date();
                         const expDate = new Date(expirationDate);
                         console.log("📅 Ngày hết hạn:", expDate);
                         console.log("📅 Hôm nay:", today);
                         const isExpired = expDate < today;
-
                         const actualStockCol = document.createElement("td");
                         const actualStockInput = document.createElement("input");
                         actualStockCol.style.width = "120px";
                         actualStockInput.type = "number";
                         actualStockInput.classList.add("form-control");
-                        actualStockInput.value = "1";
                         actualStockInput.value = isExpired ? stock : "";
                         console.log(`📦 Số lượng tồn sản phẩm:` + stock);
                         actualStockInput.placeholder = "Số lượng";
-                        actualStockInput.min = "1"; // Số lượng phải lớn hơn 0
+//                        actualStockInput.min = "0"; // Số lượng phải lớn hơn 0
+
+                        actualStockInput.onblur = function () {
+                            let numValue = Number(actualStockInput.value);
+                            if (!Number.isInteger(numValue) || numValue < 0) {
+                                alert("⚠ Vui lòng nhập số nguyên dương!");
+                                actualStockInput.value = ""; // Reset về rỗng
+                            }
+                            updateTotalDifference();
+                        };
                         actualStockCol.appendChild(actualStockInput);
 
 
@@ -432,7 +436,6 @@
                         differenceSpan.classList.add("difference");
                         differenceCol.appendChild(differenceSpan);
                         differenceCol.style.textAlign = "center";
-
 
                         const priceCol = document.createElement("td"); // Cột giá trị chênh lệch
                         const priceDifferenceSpan = document.createElement("span");
@@ -445,10 +448,10 @@
                         expCol.textContent = expirationDate;
                         expCol.style.width = "120px";
                         expCol.style.textAlign = "center";
-
                         const reasonCol = document.createElement("td");
                         const reasonSelect = document.createElement("select");
                         reasonSelect.classList.add("form-control");
+
                         // Danh sách lý do có sẵn
                         const reasons = ["Sản phẩm mới", "Hàng lỗi", "Hết hạn", "Khác"];
                         reasonCol.style.width = "170px";
@@ -461,11 +464,14 @@
                         // Kiểm tra và cập nhật nếu hết hạn
                         if (isExpired) {
                             reasonSelect.value = "Hết hạn";
+                            reasonSelect.disabled = true;
+                            actualStockInput.value = "0"; // Đặt tồn thực tế thành 0
+                            actualStockInput.disabled = true; // Ngăn người dùng chỉnh sửa số lượng
                             console.log(`✅ Đã đặt lý do mặc định thành "Hết hạn" cho sản phẩm ${productName}`);
+                            updateTotalDifference();
                         }
+
                         reasonCol.appendChild(reasonSelect);
-
-
                         const removeCol = document.createElement("td");
                         removeCol.classList.add("text-center");
                         const removeBtn = document.createElement("button");
@@ -489,22 +495,17 @@
                             updateTotalDifference();
                             updatePriceDifference();
                         });
-
-
                         // 🟢 Thêm sự kiện xóa sản phẩm
                         removeBtn.addEventListener("click", function () {
                             productRow.remove();
                         });
                     });
-
                     // 🔹 Đóng modal sau khi chọn sản phẩm
                     const modal = bootstrap.Modal.getInstance(document.getElementById("searchProductModal"));
                     modal.hide();
                     updateTotalDifference();
                     updatePriceDifference();
                 });
-
-
                 function updateTotalDifference() {
                     let totalDifferenceUp = 0; // Tổng sản phẩm lệch tăng
                     let totalDifferenceDown = 0; // Tổng sản phẩm lệch giảm
@@ -516,11 +517,11 @@
 
                         let actualStock = parseInt(actualStockInput.value) || 0; // Lấy giá trị tồn thực tế nhập vào
 
-                        // Nếu tồn thực tế nhập vào nhỏ hơn 0 hoặc không hợp lệ, đặt về 1
-                        if (actualStock < 0 || isNaN(actualStock)) {
-                            actualStock = 1;
-                            actualStockInput.value = 1; // Cập nhật lại giá trị
-                        }
+//                        // Nếu tồn thực tế nhập vào nhỏ hơn 0 hoặc không hợp lệ, đặt về 1
+//                        if (actualStock < 0 || isNaN(actualStock)) {
+//                            actualStock = 0;
+//                            actualStockInput.value = 0; // Cập nhật lại giá trị
+//                        }
 
                         const difference = actualStock - stock; // Tính số lượng chênh lệch
                         differenceSpan.textContent = difference; // Cập nhật vào ô hiển thị
@@ -532,7 +533,6 @@
                             totalDifferenceDown += difference;
                         }
                     });
-
                     // Cập nhật vào phần Tổng kết
                     document.getElementById("totalDifferenceUp").textContent = totalDifferenceUp;
                     document.getElementById("totalDifferenceDown").textContent = totalDifferenceDown;
@@ -556,10 +556,10 @@
                         let actualStock = parseInt(actualStockInput.value) || 0; // Lấy giá trị tồn thực tế nhập vào
 
                         // ✅ Nếu tồn thực tế nhập vào nhỏ hơn 1 hoặc không hợp lệ, đặt về 1
-                        if (actualStock < 1 || isNaN(actualStock)) {
-                            actualStock = 1;
-                            actualStockInput.value = 1; // Cập nhật lại giá trị
-                        }
+//                        if (actualStock < 0 || isNaN(actualStock)) {
+//                            actualStock = 0;
+//                            actualStockInput.value = 0; // Cập nhật lại giá trị
+//                        }
 
                         const difference = actualStock - stock;
                         differenceSpan.textContent = difference; // Cập nhật ô chênh lệch
@@ -586,13 +586,11 @@
             document.getElementById("submitOrderBtn").addEventListener("click", async function (event) {
                 event.preventDefault();
                 console.log("===> Bắt đầu xử lý nhập hàng");
-
                 // Lấy thông tin từ biến backend đã load sẵn
                 const staffId = "${inventoryCheckDetails.reviewedBy.userId}";
                 const warehouseId = "${inventoryCheckDetails.warehouse.warehouseId}";
                 //const checkId = document.getElementById("checkId").textContent.replace("#", "").trim();
                 const checkId = "${inventoryCheckDetails.checkId}";
-
                 if (!staffId || staffId === "null") {
                     alert("Không tìm thấy thông tin người giám sát.");
                     return;
@@ -605,25 +603,20 @@
                 console.log("🔹 Staff ID (Người giám sát):", staffId);
                 console.log("🔹 Warehouse ID (Kho nhập):", warehouseId);
                 console.log("🔹 Check ID (Mã phiếu):", checkId);
-
                 // Lấy tổng số lượng và tổng tiền chênh lệch
                 const totalDifferenceUp = parseInt(document.getElementById("totalDifferenceUp")?.textContent.trim() || "0", 10);
                 const totalDifferenceDown = parseInt(document.getElementById("totalDifferenceDown")?.textContent.trim() || "0", 10);
                 const totalPriceDifferenceUp = parseFloat(document.getElementById("totalPriceDifferenceUp")?.textContent.replace(" VND", "").replace(/\./g, "").trim() || "0");
                 const totalPriceDifferenceDown = parseFloat(document.getElementById("totalPriceDifferenceDown")?.textContent.replace(" VND", "").replace(/\./g, "").trim() || "0");
-
                 console.log("🔹 Tổng chênh lệch tăng:", totalDifferenceUp);
                 console.log("🔹 Tổng chênh lệch giảm:", totalDifferenceDown);
                 console.log("🔹 Tổng tiền chênh lệch tăng:", totalPriceDifferenceUp);
                 console.log("🔹 Tổng tiền chênh lệch giảm:", totalPriceDifferenceDown);
-
                 // Lấy thông tin nhân viên kiểm kho & ghi chú
                 const warehouseStaff = document.getElementById("warehouseStaff")?.value.trim() || "";
                 const notes = document.getElementById("notes")?.value.trim() || "";
-
                 console.log("🔹 Nhân viên kiểm kho:", warehouseStaff);
                 console.log("🔹 Ghi chú:", notes);
-
                 if (!warehouseStaff) {
                     alert("Vui lòng nhập tên nhân viên kiểm kho.");
                     return;
@@ -637,7 +630,6 @@
                     return;
                 }
                 const inventoryData = [];
-
                 async function fetchVariantId(sku) {
                     try {
                         console.log(`🔹 Fetching Variant ID for SKU: ${sku}`);
@@ -647,7 +639,6 @@
                         }
                         const data = await response.json();
                         console.log("✅ API Response:", data);
-
                         if (data && data.variantId > 0) {
                             return data.variantId;
                         } else {
@@ -665,7 +656,6 @@
                     console.log("Row HTML:", row.innerHTML);
                     const productInfo = row.children[0]?.textContent.trim() || "";
                     console.log("🔹 Product Info:", productInfo);
-
                     if (!productInfo) {
                         alert("Không tìm thấy thông tin sản phẩm.");
                         continue; // Bỏ qua sản phẩm này
@@ -673,16 +663,13 @@
 
                     const parts = productInfo.split(" - ");
                     const sku = parts.length > 1 ? parts[parts.length - 1].trim() : "";
-
                     console.log("🔹 SKU sau khi tách:", sku);
-
                     if (!sku) {
                         alert("Không tìm thấy SKU hợp lệ.");
                         continue; // Bỏ qua sản phẩm này
                     }
 
                     const reason = row.children[7]?.querySelector("select")?.value.trim();
-
                     const batch = row.children[1]?.textContent.trim(); // Lấy Batch từ cột thứ hai
                     let recordedQuantity = row.children[2]?.textContent.trim(); // Lấy tồn kho ghi nhận (stock)
                     let actualQuantity = row.children[3]?.querySelector("input")?.value.trim(); // Lấy số lượng thực nhập từ input
@@ -700,7 +687,6 @@
                     console.log("🔹 Difference Price:", differencePrice);
                     console.log("🔹 Expiration Date", expirationDate);
                     console.log("🔹 Variant ID:", variantId);
-
                     if (!sku || !actualQuantity || !recordedQuantity || !difference || !differencePrice) {
                         alert("Vui lòng kiểm tra lại thông tin sản phẩm.");
                         return;
@@ -710,7 +696,6 @@
                     recordedQuantity = parseInt(recordedQuantity, 10);
                     difference = parseInt(difference, 10);
                     differencePrice = parseFloat(differencePrice.replace(/\./g, "").replace(",", "."));
-
                     if (!variantId || parseInt(variantId) <= 0) {
                         variantId = await fetchVariantId(sku);
                         if (!variantId) {
@@ -750,22 +735,17 @@
                     checkId: checkId,
                     inventoryItems: inventoryData
                 };
-
 // Gửi dữ liệu lên server
                 try {
                     console.log("Dữ liệu gửi lên server:", requestData);
-
                     const response = await fetch("/Gr1_Warehouse/complete-inventory-check", {
                         method: "POST",
                         headers: {"Content-Type": "application/json"},
                         body: JSON.stringify(requestData)
                     });
-
                     console.log("Response status:", response.status);
-
                     const responseData = await response.json();
                     console.log("Response data:", responseData);
-
                     if (response.ok && responseData.status === "success") {
                         alert("Kiểm kho thành công!");
                         window.location.href = "/Gr1_Warehouse/staff-checklist";
@@ -777,7 +757,6 @@
                     alert("Lỗi kết nối: " + error.message);
                 }
             });
-
         </script>
         <style>
             .text-muted {

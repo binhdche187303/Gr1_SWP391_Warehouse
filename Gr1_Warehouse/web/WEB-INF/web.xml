@@ -104,6 +104,10 @@
         <servlet-name>InventoryChecklistDetail</servlet-name>
         <servlet-class>controller.InventoryChecklistDetail</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>BalanceStock</servlet-name>
+        <servlet-class>dashboardController.BalanceStock</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ArchiveServlet</servlet-name>
         <url-pattern>/archive</url-pattern>
@@ -215,6 +219,10 @@
     <servlet-mapping>
         <servlet-name>InventoryChecklistDetail</servlet-name>
         <url-pattern>/inventory-checklist-detail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BalanceStock</servlet-name>
+        <url-pattern>/balance-stock</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login</welcome-file>

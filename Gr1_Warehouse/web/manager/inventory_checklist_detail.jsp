@@ -50,9 +50,6 @@
         <%@ include file="/manager/manager_dashboard.jsp" %>
 
         <div class="page-wrapper compact-wrapper" id="pageWrapper">
-
-
-
             <div class="page-body-wrapper">
                 <div class="page-body">
                     <div class="container-fluid">
@@ -66,20 +63,25 @@
                                                     <h3>Phiếu Kiểm Kho</h3>
                                                     <br/>
                                                     <p class="text-muted d-inline">
-                                                        Mã phiếu: <strong>#${idlist[0].checkId}</strong>
+                                                        Mã phiếu: <strong>#${check.checkId}</strong>
                                                         <span class="separator"> | </span>
-                                                        Ngày kiểm kho: <strong>${idlist[0].completedAt}</strong>
+                                                        Ngày kiểm kho: 
+                                                        <strong>
+                                                            <c:choose>
+                                                                <c:when test="${not empty check.completedAt}">
+                                                                    ${check.completedAt}
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <span class="text-muted">Chưa xong</span>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </strong>
                                                         <span class="separator"> | </span>
-                                                        Trạng thái: <strong>${idlist[0].status}</strong>
+                                                        Trạng thái: <strong>${check.status}</strong>
                                                     </p>
                                                 </div>
                                                 <c:set var="roleId" value="${sessionScope.user.role.roleId}" />
-                                                <button class="btn btn-primary" 
-                                                        onclick="window.location.href = '#'">
-                                                    Tạo báo cáo chênh lệch
-                                                </button>
                                                 <c:choose>
-
                                                     <c:when test="${roleId == 3}">
                                                         <div>
                                                             <button class="btn btn-primary" 
@@ -97,15 +99,50 @@
                                                         </div>
                                                     </c:when>
                                                 </c:choose>
-
                                             </div>
                                         </div>
+
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+                                                <div class="card border">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Người giám sát</h5>
+                                                        <p><strong>Tên người giám sát:</strong> ${check.reviewedBy.fullname}</p>
+                                                        <p><strong>Điện thoại:</strong> ${check.reviewedBy.phone}</p>
+                                                        <p><strong>Email:</strong> ${check.reviewedBy.email}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="card border">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Kho nhập</h5>
+                                                        <p><strong>Tên kho lưu trữ:</strong> ${check.warehouse.warehouseName}</p>
+                                                        <p><strong>Địa chỉ:</strong> ${check.warehouse.address}</p>
+                                                        <p><strong>Điện thoại:</strong> ${check.warehouse.phone}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
 
                                         <div class="row mt-3">
                                             <div class="col-md-12">
                                                 <div class="card border">
                                                     <div class="card-body">
-                                                        <h5 class="card-title">Danh sách sản phẩm kiểm kê</h5>
+                                                        <h3 class="card-title">Danh sách sản phẩm kiểm kê</h3>
+                                                        <ul class="nav nav-tabs">
+                                                            <li class="nav-item">
+                                                                <a class="nav-link active" href="#" onclick="filterProducts('all')">Tất cả</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" href="#" onclick="filterProducts('match')">Khớp</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" href="#" onclick="filterProducts('mismatch')">Lệch</a>
+                                                            </li>
+                                                        </ul>
                                                         <table class="table table-striped table-bordered">
                                                             <thead>
                                                                 <tr>
@@ -119,16 +156,16 @@
                                                                     <th>Lý do</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody>
+                                                            <tbody id="productTable">
                                                                 <c:forEach var="item" items="${idlist}">
-                                                                    <tr>
+                                                                    <tr class="product-row" data-discrepancy="${item.discrepancy}">
                                                                         <td>${item.productName} - ${item.sku} - ${item.sizeName}</td>
                                                                         <td>${item.batchId}</td>
                                                                         <td>${item.recordedQuantity}</td>
                                                                         <td>${item.actualQuantity}</td>
                                                                         <td>${item.discrepancy}</td>
                                                                         <td>
-                                                                            <fmt:formatNumber value="${item.differencePrice}" type="currency" currencySymbol="₫" />
+                                                                            <fmt:formatNumber value="${item.differencePrice}" type="number" groupingUsed="true" />₫
                                                                         </td>
                                                                         <td>${item.expirationDate != null ? item.expirationDate : 'N/A'}</td>
                                                                         <td>${item.reason}</td>
@@ -166,16 +203,28 @@
                                                             <li class="list-group-item d-flex justify-content-between">
                                                                 <span>Giá trị lệch tăng</span>
                                                                 <span>
-                                                                    <fmt:formatNumber value="${idlist[0].priceDifferenceUp}" type="currency" currencySymbol="₫" />
+                                                                    <fmt:formatNumber value="${idlist[0].priceDifferenceUp}" type="number" groupingUsed="true" />₫
                                                                 </span>
                                                             </li>
                                                             <li class="list-group-item d-flex justify-content-between">
                                                                 <span>Giá trị lệch giảm</span>
                                                                 <span>
-                                                                    <fmt:formatNumber value="${idlist[0].priceDifferenceDown}" type="currency" currencySymbol="₫" />
+                                                                    <fmt:formatNumber value="${idlist[0].priceDifferenceDown}" type="number" groupingUsed="true" />₫
                                                                 </span>
                                                             </li>
+
                                                         </ul>
+                                                        </br>       
+                                                        <c:choose>
+                                                            <c:when test="${roleId == 3}">
+                                                                <div style="width: 100%;">
+                                                                    <button class="btn btn-primary w-100" 
+                                                                            onclick="completeInventoryCheck(${check.checkId})">
+                                                                        Hoàn tất kiểm kho
+                                                                    </button>
+                                                                </div>
+                                                            </c:when>
+                                                        </c:choose>
                                                     </div>
                                                 </div>
                                             </div>
@@ -189,7 +238,51 @@
                 </div>  
             </div>  
         </div>
+        <script>
+            function completeInventoryCheck(checkId) {
+                if (confirm("Bạn có chắc muốn hoàn tất kiểm kho không?")) {
+                    fetch('/Gr1_Warehouse/balance-stock', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({checkId: checkId})
+                    })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    alert("Cập nhật tồn kho thành công!");
+                                    window.location.href = "http://localhost:8080/Gr1_Warehouse/inventory-checklist";
+                                } else {
+                                    alert("Có lỗi xảy ra: " + data.message);
+                                }
+                            })
+                            .catch(error => console.error("Lỗi:", error));
+                }
+            }
 
+
+            function filterProducts(type) {
+                var rows = document.querySelectorAll(".product-row");
+
+                rows.forEach(row => {
+                    var discrepancy = parseInt(row.getAttribute("data-discrepancy"));
+
+                    if (type === "all") {
+                        row.style.display = "";
+                    } else if (type === "match" && discrepancy === 0) {
+                        row.style.display = "";
+                    } else if (type === "mismatch" && discrepancy !== 0) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                });
+
+                // Cập nhật tab active
+                document.querySelectorAll(".nav-link").forEach(tab => tab.classList.remove("active"));
+                event.target.classList.add("active");
+            }
+
+        </script>
         <style>
             .text-muted {
                 display: inline;
@@ -202,8 +295,6 @@
             strong {
                 margin-left: 5px;
             }
-
-
         </style>
         <!-- latest js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>

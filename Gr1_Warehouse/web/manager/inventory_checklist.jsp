@@ -106,6 +106,14 @@
                                                     </td>
                                                     <td>
                                                         <small>
+                                                            <c:choose>
+                                                                <c:when test="${not empty check.balanceDate}">
+                                                                    ${check.balanceDate}
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <span class="text-muted">Chưa xong</span>
+                                                                </c:otherwise>
+                                                            </c:choose>
                                                             <br><span class="text-muted">@${check.createdBy}</span>
                                                         </small>
                                                     </td>
@@ -117,11 +125,11 @@
                                                             </c:if></small></td>
 
                                                     <td><small><c:if test="${check.totalPriceDifferenceUp != 0}">
-                                                                <fmt:formatNumber value="${check.totalPriceDifferenceUp}" type="currency" currencySymbol="₫"/> 
+                                                                <fmt:formatNumber value="${check.totalPriceDifferenceUp}" type="number" groupingUsed="true" />₫
                                                                 <i class="fas fa-arrow-up text-success"></i><br>
                                                             </c:if>
                                                             <c:if test="${check.totalPriceDifferenceDown != 0}">
-                                                                <fmt:formatNumber value="${check.totalPriceDifferenceDown}" type="currency" currencySymbol="₫"/> 
+                                                                <fmt:formatNumber value="${check.totalPriceDifferenceDown}" type="number" groupingUsed="true" />₫
                                                                 <i class="fas fa-arrow-down text-danger"></i>
                                                             </c:if></small></td>
                                                     <td>

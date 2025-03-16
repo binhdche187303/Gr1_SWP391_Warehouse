@@ -20,111 +20,141 @@ import model.User;
 import model.Warehouse;
 
 public class InventoryDAO extends DBContext {
-  public List<InventoryCheckDetailDTO> getInventoryCheckDetail(int checkId) {
-    List<InventoryCheckDetailDTO> list = new ArrayList<>();
-    String sql = "SELECT " +
-            "ic.check_id, ic.status, ic.completed_at, " +
-            "u.fullname, u.phone, u.email, " +
-            "w.warehouse_name, w.address, w.phone, " +
-            "p.product_name, pv.sku, s.size_name, " +
-            "ib.batch_id, icd.recorded_quantity, icd.actual_quantity, " +
-            "icd.discrepancy, icd.difference_price, ib.expiration_date, " +
-            "icd.reason, ic.warehouse_staff, ic.notes, " +
-            "ic.total_difference_up, ic.total_difference_down, " +
-            "ic.total_price_difference_up, ic.total_price_difference_down " +
-            "FROM InventoryCheck ic " +
-            "JOIN Users u ON ic.reviewed_by = u.user_id " +
-            "JOIN Warehouses w ON ic.warehouse_id = w.warehouse_id " +
-            "JOIN InventoryCheckDetails icd ON ic.check_id = icd.check_id " +
-            "JOIN InventoryBatches ib ON icd.batch_id = ib.batch_id " +
-            "JOIN ProductVariants pv ON icd.variant_id = pv.variant_id " +
-            "JOIN Products p ON pv.product_id = p.product_id " +
-            "JOIN Sizes s ON pv.size_id = s.size_id " + 
-            "WHERE ic.check_id = ?";
+    public void updateInventoryCheckBalance(int checkId) {
+    String sql = "UPDATE InventoryCheck " +
+                 "SET status = N'Đã cân bằng', " +
+                 "balance_date = GETDATE() " +
+                 "WHERE check_id = ?";
 
     try (PreparedStatement ps = connection.prepareStatement(sql)) {
         ps.setInt(1, checkId);
-        try (ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                InventoryCheckDetailDTO detail = new InventoryCheckDetailDTO();
-                detail.setCheckId(rs.getInt("check_id"));
-                detail.setStatus(rs.getString("status"));
-                detail.setCompletedAt(rs.getTimestamp("completed_at"));
-                detail.setFullname(rs.getString("fullname"));
-                detail.setUserPhone(rs.getString("phone"));
-                detail.setUserEmail(rs.getString("email"));
-                detail.setWarehouseName(rs.getString("warehouse_name"));
-                detail.setWarehouseAddress(rs.getString("address"));
-                detail.setWarehousePhone(rs.getString("phone"));
-                detail.setProductName(rs.getString("product_name"));
-                detail.setSku(rs.getString("sku"));  // Lấy SKU
-                detail.setSizeName(rs.getString("size_name")); // Lấy size_name
-                detail.setBatchId(rs.getInt("batch_id"));
-                detail.setRecordedQuantity(rs.getInt("recorded_quantity"));
-                detail.setActualQuantity(rs.getInt("actual_quantity"));
-                detail.setDiscrepancy(rs.getInt("discrepancy"));
-                detail.setDifferencePrice(rs.getDouble("difference_price"));
-                detail.setExpirationDate(rs.getString("expiration_date"));
-                detail.setReason(rs.getString("reason"));
-                detail.setWarehouseStaff(rs.getString("warehouse_staff"));
-                detail.setNotes(rs.getString("notes"));
-                detail.setDifferenceUp(rs.getInt("total_difference_up")); // Lấy từ bảng InventoryCheck
-                detail.setDifferenceDown(rs.getInt("total_difference_down")); // Lấy từ bảng InventoryCheck
-                detail.setPriceDifferenceUp(rs.getDouble("total_price_difference_up")); // Lấy từ bảng InventoryCheck
-                detail.setPriceDifferenceDown(rs.getDouble("total_price_difference_down")); // Lấy từ bảng InventoryCheck
+        ps.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
 
-                list.add(detail);
+
+    public boolean updateStockFromInventoryCheck(int checkId) {
+        String sql = "UPDATE bs\n"
+                + "SET bs.quantity = icd.actual_quantity\n"
+                + "FROM InventoryBatches bs\n"
+                + "JOIN InventoryCheckDetails icd ON bs.batch_id = icd.batch_id\n"
+                + "WHERE icd.check_id = ?;";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, checkId);
+            int updatedRows = ps.executeUpdate();
+            return updatedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<InventoryCheckDetailDTO> getInventoryCheckDetail(int checkId) {
+        List<InventoryCheckDetailDTO> list = new ArrayList<>();
+        String sql = "SELECT "
+                + "ic.check_id, ic.status, ic.completed_at, "
+                + "u.fullname, u.phone, u.email, "
+                + "w.warehouse_name, w.address, w.phone, "
+                + "p.product_name, pv.sku, s.size_name, "
+                + "ib.batch_id, icd.recorded_quantity, icd.actual_quantity, "
+                + "icd.discrepancy, icd.difference_price, ib.expiration_date, "
+                + "icd.reason, ic.warehouse_staff, ic.notes, "
+                + "ic.total_difference_up, ic.total_difference_down, "
+                + "ic.total_price_difference_up, ic.total_price_difference_down "
+                + "FROM InventoryCheck ic "
+                + "JOIN Users u ON ic.reviewed_by = u.user_id "
+                + "JOIN Warehouses w ON ic.warehouse_id = w.warehouse_id "
+                + "JOIN InventoryCheckDetails icd ON ic.check_id = icd.check_id "
+                + "JOIN InventoryBatches ib ON icd.batch_id = ib.batch_id "
+                + "JOIN ProductVariants pv ON icd.variant_id = pv.variant_id "
+                + "JOIN Products p ON pv.product_id = p.product_id "
+                + "JOIN Sizes s ON pv.size_id = s.size_id "
+                + "WHERE ic.check_id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, checkId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    InventoryCheckDetailDTO detail = new InventoryCheckDetailDTO();
+                    detail.setCheckId(rs.getInt("check_id"));
+                    detail.setStatus(rs.getString("status"));
+                    detail.setCompletedAt(rs.getTimestamp("completed_at"));
+                    detail.setFullname(rs.getString("fullname"));
+                    detail.setUserPhone(rs.getString("phone"));
+                    detail.setUserEmail(rs.getString("email"));
+                    detail.setWarehouseName(rs.getString("warehouse_name"));
+                    detail.setWarehouseAddress(rs.getString("address"));
+                    detail.setWarehousePhone(rs.getString("phone"));
+                    detail.setProductName(rs.getString("product_name"));
+                    detail.setSku(rs.getString("sku"));  // Lấy SKU
+                    detail.setSizeName(rs.getString("size_name")); // Lấy size_name
+                    detail.setBatchId(rs.getInt("batch_id"));
+                    detail.setRecordedQuantity(rs.getInt("recorded_quantity"));
+                    detail.setActualQuantity(rs.getInt("actual_quantity"));
+                    detail.setDiscrepancy(rs.getInt("discrepancy"));
+                    detail.setDifferencePrice(rs.getDouble("difference_price"));
+                    detail.setExpirationDate(rs.getString("expiration_date"));
+                    detail.setReason(rs.getString("reason"));
+                    detail.setWarehouseStaff(rs.getString("warehouse_staff"));
+                    detail.setNotes(rs.getString("notes"));
+                    detail.setDifferenceUp(rs.getInt("total_difference_up")); // Lấy từ bảng InventoryCheck
+                    detail.setDifferenceDown(rs.getInt("total_difference_down")); // Lấy từ bảng InventoryCheck
+                    detail.setPriceDifferenceUp(rs.getDouble("total_price_difference_up")); // Lấy từ bảng InventoryCheck
+                    detail.setPriceDifferenceDown(rs.getDouble("total_price_difference_down")); // Lấy từ bảng InventoryCheck
+
+                    list.add(detail);
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return list;
     }
-    return list;
-}
 
+    public List<InventoryCheckDTO> getAllInventoryCheck() {
+        List<InventoryCheckDTO> list = new ArrayList<>();
+        String sql = "SELECT \n"
+                + "    ic.check_id, \n"
+                + "    ic.completed_at, \n"
+                + "    ic.balance_date, \n"
+                + "    w.warehouse_name, \n"
+                + "    ic.status, \n"
+                + "    u1.fullname AS created_by_name, \n"
+                + "    u2.fullname AS reviewed_by_name, \n"
+                + "    ic.total_difference_up, \n"
+                + "    ic.total_difference_down, \n"
+                + "    ic.total_price_difference_up, \n"
+                + "    ic.total_price_difference_down \n"
+                + "FROM InventoryCheck ic \n"
+                + "LEFT JOIN Warehouses w ON ic.warehouse_id = w.warehouse_id \n"
+                + "LEFT JOIN Users u1 ON ic.created_by = u1.user_id \n"
+                + "LEFT JOIN Users u2 ON ic.reviewed_by = u2.user_id;";
 
-     
- public List<InventoryCheckDTO> getAllInventoryCheck() {
-    List<InventoryCheckDTO> list = new ArrayList<>();
-    String sql = "SELECT \n"
-            + "    ic.check_id, \n"
-            + "    ic.completed_at, \n"
-            + "    w.warehouse_name, \n"
-            + "    ic.status, \n"
-            + "    u1.fullname AS created_by_name, \n"
-            + "    u2.fullname AS reviewed_by_name, \n"
-            + "    ic.total_difference_up, \n"
-            + "    ic.total_difference_down, \n"
-            + "    ic.total_price_difference_up, \n"
-            + "    ic.total_price_difference_down \n"
-            + "FROM InventoryCheck ic \n"
-            + "LEFT JOIN Warehouses w ON ic.warehouse_id = w.warehouse_id \n"
-            + "LEFT JOIN Users u1 ON ic.created_by = u1.user_id \n"
-            + "LEFT JOIN Users u2 ON ic.reviewed_by = u2.user_id;";
+        try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
-    try (PreparedStatement ps = connection.prepareStatement(sql);
-         ResultSet rs = ps.executeQuery()) {
-
-        while (rs.next()) {
-            InventoryCheckDTO check = new InventoryCheckDTO();
-            check.setCheckId(rs.getInt("check_id"));
-            check.setWarehouseName(rs.getString("warehouse_name"));
-            check.setStatus(rs.getString("status"));
-            check.setCompleteDate(rs.getTimestamp("completed_at"));
-            check.setCreatedBy(rs.getString("created_by_name"));
-            check.setReviewedBy(rs.getString("reviewed_by_name"));
-            check.setTotalDifferenceUp(rs.getInt("total_difference_up"));
-            check.setTotalDifferenceDown(rs.getInt("total_difference_down"));
-            check.setTotalPriceDifferenceUp(rs.getDouble("total_price_difference_up"));
-            check.setTotalPriceDifferenceDown(rs.getDouble("total_price_difference_down"));
-            list.add(check);
+            while (rs.next()) {
+                InventoryCheckDTO check = new InventoryCheckDTO();
+                check.setCheckId(rs.getInt("check_id"));
+                check.setWarehouseName(rs.getString("warehouse_name"));
+                check.setStatus(rs.getString("status"));
+                check.setCompleteDate(rs.getTimestamp("completed_at"));
+                check.setBalanceDate(rs.getTimestamp("balance_date"));  
+                check.setCreatedBy(rs.getString("created_by_name"));
+                check.setReviewedBy(rs.getString("reviewed_by_name"));
+                check.setTotalDifferenceUp(rs.getInt("total_difference_up"));
+                check.setTotalDifferenceDown(rs.getInt("total_difference_down"));
+                check.setTotalPriceDifferenceUp(rs.getDouble("total_price_difference_up"));
+                check.setTotalPriceDifferenceDown(rs.getDouble("total_price_difference_down"));
+                list.add(check);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return list;
     }
-    return list;
-}
-
 
     public boolean updateInventoryCheck(int checkId, String warehouseStaff, int totalDifferenceUp, int totalDifferenceDown,
             double totalPriceDifferenceUp, double totalPriceDifferenceDown, String notes) {

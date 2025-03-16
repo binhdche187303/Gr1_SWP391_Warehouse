@@ -118,11 +118,11 @@
                                                             </c:if></small></td>
 
                                                     <td><small><c:if test="${check.totalPriceDifferenceUp != 0}">
-                                                                <fmt:formatNumber value="${check.totalPriceDifferenceUp}" type="currency" currencySymbol="₫"/> 
+                                                                <fmt:formatNumber value="${check.totalPriceDifferenceUp}" type="number" groupingUsed="true" />₫
                                                                 <i class="fas fa-arrow-up text-success"></i><br>
                                                             </c:if>
                                                             <c:if test="${check.totalPriceDifferenceDown != 0}">
-                                                                <fmt:formatNumber value="${check.totalPriceDifferenceDown}" type="currency" currencySymbol="₫"/> 
+                                                                <fmt:formatNumber value="${check.totalPriceDifferenceDown}" type="number" groupingUsed="true" />₫
                                                                 <i class="fas fa-arrow-down text-danger"></i>
                                                             </c:if></small></td>
                                                     <td>
@@ -137,7 +137,7 @@
                                                             </li>
                                                             <li>
                                                                 <c:choose>
-                                                                    <c:when test="${check.status eq 'Đã kiểm kho'}">
+                                                                    <c:when test="${check.status eq 'Đã kiểm kho' or check.status eq 'Đã cân bằng'}">
                                                                         <button type="button" style="background: none; border: none; cursor: not-allowed; opacity: 0.5;"
                                                                                 onclick="alert('Phiếu kiểm kho này đã hoàn thành, không thể chỉnh sửa!');">
                                                                             <i class="ri-pencil-line text-muted"></i>

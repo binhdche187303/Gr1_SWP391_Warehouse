@@ -241,7 +241,7 @@
             // Kiểm tra nếu có tham số success hoặc error
             if (urlParams.has("success")) {
                 alert("✅ Phiếu kiểm kho đã được tạo thành công!");
-                window.location.href = "inventory_checklist.jsp";
+                window.location.href = 'http://localhost:8080/Gr1_Warehouse/inventory-checklist';
             } else if (urlParams.has("error")) {
                 alert("❌ Lỗi! Không thể tạo phiếu kiểm kho. Vui lòng thử lại.");
                 window.location.href = "inventory_checklist.jsp";

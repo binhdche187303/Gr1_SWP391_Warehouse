@@ -11,6 +11,7 @@ public class InventoryCheckDTO {
     private String status;
     private Timestamp checkDate;
     private Timestamp completeDate;
+    private Timestamp balanceDate;
     private int totalDifferenceUp;        
     private int totalDifferenceDown;      
     private double totalPriceDifferenceUp; 
@@ -48,6 +49,30 @@ public class InventoryCheckDTO {
         this.createdBy = createdBy;
     }
 
+    public InventoryCheckDTO(int checkId, String warehouseName, String status, Timestamp checkDate, Timestamp completeDate, Timestamp balanceDate, int totalDifferenceUp, int totalDifferenceDown, double totalPriceDifferenceUp, double totalPriceDifferenceDown, String reviewedBy, String createdBy) {
+        this.checkId = checkId;
+        this.warehouseName = warehouseName;
+        this.status = status;
+        this.checkDate = checkDate;
+        this.completeDate = completeDate;
+        this.balanceDate = balanceDate;
+        this.totalDifferenceUp = totalDifferenceUp;
+        this.totalDifferenceDown = totalDifferenceDown;
+        this.totalPriceDifferenceUp = totalPriceDifferenceUp;
+        this.totalPriceDifferenceDown = totalPriceDifferenceDown;
+        this.reviewedBy = reviewedBy;
+        this.createdBy = createdBy;
+    }
+
+    public Timestamp getBalanceDate() {
+        return balanceDate;
+    }
+
+    public void setBalanceDate(Timestamp balanceDate) {
+        this.balanceDate = balanceDate;
+    }
+
+    
     public int getCheckId() {
         return checkId;
     }

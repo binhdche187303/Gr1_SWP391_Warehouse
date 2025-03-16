@@ -10,6 +10,7 @@ public class InventoryCheck {
     private int checkId;
     private String status;
     private Timestamp checkDate;
+    private Timestamp balanceDate;
     private Timestamp completedAt;
     private Warehouse warehouse;
     private User createdBy;
@@ -26,6 +27,26 @@ public class InventoryCheck {
         this.reviewedBy = reviewedBy;
     }
 
+    public InventoryCheck(int checkId, String status, Timestamp checkDate, Timestamp balanceDate, Timestamp completedAt, Warehouse warehouse, User createdBy, User reviewedBy) {
+        this.checkId = checkId;
+        this.status = status;
+        this.checkDate = checkDate;
+        this.balanceDate = balanceDate;
+        this.completedAt = completedAt;
+        this.warehouse = warehouse;
+        this.createdBy = createdBy;
+        this.reviewedBy = reviewedBy;
+    }
+
+    public Timestamp getBalanceDate() {
+        return balanceDate;
+    }
+
+    public void setBalanceDate(Timestamp balanceDate) {
+        this.balanceDate = balanceDate;
+    }
+
+    
     public InventoryCheck() {
     }
 

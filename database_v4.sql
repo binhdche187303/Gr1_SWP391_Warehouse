@@ -261,6 +261,10 @@ CREATE TABLE InventoryCheck (
     FOREIGN KEY (reviewed_by) REFERENCES Users(user_id)
 );
 
+ALTER TABLE InventoryCheck 
+ADD balance_date DATETIME NULL;
+
+
 CREATE TABLE InventoryCheckDetails (
     check_detail_id INT PRIMARY KEY IDENTITY(1,1),  -- ID chi tiết kiểm kho
     check_id INT NOT NULL,                          -- ID phiếu kiểm kho
@@ -1988,7 +1992,19 @@ JOIN Products p ON pv.product_id = p.product_id
 JOIN Sizes s ON pv.size_id = s.size_id -- Thêm JOIN với bảng Sizes để lấy size_name
 WHERE ic.check_id = 3;
 
-select * from Roles	 r join Users u on r.role_id = u.role_id
 
+select * from InventoryBatches bs 
+                     JOIN InventoryCheckDetails icd ON bs.batch_id = icd.batch_id 
+                     WHERE icd.check_id = 8;
+
+UPDATE bs
+SET bs.quantity = icd.actual_quantity
+FROM InventoryBatches bs
+JOIN InventoryCheckDetails icd ON bs.batch_id = icd.batch_id
+WHERE icd.check_id = 8;
+
+
+			select * from InventoryCheck
+	 UPDATE InventoryCheck SET status = N'Đã cân bằng' WHERE check_id = 8
 
 
