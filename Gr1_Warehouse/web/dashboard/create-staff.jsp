@@ -148,7 +148,7 @@
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label class="col-lg-2 col-md-3 col-form-label form-label-title">Tên tài khoản</label>
                                                                     <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="text" name="username" required value="${requestScope.username} ">
+                                                                        <input class="form-control" type="text" name="username" required value="${requestScope.username}">
                                                                     </div>
                                                                 </div>
 

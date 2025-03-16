@@ -84,10 +84,11 @@ public class CreateStaff extends HttpServlet {
         String username = request.getParameter("username");
         String email = request.getParameter("email");
         String roleId_raw = request.getParameter("roleId");
-
+        
+        System.out.println(username);
         try {
             int roleId = Integer.parseInt(roleId_raw);
-            u.setUsername(username);
+            u.setUsername(username.trim());
             u.setEmail(email);
             u.setRole(new Role(roleId));
             u.setRole(new Role(roleId));
