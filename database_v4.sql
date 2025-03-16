@@ -210,7 +210,7 @@ CREATE TABLE PurchaseOrder (
     order_id INT PRIMARY KEY IDENTITY(1,1),
     order_date DATETIME NOT NULL,
     supplier_id INT NOT NULL,
-    total_amount DECIMAL(10,2) NOT NULL,
+    total_amount DECIMAL(18,2) NOT NULL,
 	bill_img_url VARCHAR(255) NULL,
     status NVARCHAR(50) DEFAULT N'Chờ nhập kho' CHECK (status IN (N'Chờ nhập kho', N'Đã nhập kho', N'Đã hủy')),
     notes NVARCHAR(MAX),
@@ -228,7 +228,7 @@ CREATE TABLE PurchaseDetails (
     order_id INT NOT NULL,                     -- ID phiếu nhập hàng
     variant_id INT NOT NULL,          
     quantity INT NOT NULL,                     -- Số lượng nhập
-    unit_price DECIMAL(10,2) NOT NULL,          -- Giá nhập mỗi đơn vị
+    unit_price DECIMAL(18,2) NOT NULL,          -- Giá nhập mỗi đơn vị
     total_price AS (quantity * unit_price),    -- Tổng tiền (tự tính)
     expiration_date DATE,                      -- Ngày hết hạn (nếu có)
     warehouse_id INT NOT NULL,                 -- Kho lưu trữ
@@ -244,9 +244,17 @@ CREATE TABLE InventoryCheck (
     check_id INT PRIMARY KEY IDENTITY(1,1),
     check_date DATETIME NOT NULL,
     warehouse_id INT NOT NULL,
-    status NVARCHAR(50) DEFAULT 'Pending' CHECK (status IN ('Pending', 'Completed', 'Approved', 'Cancelled')),
+    status NVARCHAR(50) DEFAULT N'Chờ kiểm kho' CHECK (status IN (N'Chờ kiểm kho', N'Đang kiểm kho', N'Đã kiểm kho', N'Đã cân bằng')),
     created_by INT NOT NULL,
     reviewed_by INT,
+	warehouse_staff NVARCHAR(255) NULL, -- Nhân viên kho phụ trách (Tên)
+	total_difference_up INT DEFAULT 0, -- Tổng chênh lệch tăng
+    total_difference_down INT DEFAULT 0, -- Tổng chênh lệch giảm
+    total_price_difference_up DECIMAL(18,0) DEFAULT 0, -- Tổng giá trị chênh lệch tăng
+    total_price_difference_down DECIMAL(18,0) DEFAULT 0, -- Tổng giá trị chênh lệch giảm
+    notes NVARCHAR(MAX) NULL, -- Ghi chú kiểm kho
+	completed_at DATETIME NULL,
+	balance_date DATETIME NULL,
     FOREIGN KEY (warehouse_id) REFERENCES Warehouses(warehouse_id),
     FOREIGN KEY (created_by) REFERENCES Users(user_id),
     FOREIGN KEY (reviewed_by) REFERENCES Users(user_id)
