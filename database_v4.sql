@@ -306,13 +306,12 @@ CREATE TABLE SupplierBrand (
 CREATE TABLE OrderDiscounts (
     id INT IDENTITY(1,1) PRIMARY KEY,
     order_id INT NOT NULL,
-    discount_id INT NOT NULL,
     applied_discount_percentage DECIMAL(5,2) NOT NULL,
     applied_amount DECIMAL(18,2) NOT NULL,
     applied_date DATETIME DEFAULT GETDATE(),
     FOREIGN KEY (order_id) REFERENCES Orders(order_id),
-    FOREIGN KEY (discount_id) REFERENCES Discounts(discount_id)
 );
+
 
 CREATE TABLE OrderPayments (
     payment_id INT PRIMARY KEY IDENTITY(1,1),

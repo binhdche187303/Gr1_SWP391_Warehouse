@@ -69,9 +69,9 @@ public class ApplyDiscountServlet extends HttpServlet {
         try {
             int orderId = Integer.parseInt(request.getParameter("order_id"));
 
-            List<OrderDiscount> orderDiscounts = orderDiscountDAO.getDiscountsByOrderId(orderId);
-
-            request.setAttribute("orderDiscounts", orderDiscounts);
+//            List<OrderDiscount> orderDiscounts = orderDiscountDAO.getDiscountsByOrderId(orderId);
+//
+//            request.setAttribute("orderDiscounts", orderDiscounts);
             request.getRequestDispatcher("/manager/export_good.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -91,23 +91,13 @@ public class ApplyDiscountServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
 
-        try {
-            System.out.println("? Bắt đầu ApplyDiscountServlet doPost");
-
-            // Debug toàn bộ request parameters
-            System.out.println("? Debug request parameters:");
-            Enumeration<String> parameterNames = request.getParameterNames();
-            while (parameterNames.hasMoreElements()) {
-                String paramName = parameterNames.nextElement();
-                System.out.println("   ? " + paramName + " = '" + request.getParameter(paramName) + "'");
-            }
+        try (PrintWriter out = response.getWriter()) {
+            System.out.println("🛠️ [DEBUG] Bắt đầu ApplyDiscountServlet doPost");
 
             // Lấy order_id từ request
             String orderIdParam = request.getParameter("order_id");
             if (orderIdParam == null || orderIdParam.trim().isEmpty()) {
-                System.out.println("? Lỗi: order_id bị null hoặc rỗng");
                 out.write("{\"error\": \"order_id không hợp lệ!\"}");
                 return;
             }
@@ -116,92 +106,103 @@ public class ApplyDiscountServlet extends HttpServlet {
             try {
                 orderId = Integer.parseInt(orderIdParam.trim());
             } catch (NumberFormatException e) {
-                System.out.println("? Lỗi: order_id không hợp lệ - " + e.getMessage());
                 out.write("{\"error\": \"Định dạng order_id không hợp lệ!\"}");
                 return;
             }
 
-            System.out.println("? order_id (converted): " + orderId);
-
-            // Lấy mã giảm giá từ request
-            String discountCode = request.getParameter("discount_code");
-            if (discountCode == null || discountCode.trim().isEmpty()) {
-                System.out.println("? Lỗi: Mã giảm giá bị null hoặc rỗng");
-                out.write("{\"error\": \"Vui lòng nhập mã giảm giá!\"}");
-                return;
-            }
-            discountCode = discountCode.trim();
-            System.out.println("? discountCode: " + discountCode);
-
-            // Kiểm tra mã giảm giá có tồn tại và đang active
-            Discounts discount = orderDiscountDAO.getDiscountByCode(discountCode);
-            if (discount == null) {
-                System.out.println("?? Mã giảm giá không tồn tại!");
-                out.write("{\"error\": \"Mã giảm giá không hợp lệ!\"}");
+            // Kiểm tra nếu đơn hàng đã có mã giảm giá
+            if (orderDiscountDAO.isDiscountApplied(orderId)) {
+                out.write("{\"error\": \"Đơn hàng đã áp dụng mã giảm giá trước đó!\"}");
                 return;
             }
 
-            // Kiểm tra trạng thái của mã giảm giá, chỉ áp dụng nếu nó đang active
-            if (!discount.getStatus().equals("Active")) {
-                System.out.println("?? Mã giảm giá không active!");
-                out.write("{\"error\": \"Mã giảm giá không active!\"}");
+            // Lấy phần trăm giảm giá từ request và kiểm tra tính hợp lệ
+            String discountPercentageParam = request.getParameter("discount_percentage");
+            if (discountPercentageParam == null || discountPercentageParam.trim().isEmpty()) {
+                out.write("{\"error\": \"Vui lòng nhập phần trăm giảm giá!\"}");
                 return;
             }
 
-            // Kiểm tra mã giảm giá đã được áp dụng chưa
-            boolean isApplied = orderDiscountDAO.isDiscountApplied(orderId, discount.getDiscount_id());
-            if (isApplied) {
-                System.out.println("?? Mã giảm giá đã được áp dụng trước đó!");
-                out.write("{\"error\": \"Mã giảm giá đã áp dụng!\"}");
+            BigDecimal discountPercentage;
+            try {
+                discountPercentage = new BigDecimal(discountPercentageParam.trim());
+                if (discountPercentage.compareTo(BigDecimal.ZERO) <= 0 || discountPercentage.compareTo(new BigDecimal("100")) > 0) {
+                    out.write("{\"error\": \"Phần trăm giảm giá phải từ 0% đến 100%!\"}");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                out.write("{\"error\": \"Định dạng phần trăm giảm giá không hợp lệ!\"}");
                 return;
             }
 
-            // Kiểm tra mỗi đơn hàng chỉ được giảm giá một lần
-            OrderDiscount existingOrderDiscount = orderDiscountDAO.getExistingOrderDiscount(orderId);
-            if (existingOrderDiscount != null) {
-                System.out.println("?? Mỗi đơn hàng chỉ được giảm giá một lần!");
-                out.write("{\"error\": \"Mỗi đơn hàng chỉ được giảm giá một lần!\"}");
-                return;
-            }
+            System.out.println("🛠️ [DEBUG] order_id: " + orderId + ", discount_percentage: " + discountPercentage);
 
             // Lấy tổng tiền trước giảm giá
             BigDecimal totalBeforeDiscount = orderDiscountDAO.getTotalAmount(orderId);
             if (totalBeforeDiscount.compareTo(BigDecimal.ZERO) <= 0) {
-                System.out.println("?? Tổng tiền đơn hàng không hợp lệ!");
                 out.write("{\"error\": \"Tổng tiền đơn hàng không hợp lệ!\"}");
                 return;
             }
 
-            // Tính số tiền giảm giá
-            BigDecimal discountPercentage = new BigDecimal(discount.getDiscount_percentage()).divide(new BigDecimal("100"));
-            BigDecimal appliedAmount = totalBeforeDiscount.multiply(discountPercentage);
-            System.out.println("? appliedAmount: " + appliedAmount);
+            // Áp dụng quy tắc giảm giá theo giá trị đơn hàng
+            BigDecimal appliedAmount = totalBeforeDiscount.multiply(discountPercentage.divide(new BigDecimal("100")));
 
-            // Tạo bản ghi giảm giá trong đơn hàng
+// Kiểm tra quy tắc giảm giá theo giá trị đơn hàng
+            if (totalBeforeDiscount.compareTo(new BigDecimal("10000000")) < 0) {  // Đơn hàng dưới 10 triệu
+                // Kiểm tra phần trăm giảm giá, nếu vượt quá 5% thì yêu cầu nhập lại
+                if (discountPercentage.compareTo(new BigDecimal("5")) > 0) {
+                    out.write("{\"error\": \"Giảm giá tối đa cho đơn hàng dưới 10 triệu là 5%. Vui lòng nhập lại phần trăm giảm giá!\"}");
+                    return;
+                }
+                discountPercentage = discountPercentage.min(new BigDecimal("5"));
+            } else if (totalBeforeDiscount.compareTo(new BigDecimal("10000000")) >= 0 && totalBeforeDiscount.compareTo(new BigDecimal("50000000")) <= 0) {  // Đơn hàng từ 10-50 triệu
+                // Kiểm tra phần trăm giảm giá, nếu vượt quá 15% thì yêu cầu nhập lại
+                if (discountPercentage.compareTo(new BigDecimal("15")) > 0) {
+                    out.write("{\"error\": \"Giảm giá tối đa cho đơn hàng từ 10-50 triệu là 15%. Vui lòng nhập lại phần trăm giảm giá!\"}");
+                    return;
+                }
+                discountPercentage = discountPercentage.min(new BigDecimal("15"));
+            } else if (totalBeforeDiscount.compareTo(new BigDecimal("50000000")) > 0) {  // Đơn hàng trên 50 triệu
+                // Kiểm tra phần trăm giảm giá, nếu vượt quá 20% thì yêu cầu nhập lại
+                if (discountPercentage.compareTo(new BigDecimal("20")) > 0) {
+                    out.write("{\"error\": \"Giảm giá tối đa cho đơn hàng trên 50 triệu là 20%. Vui lòng nhập lại phần trăm giảm giá!\"}");
+                    return;
+                }
+                discountPercentage = discountPercentage.min(new BigDecimal("20"));
+            }
+
+            // Tính lại số tiền giảm giá sau khi áp dụng giới hạn phần trăm
+            appliedAmount = totalBeforeDiscount.multiply(discountPercentage.divide(new BigDecimal("100")));
+            System.out.println("🛠️ [DEBUG] Số tiền giảm giá áp dụng: " + appliedAmount);
+
+            // Kiểm tra số tiền giảm giá tối đa (Ví dụ: không vượt quá 5 triệu cho đơn hàng 100 triệu)
+            if (totalBeforeDiscount.compareTo(new BigDecimal("100000000")) >= 0 && appliedAmount.compareTo(new BigDecimal("5000000")) > 0) {
+                appliedAmount = new BigDecimal("5000000");
+                System.out.println("🛠️ [DEBUG] Đơn hàng trên 100 triệu, giảm giá tối đa 5 triệu");
+            }
+
+            // Lưu thông tin giảm giá vào đơn hàng
             OrderDiscount orderDiscount = new OrderDiscount();
             orderDiscount.setOrderId(orderId);
-            orderDiscount.setDiscountId(discount.getDiscount_id());
-            orderDiscount.setAppliedDiscountPercentage(discount.getDiscount_percentage());
+            orderDiscount.setAppliedDiscountPercentage(discountPercentage.doubleValue());
             orderDiscount.setAppliedAmount(appliedAmount);
             orderDiscount.setAppliedDate(LocalDateTime.now());
 
             orderDiscountDAO.insertOrderDiscount(orderDiscount);
-            System.out.println("? Discount đã được lưu vào database");
+            System.out.println("✅ Discount đã được lưu vào database");
 
             // Cập nhật tổng tiền sau giảm giá
             orderDiscountDAO.updateTotalAfterDiscount(orderId);
             BigDecimal newTotal = orderDiscountDAO.getTotalAmount(orderId); // Thay thế double bằng BigDecimal
-            System.out.println("? Cập nhật tổng tiền sau giảm giá thành công: " + newTotal);
+            System.out.println("✅ Cập nhật tổng tiền sau giảm giá thành công: " + newTotal);
 
-            // Thành công, trả về tổng tiền mới
-            out.write("{\"success\": \"Áp dụng mã giảm giá thành công! Tổng tiền mới: " + newTotal + "\"}");
+            // Trả về tổng tiền mới sau khi giảm giá
+            out.write("{\"success\": \"Áp dụng giảm giá thành công! Tổng tiền mới: " + newTotal + "\"}");
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("? Lỗi xảy ra: " + e.getMessage());
-            out.write("{\"error\": \"Có lỗi xảy ra khi áp dụng mã giảm giá!\"}");
-        } finally {
-            out.flush();
+            System.out.println("❌ Lỗi xảy ra: " + e.getMessage());
+            response.getWriter().write("{\"error\": \"Có lỗi xảy ra khi áp dụng giảm giá!\"}");
         }
     }
 
