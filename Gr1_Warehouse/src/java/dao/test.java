@@ -24,26 +24,19 @@ public class test {
         
         InventoryDAO dao = new InventoryDAO(); 
         int testCheckId = 3;
-        
-  List<InventoryCheckDetailDTO> list = dao.getInventoryCheckDetail(testCheckId);
+        String warehouseFilter = "Kho Hà Nội";
+        String statusFilter = "Đã cân bằng";
+  List<InventoryCheckDTO> list = dao.getFilteredInventoryCheck(warehouseFilter, statusFilter);
 
  if (list.isEmpty()) {
             System.out.println("Không có dữ liệu kiểm kê nào cho check_id = " + testCheckId);
         } else {
-            for (InventoryCheckDetailDTO dto : list) {
+            for (InventoryCheckDTO dto : list) {
                 System.out.println("==========================================");
+                System.out.println("Bao gồm: " + list.size() + "phiếu kiểm");
                 System.out.println("Check ID: " + dto.getCheckId());
                 System.out.println("Trạng thái: " + dto.getStatus());
-                System.out.println("Ngày hoàn thành: " + dto.getCompletedAt());
-                System.out.println("Người kiểm kê: " + dto.getFullname() + " | " + dto.getUserPhone() + " | " + dto.getUserEmail());
-                System.out.println("Kho: " + dto.getWarehouseName() + " | " + dto.getWarehouseAddress() + " | " + dto.getWarehousePhone());
-                System.out.println("Sản phẩm: " + dto.getProductName() + " (SKU: " + dto.getSku() + " | Size: " + dto.getSizeName() + ")");
-                System.out.println("Batch ID: " + dto.getBatchId() + " | Hạn sử dụng: " + dto.getExpirationDate());
-                System.out.println("SL ghi nhận: " + dto.getRecordedQuantity() + " | SL thực tế: " + dto.getActualQuantity());
-                System.out.println("Chênh lệch: " + dto.getDiscrepancy() + " | Chênh lệch giá: " + dto.getDifferencePrice());
-                System.out.println("Lý do: " + dto.getReason());
-                System.out.println("Nhân viên kho: " + dto.getWarehouseStaff());
-                System.out.println("Ghi chú: " + dto.getNotes());
+               
                 System.out.println("==========================================\n");
             }
         }}

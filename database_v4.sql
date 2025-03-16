@@ -1941,6 +1941,7 @@ select * from InventoryCheckDetails
 SELECT 
     ic.check_id, 
     ic.completed_at, 
+    ic.balance_date, 
     w.warehouse_name, 
     ic.status, 
     u1.fullname AS created_by_name, 
@@ -1953,58 +1954,20 @@ FROM InventoryCheck ic
 LEFT JOIN Warehouses w ON ic.warehouse_id = w.warehouse_id 
 LEFT JOIN Users u1 ON ic.created_by = u1.user_id 
 LEFT JOIN Users u2 ON ic.reviewed_by = u2.user_id 
---WHERE ic.reviewed_by = 6;
-WHERE ic.check_id = 1;
+WHERE 1=1
+AND w.warehouse_name = N'Kho Hà Nội' 
+AND ic.status = N'Đã cân bằng';
 
-SELECT 
-    ic.check_id,
-    ic.status,
-    ic.completed_at,
-    u.fullname,
-    u.phone,
-    u.email,
-    w.warehouse_name,
-    w.address,
-    w.phone,
-    p.product_name,
-    pv.sku, -- Lấy thêm SKU từ bảng ProductVariants
-    s.size_name, -- Lấy thêm size_name từ bảng Sizes
-    ib.batch_id,
-    icd.recorded_quantity,
-    icd.actual_quantity,
-    icd.discrepancy,
-    icd.difference_price,
-    ib.expiration_date,
-    icd.reason,
-    ic.warehouse_staff,
-    ic.notes,
-    ic.total_difference_up,
-	ic.total_difference_down,
-	ic.total_price_difference_up,
-	ic.total_price_difference_down
+	 SELECT ic.check_id, ic.completed_at, ic.balance_date, w.warehouse_name, ic.status, 
+       u1.fullname AS created_by_name, u2.fullname AS reviewed_by_name, 
+       ic.total_difference_up, ic.total_difference_down, 
+       ic.total_price_difference_up, ic.total_price_difference_down
 FROM InventoryCheck ic
-JOIN Users u ON ic.reviewed_by = u.user_id
-JOIN Warehouses w ON ic.warehouse_id = w.warehouse_id
-JOIN InventoryCheckDetails icd ON ic.check_id = icd.check_id
-JOIN InventoryBatches ib ON icd.batch_id = ib.batch_id
-JOIN ProductVariants pv ON icd.variant_id = pv.variant_id
-JOIN Products p ON pv.product_id = p.product_id
-JOIN Sizes s ON pv.size_id = s.size_id -- Thêm JOIN với bảng Sizes để lấy size_name
-WHERE ic.check_id = 3;
-
-
-select * from InventoryBatches bs 
-                     JOIN InventoryCheckDetails icd ON bs.batch_id = icd.batch_id 
-                     WHERE icd.check_id = 8;
-
-UPDATE bs
-SET bs.quantity = icd.actual_quantity
-FROM InventoryBatches bs
-JOIN InventoryCheckDetails icd ON bs.batch_id = icd.batch_id
-WHERE icd.check_id = 8;
-
-
-			select * from InventoryCheck
-	 UPDATE InventoryCheck SET status = N'Đã cân bằng' WHERE check_id = 8
+LEFT JOIN Warehouses w ON ic.warehouse_id = w.warehouse_id
+LEFT JOIN Users u1 ON ic.created_by = u1.user_id
+LEFT JOIN Users u2 ON ic.reviewed_by = u2.user_id
+WHERE ic.reviewed_by = 6 
+and w.warehouse_name = N'Kho Hà Nội'
+and ic.status = N'Đã cân bằng'
 
 

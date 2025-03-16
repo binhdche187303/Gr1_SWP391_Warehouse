@@ -62,15 +62,30 @@
                             <div class="container mt-4">
                                 <!-- Action Buttons -->
                                 <div class="d-flex align-items-center mb-4">
+                                    <!-- Dropdown chọn Kho -->
+                                    <select class="form-select me-2" name="warehouseFilter" id="warehouseFilter" onchange="filterInventory()" >
+                                        <option value="">Tất cả Kho</option>
+                                        <c:forEach var="warehouse" items="${warehouseList}">
+                                            <option value="${warehouse.warehouseName}" ${warehouse.warehouseName == param.warehouseFilter ? 'selected' : ''}>
+                                                ${warehouse.warehouseName}
+                                            </option>
+                                        </c:forEach>
+                                    </select>
 
-                                    <button class="btn btn-outline-secondary me-2">Tất cả</button>
-                                    <button class="btn btn-outline-secondary me-2">Thêm điều kiện lọc</button>
-                                    <input class="form-control w-auto ms-auto" placeholder="Tìm theo mã phiếu" type="text">
+                                    <!-- Dropdown chọn Trạng thái -->
+                                    <select class="form-select me-2" name="statusFilter" id="statusFilter" onchange="filterInventory()">
+                                        <option value="">Tất cả Trạng thái</option>
+                                        <option value="Chờ kiểm kho" ${param.statusFilter == 'Chờ kiểm kho' ? 'selected' : ''}>Chờ kiểm kho</option>
+                                        <option value="Đã kiểm kho" ${param.statusFilter == 'Đã kiểm kho' ? 'selected' : ''}>Đã kiểm kho</option>
+                                        <option value="Đã cân bằng" ${param.statusFilter == 'Đã cân bằng' ? 'selected' : ''}>Đã cân bằng</option>
+                                    </select>
+
+                                    <button class="btn btn-outline-primary ms-2" onclick="filterInventory()">Lọc</button>
                                 </div>
 
                                 <!-- Table -->
                                 <div class="bg-white p-4 rounded shadow-sm">
-                                    <table class="table table-bordered table-striped">
+                                    <table id="inventoryTable" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th><small>Mã phiếu</small></th>
@@ -162,6 +177,7 @@
                                             <!-- Repeat rows as needed -->
                                         </tbody>
                                     </table>
+                                    <div id="pagination" class="mt-3 d-flex justify-content-center"></div>
                                 </div>
 
                             </div>
@@ -170,6 +186,99 @@
                 </div>
             </div>
         </div>
+        <script>
+            function filterInventory() {
+                const warehouse = encodeURIComponent(document.getElementById("warehouseFilter").value.trim());
+                const status = encodeURIComponent(document.getElementById("statusFilter").value.trim());
+
+                console.log("Warehouse: " + warehouse);
+                console.log("Status: " + status);
+
+                window.location.href = "/Gr1_Warehouse/staff-checklist?warehouseFilter=" + warehouse + "&statusFilter=" + status;
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const rowsPerPage = 10; // Số mục trên mỗi trang
+                const table = document.getElementById("inventoryTable"); // ID của bảng
+                const tbody = table.querySelector("tbody"); // Lấy tbody của bảng
+                const rows = Array.from(tbody.querySelectorAll("tr")); // Lấy tất cả các hàng
+                const totalPages = Math.ceil(rows.length / rowsPerPage); // Tổng số trang
+
+                let currentPage = 1;
+
+                function showPage(page) {
+                    // Ẩn tất cả các hàng trước
+                    rows.forEach((row) => (row.style.display = "none"));
+
+                    // Hiển thị các hàng của trang hiện tại
+                    const start = (page - 1) * rowsPerPage;
+                    const end = start + rowsPerPage;
+                    rows.slice(start, end).forEach((row) => (row.style.display = "table-row"));
+
+                    // Cập nhật số trang hiện tại
+                    document.getElementById("currentPage").textContent = page;
+
+                    // Xóa class "active" khỏi tất cả các nút
+                    document.querySelectorAll("#pagination button").forEach((btn) => btn.classList.remove("active"));
+
+                    // Thêm class "active" vào nút của trang hiện tại
+                                                const activeButton = document.getElementById(`page-btn-${page}`);
+                    if (activeButton) {
+                        activeButton.classList.add("active");
+                    }
+                }
+
+                function createPagination() {
+                    const paginationContainer = document.getElementById("pagination");
+                    paginationContainer.innerHTML = ""; // Xóa phân trang cũ
+
+                    // Nút Previous
+                    const prevButton = document.createElement("button");
+                    prevButton.textContent = "«";
+                    prevButton.classList.add("btn", "btn-outline-primary", "me-1");
+                    prevButton.onclick = function () {
+                        if (currentPage > 1) {
+                            currentPage--;
+                            showPage(currentPage);
+                        }
+                    };
+                    paginationContainer.appendChild(prevButton);
+
+                    // Tạo nút số trang
+                    for (let i = 1; i <= totalPages; i++) {
+                        const pageButton = document.createElement("button");
+                        pageButton.textContent = i;
+                                                    pageButton.id = `page-btn-${i}`;
+                        pageButton.classList.add("btn", "btn-outline-primary", "me-1");
+
+                        pageButton.onclick = function () {
+                            currentPage = i;
+                            showPage(currentPage);
+                        };
+                        paginationContainer.appendChild(pageButton);
+                    }
+
+                    // Nút Next
+                    const nextButton = document.createElement("button");
+                    nextButton.textContent = "»";
+                    nextButton.classList.add("btn", "btn-outline-primary", "me-1");
+                    nextButton.onclick = function () {
+                        if (currentPage < totalPages) {
+                            currentPage++;
+                            showPage(currentPage);
+                        }
+                    };
+                    paginationContainer.appendChild(nextButton);
+                }
+
+                // Khởi tạo phân trang
+                if (rows.length > 0) {
+                    createPagination();
+                    showPage(1); // Mặc định hiển thị trang 1
+                    document.getElementById("page-btn-1").classList.add("active"); // Tô màu trang 1
+                }
+            });
+        </script>
         <!-- latest js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
 

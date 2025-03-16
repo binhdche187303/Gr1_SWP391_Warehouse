@@ -171,6 +171,7 @@
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                             </div>
                                                             <div class="modal-body">
+                                                                <input type="text" id="searchInput" class="form-control mb-3" placeholder="Tìm kiếm sản phẩm theo tên hoặc SKU...">
                                                                 <table class="table">
                                                                     <thead>
                                                                         <tr>
@@ -258,6 +259,24 @@
             </div>
         </div>
 
+        <script>
+        // Hàm lọc sản phẩm
+            document.getElementById("searchInput").addEventListener("keyup", function () {
+                let searchText = this.value.toLowerCase();
+                let rows = document.querySelectorAll("#productTable tr");
+
+                rows.forEach(row => {
+                    let productName = row.cells[1].textContent.toLowerCase(); // Cột "Tên sản phẩm"
+                    let productSKU = row.cells[3].textContent.toLowerCase();  // Cột "SKU"
+
+                    if (productName.includes(searchText) || productSKU.includes(searchText)) {
+                        row.style.display = ""; // Hiển thị nếu khớp
+                    } else {
+                        row.style.display = "none"; // Ẩn nếu không khớp
+                    }
+                });
+            });
+        </script>
 
         <script>
             document.addEventListener("DOMContentLoaded", function () {
