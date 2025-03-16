@@ -558,15 +558,16 @@ public class OrderDAO extends DBContext {
         return false;
     }
 
-    public boolean insertOrderDeposit(int orderId) {
+    public boolean insertOrderDeposit(int orderId, String paymentStatus) {
         boolean isInserted = false;
         String sql = "INSERT INTO OrderPayments (order_id, deposit_amount, remaining_amount, payment_status) "
-                + "SELECT ?, total_amount * 0.5, total_amount * 0.5, 'Đã thanh toán 50%' "
+                + "SELECT ?, total_amount * 0.5, total_amount * 0.5, ? "
                 + "FROM Orders WHERE order_id = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, orderId);
-            ps.setInt(2, orderId);
+            ps.setString(2, paymentStatus);  // Thay vì giá trị cố định
+            ps.setInt(3, orderId);
 
             int rowsInserted = ps.executeUpdate();
             isInserted = rowsInserted > 0;

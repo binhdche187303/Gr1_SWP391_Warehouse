@@ -55,19 +55,17 @@ public class VnpayReturn extends HttpServlet {
         boolean isSuccess = "00".equals(vnp_TransactionStatus);
 
         // Update order status in database
-        String paymentStatus = isSuccess ? "Thanh toán 50%" : "Payment Failed";
+        String paymentStatus = isSuccess ? "Thanh toán 50%" : "Thanh toán thất bại";
         boolean updated = orderDAO.updatePaymentStatus(orderId, paymentStatus);
-        boolean isInserted = orderDAO.insertOrderDeposit(orderId); // Thêm đặt cọc vào bảng OrderPayments
 
-//        if (!updated) {
-//            response.getWriter().println("Error: Could not update payment status!");
-//            return;
-//        }
+        boolean isInserted = false; // Chỉ insert nếu thanh toán thành công
+        if (isSuccess) {
+            isInserted = orderDAO.insertOrderDeposit(orderId, paymentStatus);
+        }
 
         // Forward to order details page with success status
         request.setAttribute("isSuccess", isSuccess);
         response.sendRedirect("profileSetting");
-//        request.getRequestDispatcher("pages/cus_detail.jsp").forward(request, response);//dieu huong ve noi ban can
     }
 
     @Override

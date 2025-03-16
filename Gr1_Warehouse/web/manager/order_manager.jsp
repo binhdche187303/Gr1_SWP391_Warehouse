@@ -53,8 +53,8 @@
                                     <div class="d-flex align-items-center gap-2">
                                         <label class="fw-bold me-2">Lọc trạng thái:</label>
                                         <div class="btn-group d-flex flex-wrap" role="group">
-                                            <input type="checkbox" class="btn-check order-status-filter" id="status1" value="Chờ xác nhận">
-                                            <label class="btn btn-outline-primary" for="status1">Chờ xác nhận</label>
+                                            <input type="checkbox" class="btn-check order-status-filter" id="status1" value="Chờ xử lý">
+                                            <label class="btn btn-outline-primary" for="status1">Chờ xử lý</label>
 
                                             <input type="checkbox" class="btn-check order-status-filter" id="status2" value="Đã xác nhận">
                                             <label class="btn btn-outline-primary" for="status2">Đã xác nhận</label>
@@ -71,16 +71,20 @@
                                     <div class="d-flex align-items-center gap-2">
                                         <label class="fw-bold me-2">Thanh toán:</label>
                                         <div class="btn-group d-flex flex-wrap" role="group">
-                                            <input type="checkbox" class="btn-check payment-status-filter" id="payment1" value="Chờ xác nhận">
-                                            <label class="btn btn-outline-success" for="payment1">Chờ xác nhận</label>
+                                            <input type="checkbox" class="btn-check payment-status-filter" id="payment1" value="Chờ xử lý">
+                                            <label class="btn btn-outline-success" for="payment1">Chờ xử lý</label>
 
                                             <input type="checkbox" class="btn-check payment-status-filter" id="payment2" value="Thanh toán 50%">
                                             <label class="btn btn-outline-success" for="payment2">Thanh toán 50%</label>
 
                                             <input type="checkbox" class="btn-check payment-status-filter" id="payment3" value="Thanh toán 100%">
                                             <label class="btn btn-outline-success" for="payment3">Thanh toán 100%</label>
+
+                                            <input type="checkbox" class="btn-check payment-status-filter" id="payment4" value="Thanh toán thất bại">
+                                            <label class="btn btn-outline-success" for="payment4">Thanh toán thất bại</label>
                                         </div>
                                     </div>
+
                                 </div>
 
                                 <!-- Dropdown sắp xếp (luôn nằm bên phải) -->
@@ -118,10 +122,10 @@
                                             <td>${order.customerName}</td>
                                             <td class="text-center">
                                                 <span class="badge
-                                                      ${order.status eq 'Pending' ? 'bg-warning' : 
-                                                        order.status eq 'Completed' ? 'bg-success' : 
-                                                        order.status eq 'Đã gửi hàng' ? 'bg-danger' : 
-                                                        order.status eq 'Đã xác nhận' ? 'bg-primary' : 'bg-secondary'}">
+                                                      ${order.status eq 'Chờ xử lý' ? 'bg-warning' : 
+                                                        order.status eq 'Đã xác nhận' ? 'bg-primary' : 
+                                                        order.status eq 'Đang đóng gói' ? 'bg-info' : 
+                                                        order.status eq 'Đã gửi hàng' ? 'bg-success' : 'bg-secondary'}">
                                                           ${order.status}
                                                       </span>
                                                 </td>
@@ -129,13 +133,14 @@
                                                 <td class="text-center">
                                                     <c:set var="payment" value="${paymentMap[order.orderId]}" />
                                                     <span class="badge
-                                                          ${payment.paymentStatus eq 'Pending' ? 'bg-warning' : 
-                                                            payment.paymentStatus eq 'Completed' ? 'bg-success' : 
+                                                          ${payment.paymentStatus eq 'Chờ xử lý' ? 'bg-warning' : 
                                                             payment.paymentStatus eq 'Thanh toán 50%' ? 'bg-info' : 
-                                                            'bg-secondary'}">
+                                                            payment.paymentStatus eq 'Thanh toán 100%' ? 'bg-success' : 
+                                                            payment.paymentStatus eq 'Thanh toán thất bại' ? 'bg-danger' : 'bg-secondary'}">
                                                               ${payment != null ? payment.paymentStatus : 'Chưa thanh toán'}
                                                           </span>
                                                     </td>
+
 
                                                     <td>
                                                         <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="₫" />
@@ -183,20 +188,28 @@
                             checkbox.addEventListener("change", filterOrders);
                         });
                     });
+
                     function filterOrders() {
                         let selectedOrderStatuses = Array.from(document.querySelectorAll(".order-status-filter:checked")).map(cb => cb.value);
                         let selectedPaymentStatuses = Array.from(document.querySelectorAll(".payment-status-filter:checked")).map(cb => cb.value);
+
                         document.querySelectorAll("tbody tr").forEach(row => {
+                            // Chọn cột thứ 4 cho trạng thái đơn hàng (dựa theo HTML của bạn)
                             let orderStatusElement = row.querySelector("td:nth-child(4) span");
+                            // Chọn cột thứ 5 cho trạng thái thanh toán
                             let paymentStatusElement = row.querySelector("td:nth-child(5) span");
+
                             let orderStatus = orderStatusElement ? orderStatusElement.textContent.trim() : "";
                             let paymentStatus = paymentStatusElement ? paymentStatusElement.textContent.trim() : "";
+
                             let matchOrderStatus = selectedOrderStatuses.length === 0 || selectedOrderStatuses.includes(orderStatus);
                             let matchPaymentStatus = selectedPaymentStatuses.length === 0 || selectedPaymentStatuses.includes(paymentStatus);
+
                             row.style.display = (matchOrderStatus && matchPaymentStatus) ? "" : "none";
                         });
                     }
                 </script>
+
 
 
                 <script>
@@ -250,7 +263,7 @@
 
                         showPage(1);
                     });
-                </script>              
+                </script>                       
 
                 <script>
                     document.addEventListener("DOMContentLoaded", function () {

@@ -118,7 +118,7 @@ public class ajaxServlet extends HttpServlet {
         }
 
         String vnp_TxnRef = String.valueOf(orderId);
-        String vnp_Amount = String.valueOf(depositAmount.intValue() * 100);
+        String vnp_Amount = depositAmount.multiply(BigDecimal.valueOf(100)).toBigInteger().toString();
         String vnp_Currency = "VND";
 
         logger.info("Payment details: OrderInfo: " + vnp_OrderInfo + ", OrderType: " + vnp_OrderType

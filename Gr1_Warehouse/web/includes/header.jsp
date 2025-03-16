@@ -219,13 +219,9 @@
                                                 </button>
 
 
-                                                <div class="onhover-div">
-
                                                     <li class="right-side onhover-dropdown">
                                                         <div class="delivery-login-box">
-                                                            <div class="delivery-icon">
-                                                                <i data-feather="user"></i>
-                                                            </div>
+                                                            
 
 
 

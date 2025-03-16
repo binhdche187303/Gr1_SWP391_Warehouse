@@ -568,29 +568,32 @@
                         }
                     }
 // Cột: Giá
-
                     const priceCol = document.createElement("td");
                     const priceInput = document.createElement("input");
                     priceInput.type = "number";
                     priceInput.classList.add("form-control", "price");
                     priceInput.placeholder = "Giá";
-                    priceInput.min = "1"; // Giá phải lớn hơn 0
-                    priceInput.value = "1";
                     priceCol.appendChild(priceInput);
                     priceCol.style.width = "120px";
                     priceCol.style.textAlign = "center";
-// Cột: Số lượng
 
+// Cột: Số lượng
                     const quantityCol = document.createElement("td");
                     const quantityInput = document.createElement("input");
                     quantityInput.type = "number";
                     quantityInput.classList.add("form-control", "quantity");
                     quantityInput.placeholder = "Số lượng";
-                    quantityInput.min = "1"; // Số lượng phải lớn hơn 0
-                    quantityInput.value = "1";
                     quantityCol.appendChild(quantityInput);
                     quantityCol.style.width = "120px";
                     quantityCol.style.textAlign = "center";
+//  Gắn sự kiện `blur` ngay sau khi tạo input check validate
+                    quantityInput.addEventListener("blur", function () {
+                        validateAndUpdateTotal(this);
+                    });
+
+                    priceInput.addEventListener("blur", function () {
+                        validateAndUpdateTotal(this);
+                    });
 // Cột: Tổng giá
                     const totalPriceCol = document.createElement("td");
                     const totalPriceSpan = document.createElement("span");
@@ -630,14 +633,41 @@
                 modal.hide();
                 updateTotalPrice(); // Cập nhật tổng giá sau khi chọn xong
             });
-// 🔹 Hàm kiểm tra giá trị nhập vào phải lớn hơn 0 và cập nhật tổng giá
-            function validateAndUpdateTotal(event) {
-                const input = event.target;
-                if (parseFloat(input.value) <= 0 || isNaN(input.value)) {
-                    input.value = 1; // Nếu nhập sai, đặt về 1
+// 🔹 Hàm kiểm tra giá trị nhập vào và cập nhật tổng giá
+            function validateAndUpdateTotal(input) {
+                let value = parseFloat(input.value);
+
+                if (isNaN(value) || value <= 0) {
+                    alert(input.classList.contains("price") ? "Giá phải là số dương!" : "Số lượng phải là số nguyên dương!");
+                    input.value = "1"; // Nếu nhập sai, reset về 1
+                } else {
+                    if (input.classList.contains("quantity")) {
+                        if (!Number.isInteger(value)) {
+                            alert("Số lượng phải là số nguyên! Hệ thống sẽ làm tròn xuống.");
+                            input.value = Math.floor(value); // Làm tròn xuống số nguyên gần nhất
+                        }
+                    } else if (input.classList.contains("price")) {
+                        input.value = value; // Giữ nguyên giá trị nhập vào, không làm tròn
+                    }
                 }
-                updateTotalPrice();
+
+                updateTotalPrice(); // Cập nhật lại tổng giá
             }
+
+            function preventEnter(input) {
+                input.addEventListener("keydown", function (event) {
+                    if (event.key === "Enter") {
+                        event.preventDefault();
+                        this.blur();
+                    }
+                });
+            }
+
+// Sau khi tạo input, gọi hàm này
+            preventEnter(priceInput);
+            preventEnter(quantityInput);
+
+
 
 // 🔹 Hàm cập nhật tổng giá từng sản phẩm và tổng cộng
 
@@ -649,7 +679,9 @@
                     const quantity = parseFloat(productRow.querySelector(".quantity").value) || 0;
                     const price = parseFloat(productRow.querySelector(".price").value) || 0;
                     const totalPrice = quantity * price;
-                    productRow.querySelector(".total-price").textContent = totalPrice.toLocaleString("vi-VN") + " VND";
+                    //productRow.querySelector(".total-price").textContent = totalPrice.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VND";
+                    //productRow.querySelector(".total-price").textContent = totalPrice.toLocaleString("vi-VN") + " VND";
+                    productRow.querySelector(".total-price").textContent = totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VND";
                     totalAll += totalPrice;
                     totalQuantity += quantity; // Cộng dồn tổng số lượng nhập
                 });

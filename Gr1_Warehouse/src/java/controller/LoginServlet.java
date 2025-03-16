@@ -267,7 +267,7 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect("/Gr1_Warehouse/includes/admin.jsp");
                 break;
             case 2:  // Customer
-                response.sendRedirect(request.getContextPath() + "/pages/home.jsp");
+                response.sendRedirect(request.getContextPath() + "/home");
                 break;
             case 3:  // Warehouse manager
                 response.sendRedirect("warehouse/manager/dashboard");

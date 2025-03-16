@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import model.OrderDetailDTO;
 import model.OrderPayment;
+import model.Payment;
 import model.User;
 
 /**
@@ -99,6 +100,7 @@ public class CustomerOrderDetail extends HttpServlet {
         // 🟢 Lấy thông tin thanh toán từ OrderPayments
         OrderServiceDAO orderServiceDAO = new OrderServiceDAO();
         OrderPayment orderPayment = orderServiceDAO.getOrderPaymentByOrderId(orderId);
+        Payment payment = orderServiceDAO.getPaymentByOrderId(orderId); // Lấy từ Payment
 
         // 🟢 Tính số tiền còn lại sau khi đặt cọc
         BigDecimal remainingAmount = BigDecimal.ZERO;
@@ -107,8 +109,8 @@ public class CustomerOrderDetail extends HttpServlet {
             BigDecimal depositAmount = orderPayment.getDepositAmount() != null ? orderPayment.getDepositAmount() : BigDecimal.ZERO;
             remainingAmount = totalAmount.subtract(depositAmount);
         }
-        String paymentStatus = orderPayment != null ? orderPayment.getPaymentStatus() : "Chưa có trạng thái thanh toán";
-
+        //Status từ bảng Payment thay vì PaymentOrder
+        String paymentStatus = (payment != null) ? payment.getPaymentStatus() : "Chưa có trạng thái thanh toán";
 
         // 🟢 Đặt thông tin vào request để gửi đến JSP
         request.setAttribute("orderDetail", selectedOrder);

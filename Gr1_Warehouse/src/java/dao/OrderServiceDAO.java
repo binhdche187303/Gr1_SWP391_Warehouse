@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import model.Order;
 import model.OrderPayment;
 import java.sql.Timestamp;
+import model.Payment;
 
 /**
  *
@@ -145,6 +146,27 @@ public class OrderServiceDAO extends DBContext {
                         rs.getBigDecimal("remaining_amount"),
                         rs.getString("payment_status"),
                         rs.getTimestamp("created_at"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Payment getPaymentByOrderId(int orderId) {
+        String sql = "SELECT * FROM Payment WHERE order_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, orderId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Payment payment = new Payment();
+                    payment.setPaymentId(rs.getInt("payment_id"));
+                    payment.setOrderId(rs.getInt("order_id"));
+                    payment.setPaymentMethod(rs.getString("payment_method"));
+                    payment.setPaymentDate(rs.getTimestamp("payment_date"));
+                    payment.setPaymentStatus(rs.getString("payment_status"));
+                    return payment;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

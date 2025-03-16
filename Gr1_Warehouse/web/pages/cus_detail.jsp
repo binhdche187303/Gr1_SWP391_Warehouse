@@ -57,137 +57,136 @@
                     </span>
                 </p>
                 <p><strong>Trạng thái thanh toán:</strong> 
-                    <span class="badge ${paymentStatus eq 'Thanh toán 50%' ? 'bg-info' : (paymentStatus eq 'Đã thanh toán' ? 'bg-success' : 'bg-danger')}">
-                        ${paymentStatus}
-                    </span>
-                </p>
+                    <span class="badge
+                          ${paymentStatus eq 'Thanh toán 50%' ? 'bg-info' : 
+                            (paymentStatus eq 'Đã thanh toán' ? 'bg-success' : 
+                            (paymentStatus eq 'Thanh toán thất bại' ? 'bg-danger' : 'bg-secondary'))}">
+                              ${paymentStatus}
+                          </span>
+                    </p>
 
-                <!-- ✅ Hiển thị thông báo khi thanh toán thành công -->
-                <c:if test="${not empty isSuccess}">
-                    <div class="alert ${isSuccess ? 'alert-success' : 'alert-danger'} mt-3">
-                        ${isSuccess ? "✅ Thanh toán cọc 50% thành công!" : "❌ Thanh toán thất bại. Vui lòng thử lại."}
-                    </div>
-                </c:if>
 
-                <p><strong>Tổng:</strong> 
-                    <fmt:formatNumber value="${orderDetail.order.totalAmount}" type="currency" currencySymbol="VND" groupingUsed="true"/>
-                </p>
-            </div>
-            <input type="hidden" id="order-id" value="${orderDetail.order.orderId}">
 
-            <!-- Danh sách sản phẩm -->
-            <table class="table table-striped table-bordered">
-                <thead class="table-light">
-                    <tr>
-                        <th>Sản phẩm</th>
-                        <th>SKU</th>
-                        <th>Size</th>
-                        <th>Giá</th>
-                        <th>Số lượng</th>
-                        <th>Tổng</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:forEach var="i" begin="0" end="${orderDetail.orderDetails.size() - 1}">
+
+                    <p><strong>Tổng:</strong> 
+                        <fmt:formatNumber value="${orderDetail.order.totalAmount}" type="currency" currencySymbol="VND" groupingUsed="true"/>
+                    </p>
+                </div>
+                <input type="hidden" id="order-id" value="${orderDetail.order.orderId}">
+
+                <!-- Danh sách sản phẩm -->
+                <table class="table table-striped table-bordered">
+                    <thead class="table-light">
                         <tr>
-                            <td>${orderDetail.products[i].productName}</td>
-                            <td>${orderDetail.productVariants[i].sku}</td>
-                            <td>${orderDetail.sizes[i].size_name}</td>
-                            <td><fmt:formatNumber value="${orderDetail.orderDetails[i].unitPrice}" type="currency" currencySymbol="VND" /></td>
-                            <td>${orderDetail.orderDetails[i].quantity}</td>
-                            <td><fmt:formatNumber value="${orderDetail.orderDetails[i].unitPrice * orderDetail.orderDetails[i].quantity}" type="currency" currencySymbol="VND" /></td>
+                            <th>Sản phẩm</th>
+                            <th>SKU</th>
+                            <th>Size</th>
+                            <th>Giá</th>
+                            <th>Số lượng</th>
+                            <th>Tổng</th>
                         </tr>
-                    </c:forEach>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="5" class="text-end"><strong>Tổng (trước khi giảm giá):</strong></td>
-                        <td><strong><fmt:formatNumber value="${orderDetail.totalBeforeDiscount}" type="currency" currencySymbol="VND" groupingUsed="true"/></strong></td>
-                    </tr>
-                    <tr>
-                        <td colspan="5" class="text-end"><strong>Tổng (sau khi giảm giá):</strong></td>
-                        <td><strong><fmt:formatNumber value="${orderDetail.order.totalAmount}" type="currency" currencySymbol="VND" groupingUsed="true"/></strong></td>
-                    </tr>
-                    <tr>
-                        <td colspan="5" class="text-end"><strong>Tiền cọc:</strong></td>
-                        <td><strong><fmt:formatNumber value="${orderPayment.depositAmount}" type="currency" currencySymbol="VND" groupingUsed="true"/></strong></td>
-                    </tr>
-                    <tr>
-                        <td colspan="5" class="text-end"><strong>Tổng (sau khi cọc 50%):</strong></td>
-                        <td><strong><fmt:formatNumber value="${remainingAmount}" type="currency" currencySymbol="VND" groupingUsed="true"/></strong></td>
-                    </tr>
-                </tfoot>
-            </table>
-                    
-            <form action="ajaxServlet" method="post">
-                <input type="hidden" name="orderId" value="${orderDetail.order.orderId}">
-                <!-- Deposit Button -->
-                <button type="submit" id="depositButton" class="btn btn-primary mt-3">Cọc 50% giá trị đơn hàng</button>
-            </form>
-            <!-- Back Button -->
-            <a href="profileSetting" class="btn btn-success mt-3">Quay trở lại</a>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="i" begin="0" end="${orderDetail.orderDetails.size() - 1}">
+                            <tr>
+                                <td>${orderDetail.products[i].productName}</td>
+                                <td>${orderDetail.productVariants[i].sku}</td>
+                                <td>${orderDetail.sizes[i].size_name}</td>
+                                <td><fmt:formatNumber value="${orderDetail.orderDetails[i].unitPrice}" type="currency" currencySymbol="VND" /></td>
+                                <td>${orderDetail.orderDetails[i].quantity}</td>
+                                <td><fmt:formatNumber value="${orderDetail.orderDetails[i].unitPrice * orderDetail.orderDetails[i].quantity}" type="currency" currencySymbol="VND" /></td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5" class="text-end"><strong>Tổng (trước khi giảm giá):</strong></td>
+                            <td><strong><fmt:formatNumber value="${orderDetail.totalBeforeDiscount}" type="currency" currencySymbol="VND" groupingUsed="true"/></strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" class="text-end"><strong>Tổng (sau khi giảm giá):</strong></td>
+                            <td><strong><fmt:formatNumber value="${orderDetail.order.totalAmount}" type="currency" currencySymbol="VND" groupingUsed="true"/></strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" class="text-end"><strong>Tiền cọc:</strong></td>
+                            <td><strong><fmt:formatNumber value="${orderPayment.depositAmount}" type="currency" currencySymbol="VND" groupingUsed="true"/></strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" class="text-end"><strong>Tổng (sau khi cọc 50%):</strong></td>
+                            <td><strong><fmt:formatNumber value="${remainingAmount}" type="currency" currencySymbol="VND" groupingUsed="true"/></strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <form action="ajaxServlet" method="post">
+                    <input type="hidden" name="orderId" value="${orderDetail.order.orderId}">
+                    <!-- Deposit Button -->
+                    <button type="submit" id="depositButton" class="btn btn-primary mt-3">Cọc 50% giá trị đơn hàng</button>
+                </form>
+                <!-- Back Button -->
+                <a href="profileSetting" class="btn btn-success mt-3">Quay trở lại</a>
+            </div>
         </div>
-    </div>
 
-    <%@ include file="/includes/footer.jsp" %>
+        <%@ include file="/includes/footer.jsp" %>
 
 
-    <style>
-        .order-detail-container {
-            max-width: 900px;
-            margin: auto;
-            padding: 20px;
-            background: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        .order-info {
-            margin-bottom: 20px;
-        }
-        .order-items {
-            width: 100%;
-        }
-        .order-items th, .order-items td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-        .back-btn {
-            margin-top: 20px;
-        }
-        
-    </style>
-    <!-- Edit Card End -->
-    <!-- latest jquery-->
-    <script src="${pageContext.request.contextPath}/assets/js/jquery-3.6.0.min.js"></script>
+        <style>
+            .order-detail-container {
+                max-width: 900px;
+                margin: auto;
+                padding: 20px;
+                background: #fff;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+            }
+            .order-info {
+                margin-bottom: 20px;
+            }
+            .order-items {
+                width: 100%;
+            }
+            .order-items th, .order-items td {
+                padding: 10px;
+                border-bottom: 1px solid #ddd;
+            }
+            .back-btn {
+                margin-top: 20px;
+            }
 
-    <!-- jquery ui-->
-    <script src="${pageContext.request.contextPath}/assets/js/jquery-ui.min.js"></script>
+        </style>
+        <!-- Edit Card End -->
+        <!-- latest jquery-->
+        <script src="${pageContext.request.contextPath}/assets/js/jquery-3.6.0.min.js"></script>
 
-    <!-- Bootstrap js-->
-    <script src="${pageContext.request.contextPath}/assets/js/bootstrap/bootstrap.bundle.min.js"></script>
-    <script src="${pageContext.request.contextPath}/assets/js/bootstrap/bootstrap-notify.min.js"></script>
-    <script src="${pageContext.request.contextPath}/assets/js/bootstrap/popper.min.js"></script>
+        <!-- jquery ui-->
+        <script src="${pageContext.request.contextPath}/assets/js/jquery-ui.min.js"></script>
 
-    <!-- feather icon js-->
-    <script src="${pageContext.request.contextPath}/assets/js/feather/feather.min.js"></script>
-    <script src="${pageContext.request.contextPath}/assets/js/feather/feather-icon.js"></script>
+        <!-- Bootstrap js-->
+        <script src="${pageContext.request.contextPath}/assets/js/bootstrap/bootstrap.bundle.min.js"></script>
+        <script src="${pageContext.request.contextPath}/assets/js/bootstrap/bootstrap-notify.min.js"></script>
+        <script src="${pageContext.request.contextPath}/assets/js/bootstrap/popper.min.js"></script>
 
-    <!-- Lazyload Js -->
-    <script src="${pageContext.request.contextPath}/assets/js/lazysizes.min.js"></script>
+        <!-- feather icon js-->
+        <script src="${pageContext.request.contextPath}/assets/js/feather/feather.min.js"></script>
+        <script src="${pageContext.request.contextPath}/assets/js/feather/feather-icon.js"></script>
 
-    <!-- Wizard js -->
-    <script src="${pageContext.request.contextPath}/assets/js/wizard.js"></script>
+        <!-- Lazyload Js -->
+        <script src="${pageContext.request.contextPath}/assets/js/lazysizes.min.js"></script>
 
-    <!-- Slick js-->
-    <script src="${pageContext.request.contextPath}/assets/js/slick/slick.js"></script>
-    <script src="${pageContext.request.contextPath}/assets/js/slick/custom_slick.js"></script>
+        <!-- Wizard js -->
+        <script src="${pageContext.request.contextPath}/assets/js/wizard.js"></script>
 
-    <!-- Quantity js -->
-    <script src="${pageContext.request.contextPath}/assets/js/quantity-2.js"></script>
+        <!-- Slick js-->
+        <script src="${pageContext.request.contextPath}/assets/js/slick/slick.js"></script>
+        <script src="${pageContext.request.contextPath}/assets/js/slick/custom_slick.js"></script>
 
-    <!-- Nav & tab upside js -->
-    <script src="${pageContext.request.contextPath}/assets/js/nav-tab.js"></script>
+        <!-- Quantity js -->
+        <script src="${pageContext.request.contextPath}/assets/js/quantity-2.js"></script>
 
-    <!-- script js -->
-    <script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
-</body>
+        <!-- Nav & tab upside js -->
+        <script src="${pageContext.request.contextPath}/assets/js/nav-tab.js"></script>
+
+        <!-- script js -->
+        <script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
+    </body>

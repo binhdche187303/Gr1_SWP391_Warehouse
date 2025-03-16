@@ -173,7 +173,7 @@ CREATE TABLE Payment (
     order_id INT NOT NULL,
     payment_method NVARCHAR(255) NOT NULL,
     payment_date DATETIME NOT NULL DEFAULT GETDATE(),
-    payment_status NVARCHAR(50) DEFAULT 'Pending',
+    payment_status NVARCHAR(50) DEFAULT N'Chờ xử lý',
     FOREIGN KEY (order_id) REFERENCES Orders(order_id)
 );
 
