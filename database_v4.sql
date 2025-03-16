@@ -10,9 +10,11 @@
 --GO
 
 
-
 --drop database SWPV1
 --go
+
+
+
 
 
 -- Bảng Roles (Vai trò người dùng)
@@ -140,8 +142,8 @@ CREATE TABLE Orders (
     order_id INT PRIMARY KEY IDENTITY(1,1),
     user_id INT NOT NULL,
     order_date DATETIME NOT NULL DEFAULT GETDATE(),
-    total_amount DECIMAL(18, 2) NOT NULL,
-    status NVARCHAR(50) DEFAULT 'Pending',
+    total_amount DECIMAL(18, 0) NOT NULL,
+    status NVARCHAR(50) DEFAULT N'Chờ xử lý',
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
 	customer_name NVARCHAR(255) NULL,
     phone_number NVARCHAR(15) NULL,
@@ -149,6 +151,7 @@ CREATE TABLE Orders (
     shipping_address NVARCHAR(MAX) NULL,
     notes NVARCHAR(MAX) NULL
 );
+
 
 -- Bảng OrderDetails (Chi tiết đơn hàng)
 CREATE TABLE OrderDetails (
@@ -169,7 +172,7 @@ CREATE TABLE Payment (
     order_id INT NOT NULL,
     payment_method NVARCHAR(255) NOT NULL,
     payment_date DATETIME NOT NULL DEFAULT GETDATE(),
-    payment_status NVARCHAR(50) DEFAULT 'Pending',
+    payment_status NVARCHAR(50) DEFAULT N'Chờ xử lý',
     FOREIGN KEY (order_id) REFERENCES Orders(order_id)
 );
 
@@ -191,7 +194,6 @@ CREATE TABLE TokenForgetPassword (
     FOREIGN KEY (user_id) REFERENCES Users(user_id) -- Khóa ngoại liên kết bảng Users
 );
 
---Bảng IventoryBatches (Lô hàng)
 CREATE TABLE InventoryBatches (
     batch_id INT PRIMARY KEY IDENTITY(1,1),   -- ID của lô hàng
     variant_id INT NOT NULL,                   -- ID biến thể sản phẩm
@@ -210,7 +212,7 @@ CREATE TABLE PurchaseOrder (
     order_id INT PRIMARY KEY IDENTITY(1,1),
     order_date DATETIME NOT NULL,
     supplier_id INT NOT NULL,
-    total_amount DECIMAL(18,2) NOT NULL,
+    total_amount DECIMAL(18,0) NOT NULL,
 	bill_img_url VARCHAR(255) NULL,
     status NVARCHAR(50) DEFAULT N'Chờ nhập kho' CHECK (status IN (N'Chờ nhập kho', N'Đã nhập kho', N'Đã hủy')),
     notes NVARCHAR(MAX),
@@ -228,7 +230,7 @@ CREATE TABLE PurchaseDetails (
     order_id INT NOT NULL,                     -- ID phiếu nhập hàng
     variant_id INT NOT NULL,          
     quantity INT NOT NULL,                     -- Số lượng nhập
-    unit_price DECIMAL(18,2) NOT NULL,          -- Giá nhập mỗi đơn vị
+    unit_price DECIMAL(18,0) NOT NULL,          -- Giá nhập mỗi đơn vị
     total_price AS (quantity * unit_price),    -- Tổng tiền (tự tính)
     expiration_date DATE,                      -- Ngày hết hạn (nếu có)
     warehouse_id INT NOT NULL,                 -- Kho lưu trữ
@@ -238,6 +240,7 @@ CREATE TABLE PurchaseDetails (
     FOREIGN KEY (batch_id) REFERENCES InventoryBatches(batch_id),
 	FOREIGN KEY (variant_id) REFERENCES ProductVariants(variant_id)
 );
+
 
 --Bảng InventoryCheck (Phiếu kiểm kho)
 CREATE TABLE InventoryCheck (
@@ -260,37 +263,22 @@ CREATE TABLE InventoryCheck (
     FOREIGN KEY (reviewed_by) REFERENCES Users(user_id)
 );
 
---Bảng InventoryCheckDetails (Phiếu kiểm kho chi tiết)
+
 CREATE TABLE InventoryCheckDetails (
     check_detail_id INT PRIMARY KEY IDENTITY(1,1),  -- ID chi tiết kiểm kho
     check_id INT NOT NULL,                          -- ID phiếu kiểm kho
     batch_id INT NOT NULL,                          -- ID lô hàng được kiểm
     variant_id INT NOT NULL,                        -- ID biến thể sản phẩm
-    sku NVARCHAR(50) NOT NULL,                       -- Mã SKU
-    expected_quantity INT NOT NULL,                 -- Số lượng hệ thống ghi nhận
+    sku NVARCHAR(50) NOT NULL,                      -- Mã SKU
+    recorded_quantity INT NOT NULL,                 -- Số lượng trong hệ thống
     actual_quantity INT NOT NULL,                   -- Số lượng thực tế kiểm được
-    discrepancy AS (actual_quantity - expected_quantity), -- Chênh lệch
-	discrepancy_status VARCHAR(20) DEFAULT 'Unresolved'	CHECK (discrepancy_status IN ('Unresolved', 'Resolved', 'Approved', 'Cancelled')),
-    reason TEXT,                                   -- Lý do chênh lệch (hỏng, mất, hết hạn, v.v.)
+    discrepancy AS (actual_quantity - recorded_quantity), -- Chênh lệch số lượng
+    difference_price DECIMAL(18,2) NOT NULL,        -- Chênh lệch giá trị
+	expiration_date NVARCHAR(255),
+    reason NVARCHAR(255) DEFAULT N'Sản phẩm mới' CHECK (reason IN (N'Sản phẩm mới', N'Hàng lỗi', N'Hết hạn', N'Khác')),
     FOREIGN KEY (check_id) REFERENCES InventoryCheck(check_id),
     FOREIGN KEY (batch_id) REFERENCES InventoryBatches(batch_id),
     FOREIGN KEY (variant_id) REFERENCES ProductVariants(variant_id)
-);
-
---Bảng InventoryAdjustments (Điều chỉnh tồn kho)
-CREATE TABLE InventoryAdjustments (
-    adjustment_id INT PRIMARY KEY IDENTITY(1,1),  -- ID điều chỉnh tồn kho
-    check_detail_id INT NOT NULL,                  -- ID chi tiết kiểm kho
-    batch_id INT NOT NULL,                         -- ID lô hàng cần điều chỉnh
-    variant_id INT NOT NULL,                       -- ID biến thể sản phẩm
-    adjustment_quantity INT NOT NULL,              -- Số lượng điều chỉnh
-    adjustment_reason TEXT NOT NULL,               -- Lý do điều chỉnh
-    adjusted_by INT NOT NULL,                      -- Người thực hiện điều chỉnh
-    adjustment_date DATETIME NOT NULL,              -- Ngày điều chỉnh
-    FOREIGN KEY (check_detail_id) REFERENCES InventoryCheckDetails(check_detail_id),
-    FOREIGN KEY (batch_id) REFERENCES InventoryBatches(batch_id),
-    FOREIGN KEY (variant_id) REFERENCES ProductVariants(variant_id),
-    FOREIGN KEY (adjusted_by) REFERENCES Users(user_id)
 );
 
 
@@ -305,19 +293,18 @@ CREATE TABLE SupplierBrand (
 CREATE TABLE OrderDiscounts (
     id INT IDENTITY(1,1) PRIMARY KEY,
     order_id INT NOT NULL,
-    discount_id INT NOT NULL,
     applied_discount_percentage DECIMAL(5,2) NOT NULL,
-    applied_amount DECIMAL(18,2) NOT NULL,
+    applied_amount DECIMAL(18,0) NOT NULL,
     applied_date DATETIME DEFAULT GETDATE(),
     FOREIGN KEY (order_id) REFERENCES Orders(order_id),
-    FOREIGN KEY (discount_id) REFERENCES Discounts(discount_id)
 );
+
 
 CREATE TABLE OrderPayments (
     payment_id INT PRIMARY KEY IDENTITY(1,1),
     order_id INT NOT NULL,
-    deposit_amount DECIMAL(18,2) NOT NULL, -- Số tiền đặt cọc (50%)
-    remaining_amount DECIMAL(18,2) NOT NULL, -- Số tiền còn lại phải thanh toán (50%)
+    deposit_amount DECIMAL(18,0) NOT NULL, -- Số tiền đặt cọc (50%)
+    remaining_amount DECIMAL(18,0) NOT NULL, -- Số tiền còn lại phải thanh toán (50%)
     payment_status NVARCHAR(50) DEFAULT 'Đã thanh toán 50%', -- Trạng thái thanh toán
     created_at DATETIME DEFAULT GETDATE(), -- Ngày tạo giao dịch
     FOREIGN KEY (order_id) REFERENCES Orders(order_id)
@@ -390,7 +377,7 @@ BEGIN
     FROM Discounts
     JOIN inserted ON Discounts.discount_id = inserted.discount_id;
 END;
-SELECT * FROM dbo.Roles
+
 INSERT INTO dbo.Roles(role_name)
 VALUES
 (N'Admin system'),
@@ -400,6 +387,7 @@ VALUES
 (N'Packing staffs'),
 (N'Shipper'),
 (N'Saler');
+
 
 
 INSERT INTO dbo.Users(username, password, fullname, phone, email, role_id, status)
@@ -1361,21 +1349,8 @@ SELECT
     'In Stock' AS status
 FROM ProductVariants
 WHERE variant_id between 1 and 143;
-SELECT
-    pv.variant_id,
-    p.product_name,
-    s.size_name,
-    ib.batch_id,
-    ib.quantity AS stock,
-    ib.status,
-    ib.expiration_date,
-    w.warehouse_name
-FROM ProductVariants pv
-JOIN Products p ON pv.product_id = p.product_id
-JOIN Sizes s ON pv.size_id = s.size_id
-JOIN InventoryBatches ib ON pv.variant_id = ib.variant_id
-JOIN Warehouses w ON ib.warehouse_id = w.warehouse_id
-WHERE ib.status = 'In Stock';
+
+
 
 
 CREATE TABLE ProductQuantityDiscounts (
@@ -1388,6 +1363,7 @@ CREATE TABLE ProductQuantityDiscounts (
     FOREIGN KEY (product_id) REFERENCES Products(product_id),
     CONSTRAINT UQ_Product_MinQuantity UNIQUE (product_id, min_quantity) -- Tránh trùng min_quantity trên cùng một sản phẩm
 );
+
 
 CREATE TABLE ProductQuantityDiscountHistory (
     product_discount_history_id INT IDENTITY(1,1) PRIMARY KEY, -- Mã lịch sử thay đổi
@@ -1449,7 +1425,7 @@ BEGIN
         OR i.status <> d.status;
 END;
 
-select* from ProductQuantityDiscounts
+
 INSERT INTO dbo.ProductQuantityDiscounts
 (product_id, min_quantity,discount_percentage,created_at,status)
 VALUES
@@ -1983,4 +1959,5 @@ VALUES	(1, 1), -- Nhà phân phối Kinh Đô bán thương hiệu Kinh Đô
 		(2, 2), -- Nhà phân phối Phạm Nguyên bán thương hiệu Phạm Nguyên
 		(3, 3), -- Nhà phân phối Pepsico bán thương hiệu Pepsico
 		(4, 4); -- Công ty TNHH Orion bán thương hiệu Orion
+
 
