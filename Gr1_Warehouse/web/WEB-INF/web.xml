@@ -141,14 +141,6 @@
         <servlet-class>PackingController.ConfirmPackingServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>BrandList</servlet-name>
-        <servlet-class>managerController.BrandList</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>CreateBrand</servlet-name>
-        <servlet-class>managerController.CreateBrand</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>VnpayReturn</servlet-name>
         <servlet-class>com.vnpay.common.VnpayReturn</servlet-class>
     </servlet>
@@ -156,17 +148,14 @@
         <servlet-name>ajaxServlet</servlet-name>
         <servlet-class>com.vnpay.common.ajaxServlet</servlet-class>
     </servlet>
-    
     <servlet>
         <servlet-name>error</servlet-name>
         <servlet-class>constant.error</servlet-class>
     </servlet>
-    
     <servlet>
         <servlet-name>InventoryCheckForm</servlet-name>
         <servlet-class>controller.InventoryCheckForm</servlet-class>
     </servlet>
-    
     <servlet>
         <servlet-name>ProductByWarehouse</servlet-name>
         <servlet-class>dashboardController.ProductByWarehouse</servlet-class>
@@ -348,14 +337,6 @@
         <url-pattern>/confirmPackingServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>BrandList</servlet-name>
-        <url-pattern>/brandlist</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>CreateBrand</servlet-name>
-        <url-pattern>/createbrand</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>VnpayReturn</servlet-name>
         <url-pattern>/vnpayReturn</url-pattern>
     </servlet-mapping>
@@ -367,13 +348,10 @@
         <servlet-name>error</servlet-name>
         <url-pattern>/error</url-pattern>
     </servlet-mapping>
-    
-    
     <servlet-mapping>
         <servlet-name>InventoryCheckForm</servlet-name>
         <url-pattern>/inventory-form</url-pattern>
     </servlet-mapping>
-    
     <servlet-mapping>
         <servlet-name>ProductByWarehouse</servlet-name>
         <url-pattern>/product-warehouse</url-pattern>
