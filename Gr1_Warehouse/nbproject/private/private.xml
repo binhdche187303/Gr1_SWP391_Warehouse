@@ -3,7 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/SWP/Gr1_Warehouse/src/java/managerController/ProductDetail.java</file>
+            <file>file:/D:/SWP/Gr1_Warehouse/src/java/dashboardController/CreateStaff.java</file>
+            <file>file:/D:/SWP/Gr1_Warehouse/src/java/dashboardController/AddStaff.java</file>
+            <file>file:/D:/SWP/Gr1_Warehouse/src/java/dashboardController/AllStaff.java</file>
+            <file>file:/D:/SWP/Gr1_Warehouse/src/java/dao/UserDAO.java</file>
+            <file>file:/D:/SWP/Gr1_Warehouse/src/java/dashboardController/ProfileSetting.java</file>
+            <file>file:/D:/SWP/Gr1_Warehouse/src/java/controller/RegisterServlet.java</file>
         </group>
     </open-files>
 </project-private>

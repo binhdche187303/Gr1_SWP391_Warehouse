@@ -382,7 +382,7 @@ BEGIN
     FROM Discounts
     JOIN inserted ON Discounts.discount_id = inserted.discount_id;
 END;
-
+SELECT * FROM dbo.Roles
 INSERT INTO dbo.Roles(role_name)
 VALUES
 (N'Admin system'),
@@ -391,13 +391,18 @@ VALUES
 (N'Warehouse staffs'),
 (N'Packing staffs'),
 (N'Shipper'),
-(N'Saler';
+(N'Saler');
 
 
 INSERT INTO dbo.Users(username, password, fullname, phone, email, role_id, status)
 VALUES
-(N'cus1', 'pass1', N'Customer 1', '0123456789', 'customer1@gmail.com', 2, 'Active'),
-(N'ad1', 'pass1', N'Admin 1', '0987654321', 'admin1@gmail.com', 1, 'Active');
+(N'admin', '202cb962ac59075b964b07152d234b70', N'Admin 1', '0123456789', 'manager01@example.com', 1, 'Active'),
+(N'cus1', '202cb962ac59075b964b07152d234b70', N'Customer 1', '', 'cus1@gmail.com', 2, 'Active'),
+(N'manager1', '202cb962ac59075b964b07152d234b70', N'Warehouse manager 1', '', 'manager@gmail.com', 3, 'Active'),
+(N'staff1', '202cb962ac59075b964b07152d234b70', N'Staff 1', '', 'staff1@gmail.com', 4, 'Active'),
+(N'packing1', '202cb962ac59075b964b07152d234b70', N'Packing 1', '', 'packing@gmail.com', 5, 'Active'),
+(N'shipper1', '202cb962ac59075b964b07152d234b70', N'Shipper 1', '', 'shipper@gmail.com', 6, 'Active'),
+(N'seller1', '202cb962ac59075b964b07152d234b70', N'Seller 1', '', 'seller1@gmail.com', 7, 'Active');
 
 INSERT INTO dbo.Brands(brand_name)
 VALUES
