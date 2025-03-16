@@ -26,6 +26,15 @@ public class Warehouse {
         this.status = status;
     }
 
+    public Warehouse(int warehouseId, String warehouseName, String phone, String address) {
+        this.warehouseId = warehouseId;
+        this.warehouseName = warehouseName;
+        this.phone = phone;
+        this.address = address;
+    }
+
+    
+
     public int getWarehouseId() {
         return warehouseId;
     }

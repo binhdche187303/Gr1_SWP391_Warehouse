@@ -238,7 +238,7 @@
                                         </a>
                                         <ul class="sidebar-submenu">
                                             <li>
-                                                <a href="products.html">Chi tiết tồn kho</a>
+                                                <a href="/Gr1_Warehouse/inventory-checklist">Chi tiết tồn kho</a>
                                             </li>
 
                                             <li>

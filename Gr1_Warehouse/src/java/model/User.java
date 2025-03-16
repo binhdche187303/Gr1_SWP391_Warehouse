@@ -44,6 +44,15 @@ public class User {
         this.status = status;
     }
 
+    public User(int userId, String fullname, String phone, String email) {
+        this.userId = userId;
+        this.fullname = fullname;
+        this.phone = phone;
+        this.email = email;
+    }
+
+    
+
     public int getUserId() {
         return userId;
     }

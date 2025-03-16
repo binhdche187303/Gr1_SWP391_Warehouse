@@ -2,28 +2,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package dashboardController;
+package controller;
 
-import com.google.gson.Gson;
-import dao.RoleDAO;
+import dao.InventoryDAO;
 import dao.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
-import model.Role;
+import model.InventoryCheck;
+import model.InventoryCheckDetailDTO;
 import model.User;
 
 /**
  *
- * @author admin
+ * @author Huy Nam
  */
-@WebServlet(name = "AllStaff", urlPatterns = {"/allstaff"})
-public class AllStaff extends HttpServlet {
+public class InventoryChecklistDetail extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,10 +41,10 @@ public class AllStaff extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet AllStaff</title>");
+            out.println("<title>Servlet InventoryChecklistDetail</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet AllStaff at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet InventoryChecklistDetail at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,35 +62,44 @@ public class AllStaff extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        UserDAO ud = new UserDAO();
-        RoleDAO r = new RoleDAO();
+        HttpSession session = request.getSession();
+        UserDAO udao = new UserDAO();
 
-        String roleParam = request.getParameter("role"); // Lấy role từ request
+// Kiểm tra user trong session
+        User user = (User) session.getAttribute("acc");
+        System.out.println("User trong session (acc): " + (user != null ? user.getUserId() : "null"));
 
-        List<User> listStaff;
-        if (roleParam != null) {
-            try {
-                int roleId = Integer.parseInt(roleParam); // Chuyển roleParam thành role_id
-                listStaff = ud.getStaffByRole2(roleId); // Lấy danh sách nhân viên theo role_id
-            } catch (NumberFormatException e) {
-                listStaff = ud.getAllStaff(); // Nếu roleParam không phải số, lấy tất cả nhân viên
-            }
+        if (user == null) {
+            response.sendRedirect("login");
+            return;
         } else {
-            listStaff = ud.getAllStaff(); // Nếu không có roleParam, lấy tất cả nhân viên
+            // Lấy thông tin user từ database
+            User userLogedIn = udao.getUserById(user.getUserId());
+            System.out.println("User lấy từ DB: " + (userLogedIn != null ? userLogedIn.getUserId() : "null"));
+
+            if (userLogedIn != null) {
+                session.setAttribute("user", userLogedIn); // Lưu User vào session
+                System.out.println("Đã lưu user vào session với userId: " + userLogedIn.getUserId());
+            }
         }
 
-        List<Role> listRole = r.getAllRole();
+        String checkIdParam = request.getParameter("checkId");
+        System.out.println("Received check_id: " + checkIdParam); // Kiểm tra giá trị check_id nhận được
 
-        request.setAttribute("listStaff", listStaff);
-        request.setAttribute("listRole", listRole);
+        InventoryDAO dao = new InventoryDAO();
 
-        if ("4".equals(roleParam)) { // Nếu role_id là 4, trả JSON cho dropdown
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            Gson gson = new Gson();
-            response.getWriter().write(gson.toJson(listStaff));
-        } else { // Nếu không phải role_id = 4, chuyển hướng sang trang all-staff.jsp
-            request.getRequestDispatcher("/dashboard/all-staff.jsp").forward(request, response);
+        try {
+            int checkId = Integer.parseInt(checkIdParam);
+            List<InventoryCheckDetailDTO> list = dao.getInventoryCheckDetail(checkId);
+            InventoryCheck check = dao.getInventoryCheckDetails(checkId);
+            request.setAttribute("idlist", list);
+            request.setAttribute("check", check);
+            request.getRequestDispatcher("manager/inventory_checklist_detail.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            System.out.println("Error parsing check_id: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Exception occurred: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -106,17 +114,7 @@ public class AllStaff extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        UserDAO ud = new UserDAO();
-        RoleDAO r = new RoleDAO();
-        String status = request.getParameter("status");
-        String user_id = request.getParameter("user_id");
-        String roleId = request.getParameter("rolename");
-        ud.updateStaff(status, Integer.parseInt(roleId), Integer.parseInt(user_id));
-        List<User> listStaff = ud.getAllStaff();
-        List<Role> listRole = r.getAllRole();
-        request.setAttribute("listStaff", listStaff);
-        request.setAttribute("listRole", listRole);
-        request.getRequestDispatcher("/dashboard/all-staff.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
     /**

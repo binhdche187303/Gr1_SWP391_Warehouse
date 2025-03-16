@@ -1,0 +1,8 @@
+  <c:choose>
+                                                                <c:when test="${not empty check.balancedDate}">
+                                                                    ${check.balancedDate}
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <span class="text-muted">Chưa xong</span>
+                                                                </c:otherwise>
+                                                            </c:choose>
