@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package managerController;
+package dashboardController;
 
 import dao.BrandDAO;
 import java.io.IOException;
@@ -13,15 +13,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.Brands;
 
 /**
  *
  * @author admin
  */
-public class CreateBrand extends HttpServlet {
+public class BrandList extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +38,10 @@ public class CreateBrand extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CreateBrand</title>");
+            out.println("<title>Servlet BrandList</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CreateBrand at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet BrandList at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -64,7 +62,7 @@ public class CreateBrand extends HttpServlet {
         BrandDAO bd = new BrandDAO();
         List<Brands> listBrands = bd.getAllBrands();
         request.setAttribute("listBrands", listBrands);
-        request.getRequestDispatcher("/manager/create-brand.jsp").forward(request, response);
+        request.getRequestDispatcher("/dashboard/brand-list.jsp").forward(request, response);
     }
 
     /**
@@ -79,22 +77,25 @@ public class CreateBrand extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         BrandDAO bd = new BrandDAO();
+        String brand_id_raw = request.getParameter("brand_id");
         String brand_name = request.getParameter("brand_name");
         try {
+            int brand_id = Integer.parseInt(brand_id_raw);
             if (bd.isBrandNameExists(brand_name)) {
                 request.setAttribute("brand_name", brand_name);
                 List<Brands> listBrands = bd.getAllBrands();
                 request.setAttribute("listBrands", listBrands);
-                request.setAttribute("message", "Tên thương biệu đã tồn tại");
-                request.getRequestDispatcher("/manager/create-brand.jsp").forward(request, response);
+                request.setAttribute("message", "Tên thương hiệu đã tồn tại");
+                request.getRequestDispatcher("/dashboard/brand-list.jsp").forward(request, response);
             } else {
-                boolean success = bd.createBrand(brand_name);
-                request.getSession().setAttribute("success", "Tạo thương hiệu mới thành công");
+                bd.updateBrand(brand_id, brand_name);
+                request.getSession().setAttribute("success", "Cập nhật tên thương hiệu thành công");
                 response.sendRedirect("brandlist");
             }
-        } catch (SQLException ex) {
-            System.out.println(ex);
+        } catch (ServletException | IOException | NumberFormatException | SQLException e) {
+            System.out.println(e);
         }
+
     }
 
     /**

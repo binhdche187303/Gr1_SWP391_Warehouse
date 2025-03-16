@@ -2,10 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package managerController;
+package dashboardController;
 
-import dao.CategoryDAO;
-import dao.ProductDAO;
 import dao.SizeDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,20 +11,17 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
-import model.Categories;
-import model.ProductVariants;
-import model.Products;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Sizes;
 
 /**
  *
  * @author admin
  */
-public class CreateProductVariants extends HttpServlet {
+public class SizeList extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -45,10 +40,10 @@ public class CreateProductVariants extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CreateProductVariants</title>");
+            out.println("<title>Servlet SizeList</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CreateProductVariants at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SizeList at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -69,7 +64,7 @@ public class CreateProductVariants extends HttpServlet {
         SizeDAO sd = new SizeDAO();
         List<Sizes> listSizes = sd.getAllSizes();
         request.setAttribute("listSizes", listSizes);
-        request.getRequestDispatcher("/manager/create-product-variant.jsp").forward(request, response);
+        request.getRequestDispatcher("/dashboard/size-list.jsp").forward(request, response);
     }
 
     /**
@@ -83,44 +78,25 @@ public class CreateProductVariants extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ProductDAO pd = new ProductDAO();
-        SizeDAO sd = new SizeDAO();
-        List<Sizes> listSizes = sd.getAllSizes();
-        request.setAttribute("listSizes", listSizes);
-        String size_raw = request.getParameter("size");
-        String sku = request.getParameter("sku");
-        String price_raw = request.getParameter("price");
-
+        SizeDAO bd = new SizeDAO();
+        String size_id_raw = request.getParameter("size_id");
+        String size_name = request.getParameter("size_name");
         try {
-            BigDecimal price = new BigDecimal(price_raw);
-            int size = Integer.parseInt(size_raw);
-            if (pd.isSkuExists(sku)) {
-                request.setAttribute("sku", sku);
-                request.setAttribute("price", price);
-                request.setAttribute("size", size);
-                request.setAttribute("message", "Mã Sku đã tồn tại!");
-                request.getRequestDispatcher("/manager/create-product-variant.jsp").forward(request, response);
+            int size_id = Integer.parseInt(size_id_raw);
+            if (bd.isSizeNameExists(size_name)) {
+                request.setAttribute("size_name", size_name);
+                List<Sizes> listSizes = bd.getAllSizes();
+                request.setAttribute("listSizes", listSizes);
+                request.setAttribute("message", "Tên kích cỡ đã tồn tại");
+                request.getRequestDispatcher("/dashboard/size-list.jsp").forward(request, response);
             } else {
-                ProductVariants pv = new ProductVariants();
-                pv.setSku(sku);
-                pv.setPrice(price);
-
-                Sizes sizes = new Sizes();
-                sizes.setSize_id(size);
-                pv.setSize(sizes);
-                List<ProductVariants> lp = new ArrayList<>();
-                lp.add(pv);
-                HttpSession session = request.getSession();
-                Products product = (Products) session.getAttribute("product");
-                product.setVariants(lp);
-                pd.addNewProduct(product);
-                session.setAttribute("success", "Tạo mới sản phẩm thành công!");
-                response.sendRedirect("productdetail?product_id="+ product.getProductId());
+                bd.updateSize(size_id, size_name);
+                request.getSession().setAttribute("success", "Cập nhật tên kích cỡ thành công");
+                response.sendRedirect("sizelist");
             }
-        } catch (ServletException | IOException | NumberFormatException e) {
+        } catch (ServletException | IOException | NumberFormatException | SQLException e) {
             System.out.println(e);
         }
-
     }
 
     /**

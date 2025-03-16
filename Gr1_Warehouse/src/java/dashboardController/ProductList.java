@@ -2,26 +2,23 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package managerController;
+package dashboardController;
 
-import dao.SizeDAO;
+import dao.ProductDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import model.Sizes;
+import model.Products;
 
 /**
  *
  * @author admin
  */
-public class SizeList extends HttpServlet {
+public class ProductList extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +37,10 @@ public class SizeList extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SizeList</title>");
+            out.println("<title>Servlet ProductList</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet SizeList at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ProductList at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,10 +58,10 @@ public class SizeList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        SizeDAO sd = new SizeDAO();
-        List<Sizes> listSizes = sd.getAllSizes();
-        request.setAttribute("listSizes", listSizes);
-        request.getRequestDispatcher("/manager/size-list.jsp").forward(request, response);
+        ProductDAO pd = new ProductDAO();
+        List<Products> listProducts = pd.getAllProductsManager();
+        request.setAttribute("listProducts", listProducts);
+        request.getRequestDispatcher("/dashboard/product_list.jsp").forward(request, response);
     }
 
     /**
@@ -78,25 +75,7 @@ public class SizeList extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        SizeDAO bd = new SizeDAO();
-        String size_id_raw = request.getParameter("size_id");
-        String size_name = request.getParameter("size_name");
-        try {
-            int size_id = Integer.parseInt(size_id_raw);
-            if (bd.isSizeNameExists(size_name)) {
-                request.setAttribute("size_name", size_name);
-                List<Sizes> listSizes = bd.getAllSizes();
-                request.setAttribute("listSizes", listSizes);
-                request.setAttribute("message", "Tên kích cỡ đã tồn tại");
-                request.getRequestDispatcher("/manager/size-list.jsp").forward(request, response);
-            } else {
-                bd.updateSize(size_id, size_name);
-                request.getSession().setAttribute("success", "Cập nhật tên kích cỡ thành công");
-                response.sendRedirect("sizelist");
-            }
-        } catch (ServletException | IOException | NumberFormatException | SQLException e) {
-            System.out.println(e);
-        }
+        processRequest(request, response);
     }
 
     /**

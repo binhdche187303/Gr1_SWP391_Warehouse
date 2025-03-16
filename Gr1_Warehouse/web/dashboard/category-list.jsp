@@ -1,5 +1,5 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
@@ -69,7 +69,7 @@
     <body>
 
 
-        <%@ include file="/manager/manager_dashboard.jsp" %>
+        <%@include file="/includes/admin.jsp" %>
         <!-- page-wrapper Start-->
         <div class="page-wrapper compact-wrapper" id="pageWrapper">
             <!-- Page Body Start -->
@@ -83,12 +83,12 @@
                                 <div class="card card-table">
                                     <div class="card-body">
                                         <div class="title-header option-title">
-                                            <h5>Danh sách Thương hiệu</h5>
+                                            <h5>Danh sách Thể loại</h5>
 
 
                                             <form class="d-inline-flex">
-                                                <a href="/Gr1_Warehouse/createbrand" class="btn btn-primary btn-lg shadow-sm">
-                                                    <i class="fas fa-plus-circle"></i> Tạo thương hiệu mới
+                                                <a href="/Gr1_Warehouse/createcategory" class="btn btn-primary btn-lg shadow-sm">
+                                                    <i class="fas fa-plus-circle"></i> Tạo thể loại mới
                                                 </a>
                                             </form>
 
@@ -98,24 +98,24 @@
                                                 <thead>
                                                     <tr>
                                                         <th style="text-align: center">STT</th>
-                                                        <th style="text-align: center">Tên thương hiệu</th>
+                                                        <th style="text-align: center">Tên thể loại</th>
                                                         <th style="text-align: center">Hành động</th>
 
                                                     </tr>
                                                 </thead>
 
                                                 <tbody>
-                                                    <c:forEach var="lb" items="${requestScope.listBrands}">
+                                                    <c:forEach var="lc" items="${requestScope.listCategories}">
                                                         <tr>
                                                             <td style="text-align: center"></td>
-                                                            <td style="text-align: center">${lb.brand_name}</td>
+                                                            <td style="text-align: center">${lc.category_name}</td>
                                                             <td style="text-align: center">
                                                                 <ul>
                                                                     <li>
                                                                         <a href="javascript:void(0)" 
-                                                                           class="edit-brand"
-                                                                           data-brand-id="${lb.brand_id}" 
-                                                                           data-brand-name="${lb.brand_name}"  
+                                                                           class="edit-category"
+                                                                           data-category-id="${lc.category_id}" 
+                                                                           data-category-name="${lc.category_name}"  
                                                                            >
                                                                             <i class="ri-pencil-line"></i>
                                                                         </a>
@@ -138,21 +138,21 @@
             </div>                
         </div>
 
-        <!-- Edit Brand Modal Start-->
-        <div class="modal fade theme-modal" id="edit-brand" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <!-- Edit Category Modal Start-->
+        <div class="modal fade theme-modal" id="edit-category" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa thương hiệu</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa thể loại</h5>
                     </div>
                     <div class="modal-body">
-                        <form action="brandlist" method="POST">
-                            <input type="hidden" name="brand_id" value="" /> 
+                        <form action="categorylist" method="POST">
+                            <input type="hidden" name="category_id" value="" /> 
 
                             <!-- Quantity -->
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="brand_name" name="brand_name" value="" required />
-                                <label for="brand">Tên thương hiệu</label>
+                                <input type="text" class="form-control" id="category_name" name="category_name" value="" required />
+                                <label for="category">Tên thể loại</label>
                             </div>
 
                             <!-- Modal Footer -->
@@ -173,7 +173,7 @@
             </div>
         </div>
 
-        <!-- Edit Brand Modal End -->
+        <!-- Edit Category Modal End -->
 
         <%
     String successMessage = (String) session.getAttribute("success");
@@ -236,7 +236,7 @@
         <div class="card-body">
             <div class="row mb-4">
                 <div class="col-md-3 mb-2">
-                    <input type="text" id="brandFilter" class="form-control" placeholder="Tìm theo thương hiệu">
+                    <input type="text" id="categoryFilter" class="form-control" placeholder="Tìm theo thể loại">
                 </div>
             </div>
         </div>
@@ -248,15 +248,15 @@
                     searching: true, // Cho phép tìm kiếm
                     ordering: true,
                     info: true,
-                    pageLength: 5,
+                    pageLength: 10,
                     lengthChange: false,
                     language: {
                         url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/vi.json',
-                        emptyTable: "Không có thương hiệu nào trong hệ thống",
-                        zeroRecords: "Không tìm thấy thương hiệu phù hợp",
-                        info: "Hiển thị _START_ đến _END_ của _TOTAL_ thương hiệu",
-                        infoEmpty: "Hiển thị 0 đến 0 của 0 thương hiệu",
-                        infoFiltered: "(lọc từ _MAX_ thương hiệu)",
+                        emptyTable: "Không có thể loại nào trong hệ thống",
+                        zeroRecords: "Không tìm thấy thể loại phù hợp",
+                        info: "Hiển thị _START_ đến _END_ của _TOTAL_ thể loại",
+                        infoEmpty: "Hiển thị 0 đến 0 của 0 thể loại",
+                        infoFiltered: "(lọc từ _MAX_ thể loại)",
                         paginate: {
                             first: "Đầu tiên",
                             last: "Cuối cùng",
@@ -273,7 +273,7 @@
                     }
                 });
                 // Xử lý tìm kiếm theo thương hiệu
-                $('#brandFilter').on('keyup change', function () {
+                $('#categoryFilter').on('keyup change', function () {
                     let searchValue = this.value.toLowerCase().trim();
                     table.columns(1).search(searchValue).draw();
                 });
@@ -298,24 +298,24 @@
 
 //Modal
             document.addEventListener('DOMContentLoaded', function () {
-                // Select all elements with class 'edit-brand'
-                const editBrandButtons = document.querySelectorAll('.edit-brand');
+                // Select all elements with class 'edit-category'
+                const editCategoryButtons = document.querySelectorAll('.edit-category');
 
                 // Add click event listener to each edit button
-                editBrandButtons.forEach(button => {
+                editCategoryButtons.forEach(button => {
                     button.addEventListener('click', function () {
-                        // Get the brand ID and name from data attributes
-                        const brandId = this.getAttribute('data-brand-id');
-                        const brandName = this.getAttribute('data-brand-name');
+                        // Get the category ID and name from data attributes
+                        const categoryId = this.getAttribute('data-category-id');
+                        const categoryName = this.getAttribute('data-category-name');
 
                         // Get the modal element
-                        const editModal = document.getElementById('edit-brand');
+                        const editModal = document.getElementById('edit-category');
 
                         // Set the values in the modal form
-                        const brandIdInput = editModal.querySelector('input[name="brand_id"]');
-                        const brandNameInput = editModal.querySelector('input[name="brand_name"]');
-                        brandIdInput.value = brandId;
-                        brandNameInput.value = brandName;
+                        const categoryIdInput = editModal.querySelector('input[name="category_id"]');
+                        const categoryNameInput = editModal.querySelector('input[name="category_name"]');
+                        categoryIdInput.value = categoryId;
+                        categoryNameInput.value = categoryName;
 
                         // Open the modal using Bootstrap's modal method
                         var modal = new bootstrap.Modal(editModal);
@@ -327,22 +327,22 @@
                 const message = document.querySelector('.custom-alert');
                 if (message) {
                     // Get the modal element
-                    const editModal = document.getElementById('edit-brand');
+                    const editModal = document.getElementById('edit-category');
 
-                    // Check if we have stored brand data in session storage
-                    const storedBrandId = sessionStorage.getItem('editBrandId');
-                    const storedBrandName = sessionStorage.getItem('editBrandName');
+                    // Check if we have stored category data in session storage
+                    const storedCategoryId = sessionStorage.getItem('editCategoryId');
+                    const storedCategoryName = sessionStorage.getItem('editCategoryName');
 
-                    if (storedBrandId && storedBrandName) {
+                    if (storedCategoryId && storedCategoryName) {
                         // Set the values in the modal form
-                        const brandIdInput = editModal.querySelector('input[name="brand_id"]');
-                        const brandNameInput = editModal.querySelector('input[name="brand_name"]');
-                        brandIdInput.value = storedBrandId;
-                        brandNameInput.value = storedBrandName;
+                        const categoryIdInput = editModal.querySelector('input[name="category_id"]');
+                        const categoryNameInput = editModal.querySelector('input[name="category_name"]');
+                        categoryIdInput.value = storedCategoryId;
+                        categoryNameInput.value = storedCategoryName;
 
                         // Clear the stored data
-                        sessionStorage.removeItem('editBrandId');
-                        sessionStorage.removeItem('editBrandName');
+                        sessionStorage.removeItem('editCategoryId');
+                        sessionStorage.removeItem('editCategoryName');
                     }
 
                     // Open the modal
@@ -351,14 +351,14 @@
                 }
             });
 
-// Add this to store the brand data before form submission
-            document.querySelector('#edit-brand form').addEventListener('submit', function () {
-                const brandIdInput = this.querySelector('input[name="brand_id"]');
-                const brandNameInput = this.querySelector('input[name="brand_name"]');
+// Add this to store the category data before form submission
+            document.querySelector('#edit-category form').addEventListener('submit', function () {
+                const categoryIdInput = this.querySelector('input[name="category_id"]');
+                const categoryNameInput = this.querySelector('input[name="category_name"]');
 
                 // Store the values in session storage to retrieve after redirect
-                sessionStorage.setItem('editBrandId', brandIdInput.value);
-                sessionStorage.setItem('editBrandName', brandNameInput.value);
+                sessionStorage.setItem('editCategoryId', categoryIdInput.value);
+                sessionStorage.setItem('editCategoryName', categoryNameInput.value);
             });
         </script>
 

@@ -1,5 +1,5 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
@@ -46,7 +46,7 @@
     <body>
 
 
-        <%@ include file="/manager/manager_dashboard.jsp" %>
+        <%@include file="/includes/admin.jsp" %>
         <!-- page-wrapper Start-->
         <div class="page-wrapper compact-wrapper" id="pageWrapper">
             <!-- Page Body Start -->
@@ -107,9 +107,6 @@
                                                                                class="view-discount-history" 
                                                                                >
                                                                                 <i class="ri-eye-line"></i>
-                                                                            </a>
-                                                                            <a href="createproduct?product_id=${lp.productId}" class="view-discount-history">
-                                                                                <i class="ri-add-circle-line" style="color: rgb(116, 125, 198);width: 19;height: 18"></i>
                                                                             </a>
                                                                         </ul>
                                                                     </li>

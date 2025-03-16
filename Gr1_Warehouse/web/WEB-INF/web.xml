@@ -190,47 +190,47 @@
     </servlet>
     <servlet>
         <servlet-name>BrandList</servlet-name>
-        <servlet-class>managerController.BrandList</servlet-class>
+        <servlet-class>dashboardController.BrandList</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CategoryList</servlet-name>
-        <servlet-class>managerController.CategoryList</servlet-class>
+        <servlet-class>dashboardController.CategoryList</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CreateBrand</servlet-name>
-        <servlet-class>managerController.CreateBrand</servlet-class>
+        <servlet-class>dashboardController.CreateBrand</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CreateCategory</servlet-name>
-        <servlet-class>managerController.CreateCategory</servlet-class>
+        <servlet-class>dashboardController.CreateCategory</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CreateProductGeneral</servlet-name>
-        <servlet-class>managerController.CreateProductGeneral</servlet-class>
+        <servlet-class>dashboardController.CreateProductGeneral</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CreateProductImg</servlet-name>
-        <servlet-class>managerController.CreateProductImg</servlet-class>
+        <servlet-class>dashboardController.CreateProductImg</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CreateProductVariants</servlet-name>
-        <servlet-class>managerController.CreateProductVariants</servlet-class>
+        <servlet-class>dashboardController.CreateProductVariants</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CreateSize</servlet-name>
-        <servlet-class>managerController.CreateSize</servlet-class>
+        <servlet-class>dashboardController.CreateSize</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ProductDetail</servlet-name>
-        <servlet-class>managerController.ProductDetail</servlet-class>
+        <servlet-class>dashboardController.ProductDetail</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ProductList</servlet-name>
-        <servlet-class>managerController.ProductList</servlet-class>
+        <servlet-class>dashboardController.ProductList</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SizeList</servlet-name>
-        <servlet-class>managerController.SizeList</servlet-class>
+        <servlet-class>dashboardController.SizeList</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ArchiveServlet</servlet-name>

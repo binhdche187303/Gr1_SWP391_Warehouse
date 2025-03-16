@@ -2,24 +2,31 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package managerController;
+package dashboardController;
 
-import dao.BrandDAO;
+import dao.CategoryDAO;
+import dao.ProductDAO;
+import dao.SizeDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
+import jakarta.servlet.http.HttpSession;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
-import model.Brands;
+import model.Categories;
+import model.ProductVariants;
+import model.Products;
+import model.Sizes;
 
 /**
  *
  * @author admin
  */
-public class BrandList extends HttpServlet {
+public class CreateProductVariants extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +45,10 @@ public class BrandList extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet BrandList</title>");
+            out.println("<title>Servlet CreateProductVariants</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet BrandList at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CreateProductVariants at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,10 +66,10 @@ public class BrandList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        BrandDAO bd = new BrandDAO();
-        List<Brands> listBrands = bd.getAllBrands();
-        request.setAttribute("listBrands", listBrands);
-        request.getRequestDispatcher("/manager/brand-list.jsp").forward(request, response);
+        SizeDAO sd = new SizeDAO();
+        List<Sizes> listSizes = sd.getAllSizes();
+        request.setAttribute("listSizes", listSizes);
+        request.getRequestDispatcher("/dashboard/create-product-variant.jsp").forward(request, response);
     }
 
     /**
@@ -76,23 +83,41 @@ public class BrandList extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        BrandDAO bd = new BrandDAO();
-        String brand_id_raw = request.getParameter("brand_id");
-        String brand_name = request.getParameter("brand_name");
+        ProductDAO pd = new ProductDAO();
+        SizeDAO sd = new SizeDAO();
+        List<Sizes> listSizes = sd.getAllSizes();
+        request.setAttribute("listSizes", listSizes);
+        String size_raw = request.getParameter("size");
+        String sku = request.getParameter("sku");
+        String price_raw = request.getParameter("price");
+
         try {
-            int brand_id = Integer.parseInt(brand_id_raw);
-            if (bd.isBrandNameExists(brand_name)) {
-                request.setAttribute("brand_name", brand_name);
-                List<Brands> listBrands = bd.getAllBrands();
-                request.setAttribute("listBrands", listBrands);
-                request.setAttribute("message", "Tên thương hiệu đã tồn tại");
-                request.getRequestDispatcher("/manager/brand-list.jsp").forward(request, response);
+            BigDecimal price = new BigDecimal(price_raw);
+            int size = Integer.parseInt(size_raw);
+            if (pd.isSkuExists(sku)) {
+                request.setAttribute("sku", sku);
+                request.setAttribute("price", price);
+                request.setAttribute("size", size);
+                request.setAttribute("message", "Mã Sku đã tồn tại!");
+                request.getRequestDispatcher("/dashboard/create-product-variant.jsp").forward(request, response);
             } else {
-                bd.updateBrand(brand_id, brand_name);
-                request.getSession().setAttribute("success", "Cập nhật tên thương hiệu thành công");
-                response.sendRedirect("brandlist");
+                ProductVariants pv = new ProductVariants();
+                pv.setSku(sku);
+                pv.setPrice(price);
+
+                Sizes sizes = new Sizes();
+                sizes.setSize_id(size);
+                pv.setSize(sizes);
+                List<ProductVariants> lp = new ArrayList<>();
+                lp.add(pv);
+                HttpSession session = request.getSession();
+                Products product = (Products) session.getAttribute("product");
+                product.setVariants(lp);
+                pd.addNewProduct(product);
+                session.setAttribute("success", "Tạo mới sản phẩm thành công!");
+                response.sendRedirect("productdetail?product_id="+ product.getProductId());
             }
-        } catch (ServletException | IOException | NumberFormatException | SQLException e) {
+        } catch (ServletException | IOException | NumberFormatException e) {
             System.out.println(e);
         }
 

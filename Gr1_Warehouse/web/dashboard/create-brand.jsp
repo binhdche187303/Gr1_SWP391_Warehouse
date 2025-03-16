@@ -1,5 +1,5 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
@@ -138,7 +138,7 @@
     </head>
     <body>
 
-        <%@ include file="/manager/manager_dashboard.jsp" %>
+        <%@include file="/includes/admin.jsp" %>
         <div class="page-wrapper compact-wrapper" id="pageWrapper">
             <!-- Page Body Start -->
             <div class="page-body-wrapper">
@@ -152,21 +152,21 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <div class="title-header option-title">
-                                                    <h5>Tạo kích cỡ mới</h5>
-                                                    <a href="/Gr1_Warehouse/sizelist" class="btn btn-primary btn-lg shadow-sm">
-                                                        <i class=""></i>Danh sách kích cỡ
+                                                    <h5>Tạo thương hiệu mới</h5>
+                                                    <a href="/Gr1_Warehouse/brandlist" class="btn btn-primary btn-lg shadow-sm">
+                                                        <i class=""></i>Danh sách thương hiệu
                                                     </a>
                                                 </div>
                                                 <div class="tab-content" id="pills-tabContent">
                                                     <div class="tab-pane fade show active" id="pills-home" role="tabpanel">
-                                                        <form class="theme-form theme-form-2 mega-form" action="createsize" method="post">
+                                                        <form class="theme-form theme-form-2 mega-form" action="createbrand" method="post">
                                                             <div class="row">
                                                                 <div class="mb-4 row align-items-center">
                                                                     <label
-                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Tên kích cỡ</label>
+                                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">Tên thương hiệu</label>
                                                                     <div class="col-md-9 col-lg-10">
-                                                                        <input class="form-control" type="text" name="size_name" required 
-                                                                               value="${requestScope.size_name != null ? requestScope.size_name : ''}">
+                                                                        <input class="form-control" type="text" name="brand_name" required 
+                                                                               value="${requestScope.brand_name != null ? requestScope.brand_name : ''}">
                                                                     </div>
                                                                 </div>
 

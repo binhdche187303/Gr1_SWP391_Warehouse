@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package managerController;
+package dashboardController;
 
 import dao.SizeDAO;
 import java.io.IOException;
@@ -64,7 +64,7 @@ public class CreateSize extends HttpServlet {
         SizeDAO sd = new SizeDAO();
         List<Sizes> listSizes = sd.getAllSizes();
         request.setAttribute("listSizes", listSizes);
-        request.getRequestDispatcher("/manager/create-size.jsp").forward(request, response);
+        request.getRequestDispatcher("/dashboard/create-size.jsp").forward(request, response);
     }
 
     /**
@@ -86,7 +86,7 @@ public class CreateSize extends HttpServlet {
                 List<Sizes> listSizes = sd.getAllSizes();
                 request.setAttribute("listSizes", listSizes);
                 request.setAttribute("message", "Tên kích cỡ đã tồn tại");
-                request.getRequestDispatcher("/manager/create-size.jsp").forward(request, response);
+                request.getRequestDispatcher("/dashboard/create-size.jsp").forward(request, response);
             } else {
                 boolean success = sd.createSize(size_name);
                 request.getSession().setAttribute("success", "Tạo kích cỡ mới thành công");

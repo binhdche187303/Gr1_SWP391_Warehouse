@@ -2,26 +2,28 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package managerController;
+package dashboardController;
 
+import dao.BrandDAO;
 import dao.CategoryDAO;
+import dao.ProductDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import model.Brands;
 import model.Categories;
+import model.Products;
 
 /**
  *
  * @author admin
  */
-public class CategoryList extends HttpServlet {
+public class CreateProductGeneral extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +42,10 @@ public class CategoryList extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CategoryList</title>");
+            out.println("<title>Servlet CreateProductGeneral</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CategoryList at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CreateProductGeneral at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,10 +63,13 @@ public class CategoryList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        BrandDAO bd = new BrandDAO();
         CategoryDAO cd = new CategoryDAO();
+        List<Brands> listBrands = bd.getAllBrands();
         List<Categories> listCategories = cd.getAllCategories();
+        request.setAttribute("listBrands", listBrands);
         request.setAttribute("listCategories", listCategories);
-        request.getRequestDispatcher("/manager/category-list.jsp").forward(request, response);
+        request.getRequestDispatcher("/dashboard/create-product-general.jsp").forward(request, response);
     }
 
     /**
@@ -78,26 +83,52 @@ public class CategoryList extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        CategoryDAO cd = new CategoryDAO();
-        String category_id_raw = request.getParameter("category_id");
-        String category_name = request.getParameter("category_name");
+        ProductDAO pd = new ProductDAO();
+        String product_name = request.getParameter("product_name");
+        String brand_id_raw = request.getParameter("brand");
+        String origin = request.getParameter("origin");
+        String category_id_raw = request.getParameter("category");
+        String description = request.getParameter("description");
         try {
+            int brand_id = Integer.parseInt(brand_id_raw);
             int category_id = Integer.parseInt(category_id_raw);
-            if (cd.isCategoryNameExists(category_name)) {
-                request.setAttribute("category_name", category_name);
+            Products p = new Products();
+            p.setProductName(product_name);
+
+            Brands brand = new Brands();
+            brand.setBrand_id(brand_id);
+            p.setBrand(brand);
+
+            Categories category = new Categories();
+            category.setCategory_id(category_id);
+            p.setOrigin(origin);
+            p.setCate(category);
+            p.setDescription(description);
+
+            if (pd.isProductNameExists(product_name)) {
+                request.setAttribute("product_name", product_name);
+                request.setAttribute("brand", brand);
+                request.setAttribute("origin", origin);
+                request.setAttribute("category", category);
+                request.setAttribute("description", description);
+                request.setAttribute("message", "Tên sản phẩm đã tồn tại!");
+                BrandDAO bd = new BrandDAO();
+                CategoryDAO cd = new CategoryDAO();
+                List<Brands> listBrands = bd.getAllBrands();
                 List<Categories> listCategories = cd.getAllCategories();
+                request.setAttribute("listBrands", listBrands);
                 request.setAttribute("listCategories", listCategories);
-                request.setAttribute("message", "Tên thể loại đã tồn tại");
-                request.getRequestDispatcher("/manager/category-list.jsp").forward(request, response);
+                request.getRequestDispatcher("/dashboard/create-product-general.jsp").forward(request, response);
             } else {
-                cd.updateCategory(category_id, category_name);
-                request.getSession().setAttribute("success", "Cập nhật tên thể loại thành công");
-                response.sendRedirect("categorylist");
+                HttpSession session = request.getSession();
+                session.setAttribute("product", p);
+                System.out.println(p.getProductName());
+                response.sendRedirect("createproductimg");
             }
-        } catch (ServletException | IOException | NumberFormatException | SQLException e) {
+
+        } catch (NumberFormatException e) {
             System.out.println(e);
         }
-
     }
 
     /**

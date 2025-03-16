@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package managerController;
+package dashboardController;
 
 import dao.BrandDAO;
 import dao.CategoryDAO;
@@ -84,7 +84,7 @@ public class ProductDetail extends HttpServlet {
             request.setAttribute("listBrands", listBrands);
             request.setAttribute("listCategories", listCategories);
             request.setAttribute("listSizes", listSizes);
-            request.getRequestDispatcher("/manager/product_detail.jsp").forward(request, response);
+            request.getRequestDispatcher("/dashboard/product_detail.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             System.out.println(e);
         }

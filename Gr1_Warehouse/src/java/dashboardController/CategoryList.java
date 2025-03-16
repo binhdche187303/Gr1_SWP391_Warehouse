@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package managerController;
+package dashboardController;
 
 import dao.CategoryDAO;
 import java.io.IOException;
@@ -21,7 +21,7 @@ import model.Categories;
  *
  * @author admin
  */
-public class CreateCategory extends HttpServlet {
+public class CategoryList extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +40,10 @@ public class CreateCategory extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CreateCategory</title>");
+            out.println("<title>Servlet CategoryList</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CreateCategory at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CategoryList at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -64,7 +64,7 @@ public class CreateCategory extends HttpServlet {
         CategoryDAO cd = new CategoryDAO();
         List<Categories> listCategories = cd.getAllCategories();
         request.setAttribute("listCategories", listCategories);
-        request.getRequestDispatcher("/manager/create-category.jsp").forward(request, response);
+        request.getRequestDispatcher("/dashboard/category-list.jsp").forward(request, response);
     }
 
     /**
@@ -79,22 +79,25 @@ public class CreateCategory extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         CategoryDAO cd = new CategoryDAO();
+        String category_id_raw = request.getParameter("category_id");
         String category_name = request.getParameter("category_name");
         try {
+            int category_id = Integer.parseInt(category_id_raw);
             if (cd.isCategoryNameExists(category_name)) {
                 request.setAttribute("category_name", category_name);
                 List<Categories> listCategories = cd.getAllCategories();
                 request.setAttribute("listCategories", listCategories);
-                request.setAttribute("message", "Tên thương hiệu đã tồn tại");
-                request.getRequestDispatcher("/manager/create-category.jsp").forward(request, response);
+                request.setAttribute("message", "Tên thể loại đã tồn tại");
+                request.getRequestDispatcher("/dashboard/category-list.jsp").forward(request, response);
             } else {
-                boolean success = cd.createCategory(category_name);
-                request.getSession().setAttribute("success", "Tạo thương hiệu mới thành công");
+                cd.updateCategory(category_id, category_name);
+                request.getSession().setAttribute("success", "Cập nhật tên thể loại thành công");
                 response.sendRedirect("categorylist");
             }
-        } catch (SQLException ex) {
-            System.out.println(ex);
+        } catch (ServletException | IOException | NumberFormatException | SQLException e) {
+            System.out.println(e);
         }
+
     }
 
     /**

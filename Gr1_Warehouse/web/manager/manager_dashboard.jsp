@@ -152,7 +152,7 @@
                                     <li>
                                         <a href="support-ticket.html">
                                             <i data-feather="phone"></i>
-                                            <span>Spports Tickets</span>
+                                            <span>Sports Tickets</span>
                                         </a>
                                     </li>
                                     <li>
@@ -258,71 +258,7 @@
                                             </li> 
                                         </ul>
                                     </li>
-                                    
-                                    <li class="sidebar-list">
-                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-store-3-line"></i>
-                                            <span>Quản lí sản phẩm</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="/Gr1_Warehouse/productlist">Danh sách sản phẩm</a>
-                                            </li>
 
-                                            <li>
-                                                <a href="/Gr1_Warehouse/createproductgeneral">Tạo sản phẩm mới</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    
-                                    <li class="sidebar-list">
-                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-store-3-line"></i>
-                                            <span>Quản lí thương hiệu</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="/Gr1_Warehouse/brandlist">Danh sách thương hiệu</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="/Gr1_Warehouse/createbrand">Tạo thương hiệu mới</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    
-                                     <li class="sidebar-list">
-                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-store-3-line"></i>
-                                            <span>Quản lí thể loại</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="/Gr1_Warehouse/categorylist">Danh sách thể loại</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="/Gr1_Warehouse/createcategory">Tạo thể loại mới</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    
-                                    <li class="sidebar-list">
-                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i class="ri-store-3-line"></i>
-                                            <span>Quản lí kích cỡ sản phẩm</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="/Gr1_Warehouse/sizelist">Danh sách kích cỡ</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="/Gr1_Warehouse/createsize">Tạo kích cỡ mới</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    
                                     <li class="sidebar-list">
                                         <a class="sidebar-link sidebar-title link-nav" href="reports.html">
                                             <i class="ri-file-chart-line"></i>
