@@ -97,12 +97,12 @@
                                                         <td><span class="small">${orderDetail.quantity}</span></td>
                                                         <td>
                                                             <span class="small">
-                                                                <fmt:formatNumber value="${orderDetail.unitPrice}" type="currency" currencySymbol="đ" />
+                                                                <fmt:formatNumber value="${orderDetail.unitPrice}" type="number" groupingUsed="true"/>₫
                                                             </span>
                                                         </td>
                                                         <td>
                                                             <span class="small">
-                                                                <fmt:formatNumber value="${orderDetail.unitPrice * orderDetail.quantity}" type="currency" currencySymbol="đ" />
+                                                                <fmt:formatNumber value="${orderDetail.unitPrice * orderDetail.quantity}" type="number" groupingUsed="true"/>₫
                                                             </span>
                                                         </td>
                                                     </tr>
@@ -112,7 +112,7 @@
                                                 <tr>
                                                     <td colspan="3" class="text-end fw-bold">Tổng tiền:</td>
                                                     <td class="fw-bold text-danger">
-                                                        <fmt:formatNumber value="${totalAmount != null ? totalAmount : 0}" type="currency" currencySymbol="đ" />
+                                                        <fmt:formatNumber value="${totalAmount != null ? totalAmount : 0}" type="number" groupingUsed="true"/>₫
                                                     </td>
                                                 </tr>
                                             </tfoot>
@@ -138,7 +138,7 @@
                                         <div class="d-flex justify-content-between fw-bold">
                                             <span>Tổng thanh toán (sau khi áp dụng mã giảm giá)</span>
                                             <span class="fw-bold text-danger" id="total-amount">
-                                                <fmt:formatNumber value="${orderDetailDTO.order.totalAmount}" type="currency" currencySymbol="đ" />
+                                                <fmt:formatNumber value="${orderDetailDTO.order.totalAmount}" type="number" groupingUsed="true"/>₫
                                             </span>
                                         </div>
                                         <c:set var="sale" value="${sale}"/>

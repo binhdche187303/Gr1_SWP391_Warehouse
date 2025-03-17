@@ -38,8 +38,10 @@
 
         <!-- Template css -->
         <link id="color-link" rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/style.css" />
-    <body>
+    
     </head>
+    <body>
+    
     <%@ include file="/includes/header.jsp" %>
 
 
@@ -64,10 +66,6 @@
                               ${paymentStatus}
                           </span>
                     </p>
-
-
-
-
                     <p><strong>Tổng:</strong> 
                         <fmt:formatNumber value="${orderDetail.order.totalAmount}" type="number" groupingUsed="true"/>₫
                     </p>
@@ -79,7 +77,7 @@
                     <thead class="table-light">
                         <tr>
                             <th>Sản phẩm</th>
-<!--                            <th>SKU</th>-->
+                            <th>SKU</th>
                             <th>Phân loại</th>
                             <th>Giá</th>
                             <th>Số lượng</th>
@@ -90,7 +88,7 @@
                         <c:forEach var="i" begin="0" end="${orderDetail.orderDetails.size() - 1}">
                             <tr>
                                 <td>${orderDetail.products[i].productName}</td>
-<!--                                <td>${orderDetail.productVariants[i].sku}</td>-->
+                                <td>${orderDetail.productVariants[i].sku}</td>
                                 <td>${orderDetail.sizes[i].size_name}</td>
                                 <td><fmt:formatNumber value="${orderDetail.orderDetails[i].unitPrice}" type="number" groupingUsed="true"/>₫</td>
                                 <td>${orderDetail.orderDetails[i].quantity}</td>
@@ -100,19 +98,19 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="4" class="text-end"><strong>Tổng (trước khi giảm giá):</strong></td>
+                            <td colspan="5" class="text-end"><strong>Tổng (trước khi giảm giá):</strong></td>
                             <td><strong><fmt:formatNumber value="${orderDetail.totalBeforeDiscount}" type="number" groupingUsed="true"/>₫</strong></td>
                         </tr>
                         <tr>
-                            <td colspan="4" class="text-end"><strong>Tổng (sau khi giảm giá):</strong></td>
+                            <td colspan="5" class="text-end"><strong>Tổng (sau khi giảm giá):</strong></td>
                             <td><strong><fmt:formatNumber value="${orderDetail.order.totalAmount}" type="number" groupingUsed="true"/>₫</strong></td>
                         </tr>
                         <tr>
-                            <td colspan="4" class="text-end"><strong>Tiền cọc:</strong></td>
+                            <td colspan="5" class="text-end"><strong>Tiền cọc:</strong></td>
                             <td><strong><fmt:formatNumber value="${orderPayment.depositAmount}" type="number" groupingUsed="true"/>₫</strong></td>
                         </tr>
                         <tr>
-                            <td colspan="4" class="text-end"><strong>Tổng (sau khi cọc 50%):</strong></td>
+                            <td colspan="5" class="text-end"><strong>Tổng (sau khi cọc 50%):</strong></td>
                             <td><strong><fmt:formatNumber value="${remainingAmount}" type="number" groupingUsed="true"/>₫</strong></td>
                         </tr>
                     </tfoot>

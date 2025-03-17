@@ -1958,3 +1958,7 @@ VALUES	(1, 1), -- Nhà phân phối Kinh Đô bán thương hiệu Kinh Đô
 		(4, 4); -- Công ty TNHH Orion bán thương hiệu Orion
 
 
+						select * from Users
+						select * from InventoryBatches
+						select * from InventoryCheck
+						select * from OrderDetails

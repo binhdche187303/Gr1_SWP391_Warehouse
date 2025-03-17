@@ -143,7 +143,8 @@
 
 
                                                     <td>
-                                                        <fmt:formatNumber value="${order.totalAmount}" type="currency" currencySymbol="₫" />
+                                                      
+                                                        <fmt:formatNumber value="${order.totalAmount}" type="number" groupingUsed="true"/>₫
                                                     </td>
                                                     <td class="text-center">
                                                         <a href="order-details?orderId=${order.orderId}">
