@@ -315,9 +315,9 @@ public class InventoryDAO extends DBContext {
         return check;
     }
 
-    public List<InventoryCheckDTO> getFilteredInventoryCheckByStaffId(int staffId, String warehouseFilter, String statusFilter) {
+public List<InventoryCheckDTO> getFilteredInventoryCheckByStaffId(int staffId, String warehouseFilter, String statusFilter) {
         List<InventoryCheckDTO> list = new ArrayList<>();
-        String sql = "SELECT ic.check_id, ic.completed_at, ic.balance_date, w.warehouse_name, ic.status, \n"
+        String sql = "SELECT ic.check_id, ic.check_date, ic.completed_at, ic.balance_date, w.warehouse_name, ic.status, \n"
                 + "       u1.fullname AS created_by_name, u2.fullname AS reviewed_by_name, \n"
                 + "       ic.total_difference_up, ic.total_difference_down, \n"
                 + "       ic.total_price_difference_up, ic.total_price_difference_down\n"
@@ -348,6 +348,7 @@ public class InventoryDAO extends DBContext {
                 while (rs.next()) {
                     InventoryCheckDTO check = new InventoryCheckDTO();
                     check.setCheckId(rs.getInt("check_id"));
+                    check.setCheckDate(rs.getTimestamp("check_date"));
                     check.setWarehouseName(rs.getString("warehouse_name"));
                     check.setStatus(rs.getString("status"));
                     check.setCompleteDate(rs.getTimestamp("completed_at"));
@@ -366,7 +367,6 @@ public class InventoryDAO extends DBContext {
         }
         return list;
     }
-
 //    public List<InventoryCheckDTO> getAllInventoryCheckByStaffId(int staffId) {
 //        List<InventoryCheckDTO> list = new ArrayList<>();
 //        String sql = "SELECT \n"

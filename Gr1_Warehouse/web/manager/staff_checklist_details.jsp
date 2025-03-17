@@ -260,6 +260,78 @@
         </div>
 
         <script>
+            // Hàm lọc sản phẩm
+            document.addEventListener("DOMContentLoaded", function () {
+                const searchInput = document.getElementById("searchInput");
+
+                if (searchInput) {
+                    searchInput.addEventListener("input", function () {
+                        const searchTerm = this.value.toLowerCase().trim();
+                        const productRows = document.querySelectorAll("#productTable tr");
+
+                        productRows.forEach(row => {
+                            // Skip if this is not a product row (e.g., no cells)
+                            if (row.cells.length < 2)
+                                return;
+
+                            // Get product name (2nd column) and SKU (4th column)
+                            const productName = row.cells[1].textContent.toLowerCase();
+                            const sku = row.cells[3].textContent.toLowerCase();
+
+                            // Check if either the product name or SKU contains the search term
+                            const matchFound = productName.includes(searchTerm) || sku.includes(searchTerm);
+
+                            // Show/hide the row based on search match
+                            row.style.display = matchFound ? "" : "none";
+                        });
+
+                        // Check if there are any visible rows after filtering
+                        let visibleRows = 0;
+                        productRows.forEach(row => {
+                            if (row.style.display !== "none")
+                                visibleRows++;
+                        });
+
+                        // If no results found and we have a table body
+                        if (visibleRows === 0 && productRows.length > 0) {
+                            // Check if we already have a "no results" row
+                            const noResultsRow = document.getElementById("no-results-row");
+                            if (!noResultsRow) {
+                                const tbody = document.getElementById("productTable");
+                                const tr = document.createElement("tr");
+                                tr.id = "no-results-row";
+                                const td = document.createElement("td");
+                                td.colSpan = 8; // Span all columns
+                                td.textContent = "Không tìm thấy sản phẩm phù hợp";
+                                td.className = "text-center text-muted py-3";
+                                tr.appendChild(td);
+                                tbody.appendChild(tr);
+                            } else {
+                                noResultsRow.style.display = "";
+                            }
+                        } else {
+                            // Remove "no results" row if results found
+                            const noResultsRow = document.getElementById("no-results-row");
+                            if (noResultsRow) {
+                                noResultsRow.style.display = "none";
+                            }
+                        }
+                    });
+
+                    // Add clear button for search input
+                    searchInput.addEventListener("keydown", function (event) {
+                        // Clear results when pressing Escape
+                        if (event.key === "Escape") {
+                            this.value = "";
+                            // Trigger the input event to update the table
+                            this.dispatchEvent(new Event("input"));
+                        }
+                    });
+                }
+            });
+        </script>
+
+        <!--        <script>
         // Hàm lọc sản phẩm
             document.getElementById("searchInput").addEventListener("keyup", function () {
                 let searchText = this.value.toLowerCase();
@@ -276,8 +348,7 @@
                     }
                 });
             });
-        </script>
-
+        </script>-->
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const openProductModalBtn = document.getElementById("openProductModal");
