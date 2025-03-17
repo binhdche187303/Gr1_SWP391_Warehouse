@@ -17,6 +17,7 @@ import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -117,7 +118,7 @@ public class ajaxServlet extends HttpServlet {
             return;
         }
 
-        String vnp_TxnRef = String.valueOf(orderId);
+        String vnp_TxnRef = String.valueOf(orderId)+"_"+LocalDateTime.now();
         String vnp_Amount = depositAmount.multiply(BigDecimal.valueOf(100)).toBigInteger().toString();
         String vnp_Currency = "VND";
 

@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +51,8 @@ public class VnpayReturn extends HttpServlet {
         }
 
         // Extract orderId and update payment status
-        int orderId = Integer.parseInt(request.getParameter("vnp_TxnRef"));
+        String idraw = request.getParameter("vnp_TxnRef").split("_")[0];
+        int orderId = Integer.parseInt(idraw);
         String vnp_TransactionStatus = request.getParameter("vnp_TransactionStatus");
         boolean isSuccess = "00".equals(vnp_TransactionStatus);
 

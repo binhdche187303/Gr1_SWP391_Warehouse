@@ -534,11 +534,11 @@
                                                                                 "<h4>Mã đơn hàng: <span>#" + order.orderId + "</span></h4>" +
                                                                                 "<h6 class='text-content'>Ngày đặt hàng: " + formattedDate + "</h6>" +
                                                                                 "<h6 class='text-content'>Trạng thái đơn hàng: <span class='badge bg-warning'>" + order.status + "</span></h6>" +
-                                                                                "<h6 class='text-content'>Tổng: " + order.totalAmount.toLocaleString('vi-VN') + " VND</h6>" +
+                                                                                "<h6 class='text-content'>Tổng: " + order.totalAmount.toLocaleString('vi-VN') + " ₫</h6>" +
                                                                                 "</div>" +
                                                                                 "</div>" +
                                                                                 "<div class='order-footer d-flex justify-content-end'>" +
-                                                                                "<a href='customerOrderDetail?orderId=" + order.orderId + "' class='btn btn-primary'>View Details</a>" +
+                                                                                "<a href='customerOrderDetail?orderId=" + order.orderId + "' class='btn btn-primary'>Xem chi tiết</a>" +
                                                                                 "</div>" +
                                                                                 "</div>" +
                                                                                 "</div>";

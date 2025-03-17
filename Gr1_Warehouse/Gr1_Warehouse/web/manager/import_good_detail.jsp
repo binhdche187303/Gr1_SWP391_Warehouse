@@ -134,11 +134,11 @@
                                                                             <td>${orderDetail.productNames[status.index]}  -  ${detail.sku}   -   ${orderDetail.sizeName[status.index]}</td>
                                                                             <td>${detail.quantity}</td>
                                                                             <td>
-                                                                                <fmt:formatNumber value="${detail.unitPrice}" type="currency" currencySymbol="đ" />
+                                                                                <fmt:formatNumber value="${detail.unitPrice}" type="number" groupingUsed="true"/>đ
                                                                             </td>
                                                                             <td>${detail.expirationDate != null ? detail.expirationDate : 'N/A'}</td>
                                                                             <td>
-                                                                                <fmt:formatNumber value="${detail.totalPrice}" type="currency" currencySymbol="đ" />
+                                                                                <fmt:formatNumber value="${detail.totalPrice}" type="number" groupingUsed="true" />đ
                                                                             </td>                                                                        
                                                                         </tr>
                                                                     </c:forEach>
@@ -177,14 +177,14 @@
                                                             <li class="list-group-item d-flex justify-content-between">
                                                                 <span>Giá</span>
                                                                 <span>
-                                                                    <fmt:formatNumber value="${not empty orderDetail.purchaseDetails ? orderDetail.purchaseDetails[0].unitPrice : 0}" type="currency" currencySymbol="₫" />
+                                                                    <fmt:formatNumber value="${not empty orderDetail.purchaseDetails ? orderDetail.purchaseDetails[0].unitPrice : 0}" type="number" groupingUsed="true"/>₫
                                                                 </span>
                                                             </li>
 
                                                             <li class="list-group-item d-flex justify-content-between text-danger">
                                                                 <strong>Tổng tiền hàng</strong>
                                                                 <strong>
-                                                                    <fmt:formatNumber value="${not empty orderDetail.order.totalAmount ? orderDetail.order.totalAmount : 0}" type="currency" currencySymbol="₫" />
+                                                                    <fmt:formatNumber value="${not empty orderDetail.order.totalAmount ? orderDetail.order.totalAmount : 0}" type="number" groupingUsed="true"/>₫
                                                                 </strong>
                                                             </li>
                                                         </ul>
