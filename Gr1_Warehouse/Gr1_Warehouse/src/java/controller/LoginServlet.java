@@ -1,5 +1,6 @@
 package controller;
 
+import dao.ProductDAO;
 import dao.UserDAO;
 import model.User;
 import jakarta.servlet.ServletException;
@@ -11,6 +12,8 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Base64;
+import java.util.List;
+import model.Categories;
 import model.GoogleAccount;
 import model.Role;
 import ulti.MD5Hash;
@@ -36,36 +39,13 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+//        ProductDAO productDAO = new ProductDAO();
+//        List<Categories> categories = productDAO.getAllCategory();
+//        request.setAttribute("category", categories);
+
         String code = request.getParameter("code");
 
-//        if (code == null || code.trim().isEmpty()) {
-//            request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
-//            return;
-//        }
-
         if (code == null || code.trim().isEmpty()) {
-            Cookie[] cookies = request.getCookies();
-            String decodedPassword = "";
-            String savedIdentifier = "";
-
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if ("identifier".equals(cookie.getName())) {
-                        savedIdentifier = cookie.getValue();
-                    }
-                    if ("password".equals(cookie.getName())) {
-                        try {
-                            decodedPassword = new String(Base64.getDecoder().decode(cookie.getValue()));
-                        } catch (IllegalArgumentException e) {
-                            System.out.println("Error decoding password: " + e.getMessage());
-                        }
-                    }
-                }
-            }
-
-            request.setAttribute("savedIdentifier", savedIdentifier);
-            request.setAttribute("decodedPassword", decodedPassword);
-
             request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
             return;
         }
@@ -131,10 +111,10 @@ public class LoginServlet extends HttpServlet {
 
         switch (roleId) {
             case 1:  // Admin system
-                response.sendRedirect("/Gr1_Warehouse/includes/admin.jsp");
+                response.sendRedirect("/Gr1_Warehouse/dashboard");
                 break;
             case 2:  // Customer
-                response.sendRedirect("/Gr1_Warehouse/pages/home.jsp");
+                response.sendRedirect(request.getContextPath() + "/home");
                 break;
             case 3:  // Warehouse manager
                 response.sendRedirect("/Gr1_Warehouse/manager/manager_dashboard.jsp");
@@ -143,7 +123,13 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect("/Gr1_Warehouse/staff-checklist");
                 break;
             case 5:  // Packing staff
-                response.sendRedirect("/Gr1_Warehouse/packing-orders");
+                response.sendRedirect("packing/staff/dashboard");
+                break;
+            case 6:  // Shipper staff
+                response.sendRedirect("/Gr1_Warehouse/ship-orders");
+                break;
+            case 7:  // Saler staff
+                response.sendRedirect("/Gr1_Warehouse/sale-orders");
                 break;
             default:
                 response.sendRedirect("error");
@@ -234,13 +220,9 @@ public class LoginServlet extends HttpServlet {
             System.out.println("Identifier and password saved in cookies for 7 days.");
         } else {
             Cookie emailCookie = new Cookie("identifier", "");
-            Cookie passwordCookie = new Cookie("password", "");
             emailCookie.setMaxAge(0);
             emailCookie.setPath("/");
             response.addCookie(emailCookie);
-            passwordCookie.setMaxAge(0);
-            passwordCookie.setPath("/");
-            response.addCookie(passwordCookie);
             System.out.println("Identifier cookie deleted.");
         }
 
@@ -264,7 +246,7 @@ public class LoginServlet extends HttpServlet {
 
         switch (roleId) {
             case 1:  // Admin system
-                response.sendRedirect("/Gr1_Warehouse/includes/admin.jsp");
+                response.sendRedirect("/Gr1_Warehouse/dashboard");
                 break;
             case 2:  // Customer
                 response.sendRedirect(request.getContextPath() + "/home");
@@ -276,7 +258,13 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect("/Gr1_Warehouse/staff-checklist");
                 break;
             case 5:  // Packing staff
-                response.sendRedirect("/Gr1_Warehouse/packing-orders");
+                response.sendRedirect("packing/staff/dashboard");
+                break;
+            case 6:  // Shipper staff
+                response.sendRedirect("/Gr1_Warehouse/ship-orders");
+                break;
+            case 7:  // Saler staff
+                response.sendRedirect("/Gr1_Warehouse/sale-orders");
                 break;
             default:
                 System.out.println("Unknown role ID: " + roleId + ". Redirecting to error page.");

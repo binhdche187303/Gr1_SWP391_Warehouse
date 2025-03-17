@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import model.Cart;
+import model.Categories;
 import model.ProductVariants;
 import model.User;
 
@@ -45,7 +46,9 @@ public class CartController extends HttpServlet {
             response.sendRedirect("login");
             return;
         }
-
+        ProductDAO productDAO = new ProductDAO();
+        List<Categories> categories = productDAO.getAllCategory();
+        request.setAttribute("category", categories);
         int userId = user.getUserId();
         List<Cart> cartItems = cartDAO.getCartByUserId(userId);
         Map<Integer, List<ProductVariants>> sizeOptions = new HashMap<>();

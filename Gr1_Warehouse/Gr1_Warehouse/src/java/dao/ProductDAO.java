@@ -1026,6 +1026,116 @@ public class ProductDAO extends DBContext {
         return numberOfProduct;
     }
 
+     public List<Products> getProductsByCategoryOrBrand(Integer categoryId) {
+    List<Products> productsList = new ArrayList<>();
+    
+    // Câu truy vấn SQL với điều kiện lọc theo category_id hoặc brand_id nếu được truyền vào
+    String query = "WITH ProductMinPrice AS ( "
+                 + "    SELECT pv.product_id, MIN(pv.price) AS min_price "
+                 + "    FROM ProductVariants pv "
+                 + "    GROUP BY pv.product_id "
+                 + "), "
+                 + "ProductFirstImage AS ( "
+                 + "    SELECT i.product_id, MIN(i.image_id) AS first_image_id "
+                 + "    FROM Images i "
+                 + "    GROUP BY i.product_id "
+                 + ") "
+                 + "SELECT p.product_id, p.product_name, p.description, "
+                 + "       s.size_name AS size_type, pm.min_price AS current_price, "
+                 + "       i.image_url, c.category_name, c.category_id, "
+                 + "       b.brand_id, b.brand_name "
+                 + "FROM Products p "
+                 + "JOIN Categories c ON p.category_id = c.category_id "
+                 + "JOIN Brands b ON p.brand_id = b.brand_id "
+                 + "JOIN ProductMinPrice pm ON p.product_id = pm.product_id "
+                 + "JOIN ProductVariants pv ON p.product_id = pv.product_id AND pv.price = pm.min_price "
+                 + "JOIN Sizes s ON pv.size_id = s.size_id "
+                 + "JOIN ProductFirstImage pi ON p.product_id = pi.product_id "
+                 + "JOIN Images i ON pi.first_image_id = i.image_id ";
+
+    // Thêm điều kiện lọc nếu có categoryId hoặc brandId
+    List<Integer> params = new ArrayList<>();
+    if (categoryId != null && categoryId > 0) {
+        query += "WHERE c.category_id = ? ";
+        params.add(categoryId);
+    }
+    
+    try {
+        PreparedStatement ps = connection.prepareStatement(query);
+        for (int i = 0; i < params.size(); i++) {
+            ps.setInt(i + 1, params.get(i));
+        }
+        
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            int productId = rs.getInt("product_id");
+            String productName = rs.getString("product_name");
+            String description = rs.getString("description");
+            String sizeType = rs.getString("size_type");
+            double currentPrice = rs.getDouble("current_price");
+            String imageUrl = rs.getString("image_url");
+
+            // Tạo đối tượng Product
+            Products product = new Products();
+            product.setProductId(productId);
+            product.setProductName(productName);
+            product.setDescription(description);
+
+            // Gán thông tin category
+            Categories cate = new Categories();
+            cate.setCategory_id(rs.getInt("category_id"));
+            cate.setCategory_name(rs.getString("category_name"));
+            product.setCate(cate);
+
+            // Gán thông tin thương hiệu
+            Brands brand = new Brands();
+            brand.setBrand_id(rs.getInt("brand_id"));
+            brand.setBrand_name(rs.getString("brand_name"));
+            product.setBrand(brand);
+
+            // Gán thông tin size và giá
+            ProductVariants variant = new ProductVariants();
+            variant.setPrice(BigDecimal.valueOf(currentPrice));
+            Sizes size = new Sizes();
+            size.setSize_name(sizeType);
+            variant.setSize(size);
+            product.setVariants(new ArrayList<>());
+            product.getVariants().add(variant);
+
+            // Gán hình ảnh
+            Images image = new Images();
+            image.setImage_url(imageUrl);
+            product.setImages(new ArrayList<>());
+            product.getImages().add(image);
+
+            productsList.add(product);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        System.out.println("Error fetching products: " + e.getMessage());
+    }
+
+    return productsList;
+}
+
+    
+    public List<Categories> getAllCategory() {
+        List<Categories> categories  = new ArrayList<>();
+        String sql = "SELECT * FROM Categories";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                categories.add(new Categories(rs.getInt("category_id"), rs.getString("category_name")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return categories;
+    }
+
+    
     public static void main(String[] args) {
         ProductDAO pd = new ProductDAO();
         Products p = new Products();

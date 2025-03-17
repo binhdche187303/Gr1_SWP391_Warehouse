@@ -26,9 +26,9 @@ public class SaleDAO extends DBContext {
         List<Order> orders = new ArrayList<>();
         String sql = "SELECT * FROM dbo.Orders\n"
                 + "JOIN dbo.Users ON Users.user_id = Orders.user_id\n"
-                + "WHERE Orders.status= N'pending' \n"
+                + "WHERE Orders.status= N'Chờ xử lý' \n"
                 + "AND Orders.order_id NOT IN\n"
-                + "(SELECT order_id FROM dbo.Sale)";
+                + "(SELECT order_id FROM dbo.SaleDetails)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
@@ -56,7 +56,7 @@ public class SaleDAO extends DBContext {
     public boolean assignSaleOrder(int orderId, int staffId) {
         try {
             // Kiểm tra nếu đơn hàng đã có nhân viên vận chuyển chưa
-            String checkOrderSql = "SELECT COUNT(*) FROM Sale WHERE order_id = ?";
+            String checkOrderSql = "SELECT COUNT(*) FROM SaleDetails WHERE order_id = ?";
             try (PreparedStatement checkOrderStmt = connection.prepareStatement(checkOrderSql)) {
                 checkOrderStmt.setInt(1, orderId);
                 try (ResultSet rs = checkOrderStmt.executeQuery()) {
@@ -68,7 +68,7 @@ public class SaleDAO extends DBContext {
             }
 
             // Chèn vào bảng Sale
-            String insertSql = "INSERT INTO Sale (order_id, staff_id) VALUES (?, ?)";
+            String insertSql = "INSERT INTO SaleDetails (order_id, staff_id) VALUES (?, ?)";
 
             try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
 
@@ -140,7 +140,7 @@ public class SaleDAO extends DBContext {
                 + "                LEFT JOIN Products pr ON odt.product_id = pr.product_id \n"
                 + "                LEFT JOIN ProductVariants pv ON pr.product_id = pv.product_id AND odt.size_id = pv.size_id \n"
                 + "                LEFT JOIN Sizes s ON odt.size_id = s.size_id \n"
-                + "                LEFT JOIN Sale sa ON o.order_id = sa.order_id \n"
+                + "                LEFT JOIN SaleDetails sa ON o.order_id = sa.order_id \n"
                 + "                LEFT JOIN Users u ON sa.staff_id = u.user_id \n"
                 + "                WHERE o.order_id = ?";
 
@@ -215,7 +215,7 @@ public class SaleDAO extends DBContext {
         String sql = "SELECT o.order_id, o.status, p.payment_status,s.noteSale  "
                 + "FROM Orders o "
                 + "JOIN Payment p ON o.order_id = p.order_id "
-                + "JOIN Sale s ON o.order_id = s.order_id "
+                + "JOIN SaleDetails s ON o.order_id = s.order_id "
                 + "WHERE s.staff_id = ?"; // Lọc theo nhân viên đã nhận đơn
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -237,7 +237,7 @@ public class SaleDAO extends DBContext {
     }
 
     public boolean confirmSale(int orderId, String note) {
-        String updateSaleSql = "UPDATE Sale SET noteSale = ? WHERE order_id = ?";
+        String updateSaleSql = "UPDATE SaleDetails SET noteSale = ? WHERE order_id = ?";
 
         try {
             connection.setAutoCommit(false); // Bắt đầu transaction
@@ -276,8 +276,8 @@ public class SaleDAO extends DBContext {
 
     public Sale getSaleByOrderId(int orderId) {
         Sale s = new Sale();
-        String sql = "SELECT * FROM dbo.Orders JOIN dbo.Sale ON Sale.order_id = Orders.order_id\n"
-                + "JOIN dbo.Users ON Users.user_id = Sale.staff_id\n"
+        String sql = "SELECT * FROM dbo.Orders JOIN dbo.SaleDetails ON SaleDetails.order_id = Orders.order_id\n"
+                + "JOIN dbo.Users ON Users.user_id = SaleDetails.staff_id\n"
                 + "WHERE Orders.order_id= ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -304,11 +304,11 @@ public class SaleDAO extends DBContext {
 
     public static void main(String[] args) {
         SaleDAO sd = new SaleDAO();
-//        List<Order> list = sd.getAllOrders();
-//        for (Order order : list) {
-//            System.out.println(order);
-//        }
-        Sale s = sd.getSaleByOrderId(13);
-        System.out.println(s);
+        List<Order> list = sd.getAllOrders();
+        for (Order order : list) {
+            System.out.println(order);
+        }
+//        Sale s = sd.getSaleByOrderId(13);
+//        System.out.println(s);
     }
 }

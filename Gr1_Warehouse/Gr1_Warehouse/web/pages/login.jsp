@@ -46,7 +46,7 @@
                             <nav>
                                 <ol class="breadcrumb mb-0">
                                     <li class="breadcrumb-item">
-                                        <a href="index.html">
+                                        <a href="home">
                                             <i class="fa-solid fa-house"></i>
                                         </a>
                                     </li>
@@ -71,10 +71,10 @@
                     <div class="col-xxl-4 col-xl-5 col-lg-6 col-sm-8 mx-auto">
                         <div class="log-in-box">
                             <div class="log-in-title">
-                                <h3>Welcome To Fastkart</h3>
-                                <h4>Log In Your Account</h4>
+                                <h3>Chào mừng đến với BULKMART</h3>
+                                <h4>Đăng nhập tài khoản của bạn</h4>
                             </div>
-
+                            <br>
                             <% if(request.getAttribute("error") != null) { %>
                             <div class="alert alert-danger">
                                 <%= request.getAttribute("error") %>

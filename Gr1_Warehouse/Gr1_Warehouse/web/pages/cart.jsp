@@ -98,15 +98,15 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="breadscrumb-contain">
-                            <h2>Cart</h2>
+                            <h2>Giỏ hàng</h2>
                             <nav>
                                 <ol class="breadcrumb mb-0">
                                     <li class="breadcrumb-item">
-                                        <a href="index.html">
+                                        <a href="/Gr1_Warehouse/home">
                                             <i class="fa-solid fa-house"></i>
                                         </a>
                                     </li>
-                                    <li class="breadcrumb-item active" aria-current="page">Cart</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Giỏ hàng</li>
                                 </ol>
                             </nav>
                         </div>
@@ -191,12 +191,12 @@
                                                             </div>
                                                         </td>
                                                         <td class="subtotal">
-                                                            <h4 class="table-title text-content">Total</h4>
+                                                            <h4 class="table-title text-content">Tổng</h4>
                                                             <h5><fmt:formatNumber value="${item.price * item.quantity}" pattern="#,###" />₫ </h5>
                                                         </td>
                                                         <td class="save-remove">
-                                                            <h4 class="table-title text-content">Action</h4>
-                                                            <a class="remove close_button" onclick="removeFromCart(${item.cartId})">Remove</a>
+                                                            <h4 class="table-title text-content">Hành động</h4>
+                                                            <a class="remove close_button" onclick="removeFromCart(${item.cartId})">Xóa</a>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>
@@ -219,15 +219,15 @@
                     <div class="col-xxl-3">
                         <div class="summery-box p-sticky">
                             <div class="summery-header">
-                                <h3>Cart Total</h3>
+                                <h3>Tổng giỏ hàng</h3>
                             </div>
 
                             <div class="summery-contain">
                                 <div class="coupon-cart">
-                                    <h6 class="text-content mb-2">Coupon Apply</h6>
+                                    <h6 class="text-content mb-2">Áp mã giảm giá</h6>
                                     <div class="mb-3 coupon-box input-group">
                                         <input type="text" class="form-control" placeholder="Enter Coupon Code Here...">
-                                        <button class="btn-apply">Apply</button>
+                                        <button class="btn-apply">Áp dụng</button>
                                     </div>
                                 </div>
                                 <ul>
@@ -256,11 +256,11 @@
                             <div class="button-group cart-button">
                                 <ul>
                                     <li>
-                                        <button onclick="processCheckout()" class="btn btn-animation proceed-btn fw-bold">Process To Checkout</button>
+                                        <button onclick="processCheckout()" class="btn btn-animation proceed-btn fw-bold">Tiến hành thanh toán</button>
                                     </li>
                                     <li>
                                         <button onclick="location.href = 'index.html';" class="btn btn-light shopping-button text-dark">
-                                            <i class="fa-solid fa-arrow-left-long"></i> Return To Shopping
+                                            <i class="fa-solid fa-arrow-left-long"></i> Trở về
                                         </button>
                                     </li>
                                 </ul>

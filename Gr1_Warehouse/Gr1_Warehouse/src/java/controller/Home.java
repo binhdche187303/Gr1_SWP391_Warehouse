@@ -5,12 +5,15 @@
 
 package controller;
 
+import dao.ProductDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
+import model.Categories;
 
 /**
  *
@@ -53,6 +56,9 @@ public class Home extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        ProductDAO dao = new ProductDAO();
+        List<Categories> categories = dao.getAllCategory();
+        request.setAttribute("category", categories);
         request.getRequestDispatcher("pages/home.jsp").forward(request, response);
     } 
 

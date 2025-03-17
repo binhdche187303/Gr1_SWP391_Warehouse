@@ -60,7 +60,11 @@ public class Shop extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         ProductDAO pdao = new ProductDAO();
+        List<Categories> categories = pdao.getAllCategory();
+        request.setAttribute("category", categories);
+
         List<Categories> cat = pdao.getCategoryProductCounts();
         request.setAttribute("category", cat);
         List<Brands> brand = pdao.getBrandProductCounts();
@@ -123,32 +127,37 @@ public class Shop extends HttpServlet {
 
         int maxPage = (int) Math.ceil((double) totalProducts / pageSize);
         List<Products> paginatedList = pdao.getListProductsPaginated(filteredProducts, startProduct, pageSize);
-
-// Xây dựng danh sách trang cần hiển thị
         List<Integer> paginationPages = new ArrayList<>();
-        if (currentPage <= 5) {
-            for (int i = 1; i <= Math.min(5, maxPage); i++) {
+        if (maxPage <= 5) {
+            // Nếu tổng số trang <= 5, hiển thị hết
+            for (int i = 1; i <= maxPage; i++) {
+                paginationPages.add(i);
+            }
+        } else if (currentPage <= 3) {
+            // Nếu đang ở 3 trang đầu, hiển thị từ 1 đến 5, thêm "..." và trang cuối
+            for (int i = 1; i <= 5; i++) {
+                paginationPages.add(i);
+            }
+            paginationPages.add(-1); // Dấu "..."
+            paginationPages.add(maxPage);
+        } else if (currentPage >= maxPage - 2) {
+            // Nếu đang ở 3 trang cuối, hiển thị trang đầu, "..." rồi các trang cuối
+            paginationPages.add(1);
+            paginationPages.add(-1); // Dấu "..."
+            for (int i = maxPage - 4; i <= maxPage; i++) {
                 paginationPages.add(i);
             }
         } else {
+            // Trường hợp còn lại: hiển thị trang đầu, "...", các trang gần currentPage, "..." và trang cuối
             paginationPages.add(1);
-            paginationPages.add(-1); // Dấu "..." 
-
-            // Thêm hai trang gần nhất với currentPage
-            if (currentPage - 1 > 1) {
-                paginationPages.add(currentPage - 1);
-            }
+            paginationPages.add(-1); // Dấu "..."
+            paginationPages.add(currentPage - 1);
             paginationPages.add(currentPage);
-            if (currentPage + 1 < maxPage) {
-                paginationPages.add(currentPage + 1);
-            }
-
-            // Thêm dấu "..." nếu cần và trang cuối
-            if (currentPage < maxPage - 1) {
-                paginationPages.add(-1); // Dấu "..."
-            }
+            paginationPages.add(currentPage + 1);
+            paginationPages.add(-1); // Dấu "..."
             paginationPages.add(maxPage);
         }
+
         request.setAttribute("paginationPages", paginationPages); // Truyền trang cần hiển thị
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("maxPage", maxPage);

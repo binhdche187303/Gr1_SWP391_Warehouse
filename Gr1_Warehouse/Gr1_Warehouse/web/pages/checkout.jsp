@@ -95,15 +95,15 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="breadscrumb-contain">
-                            <h2>Checkout</h2>
+                            <h2>Thanh toán</h2>
                             <nav>
                                 <ol class="breadcrumb mb-0">
                                     <li class="breadcrumb-item">
-                                        <a href="index.html">
+                                        <a href="/Gr1_Warehouse/home">
                                             <i class="fa-solid fa-house"></i>
                                         </a>
                                     </li>
-                                    <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Thanh toán</li>
                                 </ol>
                             </nav>
                         </div>
@@ -141,18 +141,18 @@
                                                     </div>
                                                 </c:if>
                                                 <div class="checkout-title">
-                                                    <h4>Delivery Address</h4>
+                                                    <h4>Thông tin giao hàng</h4>
                                                 </div>
 
                                                 <div class="checkout-detail">
                                                     <div class="customer-info">
                                                         <div class="mb-3">
-                                                            <label for="customerName" class="form-label">Full Name:</label>
+                                                            <label for="customerName" class="form-label">Họ và tên:</label>
                                                             <input type="text" class="form-control" id="customerName" name="customerName" required value="${user.fullname}">
                                                         </div>
 
                                                         <div class="mb-3">
-                                                            <label for="phoneNumber" class="form-label">Phone Number:</label>
+                                                            <label for="phoneNumber" class="form-label">SĐT:</label>
                                                             <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" required value="${user.phone}">
                                                         </div>
 
@@ -162,12 +162,12 @@
                                                         </div>
 
                                                         <div class="mb-3">
-                                                            <label for="shippingAddress" class="form-label">Shipping Address:</label>
+                                                            <label for="shippingAddress" class="form-label">Địa chỉ nhận hàng:</label>
                                                             <textarea class="form-control" id="shippingAddress" name="shippingAddress" rows="2" required>${user.address}</textarea>
                                                         </div>
 
                                                         <div class="mb-3">
-                                                            <label for="notes" class="form-label">Notes:</label>
+                                                            <label for="notes" class="form-label">Ghi chú:</label>
                                                             <textarea class="form-control" id="notes" name="notes" rows="2"></textarea>
                                                         </div>
                                                     </div>
@@ -213,8 +213,7 @@
                                                                             class="form-check mb-0 custom-form-check show-box-checked">
                                                                             <input class="form-check-input" type="radio"
                                                                                    name="standard" id="future">
-                                                                            <label class="form-check-label" for="future">Future
-                                                                                Delivery Option</label>
+                                                                            <label class="form-check-label" for="future">Thanh toán</label>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -309,7 +308,7 @@
                                 </div>
 
 
-                                <button class="btn theme-bg-color text-white btn-md w-100 mt-4 fw-bold">Place Order</button>
+                                <button class="btn theme-bg-color text-white btn-md w-100 mt-4 fw-bold">Đặt hàng</button>
                             </div>
                         </div>
                     </div>

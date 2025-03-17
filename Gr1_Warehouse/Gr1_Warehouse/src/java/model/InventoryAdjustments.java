@@ -92,4 +92,3 @@ public class InventoryAdjustments {
         this.adjustmentDate = adjustmentDate;
     }
 }
-

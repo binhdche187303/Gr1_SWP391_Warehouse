@@ -72,7 +72,7 @@ public class AllStaff extends HttpServlet {
         if (roleParam != null) {
             try {
                 int roleId = Integer.parseInt(roleParam); // Chuyển roleParam thành role_id
-                listStaff = ud.getStaffByRole(roleId); // Lấy danh sách nhân viên theo role_id
+                listStaff = ud.getStaffByRole2(roleId); // Lấy danh sách nhân viên theo role_id
             } catch (NumberFormatException e) {
                 listStaff = ud.getAllStaff(); // Nếu roleParam không phải số, lấy tất cả nhân viên
             }

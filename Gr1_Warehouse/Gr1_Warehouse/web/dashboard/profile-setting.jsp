@@ -79,12 +79,12 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <div class="title-header option-title">
-                                                    <h5>Profile Setting</h5>
+                                                    <h5>Cài đặt hồ sơ</h5>
                                                 </div>
                                                 <form class="theme-form theme-form-2 mega-form">
                                                     <div class="row">
                                                         <div class="mb-4 row align-items-center">
-                                                            <label class="form-label-title col-sm-2 mb-0">Full Name</label>
+                                                            <label class="form-label-title col-sm-2 mb-0">Họ và Tên</label>
                                                             <div class="col-sm-10">
                                                                 <input class="form-control" type="text"
                                                                        placeholder="Enter Your First Name" value="${sessionScope.acc.fullname}" readonly>
@@ -92,8 +92,7 @@
                                                         </div>
 
                                                         <div class="mb-4 row align-items-center">
-                                                            <label class="form-label-title col-sm-2 mb-0">Enter Email
-                                                                Address</label>
+                                                            <label class="form-label-title col-sm-2 mb-0">Email</label>
                                                             <div class="col-sm-10">
                                                                 <input class="form-control" type="email"
                                                                        placeholder="Enter Your Email Address" value="${sessionScope.acc.email}" readonly>
@@ -101,20 +100,19 @@
                                                         </div>
 
                                                         <div class="mb-4 row align-items-center">
-                                                            <label class="form-label-title col-sm-2 mb-0">Your Phone
-                                                                Number</label>
+                                                            <label class="form-label-title col-sm-2 mb-0">SĐT</label>
                                                             <div class="col-sm-10">
                                                                 <input class="form-control" type="number"
-                                                                       placeholder="Enter Your Number" value="${sessionScope.acc.phone}" readonly>
+                                                                       placeholder="Nhập số điện thoại" value="${sessionScope.acc.phone}" readonly>
                                                             </div>
                                                         </div>
 
                                                         <div class="mb-4 row align-items-center">
-                                                            <label class="form-label-title col-sm-2 mb-0">Your Address
+                                                            <label class="form-label-title col-sm-2 mb-0">Địa chỉ
                                                             </label>
                                                             <div class="col-sm-10">
                                                                 <input class="form-control" type="text"
-                                                                       placeholder="Enter Your Address" value="${sessionScope.acc.address}" readonly>
+                                                                       placeholder="Nhập địa chỉ của bạn" value="${sessionScope.acc.address}" readonly>
                                                             </div>
                                                         </div>
 
@@ -127,15 +125,13 @@
                                                             
                                                         <div class="d-flex justify-content-end gap-2 mt-3">
                                                             <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#edit-profile">
-                                                                <i class="fa-solid fa-pen-to-square me-2"></i> Edit Profile
+                                                                <i class="fa-solid fa-pen-to-square me-2"></i> Thay đổi hồ sơ
                                                             </button>
 
                                                             <button type="button" class="btn btn-secondary btn-md" data-bs-toggle="modal" data-bs-target="#change-password">
-                                                                <i class="fa-solid"></i> Change Password
+                                                                <i class="fa-solid"></i> Đổi mật khẩu
                                                             </button>
                                                         </div>
-
-
                                                     </div>
                                                 </form>
                                             </div>
@@ -146,7 +142,7 @@
                                             <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Edit Profile</h5>
+                                                        <h5 class="modal-title" id="exampleModalLabel">Thay đổi hồ sơ</h5>
                                                     </div>
                                                     <div class="modal-body">
                                                         <form action="profilesettingadmin" method="POST">
@@ -156,7 +152,7 @@
                                                             <!-- FullName -->
                                                             <div class="form-floating mb-4 theme-form-floating">
                                                                 <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Enter FullName" value="${sessionScope.acc.fullname}" required />
-                                                                <label for="fullname">FullName</label>
+                                                                <label for="fullname">Họ và tên</label>
                                                             </div>
 
                                                             <div class="form-floating mb-4 theme-form-floating">
@@ -167,18 +163,18 @@
                                                             <!-- PhoneNumber -->
                                                             <div class="form-floating mb-4 theme-form-floating">
                                                                 <input type="number" class="form-control" id="phone" name="phone" placeholder="Enter Phone" value="${sessionScope.acc.phone}" required />
-                                                                <label for="phone">Phone</label>
+                                                                <label for="phone">SĐT</label>
                                                             </div>
 
                                                             <!-- Address -->
                                                             <div class="form-floating mb-4 theme-form-floating">
                                                                 <input type="text" class="form-control" id="address" name="address" placeholder="Enter address" value="${sessionScope.acc.address}" required />
-                                                                <label for="address">Address</label>
+                                                                <label for="address">Địa chỉ</label>
                                                             </div>
 
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary btn-md" data-bs-dismiss="modal">Close</button>
-                                                                <button type="submit" class="btn theme-bg-color btn-md text-white">Save changes</button>
+                                                                <button type="button" class="btn btn-secondary btn-md" data-bs-dismiss="modal">Đóng</button>
+                                                                <button type="submit" class="btn theme-bg-color btn-md text-white">Lưu thay đổi</button>
                                                             </div>
 
                                                         </form>
@@ -193,7 +189,7 @@
                                             <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Change Password</h5>
+                                                        <h5 class="modal-title" id="exampleModalLabel">Đổi mật khẩu</h5>
                                                     </div>
                                                     <div class="modal-body">
                                                         <form action="profilesettingadmin" method="POST">
@@ -203,19 +199,19 @@
                                                             <!-- Old Password -->
                                                             <div class="form-floating mb-4 theme-form-floating">
                                                                 <input type="password" class="form-control" id="currentpassword" name="currentpassword" placeholder="Enter Current Password" required />
-                                                                <label for="oldpass">Old Password</label>
+                                                                <label for="oldpass">Mật khẩu cũ</label>
                                                             </div>
 
                                                             <!-- New Password -->
                                                             <div class="form-floating mb-4 theme-form-floating">
                                                                 <input type="password" class="form-control" id="newpassword" name="newpassword" placeholder="Enter New Password" required />
-                                                                <label for="newpass">New Password</label>
+                                                                <label for="newpass">Mật khẩu mới</label>
                                                             </div>
 
                                                             <!-- Confirm New Password -->
                                                             <div class="form-floating mb-4 theme-form-floating">
                                                                 <input type="password" class="form-control" id="confirmpassword" name="confirmpassword" placeholder="Confirm New Password" required />
-                                                                <label for="confirmpass">Confirm New Password</label>
+                                                                <label for="confirmpass">Xác nhận lại mật khẩu</label>
                                                             </div>
                                                             <%
 String error = (String) request.getAttribute("error");
@@ -234,8 +230,8 @@ String success = (String) request.getAttribute("success");
                                                             </div>
                                                             <% } %>
                                                             <div class="modal-footer" >
-                                                                <button type="button" class="btn btn-secondary btn-md" data-bs-dismiss="modal">Close</button>
-                                                                <button type="submit" class="btn theme-bg-color btn-md text-white">Save changes</button>
+                                                                <button type="button" class="btn btn-secondary btn-md" data-bs-dismiss="modal">Đóng</button>
+                                                                <button type="submit" class="btn theme-bg-color btn-md text-white">Lưu thay đổi</button>
                                                             </div>
                                                         </form>
 

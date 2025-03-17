@@ -335,8 +335,7 @@ CREATE TABLE SaleDetails (
     sale_id INT IDENTITY(1,1) PRIMARY KEY, -- Mã vận chuyển
     order_id INT NOT NULL, -- Mã đơn hàng
     staff_id INT NOT NULL, -- Nhân viên giao hàng
-    status NVARCHAR(50) DEFAULT 'Đã giao hàng', -- Trạng thái giao hàng
-    shipped_at DATETIME DEFAULT GETDATE(), -- Thời gian giao hàng 
+	noteSale NVARCHAR(200),
     FOREIGN KEY (order_id) REFERENCES Orders(order_id),
     FOREIGN KEY (staff_id) REFERENCES Users(user_id)
 );
@@ -388,17 +387,15 @@ VALUES
 (N'Shipper'),
 (N'Saler');
 
-
-
 INSERT INTO dbo.Users(username, password, fullname, phone, email, role_id, status)
 VALUES
 (N'admin', '202cb962ac59075b964b07152d234b70', N'Admin 1', '0123456789', 'manager01@example.com', 1, 'Active'),
-(N'cus1', '202cb962ac59075b964b07152d234b70', N'Customer 1', '', 'cus1@gmail.com', 2, 'Active'),
-(N'manager1', '202cb962ac59075b964b07152d234b70', N'Warehouse manager 1', '', 'manager@gmail.com', 3, 'Active'),
-(N'staff1', '202cb962ac59075b964b07152d234b70', N'Staff 1', '', 'staff1@gmail.com', 4, 'Active'),
-(N'packing1', '202cb962ac59075b964b07152d234b70', N'Packing 1', '', 'packing@gmail.com', 5, 'Active'),
-(N'shipper1', '202cb962ac59075b964b07152d234b70', N'Shipper 1', '', 'shipper@gmail.com', 6, 'Active'),
-(N'seller1', '202cb962ac59075b964b07152d234b70', N'Seller 1', '', 'seller1@gmail.com', 7, 'Active');
+(N'cus1', '202cb962ac59075b964b07152d234b70', N'Customer 1', '0123456789', 'cus1@gmail.com', 2, 'Active'),
+(N'manager1', '202cb962ac59075b964b07152d234b70', N'Warehouse manager 1', '0123456789', 'manager@gmail.com', 3, 'Active'),
+(N'staff1', '202cb962ac59075b964b07152d234b70', N'Staff 1', '0123456789', 'staff1@gmail.com', 4, 'Active'),
+(N'packing1', '202cb962ac59075b964b07152d234b70', N'Packing 1', '0123456789', 'packing@gmail.com', 5, 'Active'),
+(N'shipper1', '202cb962ac59075b964b07152d234b70', N'Shipper 1', '0123456789', 'shipper@gmail.com', 6, 'Active'),
+(N'seller1', '202cb962ac59075b964b07152d234b70', N'Seller 1', '0123456789', 'seller1@gmail.com', 7, 'Active');
 
 INSERT INTO dbo.Brands(brand_name)
 VALUES

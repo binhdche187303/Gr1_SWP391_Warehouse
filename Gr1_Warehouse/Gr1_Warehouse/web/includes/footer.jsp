@@ -100,7 +100,7 @@
                             <div class="footer-logo">
                                 <div class="theme-logo">
                                     <a href="index.jsp">
-                                        <img src="${pageContext.request.contextPath}/assets/images/logo/1.png" class="blur-up lazyload" alt="">
+                                    <img src="${pageContext.request.contextPath}/assets/images/logo_1.png" class="img-fluid blur-up lazyload" alt="">
                                     </a>
                                 </div>
 

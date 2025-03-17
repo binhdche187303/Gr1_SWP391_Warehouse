@@ -107,15 +107,15 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="breadscrumb-contain">
-                            <h2>Shop List</h2>
+                            <h2>Cửa hàng</h2>
                             <nav>
                                 <ol class="breadcrumb mb-0">
                                     <li class="breadcrumb-item">
-                                        <a href="index.html">
+                                        <a href="/Gr1_Warehouse/home">
                                             <i class="fa-solid fa-house"></i>
                                         </a>
                                     </li>
-                                    <li class="breadcrumb-item active" aria-current="page">Shop List</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Cửa hàng</li>
                                 </ol>
                             </nav>
                         </div>
@@ -373,16 +373,6 @@
                                                     <h5 class="name">${product.productName}</h5>
                                                 </a>
                                                 <p class="text-content mt-1 mb-2 product-content">${product.description}</p>
-                                                <div class="product-rating mt-2">
-                                                    <ul class="rating">
-                                                        <li><i data-feather="star" class="fill"></i></li>
-                                                        <li><i data-feather="star" class="fill"></i></li>
-                                                        <li><i data-feather="star" class="fill"></i></li>
-                                                        <li><i data-feather="star" class="fill"></i></li>
-                                                        <li><i data-feather="star"></i></li>
-                                                    </ul>
-                                                    <span>(4.0)</span>
-                                                </div>
                                                 <h6 class="unit">
                                                     <c:forEach var="variant" items="${product.variants}">
                                                         ${variant.size.size_name}
@@ -390,9 +380,9 @@
                                                 </h6>
                                                 <h5 class="price"><span class="theme-color">
                                                         <c:forEach var="variant" items="${product.variants}">
-                                                            <fmt:formatNumber value="${variant.price}" type="currency" currencySymbol="₫" />
+                                                            <fmt:formatNumber value="${variant.price}" type="number" groupingUsed="true" />₫
                                                         </c:forEach>
-                                                    </span> <del>$15.15</del></h5>
+                                                    
 
                                             </div>
                                         </div>
@@ -665,64 +655,6 @@
         <!-- Bg overlay Start -->
         <div class="bg-overlay"></div>
         <!-- Bg overlay End -->
-
-
-        <script>
-            function viewProduct(productId) {
-                fetch(`/Gr1_Warehouse/shop?productId=` + productId)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.error) {
-                                console.error('Lỗi:', data.error);
-                                return;
-                            }
-
-                            // Cập nhật thông tin sản phẩm
-                            document.getElementById('modal-product-name').textContent = data.productName;
-                            document.getElementById('modal-product-brand').textContent = data.brandName || "N/A";
-                            document.getElementById('modal-product-code').textContent = data.sku || "N/A";
-                            document.getElementById('modal-product-description').textContent = data.description;
-                            document.getElementById('modal-product-price').textContent =
-                                    new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(data.variants[0].price);
-
-                            // Cập nhật danh sách size (without price)
-                            let sizeSelect = document.getElementById('modal-product-size');
-                            sizeSelect.innerHTML = ''; // Xóa size cũ
-                            data.variants.forEach(variant => {
-                                let option = document.createElement('option');
-                                option.value = variant.sizeId;
-                                option.textContent = variant.sizeName; // Only size name here
-                                sizeSelect.appendChild(option);
-                            });
-
-                            // Cập nhật hình ảnh chính
-                            document.getElementById('modal-product-image').src = data.firstImageUrl;
-                            document.getElementById('modal-product-image').style.width = '300px'; // Adjust the width as needed
-
-                            // Cập nhật danh sách thumbnail
-                            let thumbnailContainer = document.getElementById('modal-thumbnails');
-                            thumbnailContainer.innerHTML = ''; // Xóa ảnh cũ
-                            data.images.forEach(img => {
-                                let imgElement = document.createElement('img');
-                                imgElement.src = img.imageUrl;
-                                imgElement.classList.add('img-thumbnail', 'me-2');
-                                imgElement.style.width = "50px";
-                                imgElement.onclick = () => {
-                                    document.getElementById('modal-product-image').src = img.imageUrl;
-                                };
-                                thumbnailContainer.appendChild(imgElement);
-                            });
-
-                            // Cập nhật link "View More Details"
-                            document.getElementById('modal-view-more').setAttribute('onclick', `location.href='product-detail.jsp?productId=${data.productId}'`);
-
-                            // Mở modal
-                            new bootstrap.Modal(document.getElementById('quickViewModal')).show();
-                        })
-                        .catch(error => console.error('Lỗi khi lấy dữ liệu:', error));
-            }
-        </script>
-
 
 
         <!-- Latest jQuery -->
