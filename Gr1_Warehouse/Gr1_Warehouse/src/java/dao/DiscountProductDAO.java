@@ -4,6 +4,8 @@
  */
 package dao;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.security.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,63 @@ import model.Products;
  * @author admin
  */
 public class DiscountProductDAO extends DBContext {
+
+    public int getProductIdByVariant(int variantId) {
+        int productId = -1;
+        String query = "SELECT product_id FROM ProductVariants WHERE variant_id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, variantId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                productId = rs.getInt("product_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return productId;
+    }
+
+    public BigDecimal getVariantPrice(int variantId) {
+        BigDecimal price = BigDecimal.ZERO;
+        String query = "SELECT price FROM ProductVariants WHERE variant_id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, variantId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                price = rs.getBigDecimal("price");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return price;
+    }
+
+    public BigDecimal getDiscountedPrice(int productId, int variantId, int quantity, BigDecimal basePrice) {
+        String sql = "SELECT TOP 1 discount_percentage FROM ProductQuantityDiscounts "
+                + "WHERE product_id = ? AND min_quantity <= ? "
+                + "ORDER BY min_quantity DESC";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, productId);
+            ps.setInt(2, quantity);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                BigDecimal discount = rs.getBigDecimal("discount_percentage");
+                if (discount != null) {
+                    discount = discount.divide(new BigDecimal(100), MathContext.DECIMAL128);
+                    return basePrice.subtract(basePrice.multiply(discount));
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return basePrice; // Không có giảm giá thì giữ nguyên giá
+    }
 
     public List<DiscountProduct> getAllDiscountsProduct() {
 
