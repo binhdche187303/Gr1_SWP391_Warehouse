@@ -46,7 +46,7 @@
                             <nav>
                                 <ol class="breadcrumb mb-0">
                                     <li class="breadcrumb-item">
-                                        <a href="home">
+                                        <a href="index.html">
                                             <i class="fa-solid fa-house"></i>
                                         </a>
                                     </li>
@@ -74,12 +74,14 @@
                                 <h3>Chào mừng đến với BULKMART</h3>
                                 <h4>Đăng nhập tài khoản của bạn</h4>
                             </div>
-                            <br>
-                            <% if(request.getAttribute("error") != null) { %>
+
+                            <% String errorMessage = (String) request.getAttribute("error"); %>
+                            <% if (errorMessage != null) { %>
                             <div class="alert alert-danger">
-                                <%= request.getAttribute("error") %>
+                                <%= errorMessage %>
                             </div>
                             <% } %>
+
 
                             <div class="input-box">
                                 <form class="row g-4" method="post" action="${pageContext.request.contextPath}/login">

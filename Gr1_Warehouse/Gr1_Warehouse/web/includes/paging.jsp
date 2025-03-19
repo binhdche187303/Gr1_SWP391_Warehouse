@@ -79,9 +79,14 @@
                                     <c:param name="brand_id" value="${brandId}" />
                                 </c:forEach>
                             </c:if>
-                            <c:if test="${not empty param.price_range}">
-                                <c:param name="price_range" value="${param.price_range}" />
+
+                            <c:if test="${not empty param.minPrice}">
+                                <c:param name="minPrice" value="${param.minPrice}" />
                             </c:if>
+                            <c:if test="${not empty param.maxPrice}">
+                                <c:param name="maxPrice" value="${param.maxPrice}" />
+                            </c:if>
+
                             <c:if test="${not empty param.sortOrder}">
                                 <c:param name="sortOrder" value="${param.sortOrder}" />
                             </c:if>
@@ -116,9 +121,13 @@
                                             <c:param name="brand_id" value="${brandId}" />
                                         </c:forEach>
                                     </c:if>
-                                    <c:if test="${not empty param.price_range}">
-                                        <c:param name="price_range" value="${param.price_range}" />
+                                    <c:if test="${not empty param.minPrice}">
+                                        <c:param name="minPrice" value="${param.minPrice}" />
                                     </c:if>
+                                    <c:if test="${not empty param.maxPrice}">
+                                        <c:param name="maxPrice" value="${param.maxPrice}" />
+                                    </c:if>
+
                                     <c:if test="${not empty param.sortOrder}">
                                         <c:param name="sortOrder" value="${param.sortOrder}" />
                                     </c:if>
@@ -147,8 +156,11 @@
                                     <c:param name="brand_id" value="${brandId}" />
                                 </c:forEach>
                             </c:if>
-                            <c:if test="${not empty param.price_range}">
-                                <c:param name="price_range" value="${param.price_range}" />
+                            <c:if test="${not empty param.minPrice}">
+                                <c:param name="minPrice" value="${param.minPrice}" />
+                            </c:if>
+                            <c:if test="${not empty param.maxPrice}">
+                                <c:param name="maxPrice" value="${param.maxPrice}" />
                             </c:if>
                             <c:if test="${not empty param.sortOrder}">
                                 <c:param name="sortOrder" value="${param.sortOrder}" />
@@ -162,8 +174,5 @@
                 </c:if>
             </ul>
         </div>
-
-
-
     </body>
 </html>

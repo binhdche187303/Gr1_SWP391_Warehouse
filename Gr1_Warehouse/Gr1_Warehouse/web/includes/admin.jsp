@@ -83,18 +83,13 @@
                                 <div class="media profile-media">
 
                                     <div class="user-name-hide media-body">
-                                        <span>${sessionScope.acc.username}</span>
+                                        <span>${sessionScope.acc.username}</span><br>
+                                        <span>${sessionScope.acc.role.roleName}</span>
 
-                                        <p class="mb-0 font-roboto">Admin<i class="middle ri-arrow-down-s-line"></i></p>
+                                        <p class="mb-0 font-roboto"><i class="middle ri-arrow-down-s-line"></i></p>
                                     </div>
                                 </div>
                                 <ul class="profile-dropdown onhover-show-div">
-                                    <li>
-                                        <a href="allusers">
-                                            <i data-feather="users"></i>
-                                            <span>Users</span>
-                                        </a>
-                                    </li>
                                     <li>
                                         <a href="order-list.html">
                                             <i data-feather="archive"></i>

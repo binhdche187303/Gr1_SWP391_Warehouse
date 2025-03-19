@@ -1,80 +1,83 @@
+import dao.OrderDAO;
+import java.util.ArrayList;
+import model.OrderDetailDTO;
+import model.OrderDetail;
+import model.Payment;
 
-import dao.ProductDAO;
-import dao.UserDAO;
 import java.util.List;
-import model.ProductDTO;
-import model.User;
-import model.Role;
+import model.ProductVariants;
+import model.Products;
+import model.Sizes;
 
 public class TestCreateUser {
 
-    public static void main(String[] args) {
-        try {
-            // 2. Khởi tạo UserDAO
-            UserDAO userDAO = new UserDAO();
-
-            // 3. Tạo tài khoản admin
-            User newAdmin = new User();
-            newAdmin.setUsername("admin");
-            newAdmin.setFullname("Admin System ");
-            newAdmin.setEmail("admin2@example.com");
-            newAdmin.setRole(new Role(1)); // role_id = 1 (Admin)
-            newAdmin.setStatus("Active");
-            newAdmin.setAddress("123 Trụ sở chính");
-
-            // 3. Admin tạo tài khoản cho Warehouse Manager
-            User manager = new User();
-            manager.setUsername("manager01");
-            manager.setFullname("Warehouse Manager 01");
-            manager.setEmail("manager01@example.com");
-            manager.setRole(new Role(3)); // role_id = 3 (Warehouse Manager)
-            manager.setStatus("Active");
-            manager.setAddress("Hà Nội");
-
-            userDAO.create(manager);
-
-            // 4. Admin tạo tài khoản cho Warehouse Staff
-            User staff = new User();
-            staff.setUsername("staff02");
-            staff.setFullname("Warehouse Staff 02");
-            staff.setEmail("staff02@example.com");
-            staff.setRole(new Role(4)); // role_id = 4 (Warehouse Staff)
-            staff.setStatus("Active");
-            staff.setAddress(null); // Không có địa chỉ
-
-            userDAO.create(staff);
-
-            // 4. Admin tạo tài khoản cho Warehouse Staff
-            User staff2 = new User();
-            staff2.setUsername("staff03");
-            staff2.setFullname("Warehouse Staff 03");
-            staff2.setPhone("0123456789");
-            staff2.setEmail("staff03@example.com");
-            staff2.setRole(new Role(4)); // role_id = 5 (Warehouse Staff)
-            staff2.setStatus("Active");
-            staff2.setAddress(null); // Không có địa chỉ
-
-            userDAO.create(staff2);
-
-            // 4. Admin tạo tài khoản cho Warehouse Staff
-            User staff4 = new User();
-            staff4.setUsername("staff04");
-            staff4.setFullname("Warehouse Staff 05");
-            staff4.setPhone("0123456789");
-            staff4.setEmail("staff05@example.com");
-            staff4.setRole(new Role(4)); // role_id = 5 (Warehouse Staff)
-            staff4.setStatus("Active");
-            staff4.setAddress(null); // Không có địa chỉ
-
-            userDAO.create(staff4);
-
-            // 4. Gọi phương thức tạo admin
-            userDAO.create(newAdmin);
-            System.out.println("✅ Tạo tài khoản admin thành công!");
-
-        } catch (Exception e) {
-            System.out.println("❌ Lỗi khi tạo tài khoản admin: " + e.getMessage());
-            e.printStackTrace();
+public static void main(String[] args) {
+    // Chọn một orderId cụ thể để test
+    int orderId = 9; // Thay thế bằng ID đơn hàng thực tế
+    
+    // Tạo đối tượng OrderDAO và lấy thông tin chi tiết đơn hàng
+    OrderDAO orderDAO = new OrderDAO();
+    OrderDetailDTO orderDetailDTO = orderDAO.getOrderDetails(orderId);
+    
+    // Kiểm tra đối tượng OrderDetailDTO
+    if (orderDetailDTO == null) {
+        System.out.println("OrderDetailDTO is null");
+        return;
+    }
+    
+    // Kiểm tra các danh sách
+    List<OrderDetail> orderDetails = orderDetailDTO.getOrderDetails();
+    List<Products> products = orderDetailDTO.getProducts();
+    List<ProductVariants> variants = orderDetailDTO.getProductVariants();
+    List<Sizes> sizes = orderDetailDTO.getSizes();
+    
+    // In thông tin số lượng các phần tử
+    System.out.println("OrderDetails size: " + orderDetails.size());
+    System.out.println("Products size: " + products.size());
+    System.out.println("Variants size: " + variants.size());
+    System.out.println("Sizes size: " + sizes.size());
+    
+    // Kiểm tra dữ liệu chi tiết
+    System.out.println("\n--- Chi tiết đơn hàng ---");
+    for (int i = 0; i < orderDetails.size(); i++) {
+        OrderDetail detail = orderDetails.get(i);
+        int productId = detail.getProductId();
+        
+        // Tìm sản phẩm tương ứng
+        Products product = products.stream()
+                .filter(p -> p.getProductId() == productId)
+                .findFirst()
+                .orElse(null);
+        
+        // Tìm variant và size tương ứng
+        ProductVariants variant = (i < variants.size()) ? variants.get(i) : null;
+        Sizes size = (i < sizes.size()) ? sizes.get(i) : null;
+        
+        System.out.println("\n--- Item " + (i + 1) + " ---");
+        System.out.println("Product ID: " + productId);
+        System.out.println("Product Name: " + (product != null ? product.getProductName() : "N/A"));
+        System.out.println("SKU: " + (variant != null ? variant.getSku() : "N/A"));
+        System.out.println("Size ID: " + (detail.getSizeId() != 0 ? detail.getSizeId() : "N/A"));
+        System.out.println("Size Name: " + (size != null ? size.getSize_name() : "N/A"));
+        System.out.println("Quantity: " + detail.getQuantity());
+        System.out.println("Unit Price: " + detail.getUnitPrice());
+    }
+    
+    // Kiểm tra cụ thể các trường hợp thiếu size
+    System.out.println("\n--- Kiểm tra đặc biệt cho các mục không có size ---");
+    for (int i = 0; i < orderDetails.size(); i++) {
+        OrderDetail detail = orderDetails.get(i);
+        ProductVariants variant = (i < variants.size()) ? variants.get(i) : null;
+        Sizes size = (i < sizes.size()) ? sizes.get(i) : null;
+        
+        if (size == null || size.getSize_name() == null || size.getSize_name().isEmpty()) {
+            System.out.println("Phát hiện mục không có size:");
+            System.out.println("Item index: " + i);
+            System.out.println("SKU: " + (variant != null ? variant.getSku() : "N/A"));
+            
+            // Kiểm tra xem OrderDetail có sizeId không
+            System.out.println("Size ID trong OrderDetail: " + detail.getSizeId());
         }
     }
+}
 }

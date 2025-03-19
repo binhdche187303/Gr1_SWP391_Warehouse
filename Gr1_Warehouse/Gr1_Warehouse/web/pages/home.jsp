@@ -2014,7 +2014,7 @@
                                 </div>
                             </div>
                         </div>
-                                                    <br>
+                        <br>
                         <div class="title d-block">
                             <div>
                                 <h2>Our best Seller</h2>
@@ -2261,6 +2261,10 @@
                             <div class="banner-contain hover-effect">
                                 <img src="${pageContext.request.contextPath}/assets/images/banner6.jpg" class="bg-img blur-up lazyload" alt="">
                                 <div class="banner-details p-center banner-b-space w-100 text-center">
+                                    <div style="background-color: rgba(0, 0, 0, 0);">
+                                            <h2>.</h2>
+                                            <h3>.</h3>
+                                        </div>
                                 </div>
                             </div>
                         </div>
@@ -2564,6 +2568,7 @@
                                         <a href="shop-left-sidebar.html" class="deal-image">
                                             <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/13.png" class="blur-up lazyload" alt="">
                                         </a>
+                                        
 
                                         <a href="shop-left-sidebar.html" class="deal-contain">
                                             <h5>Blended Instant Coffee 50 g Buy 1 Get 1 Free</h5>
@@ -2587,6 +2592,33 @@
                 </a>
             </div>
         </div>
+        <!-- Chatbot Dialogflow -->
+        <div class="chatbot-container">
+            <!-- Nhúng chatbot Dialogflow Messenger -->
+            <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+            <df-messenger
+                intent="WELCOME"
+                chat-title="Hỗ trợ tư vấn BULKMART"
+                agent-id="a0640f2f-9c74-4bf4-b685-14970cd0a079"
+                language-code="vi"
+                expand="false"> <!-- Chỉ mở khi click vào nút chat -->
+            </df-messenger>
+
+        </div>
+
+        <style>
+            .df-messenger {
+                --df-messenger-bot-message: #4285f4;
+                --df-messenger-button-titlebar-color: #4285f4;
+                --df-messenger-chat-background-color: #f8f9fa;
+                --df-messenger-font-color: #000000;
+                --df-messenger-send-icon: #4285f4;
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 999;
+            }
+        </style>
         <!-- Tap to top end -->
         <!-- Bg overlay Start -->
         <div class="bg-overlay"></div>

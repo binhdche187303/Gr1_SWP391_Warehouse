@@ -56,7 +56,7 @@
                                             <i class="fa-solid fa-house"></i>
                                         </a>
                                     </li>
-                                    <li class="breadcrumb-item active">Forgot Password</li>
+                                    <li class="breadcrumb-item active">Quên mật khẩu</li>
                                 </ol>
                             </nav>
                         </div>
@@ -80,21 +80,21 @@
                         <div class="d-flex align-items-center justify-content-center h-100">
                             <div class="log-in-box">
                                 <div class="log-in-title">
-                                    <h3>Welcome To Fastkart</h3>
-                                    <h4>Forgot your password</h4>
+                                    <h3>Chào mừng đến với BULKMART</h3>
+                                    <h4>Quên mật khẩu</h4>
                                 </div>
                                 <div class="input-box">
                                     <form action="request" method="POST" class="row g-4">
                                         <div class="col-12">
                                             <div class="form-floating theme-form-floating log-in-form">
                                                 <input type="email" class="form-control" id="email" name="email" placeholder="Email Address" required/>
-                                                <label for="email">Email Address</label>
+                                                <label for="email">Địa chỉ email</label>
                                             </div>
                                         </div>
 
                                         <div class="col-12">
                                             <button class="btn btn-animation w-100" type="submit">
-                                                Reset Password
+                                                Đặt lại mật khẩu
                                             </button>
                                         </div>
                                     </form>

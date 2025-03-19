@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller;
 
 import dao.OrderDAO;
@@ -14,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.util.List;
 import model.OrderDetailDTO;
 import model.OrderPayment;
 import model.Payment;
@@ -29,8 +24,7 @@ public class CustomerOrderDetail extends HttpServlet {
     private OrderDAO orderDAO = new OrderDAO(); // Đảm bảo bạn có OrderDAO để truy vấn DB
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      *
      * @param request servlet request
      * @param response servlet response
@@ -41,7 +35,6 @@ public class CustomerOrderDetail extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -54,15 +47,6 @@ public class CustomerOrderDetail extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -81,18 +65,11 @@ public class CustomerOrderDetail extends HttpServlet {
             return;
         }
 
-        List<OrderDetailDTO> orders = orderDAO.getOrdersByCustomerId(user.getUserId());
+        // 🟢 Lấy chi tiết đơn hàng theo orderId
+        OrderDetailDTO orderDetailDTO = orderDAO.getOrderDetailById(orderId);
 
-        OrderDetailDTO selectedOrder = null;
-        for (OrderDetailDTO order : orders) {
-            if (order.getOrder().getOrderId() == orderId) {
-                selectedOrder = order;
-                break;
-            }
-        }
-
-        // Nếu không tìm thấy đơn hàng, chuyển hướng
-        if (selectedOrder == null) {
+        // Nếu không tìm thấy đơn hàng, chuyển hướng về trang chi tiết
+        if (orderDetailDTO == null) {
             response.sendRedirect("pages/cus_detail.jsp");
             return;
         }
@@ -105,44 +82,32 @@ public class CustomerOrderDetail extends HttpServlet {
         // 🟢 Tính số tiền còn lại sau khi đặt cọc
         BigDecimal remainingAmount = BigDecimal.ZERO;
         if (orderPayment != null) {
-            BigDecimal totalAmount = selectedOrder.getOrder().getTotalAmount();
+            BigDecimal totalAmount = orderDetailDTO.getOrder().getTotalAmount();
             BigDecimal depositAmount = orderPayment.getDepositAmount() != null ? orderPayment.getDepositAmount() : BigDecimal.ZERO;
             remainingAmount = totalAmount.subtract(depositAmount);
         }
-        //Status từ bảng Payment thay vì PaymentOrder
+        
+        // Status từ bảng Payment thay vì PaymentOrder
         String paymentStatus = (payment != null) ? payment.getPaymentStatus() : "Chưa có trạng thái thanh toán";
 
         // 🟢 Đặt thông tin vào request để gửi đến JSP
-        request.setAttribute("orderDetail", selectedOrder);
+        request.setAttribute("orderDetail", orderDetailDTO);
         request.setAttribute("orderPayment", orderPayment);
         request.setAttribute("remainingAmount", remainingAmount);
         request.setAttribute("paymentStatus", paymentStatus);
 
+        // Chuyển tiếp đến trang JSP
         request.getRequestDispatcher("pages/cus_detail.jsp").forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Servlet để hiển thị chi tiết đơn hàng của khách hàng";
+    }
 }

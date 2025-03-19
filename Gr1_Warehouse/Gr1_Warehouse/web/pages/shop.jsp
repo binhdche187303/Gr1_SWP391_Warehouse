@@ -133,38 +133,26 @@
                         <div class="slider-1 slider-animate product-wrapper no-arrow">
                             <div>
                                 <div class="banner-contain-2 hover-effect">
-                                    <img src="${pageContext.request.contextPath}/assets/images/shop/1.jpg" class="bg-img rounded-3 blur-up lazyload" alt="" data-src="${pageContext.request.contextPath}/assets/images/shop/1.jpg">
+                                    <img src="${pageContext.request.contextPath}/assets/images/shop1.jpg" class="bg-img rounded-3 blur-up lazyload" alt="" data-src="${pageContext.request.contextPath}/assets/images/shop1.jpg">
                                     <div
                                         class="banner-detail p-center-right position-relative shop-banner ms-auto banner-small">
-                                        <div>
-                                            <h2>Healthy, nutritious & Tasty Fruits & Veggies</h2>
-                                            <h3>Save upto 50%</h3>
+                                        <div style="background-color: rgba(0, 0, 0, 0);">
+                                            <h2>.</h2>
+                                            <h3>.</h3>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
 
                             <div>
                                 <div class="banner-contain-2 hover-effect">
-                                    <img src="${pageContext.request.contextPath}/assets/images/shop/1.jpg" class="bg-img rounded-3 blur-up lazyload" alt="" data-src="${pageContext.request.contextPath}/assets/images/shop/1.jpg">
+                                    <img src="${pageContext.request.contextPath}/assets/images/shop2.jpg" class="bg-img rounded-3 blur-up lazyload" alt="" data-src="${pageContext.request.contextPath}/assets/images/shop2.jpg">
                                     <div
                                         class="banner-detail p-center-right position-relative shop-banner ms-auto banner-small">
-                                        <div>
-                                            <h2>Healthy, nutritious & Tasty Fruits & Veggies</h2>
-                                            <h3>Save upto 50%</h3>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <div class="banner-contain-2 hover-effect">
-                                    <img src="${pageContext.request.contextPath}/assets/images/shop/1.jpg" class="bg-img rounded-3 blur-up lazyload" alt="" data-src="${pageContext.request.contextPath}/assets/images/shop/1.jpg">
-                                    <div
-                                        class="banner-detail p-center-right position-relative shop-banner ms-auto banner-small">
-                                        <div>
-                                            <h2>Healthy, nutritious & Tasty Fruits & Veggies</h2>
-                                            <h3>Save upto 50%</h3>
+                                        <div style="background-color: rgba(0, 0, 0, 0);">
+                                            <h2>.</h2>
+                                            <h3>.</h3>
                                         </div>
                                     </div>
                                 </div>
@@ -219,7 +207,7 @@
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <br>
                                         <div class="accordion-item">
                                             <h2 class="accordion-header" id="headingTwo">
                                                 <button class="accordion-button collapsed" type="button"
@@ -250,7 +238,7 @@
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <br>
                                         <div class="accordion-item">
                                             <h2 class="accordion-header" id="headingThree">
                                                 <button class="accordion-button collapsed" type="button"
@@ -261,11 +249,13 @@
                                             </h2>
                                             <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree">
                                                 <div class="accordion-body">
-                                                    <div class="range-slider">
-                                                        <input type="text" class="js-range-slider" name="price_range" value="${price_range}">
+                                                    <div class="price-inputs d-flex">
+                                                        <input type="number" name="minPrice" class="form-control me-2" placeholder="Min Price" value="${minPrice}">
+                                                        <input type="number" name="maxPrice" class="form-control" placeholder="Max Price" value="${maxPrice}">
                                                     </div>
                                                 </div>
                                             </div>
+
                                         </div>
 
 
@@ -363,7 +353,7 @@
                                                     </c:forEach>
                                                 </a>
 
-                                   
+
                                             </div>
                                         </div>
                                         <div class="product-footer">
@@ -382,361 +372,100 @@
                                                         <c:forEach var="variant" items="${product.variants}">
                                                             <fmt:formatNumber value="${variant.price}" type="number" groupingUsed="true" />₫
                                                         </c:forEach>
-                                                    
 
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- Modal với ID duy nhất cho từng sản phẩm -->
-                                <!-- Modal Quick View -->
-                                <div class="modal fade" id="quickViewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="modal-product-name">Tên sản phẩm</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="row">
-                                                    <!-- Cột trái: Hình ảnh sản phẩm -->
-                                                    <div class="col-md-4">
-                                                        <img id="modal-product-image" src="" alt="Product Image" class="img-fluid w-75">
-                                                        <div id="modal-thumbnails" class="d-flex mt-2"></div>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+
+
+
+
+
+                                                    </c:forEach>
+
                                                     </div>
 
-                                                    <!-- Cột phải: Chi tiết sản phẩm -->
-                                                    <div class="col-md-8">
-                                                        <p><strong>Brand:</strong> <span id="modal-product-brand"></span></p>
-                                                        <p><strong>Product Code:</strong> <span id="modal-product-code"></span></p>
-                                                        <p id="modal-product-description"></p>
+                                                    <%@ include file="/includes/paging.jsp" %>
 
-                                                        <h5>Price:</h5>
-                                                        <h4 class="text-danger" id="modal-product-price"></h4>
+                                                    </div>
+                                                    </div>
+                                                    </div>
+                                                    </section>
+                                                    <!-- Shop Section End -->
 
-                                                        <h5>Select Size:</h5>
-                                                        <select class="form-select" id="modal-product-size"></select>
+                                                    <!-- Footer Section Start -->
+                                                    <%@ include file="/includes/footer.jsp" %> <!-- Nhúng header -->
+                                                    <!-- Footer Section End -->
 
-                                                        <!-- Nút thao tác -->
-                                                        <div class="mt-3">
-                                                            <button class="btn btn-primary">Add to Cart</button>
-                                                            <button id="modal-view-more" class="btn btn-secondary">View More Details</button>
+                                                    <!-- Add to cart Modal Start -->
+                                                    <div class="add-cart-box">
+                                                        <div class="add-iamge">
+                                                            <img src="${pageContext.request.contextPath}/assets/images/cake/pro/1.jpg" class="img-fluid blur-up lazyload" alt="">
+                                                        </div>
+
+                                                        <div class="add-contain">
+                                                            <h6>Added to Cart</h6>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                                    <!-- Add to cart Modal End -->
+
+                                                    <!-- Tap to top start -->
+                                                    <div class="theme-option">
+                                                        <div class="back-to-top">
+                                                            <a id="back-to-top" href="#">
+                                                                <i class="fas fa-chevron-up"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Tap to top end -->
+
+                                                    <!-- Bg overlay Start -->
+                                                    <div class="bg-overlay"></div>
+                                                    <!-- Bg overlay End -->
 
 
+                                                    <!-- Latest jQuery -->
+                                                    <script src="${pageContext.request.contextPath}/assets/js/jquery-3.6.0.min.js"></script>
+
+                                                    <!-- jQuery UI -->
+                                                    <script src="${pageContext.request.contextPath}/assets/js/jquery-ui.min.js"></script>
+
+                                                    <!-- Bootstrap JS -->
+                                                    <script src="${pageContext.request.contextPath}/assets/js/bootstrap/bootstrap.bundle.min.js"></script>
+                                                    <script src="${pageContext.request.contextPath}/assets/js/bootstrap/bootstrap-notify.min.js"></script>
+                                                    <script src="${pageContext.request.contextPath}/assets/js/bootstrap/popper.min.js"></script>
+
+                                                    <!-- Feather icon JS -->
+                                                    <script src="${pageContext.request.contextPath}/assets/js/feather/feather.min.js"></script>
+                                                    <script src="${pageContext.request.contextPath}/assets/js/feather/feather-icon.js"></script>
+
+                                                    <!-- Lazyload JS -->
+                                                    <script src="${pageContext.request.contextPath}/assets/js/lazysizes.min.js"></script>
+
+                                                    <!-- Slick JS -->
+                                                    <script src="${pageContext.request.contextPath}/assets/js/slick/slick.js"></script>
+                                                    <script src="${pageContext.request.contextPath}/assets/js/slick/slick-animation.min.js"></script>
+                                                    <script src="${pageContext.request.contextPath}/assets/js/slick/custom_slick.js"></script>
+
+                                                    <!-- Price Range JS -->
+                                                    <script src="${pageContext.request.contextPath}/assets/js/ion.rangeSlider.min.js"></script>
+
+                                                    <!-- Quantity JS -->
+                                                    <script src="${pageContext.request.contextPath}/assets/js/quantity-2.js"></script>
+
+                                                    <!-- Sidebar open JS -->
+                                                    <script src="${pageContext.request.contextPath}/assets/js/filter-sidebar.js"></script>
+
+                                                    <!-- WOW JS -->
+                                                    <script src="${pageContext.request.contextPath}/assets/js/wow.min.js"></script>
+                                                    <script src="${pageContext.request.contextPath}/assets/js/custom-wow.js"></script>
+
+                                                    <!-- Script JS -->
+                                                    <script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
 
 
-                            </c:forEach>
+                                                    </body>
 
-                        </div>
-
-                        <%@ include file="/includes/paging.jsp" %>
-
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Shop Section End -->
-
-        <!-- Footer Section Start -->
-        <%@ include file="/includes/footer.jsp" %> <!-- Nhúng header -->
-        <!-- Footer Section End -->
-
-        <!-- Location Modal Start -->
-        <div class="modal location-modal fade theme-modal" id="locationModal" tabindex="-1"
-             aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Choose your Delivery Location</h5>
-                        <p class="mt-1 text-content">Enter your address and we will specify the offer for your area.</p>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="location-list">
-                            <div class="search-input">
-                                <input type="search" class="form-control" placeholder="Search Your Area">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </div>
-
-                            <div class="disabled-box">
-                                <h6>Select a Location</h6>
-                            </div>
-
-                            <ul class="location-select custom-height">
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <h6>Alabama</h6>
-                                        <span>Min: $130</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <h6>Arizona</h6>
-                                        <span>Min: $150</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <h6>California</h6>
-                                        <span>Min: $110</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <h6>Colorado</h6>
-                                        <span>Min: $140</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <h6>Florida</h6>
-                                        <span>Min: $160</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <h6>Georgia</h6>
-                                        <span>Min: $120</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <h6>Kansas</h6>
-                                        <span>Min: $170</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <h6>Minnesota</h6>
-                                        <span>Min: $120</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <h6>New York</h6>
-                                        <span>Min: $110</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <h6>Washington</h6>
-                                        <span>Min: $130</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Location Modal End -->
-
-        <!-- Deal Box Modal Start -->
-        <div class="modal fade theme-modal deal-modal" id="deal-box" tabindex="-1" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <div>
-                            <h5 class="modal-title w-100" id="deal_today">Deal Today</h5>
-                            <p class="mt-1 text-content">Recommended deals for you.</p>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="deal-offer-box">
-                            <ul class="deal-offer-list">
-                                <li class="list-1">
-                                    <div class="deal-offer-contain">
-                                        <a href="shop-left-sidebar.html" class="deal-image">
-                                            <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/10.png" class="blur-up lazyload"
-                                                 alt="">
-                                        </a>
-
-                                        <a href="shop-left-sidebar.html" class="deal-contain">
-                                            <h5>Blended Instant Coffee 50 g Buy 1 Get 1 Free</h5>
-                                            <h6>$52.57 <del>57.62</del> <span>500 G</span></h6>
-                                        </a>
-                                    </div>
-                                </li>
-
-                                <li class="list-2">
-                                    <div class="deal-offer-contain">
-                                        <a href="shop-left-sidebar.html" class="deal-image">
-                                            <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/11.png" class="blur-up lazyload"
-                                                 alt="">
-                                        </a>
-
-                                        <a href="shop-left-sidebar.html" class="deal-contain">
-                                            <h5>Blended Instant Coffee 50 g Buy 1 Get 1 Free</h5>
-                                            <h6>$52.57 <del>57.62</del> <span>500 G</span></h6>
-                                        </a>
-                                    </div>
-                                </li>
-
-                                <li class="list-3">
-                                    <div class="deal-offer-contain">
-                                        <a href="shop-left-sidebar.html" class="deal-image">
-                                            <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/12.png" class="blur-up lazyload"
-                                                 alt="">
-                                        </a>
-
-                                        <a href="shop-left-sidebar.html" class="deal-contain">
-                                            <h5>Blended Instant Coffee 50 g Buy 1 Get 1 Free</h5>
-                                            <h6>$52.57 <del>57.62</del> <span>500 G</span></h6>
-                                        </a>
-                                    </div>
-                                </li>
-
-                                <li class="list-1">
-                                    <div class="deal-offer-contain">
-                                        <a href="shop-left-sidebar.html" class="deal-image">
-                                            <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/13.png" class="blur-up lazyload"
-                                                 alt="">
-                                        </a>
-
-                                        <a href="shop-left-sidebar.html" class="deal-contain">
-                                            <h5>Blended Instant Coffee 50 g Buy 1 Get 1 Free</h5>
-                                            <h6>$52.57 <del>57.62</del> <span>500 G</span></h6>
-                                        </a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Deal Box Modal End -->
-
-        <!-- Add to cart Modal Start -->
-        <div class="add-cart-box">
-            <div class="add-iamge">
-                <img src="${pageContext.request.contextPath}/assets/images/cake/pro/1.jpg" class="img-fluid blur-up lazyload" alt="">
-            </div>
-
-            <div class="add-contain">
-                <h6>Added to Cart</h6>
-            </div>
-        </div>
-        <!-- Add to cart Modal End -->
-
-        <!-- Tap to top start -->
-        <div class="theme-option">
-            <div class="back-to-top">
-                <a id="back-to-top" href="#">
-                    <i class="fas fa-chevron-up"></i>
-                </a>
-            </div>
-        </div>
-        <!-- Tap to top end -->
-
-        <!-- Bg overlay Start -->
-        <div class="bg-overlay"></div>
-        <!-- Bg overlay End -->
-
-
-        <!-- Latest jQuery -->
-        <script src="${pageContext.request.contextPath}/assets/js/jquery-3.6.0.min.js"></script>
-
-        <!-- jQuery UI -->
-        <script src="${pageContext.request.contextPath}/assets/js/jquery-ui.min.js"></script>
-
-        <!-- Bootstrap JS -->
-        <script src="${pageContext.request.contextPath}/assets/js/bootstrap/bootstrap.bundle.min.js"></script>
-        <script src="${pageContext.request.contextPath}/assets/js/bootstrap/bootstrap-notify.min.js"></script>
-        <script src="${pageContext.request.contextPath}/assets/js/bootstrap/popper.min.js"></script>
-
-        <!-- Feather icon JS -->
-        <script src="${pageContext.request.contextPath}/assets/js/feather/feather.min.js"></script>
-        <script src="${pageContext.request.contextPath}/assets/js/feather/feather-icon.js"></script>
-
-        <!-- Lazyload JS -->
-        <script src="${pageContext.request.contextPath}/assets/js/lazysizes.min.js"></script>
-
-        <!-- Slick JS -->
-        <script src="${pageContext.request.contextPath}/assets/js/slick/slick.js"></script>
-        <script src="${pageContext.request.contextPath}/assets/js/slick/slick-animation.min.js"></script>
-        <script src="${pageContext.request.contextPath}/assets/js/slick/custom_slick.js"></script>
-
-        <!-- Price Range JS -->
-        <script src="${pageContext.request.contextPath}/assets/js/ion.rangeSlider.min.js"></script>
-
-        <!-- Quantity JS -->
-        <script src="${pageContext.request.contextPath}/assets/js/quantity-2.js"></script>
-
-        <!-- Sidebar open JS -->
-        <script src="${pageContext.request.contextPath}/assets/js/filter-sidebar.js"></script>
-
-        <!-- WOW JS -->
-        <script src="${pageContext.request.contextPath}/assets/js/wow.min.js"></script>
-        <script src="${pageContext.request.contextPath}/assets/js/custom-wow.js"></script>
-
-        <!-- Script JS -->
-        <script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
-
-        <script>
-            $(function () {
-                var $range = $(".js-range-slider"),
-                        $inputFrom = $(".js-input-from"),
-                        $inputTo = $(".js-input-to"),
-                        instance,
-                        min = 0,
-                        max = 1000000,
-                        from = localStorage.getItem("rangeFrom") ? parseInt(localStorage.getItem("rangeFrom")) : 0,
-                        to = localStorage.getItem("rangeTo") ? parseInt(localStorage.getItem("rangeTo")) : 500000;
-
-                $range.ionRangeSlider({
-                    type: "double",
-                    min: min,
-                    max: max,
-                    from: from, // Gán giá trị đã lưu
-                    to: to, // Gán giá trị đã lưu
-                    prefix: '$. ',
-                    onStart: updateInputs,
-                    onChange: updateInputs,
-                    onFinish: saveValues, // Lưu khi người dùng kết thúc thao tác
-                    step: 50000,
-                    prettify_enabled: true,
-                    prettify_separator: ".",
-                    values_separator: " - ",
-                    force_edges: true
-                });
-
-                instance = $range.data("ionRangeSlider");
-
-                function updateInputs(data) {
-                    $inputFrom.val(data.from);
-                    $inputTo.val(data.to);
-                }
-
-                function saveValues(data) {
-                    localStorage.setItem("rangeFrom", data.from);
-                    localStorage.setItem("rangeTo", data.to);
-                }
-            });
-        </script>
-    </body>
-
-</html>
+                                                    </html>

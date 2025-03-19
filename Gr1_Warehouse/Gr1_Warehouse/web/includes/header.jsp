@@ -150,13 +150,13 @@
                                                             <% } else { %>
                                                             <!-- Nếu chưa đăng nhập, hiển thị các tùy chọn khác -->
                                                             <li class="product-box-contain">
-                                                                <a href="${pageContext.request.contextPath}/login">Log In</a>
+                                                                <a href="${pageContext.request.contextPath}/login">Đăng nhập</a>
                                                             </li>
                                                             <li class="product-box-contain">
-                                                                <a href="${pageContext.request.contextPath}/register">Register</a>
+                                                                <a href="${pageContext.request.contextPath}/register">Đăng kí</a>
                                                             </li>
                                                             <li class="product-box-contain">
-                                                                <a href="${pageContext.request.contextPath}/request">Forgot Password</a>
+                                                                <a href="${pageContext.request.contextPath}/request">Quên mật khẩu</a>
                                                             </li>
                                                             <% } %>
                                                         </ul>

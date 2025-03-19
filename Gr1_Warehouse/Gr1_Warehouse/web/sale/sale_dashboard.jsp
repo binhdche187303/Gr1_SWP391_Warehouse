@@ -230,6 +230,18 @@
                                             </li>
                                         </ul>
                                     </li>
+                                    
+                                    <li class="sidebar-list">
+                                        <a class="sidebar-link sidebar-title" href="javascript:void(0)">
+                                            <i class="ri-archive-line"></i>
+                                            <span>Khách hàng</span>
+                                        </a>
+                                        <ul class="sidebar-submenu">
+                                            <li>
+                                                <a href="/Gr1_Warehouse/browse-cus">Danh sách khách hàng</a>
+                                            </li>
+                                        </ul>
+                                    </li>
                                     <li class="sidebar-list">
                                         <a class="sidebar-link sidebar-title link-nav" href="reports.html">
                                             <i class="ri-file-chart-line"></i>

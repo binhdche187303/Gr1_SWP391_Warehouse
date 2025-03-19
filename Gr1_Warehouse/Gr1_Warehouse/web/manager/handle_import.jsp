@@ -567,7 +567,7 @@
                             daysLeftMessage.style.color = daysLeft <= 7 ? "red" : "green";
                         }
                     }
-// Cột: Giá
+// Tạo cột và input cho giá
                     const priceCol = document.createElement("td");
                     const priceInput = document.createElement("input");
                     priceInput.type = "number";
@@ -577,7 +577,7 @@
                     priceCol.style.width = "120px";
                     priceCol.style.textAlign = "center";
 
-// Cột: Số lượng
+// Tạo cột và input cho số lượng
                     const quantityCol = document.createElement("td");
                     const quantityInput = document.createElement("input");
                     quantityInput.type = "number";
@@ -586,14 +586,20 @@
                     quantityCol.appendChild(quantityInput);
                     quantityCol.style.width = "120px";
                     quantityCol.style.textAlign = "center";
-//  Gắn sự kiện `blur` ngay sau khi tạo input check validate
-                    quantityInput.addEventListener("blur", function () {
-                        validateAndUpdateTotal(this);
+
+// Gắn sự kiện `blur` cho priceInput và quantityInput
+                    priceInput.addEventListener("blur", function () {
+                        if (this) { // Kiểm tra input có hợp lệ không
+                            validateAndUpdateTotal(this);
+                        }
                     });
 
-                    priceInput.addEventListener("blur", function () {
-                        validateAndUpdateTotal(this);
+                    quantityInput.addEventListener("blur", function () {
+                        if (this) { // Kiểm tra input có hợp lệ không
+                            validateAndUpdateTotal(this);
+                        }
                     });
+
 // Cột: Tổng giá
                     const totalPriceCol = document.createElement("td");
                     const totalPriceSpan = document.createElement("span");
@@ -635,37 +641,65 @@
             });
 // 🔹 Hàm kiểm tra giá trị nhập vào và cập nhật tổng giá
             function validateAndUpdateTotal(input) {
-                let value = parseFloat(input.value);
+                if (!input) {
+                    console.error("Input không hợp lệ!");
+                    return; // Nếu input không hợp lệ, thoát hàm
+                }
 
-                if (isNaN(value) || value <= 0) {
-                    alert(input.classList.contains("price") ? "Giá phải là số dương!" : "Số lượng phải là số nguyên dương!");
-                    input.value = "1"; // Nếu nhập sai, reset về 1
-                } else {
-                    if (input.classList.contains("quantity")) {
+                // Ensure input has classList before trying to access 'contains'
+                if (input.classList && input.classList.contains("price")) {
+                    let value = parseFloat(input.value);
+
+                    if (isNaN(value) || value <= 0) {
+                        alert("Giá phải là số dương!");
+                        input.value = "1"; // Nếu nhập sai, reset về 1
+                    } else {
+                        input.value = value;
+                    }
+                }
+
+                if (input.classList && input.classList.contains("quantity")) {
+                    let value = parseFloat(input.value);
+
+                    if (isNaN(value) || value <= 0) {
+                        alert("Số lượng phải là số nguyên dương!");
+                        input.value = "1"; // Nếu nhập sai, reset về 1
+                    } else {
                         if (!Number.isInteger(value)) {
                             alert("Số lượng phải là số nguyên! Hệ thống sẽ làm tròn xuống.");
                             input.value = Math.floor(value); // Làm tròn xuống số nguyên gần nhất
                         }
-                    } else if (input.classList.contains("price")) {
-                        input.value = value; // Giữ nguyên giá trị nhập vào, không làm tròn
                     }
                 }
 
                 updateTotalPrice(); // Cập nhật lại tổng giá
             }
 
+
+// Hàm ngăn chặn phím Enter
             function preventEnter(input) {
+                if (!input)
+                    return; // Kiểm tra nếu input không hợp lệ
+
                 input.addEventListener("keydown", function (event) {
                     if (event.key === "Enter") {
                         event.preventDefault();
-                        this.blur();
+                        this.blur(); // Mất focus khỏi input khi nhấn Enter
                     }
                 });
             }
 
 // Sau khi tạo input, gọi hàm này
-            preventEnter(priceInput);
-            preventEnter(quantityInput);
+            const priceInput = document.querySelector(".price"); // Chọn phần tử input giá
+            const quantityInput = document.querySelector(".quantity"); // Chọn phần tử input số lượng
+
+// Kiểm tra và ngăn chặn phím Enter
+            if (priceInput)
+                preventEnter(priceInput);
+            if (quantityInput)
+                preventEnter(quantityInput);
+
+
 
 
 
@@ -837,10 +871,20 @@
                 let quantity = row.querySelector(".quantity").value.trim();
                 unitPrice = parseFloat(unitPrice);
                 quantity = parseInt(quantity, 10);
+
+                // Kiểm tra ngày hết hạn
+                if (expirationDate && new Date(expirationDate) < new Date()) {
+                    console.log("SKU đang kiểm tra:", sku);  // In ra giá trị của skus
+                    alert("Lô hàng với SKU: " + sku + " đã hết hạn! Không thể nhập hàng.");
+                    isValid = false;
+                    break;
+                }
+
+
                 if (!variantId || parseInt(variantId) <= 0) {
                     variantId = await fetchVariantId(sku);
                     if (!variantId) {
-                        alert(`Không thể tìm thấy Variant ID cho SKU: ${sku}. Hãy kiểm tra lại!`);
+                        alert("Không thể tìm thấy Variant ID cho SKU: " + sku + ". Hãy kiểm tra lại!");
                         isValid = false;
                         break;
                     }

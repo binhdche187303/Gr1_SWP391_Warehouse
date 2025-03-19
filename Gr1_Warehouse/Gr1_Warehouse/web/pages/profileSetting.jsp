@@ -538,7 +538,8 @@
                                                                                 "</div>" +
                                                                                 "</div>" +
                                                                                 "<div class='order-footer d-flex justify-content-end'>" +
-                                                                                "<a href='customerOrderDetail?orderId=" + order.orderId + "' class='btn btn-primary'>View Details</a>" +
+                                                                                "<a href='customerOrderDetail?orderId=" + order.orderId + "' class='btn btn-primary'>Xem chi tiết</a>" +
+                                                                                
                                                                                 "</div>" +
                                                                                 "</div>" +
                                                                                 "</div>";

@@ -58,10 +58,10 @@
                                 <div class="card card-table">
                                     <div class="card-body">
                                         <div class="title-header option-title">
-                                            <h5>All Suppliers</h5>
+                                            <h5>Tất cả các nhà cung cấp</h5>
                                             <form class="d-inline-flex">
                                                 <button type="button" class="align-items-center btn btn-theme d-flex" data-bs-toggle="modal" data-bs-target="#addSupplierModal">
-                                                    <i data-feather="plus"></i>Add New Supplier
+                                                    <i data-feather="plus"></i>Thêm nhà cung cấp mới
                                                 </button>
                                             </form>
                                         </div>

@@ -67,86 +67,95 @@ public class OrderDetailServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html; charset=UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        request.setCharacterEncoding("UTF-8"); // Đảm bảo request nhận UTF-8
+protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    response.setContentType("text/html; charset=UTF-8");
+    response.setCharacterEncoding("UTF-8");
+    request.setCharacterEncoding("UTF-8"); // Đảm bảo request nhận UTF-8
 
-        // 🟢 Lấy orderId từ request
-        int orderId;
-        try {
-            orderId = Integer.parseInt(request.getParameter("orderId"));
-        } catch (NumberFormatException e) {
-            System.out.println("🔴 Lỗi: orderId không hợp lệ!");
-            response.getWriter().println("Lỗi: orderId không hợp lệ!");
-            return;
-        }
-
-        // 🟢 Lấy thông tin đơn hàng từ DB
-        OrderDAO orderDAO = new OrderDAO();
-        OrderDetailDTO orderDetailDTO = orderDAO.getOrderDetails(orderId);
-
-        if (orderDetailDTO == null || orderDetailDTO.getOrder() == null) {
-            System.out.println("🔴 Lỗi: Không tìm thấy đơn hàng với ID " + orderId);
-            response.getWriter().println("Lỗi: Không tìm thấy đơn hàng!");
-            return;
-        }
-
-        // 🟢 Lấy danh sách dữ liệu từ DTO
-        Order order = orderDetailDTO.getOrder();
-        User user = orderDetailDTO.getUser();
-        Payment payment = orderDetailDTO.getPayment();
-        List<OrderDetail> orderDetails = orderDetailDTO.getOrderDetails();
-        List<Products> products = orderDetailDTO.getProducts();
-        List<ProductVariants> productVariants = orderDetailDTO.getProductVariants();
-
-        // 🟢 In ra thông tin đơn hàng
-        System.out.println("📌 Thông tin đơn hàng:");
-        System.out.println("🔹 Order ID: " + order.getOrderId());
-        System.out.println("🔹 Ngày đặt hàng: " + order.getOrderDate());
-        System.out.println("🔹 Trạng thái đơn hàng: " + order.getStatus());
-        System.out.println("🔹 Trạng thái thanh toán: " + (payment != null ? payment.getPaymentStatus() : "Không có thông tin"));
-
-        // 🟢 Tính tổng tiền đơn hàng
-        BigDecimal totalAmount = BigDecimal.ZERO;
-        for (int i = 0; i < orderDetails.size(); i++) {
-            OrderDetail detail = orderDetails.get(i);
-
-            // Lấy thông tin sản phẩm từ danh sách trong DTO
-            Products product = (products != null && i < products.size()) ? products.get(i) : null;
-            ProductVariants variant = (productVariants != null && i < productVariants.size()) ? productVariants.get(i) : null;
-
-            // Kiểm tra và lấy giá trị
-            String productName = (product != null) ? product.getProductName() : "Không có thông tin";
-            String sku = (variant != null) ? variant.getSku() : "Không có thông tin";
-            BigDecimal unitPrice = detail.getUnitPrice();
-            BigDecimal quantity = BigDecimal.valueOf(detail.getQuantity());
-
-            // Tính tổng tiền
-            totalAmount = totalAmount.add(unitPrice.multiply(quantity));
-
-            // 🟢 In thông tin sản phẩm
-            System.out.println("🔸 Sản phẩm #" + (i + 1) + ":");
-            System.out.println("   - Tên sản phẩm: " + productName);
-            System.out.println("   - SKU: " + sku);
-            System.out.println("   - Số lượng: " + quantity);
-            System.out.println("   - Đơn giá: " + unitPrice);
-            System.out.println("   - Thành tiền: " + unitPrice.multiply(quantity));
-        }
-
-        // 🟢 In tổng tiền
-        System.out.println("💰 Tổng tiền đơn hàng: " + totalAmount);
-
-        // 🟢 Chuyển dữ liệu sang JSP
-        SaleDAO sd = new SaleDAO();
-        Sale s = sd.getSaleByOrderId(orderId);
-        request.setAttribute("sale", s);
-        request.setAttribute("totalAmount", totalAmount);
-        request.setAttribute("orderDetailDTO", orderDetailDTO);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/manager/export_good.jsp");
-        dispatcher.forward(request, response);
+    // 🟢 Lấy orderId từ request
+    int orderId;
+    try {
+        orderId = Integer.parseInt(request.getParameter("orderId"));
+    } catch (NumberFormatException e) {
+        System.out.println("🔴 Lỗi: orderId không hợp lệ!");
+        response.getWriter().println("Lỗi: orderId không hợp lệ!");
+        return;
     }
 
+    // 🟢 Lấy thông tin đơn hàng từ DB
+    OrderDAO orderDAO = new OrderDAO();
+    OrderDetailDTO orderDetailDTO = orderDAO.getOrderDetails(orderId);
+
+    if (orderDetailDTO == null || orderDetailDTO.getOrder() == null) {
+        System.out.println("🔴 Lỗi: Không tìm thấy đơn hàng với ID " + orderId);
+        response.getWriter().println("Lỗi: Không tìm thấy đơn hàng!");
+        return;
+    }
+
+    // 🟢 Lấy danh sách dữ liệu từ DTO
+    Order order = orderDetailDTO.getOrder();
+    User user = orderDetailDTO.getUser();
+    Payment payment = orderDetailDTO.getPayment();
+    List<OrderDetail> orderDetails = orderDetailDTO.getOrderDetails();
+    List<Products> products = orderDetailDTO.getProducts();
+    List<ProductVariants> productVariants = orderDetailDTO.getProductVariants();
+    List<Sizes> sizes = orderDetailDTO.getSizes(); // Sửa từ getSizeList() thành getSizes()
+
+    // 🟢 In ra thông tin đơn hàng
+    System.out.println("📌 Thông tin đơn hàng:");
+    System.out.println("🔹 Order ID: " + order.getOrderId());
+    System.out.println("🔹 Ngày đặt hàng: " + order.getOrderDate());
+    System.out.println("🔹 Trạng thái đơn hàng: " + order.getStatus());
+    System.out.println("🔹 Trạng thái thanh toán: " + (payment != null ? payment.getPaymentStatus() : "Không có thông tin"));
+
+    // 🟢 Tính tổng tiền đơn hàng
+    BigDecimal totalAmount = BigDecimal.ZERO;
+    for (int i = 0; i < orderDetails.size(); i++) {
+        OrderDetail detail = orderDetails.get(i);
+        
+        // Tìm sản phẩm dựa trên productId
+        int productId = detail.getProductId();
+        Products product = products.stream()
+                .filter(p -> p.getProductId() == productId)
+                .findFirst()
+                .orElse(null);
+        
+        // Tìm biến thể và size dựa trên index
+        ProductVariants variant = (i < productVariants.size()) ? productVariants.get(i) : null;
+        Sizes size = (i < sizes.size()) ? sizes.get(i) : null;
+
+        // Kiểm tra và lấy giá trị
+        String productName = (product != null) ? product.getProductName() : "Không có thông tin";
+        String sku = (variant != null) ? variant.getSku() : "Không có thông tin";
+        String sizeName = (size != null) ? size.getSize_name() : "Không có thông tin";
+        BigDecimal unitPrice = detail.getUnitPrice();
+        BigDecimal quantity = BigDecimal.valueOf(detail.getQuantity());
+
+        // Tính tổng tiền
+        totalAmount = totalAmount.add(unitPrice.multiply(quantity));
+
+        // 🟢 In thông tin sản phẩm - luôn hiển thị tên sản phẩm và size cho mỗi biến thể
+        System.out.println("🔸 Sản phẩm #" + (i + 1) + ":");
+        System.out.println("   - Tên sản phẩm: " + productName);
+        System.out.println("   - SKU: " + sku);
+        System.out.println("   - Size: " + sizeName);
+        System.out.println("   - Số lượng: " + quantity);
+        System.out.println("   - Đơn giá: " + unitPrice);
+        System.out.println("   - Thành tiền: " + unitPrice.multiply(quantity));
+    }
+
+    // 🟢 In tổng tiền
+    System.out.println("💰 Tổng tiền đơn hàng: " + totalAmount);
+
+    // 🟢 Chuyển dữ liệu sang JSP
+    SaleDAO sd = new SaleDAO();
+    Sale s = sd.getSaleByOrderId(orderId);
+    request.setAttribute("sale", s);
+    request.setAttribute("totalAmount", totalAmount);
+    request.setAttribute("orderDetailDTO", orderDetailDTO);
+    request.getRequestDispatcher("/manager/export_good.jsp").forward(request, response);
+    
+}
     /**
      * Handles the HTTP <code>POST</code> method.
      *

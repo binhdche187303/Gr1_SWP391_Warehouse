@@ -72,41 +72,86 @@
                     <div class="col-xxl-4 col-xl-5 col-lg-6 col-sm-8 mx-auto">
                         <div class="log-in-box">
                             <div class="log-in-title">
-                                <h3>Welcome To Fastkart</h3>
+                                <h3>Chào mừng đến với BULKMART</h3>                                
                                 <h4>Tạo tài khoản mới</h4>
                             </div>
 
                             <div class="input-box">
                                 <!-- Registration Form -->
                                 <form action="${pageContext.request.contextPath}/register" method="post" class="mt-4">
+                                    <c:if test="${not empty error}">
+                                        <div class="alert alert-danger">${error}</div>
+                                    </c:if>
+
                                     <div class="form-group">
                                         <label for="email">Email</label>
-                                        <input type="email" class="form-control" id="email" name="email" required value="${param.email}">
+                                        <input type="email" class="form-control" id="email" name="email" required value="${email}">
+                                        <c:if test="${not empty errorEmail}">
+                                            <small class="text-danger">${errorEmail}</small>
+                                        </c:if>
                                     </div>
 
                                     <div class="form-group mt-3">
                                         <label for="username">Tên người dùng</label>
-                                        <input type="text" class="form-control" id="username" name="username" required value="${param.username}">
+                                        <input type="text" class="form-control" id="username" name="username" required value="${username}">
+                                        <c:if test="${not empty errorUsername}">
+                                            <small class="text-danger">${errorUsername}</small>
+                                        </c:if>
                                     </div>
 
                                     <div class="form-group mt-3">
                                         <label for="password">Mật khẩu</label>
-                                        <input type="password" class="form-control" id="password" name="password" required>
+                                        <input type="password" class="form-control" id="password" name="password" required value="${password}">
+                                        <small class="text-muted">Ít nhất 1 chữ in hoa, 1 ký tự đặc biệt, 1 số, tối thiểu 8 ký tự.</small>
+                                        <c:if test="${not empty errorPassword}">
+                                            <small class="text-danger">${errorPassword}</small>
+                                        </c:if>
                                     </div>
 
                                     <div class="form-group mt-3">
                                         <label for="fullname">Tên đầy đủ</label>
-                                        <input type="text" class="form-control" id="fullname" name="fullname" required value="${param.fullname}">
+                                        <input type="text" class="form-control" id="fullname" name="fullname" required value="${fullname}">
                                     </div>
 
                                     <div class="form-group mt-3">
                                         <label for="phone">Số điện thoại</label>
-                                        <input type="text" class="form-control" id="phone" name="phone" required value="${param.phone}">
+                                        <input type="text" class="form-control" id="phone" name="phone" required value="${phone}">
+                                        <c:if test="${not empty errorPhone}">
+                                            <small class="text-danger">${errorPhone}</small>
+                                        </c:if>
                                     </div>
-                                    <br><!-- comment -->
-                                <div class="col-12">
-                                    <button class="btn btn-animation w-100" type="submit">Đăng kí</button>
-                                </div>                               
+
+                                    <!-- 🏪 Thêm thông tin cửa hàng -->
+                                    <div class="form-group mt-3">
+                                        <label for="storeName">Tên cửa hàng</label>
+                                        <input type="text" class="form-control" id="storeName" name="storeName" required value="${storeName}">
+                                    </div>
+
+                                    <div class="form-group mt-3">
+                                        <label for="storeAddress">Địa chỉ cửa hàng</label>
+                                        <input type="text" class="form-control" id="storeAddress" name="storeAddress" required value="${storeAddress}">
+                                    </div>
+
+                                    <div class="form-group mt-3">
+                                        <label for="taxCode">Mã số thuế</label>
+                                        <input type="text" class="form-control" id="taxCode" name="taxCode" required value="${taxCode}">
+                                        <c:if test="${not empty errorTaxCode}">
+                                            <small class="text-danger">${errorTaxCode}</small>
+                                        </c:if>
+                                    </div>
+
+                                    <div class="form-group mt-3">
+                                        <label for="businessLicense">Giấy phép kinh doanh (URL Google Drive)</label>
+                                        <input type="text" class="form-control" id="businessLicense" name="businessLicense" required 
+                                               value="${param.businessLicense}"
+                                               pattern="https://drive\.google\.com/file/d/[a-zA-Z0-9_-]+/view"
+                                               title="Vui lòng nhập đúng định dạng Google Drive: https://drive.google.com/file/d/[ID]/view">
+                                        <small class="text-muted">Ví dụ: https://drive.google.com/file/d/11qqtZj31PQRjCVBu80IdsJTfw2sGlkuh/view</small>
+                                    </div>
+
+                                    <div class="col-12 mt-4">
+                                        <button class="btn btn-animation w-100" type="submit">Đăng kí</button>
+                                    </div>
                                 </form>
 
                             </div>

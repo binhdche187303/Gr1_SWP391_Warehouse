@@ -284,6 +284,10 @@
         <servlet-name>ProductByWarehouse</servlet-name>
         <servlet-class>dashboardController.ProductByWarehouse</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>BrowseCus</servlet-name>
+        <servlet-class>SaleController.BrowseCus</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ArchiveServlet</servlet-name>
         <url-pattern>/archive</url-pattern>
@@ -575,6 +579,10 @@
     <servlet-mapping>
         <servlet-name>ProductByWarehouse</servlet-name>
         <url-pattern>/product-warehouse</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BrowseCus</servlet-name>
+        <url-pattern>/browse-cus</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>login</welcome-file>
