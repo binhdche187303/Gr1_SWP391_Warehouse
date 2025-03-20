@@ -138,6 +138,7 @@ public class DiscountProductDetail extends HttpServlet {
 
                 // Set fresh data to request attributes
                 request.setAttribute("product_name", product_name);
+                request.setAttribute("product_id", product_id);
                 request.setAttribute("listDiscountProduct", listDiscountProduct);
                 request.setAttribute("listDiscountProductHistory", listDiscountProductHistory);
 

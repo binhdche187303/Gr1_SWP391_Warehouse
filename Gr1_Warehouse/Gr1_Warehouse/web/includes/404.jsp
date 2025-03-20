@@ -129,7 +129,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="image-404">
-                            <img src="${pageContext.request.contextPath}/assets/images/inner-page/404.png" class="img-fluid blur-up lazyload" alt="">
+                            <img src="${pageContext.request.contextPath}/assets/images/inner-page/404.png" class="img-fluid" alt="">
                         </div>
                     </div>
 

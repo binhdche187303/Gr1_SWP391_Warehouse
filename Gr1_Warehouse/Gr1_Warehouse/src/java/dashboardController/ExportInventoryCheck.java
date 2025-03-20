@@ -2,30 +2,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller;
+package dashboardController;
 
-import com.google.gson.Gson;
-import dao.OrderDAO;
+import dao.InventoryDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
-import model.Order;
-import model.OrderDetail;
-import model.OrderDetailDTO;
-import model.User;
+import model.InventoryCheck;
+import model.InventoryCheckDetailDTO;
 
 /**
  *
  * @author Dell
  */
-public class CustomerOrderServlet extends HttpServlet {
+public class ExportInventoryCheck extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,10 +38,10 @@ public class CustomerOrderServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CustomerOrderServlet</title>");
+            out.println("<title>Servlet ExportInventoryCheck</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CustomerOrderServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ExportInventoryCheck at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -65,38 +59,52 @@ public class CustomerOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("acc") == null) {
-            response.sendRedirect("login");
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
+
+        System.out.println("=== Bắt đầu xử lý doGet trong InventoryCheckServlet ===");
+
+        InventoryDAO dao = new InventoryDAO();
+        String checkIdParam = request.getParameter("checkId");
+
+        // Kiểm tra checkId có hợp lệ không
+        if (checkIdParam == null || !checkIdParam.matches("\\d+")) {
+            System.out.println("[LỖI] Mã phiếu kiểm không hợp lệ: " + checkIdParam);
+            request.setAttribute("error", "Mã phiếu kiểm không hợp lệ.");
+            request.getRequestDispatcher("/manager/export_inventory_check.jsp").forward(request, response);
             return;
         }
 
-        User currentUser = (User) session.getAttribute("acc");
-        int customerId = currentUser.getUserId();
-        System.out.println("🔹 [INFO] User ID: " + customerId + " - Đang lấy danh sách đơn hàng.");
+        try {
+            int checkId = Integer.parseInt(checkIdParam);
+            System.out.println("[INFO] Đã nhận được checkId: " + checkId);
 
-        OrderDAO orderDAO = new OrderDAO();
-        List<OrderDetailDTO> orderList = orderDAO.getOrdersByCustomerId(customerId);
-        // Log kết quả trả về từ DB
-        if (orderList.isEmpty()) {
-            System.out.println("⚠️ [INFO] Không có đơn hàng nào được tìm thấy cho khách hàng ID: " + customerId);
-        } else {
-            System.out.println("✅ [SUCCESS] Tìm thấy " + orderList.size() + " đơn hàng cho khách hàng ID: " + customerId);
-            for (OrderDetailDTO orderDetail : orderList) {
-                Order order = orderDetail.getOrder();
-                System.out.println("🛒 Đơn hàng ID: " + order.getOrderId()
-                        + " | Ngày đặt: " + order.getOrderDate()
-                        + " | Tổng tiền: " + order.getTotalAmount()
-                        + " | Trạng thái: " + order.getStatus());
+            List<InventoryCheckDetailDTO> list = dao.getInventoryCheckDetail(checkId);
+            InventoryCheck check = dao.getInventoryCheckDetails(checkId);
+
+            // Log dữ liệu truy vấn được
+            System.out.println("[INFO] Dữ liệu InventoryCheckDetailDTO:");
+            for (InventoryCheckDetailDTO detail : list) {
+                System.out.println("  - " + detail.toString());
             }
-        }
-        response.setContentType("application/json;charset=UTF-8");
-        PrintWriter out = response.getWriter();
 
-        Gson gson = new Gson();
-        String json = gson.toJson(orderList);
-        out.print(json);
-        out.flush();
+            System.out.println("[INFO] Dữ liệu InventoryCheck:");
+            System.out.println("  - " + check.toString());
+
+            request.setAttribute("idlist", list);
+            request.setAttribute("check", check);
+            System.out.println("[INFO] Chuyển hướng đến export_inventory_check.jsp");
+            request.getRequestDispatcher("/manager/export_inventory_check.jsp").forward(request, response);
+
+        } catch (NumberFormatException e) {
+            System.out.println("[LỖI] Lỗi khi chuyển đổi checkId: " + checkIdParam);
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("[LỖI] Xảy ra ngoại lệ không mong muốn:");
+            e.printStackTrace();
+        }
+
+        System.out.println("=== Kết thúc xử lý doGet ===");
     }
 
     /**

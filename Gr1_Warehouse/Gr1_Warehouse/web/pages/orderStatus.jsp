@@ -42,153 +42,122 @@
 
         <!-- Template css -->
         <link id="color-link" rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/style.css">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f8f9fa;
+                margin: 0;
+                padding: 0;
+            }
+
+            .cd__main {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 80vh;
+            }
+
+            .jumbotron {
+                background: #f2f4f7; /* Màu nền nhạt */
+                padding: 40px;
+                border-radius: 10px;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+                text-align: center;
+                width: 60%;
+            }
+
+            .jumbotron h1 {
+                font-size: 2.5rem;
+                color: #333;
+                font-weight: 600;
+                margin-bottom: 15px;
+            }
+
+            .jumbotron p.lead {
+                font-size: 1.2rem;
+                color: #666;
+            }
+
+            .jumbotron hr {
+                width: 80%;
+                border-top: 1px solid #ddd;
+                margin: 20px auto;
+            }
+
+            .btn-primary {
+                background-color: #007bff;
+                border: none;
+                padding: 10px 20px;
+                font-size: 1rem;
+                border-radius: 6px;
+                transition: 0.3s ease-in-out;
+            }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+            }
+
+        </style>
     </head>
 
-
     <body>
+        <%@ include file="/includes/header.jsp" %>
+        <main class="cd__main">
+            <div class="jumbotron text-center">
+                <h1 class="display-3">
+                    <%
+                        String status = (String) request.getAttribute("status");
+                        if ("success".equals(status)) {
+                    %>
+                    Cảm ơn bạn đã đặt hàng!
+                    <%
+                        } else if ("error".equals(status)) {
+                    %>
+                    Đặt hàng thất bại!
+                    <%
+                        } else if ("emptyCart".equals(status)) {
+                    %>
+                    Giỏ hàng trống!
+                    <%
+                        } else {
+                    %>
+                    Trạng thái không xác định!
+                    <%
+                        }
+                    %>
+                </h1>
 
-        <!-- Header Start -->
-        <%@ include file="/includes/header.jsp" %> <!-- Nhúng header -->
-        <!-- Header End -->
+                <p class="lead">
+                    <strong>
+                        <%
+                            if ("success".equals(status)) {
+                        %>
+                        Đơn hàng của bạn đã được xác nhận. Chúng tôi sẽ sớm liên hệ với bạn!
+                        <%
+                            } else if ("error".equals(status)) {
+                        %>
+                        Có lỗi xảy ra khi xử lý đơn hàng. Vui lòng thử lại sau!
+                        <%
+                            } else if ("emptyCart".equals(status)) {
+                        %>
+                        Không có sản phẩm nào trong giỏ hàng để thanh toán!
+                        <%
+                            } else {
+                        %>
+                        Hãy kiểm tra lại thông tin đơn hàng của bạn.
+                        <%
+                            }
+                        %>
+                    </strong>
+                </p>
 
-        <!-- mobile fix menu start -->
-        <div class="mobile-menu d-md-none d-block mobile-cart">
-            <ul>
-                <li class="active">
-                    <a href="index.html">
-                        <i class="iconly-Home icli"></i>
-                        <span>Home</span>
-                    </a>
-                </li>
+                <hr />
 
-                <li class="mobile-category">
-                    <a href="javascript:void(0)">
-                        <i class="iconly-Category icli js-link"></i>
-                        <span>Category</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="search.html" class="search-box">
-                        <i class="iconly-Search icli"></i>
-                        <span>Search</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="wishlist.html" class="notifi-wishlist">
-                        <i class="iconly-Heart icli"></i>
-                        <span>My Wish</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="cart.html">
-                        <i class="iconly-Bag-2 icli fly-cate"></i>
-                        <span>Cart</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <section class="breadscrumb-section pt-0">
-            <div class="container-fluid-lg">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="breadscrumb-contain">
-                            <h2>Checkout page</h2>
-                            <nav>
-                                <ol class="breadcrumb mb-0">
-                                    <li class="breadcrumb-item">
-                                        <a href="index.html">
-                                            <i class="fa-solid fa-house"></i>
-                                        </a>
-                                    </li>
-                                    <li class="breadcrumb-item active" aria-current="page">Cart</li>
-                                </ol>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
+                <p class="lead">
+                    <a class="btn btn-primary btn-sm" href="home" role="button">Tiếp tục mua sắm</a>
+                </p>
             </div>
-        </section>
-        <!-- Breadcrumb Section End -->
-
-        <!-- Cart Section Start -->
-        <section class="cart-section section-b-space">
-            <div class="container-fluid-lg">
-                <div class="row g-sm-5 g-3">
-                    <div class="col-xxl-12">
-                        <div class="cart-table">
-                            <div class="table-responsive-xl">
-                                <%
-        String status = request.getParameter("status");
-        if (status != null) {
-                                %>
-                                <div class="alert
-                                     <%= "success".equals(status) ? "alert-success" : "alert-danger" %>
-                                     alert-dismissible fade show" role="alert">
-                                    <strong>
-                                        <%= "success".equals(status) ? "Order placed successfully!" : "Order failed. Please try again!" %>
-                                    </strong>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                                <%
-                                    }
-                                %>
-
-                            </div>
-                            <p class="lead">
-                                <a class="btn btn-primary btn-sm" href="${pageContext.request.contextPath}/home" role="button">
-                                    Continue to homepage
-                                </a>
-
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
+        </main>
         <%@ include file="/includes/footer.jsp" %>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
-        <!-- Latest jQuery -->
-        <script src="${pageContext.request.contextPath}/assets/js/jquery-3.6.0.min.js"></script>
-
-        <!-- jQuery UI -->
-        <script src="${pageContext.request.contextPath}/assets/js/jquery-ui.min.js"></script>
-        <!-- Bootstrap JS -->
-        <script src="${pageContext.request.contextPath}/assets/js/bootstrap/bootstrap.bundle.min.js"></script>
-        <script src="${pageContext.request.contextPath}/assets/js/bootstrap/bootstrap-notify.min.js"></script>
-        <script src="${pageContext.request.contextPath}/assets/js/bootstrap/popper.min.js"></script>
-
-        <!-- Feather icon JS -->
-        <script src="${pageContext.request.contextPath}/assets/js/feather/feather.min.js"></script>
-        <script src="${pageContext.request.contextPath}/assets/js/feather/feather-icon.js"></script>
-
-        <!-- Lazyload JS -->
-        <script src="${pageContext.request.contextPath}/assets/js/lazysizes.min.js"></script>
-
-        <!-- Slick JS -->
-        <script src="${pageContext.request.contextPath}/assets/js/slick/slick.js"></script>
-        <script src="${pageContext.request.contextPath}/assets/js/slick/slick-animation.min.js"></script>
-        <script src="${pageContext.request.contextPath}/assets/js/slick/custom_slick.js"></script>
-
-        <!-- Price Range JS -->
-        <script src="${pageContext.request.contextPath}/assets/js/ion.rangeSlider.min.js"></script>
-
-        <!-- Quantity JS -->
-        <script src="${pageContext.request.contextPath}/assets/js/quantity-2.js"></script>
-
-        <!-- Sidebar open JS -->
-        <script src="${pageContext.request.contextPath}/assets/js/filter-sidebar.js"></script>
-
-        <!-- WOW JS -->
-        <script src="${pageContext.request.contextPath}/assets/js/wow.min.js"></script>
-        <script src="${pageContext.request.contextPath}/assets/js/custom-wow.js"></script>
-
-        <!-- Script JS -->
-        <script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
     </body>
 </html>

@@ -15,7 +15,7 @@
             <div class="invoice-container w-100">
                 <div class="invoice-header d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <h1>Fastkart</h1>
+                        <h1>BULKMART</h1>
                         <p class="text-muted">2345 Đường Tail Ends, ORADELL, New Jersey</p>
                     </div>
                     <div class="text-end">
@@ -108,13 +108,18 @@
             </div>
         </div>
 
+
         <script>
             function printInvoice() {
-                window.print(); // In hóa đơn
-                setTimeout(() => {
-                    window.location.href = "http://localhost:8080/Gr1_Warehouse/my-packing-orders";
-                }, 2000);
+                let orderId = "${orderDetail.order_id}"; // Lấy checkId từ dữ liệu động
+                window.print(); // Mở hộp thoại in
+
+                // Đợi 2 giây trước khi chuyển hướng
+                setTimeout(function () {
+                    window.location.href = "http://localhost:8080/Gr1_Warehouse/orderPackingDetail?orderId=" + orderId;
+                }, 1000);
             }
+
         </script>
 
         <style>

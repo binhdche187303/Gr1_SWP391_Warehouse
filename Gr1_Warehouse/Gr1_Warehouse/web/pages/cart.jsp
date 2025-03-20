@@ -45,6 +45,27 @@
 
         <!-- Template css -->
         <link id="color-link" rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/style.css">
+        <style>
+            .cart-table {
+                overflow-x: auto; /* Cho phép cuộn ngang nếu bảng quá rộng */
+            }
+
+            .cart-table .table {
+                width: 100%;
+                table-layout: auto; /* Đảm bảo bảng tự điều chỉnh kích thước */
+                max-width: 100%; /* Không cho phép bảng rộng hơn thẻ chứa */
+                white-space: nowrap; /* Ngăn chữ xuống dòng gây vỡ layout */
+            }
+            .table td:first-child {
+                text-align: center; /* Căn giữa nội dung trong ô */
+                vertical-align: middle; /* Căn giữa theo chiều dọc */
+            }
+
+            .checkout-checkbox {
+                transform: scale(1.2); /* Tăng kích thước checkbox nếu cần */
+            }
+
+        </style>
     </head>
 
 
@@ -390,7 +411,7 @@
 //                                        });
 //                            });
 //                        });
-                 document.querySelectorAll(".qty-left-minus, .qty-right-plus").forEach(button => {
+                        document.querySelectorAll(".qty-left-minus, .qty-right-plus").forEach(button => {
                             button.addEventListener("click", function () {
                                 let productId = this.dataset.productId;
                                 let sizeId = this.dataset.sizeId;

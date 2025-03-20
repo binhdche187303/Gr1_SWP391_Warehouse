@@ -126,21 +126,16 @@ public class ConfirmOrderController extends HttpServlet {
 
         // Nếu có lỗi, gửi lại form với thông báo lỗi
         if (!errors.isEmpty()) {
-            SizeDAO sizeDAO = new SizeDAO();
-            if (user == null) {
-                response.sendRedirect("login");
-                return;
-            }
             request.setAttribute("user", user);
-            List<Cart> cartItems = (List<Cart>) session.getAttribute("cart_to_checkout");
-            request.setAttribute("cartItems", cartItems);
+            request.setAttribute("cartItems", carts);
             request.setAttribute("errors", errors);
             request.getRequestDispatcher("/pages/checkout.jsp").forward(request, response);
             return;
         }
 
         if (carts == null || carts.isEmpty()) {
-            response.sendRedirect("/pages/orderStatus.jsp?status=emptyCart");
+            request.setAttribute("status", "emptyCart");
+            request.getRequestDispatcher("/pages/orderStatus.jsp").forward(request, response);
             return;
         }
 
@@ -158,19 +153,21 @@ public class ConfirmOrderController extends HttpServlet {
         boolean success = orderDAO.processCheckoutWithPayment(userId, customerName, phoneNumber, email, shippingAddress, notes, orderDetails, totalAmount, paymentMethod);
 
         if (success) {
+            // Xóa các sản phẩm vừa đặt hàng khỏi giỏ hàng trong database
+            CartDAO cartDAO = new CartDAO();
+            cartDAO.removeCheckedOutItems(userId, carts);
 
-    // Xóa các sản phẩm vừa đặt hàng khỏi giỏ hàng trong database
-    CartDAO cartDAO = new CartDAO();
-    boolean cartCleared = cartDAO.removeCheckedOutItems(userId, carts);
-    // Xóa giỏ hàng thanh toán khỏi session
-    session.removeAttribute("cart_to_checkout");
+            // Xóa giỏ hàng thanh toán khỏi session
+            session.removeAttribute("cart_to_checkout");
 
-    response.sendRedirect(request.getContextPath() + "/pages/orderStatus.jsp?status=success");
-} else {
-    response.sendRedirect(request.getContextPath() + "/pages/orderStatus.jsp?status=error");
-}
+            // Chuyển tiếp đến trang orderStatus.jsp với trạng thái thành công
+            request.setAttribute("status", "success");
+        } else {
+            // Chuyển tiếp đến trang orderStatus.jsp với trạng thái lỗi
+            request.setAttribute("status", "error");
+        }
 
-
+        request.getRequestDispatcher("/pages/orderStatus.jsp").forward(request, response);
     }
 
     /**

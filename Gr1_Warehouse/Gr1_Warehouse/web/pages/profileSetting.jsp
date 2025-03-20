@@ -495,6 +495,7 @@
         <script>
                                                 function loadOrders() {
                                                     console.log("📌 Fetching order data...");
+
                                                     fetch('/Gr1_Warehouse/customer-order')
                                                             .then(function (response) {
                                                                 if (!response.ok) {
@@ -511,7 +512,7 @@
                                                                     var dateB = new Date(b.order.orderDate);
                                                                     return dateB - dateA; // Sắp xếp giảm dần
                                                                 });
-                                                                
+
                                                                 var orderHTML = "";
                                                                 if (orderList.length === 0) {
                                                                     orderHTML = "<p class='text-danger'>🚨 Bạn chưa có đơn hàng nào!</p>";
@@ -539,7 +540,6 @@
                                                                                 "</div>" +
                                                                                 "<div class='order-footer d-flex justify-content-end'>" +
                                                                                 "<a href='customerOrderDetail?orderId=" + order.orderId + "' class='btn btn-primary'>Xem chi tiết</a>" +
-                                                                                
                                                                                 "</div>" +
                                                                                 "</div>" +
                                                                                 "</div>";
@@ -551,7 +551,6 @@
                                                                 console.error("❌ Error loading orders:", error);
                                                             });
                                                 }
-
         </script>
 
         <script>

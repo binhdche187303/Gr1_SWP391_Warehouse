@@ -121,7 +121,27 @@
                                                 <div class="border-bottom pb-2 mb-2">
                                                     <h3 class="text-lg font-semibold">Sản phẩm</h3>
                                                 </div>
-                                                
+                                                <div class="mb-4">
+                                                    <div class="row">
+                                                        <div class="col-md-9 d-flex align-items-center">
+                                                            <div class="input-group w-100">
+                                                                <div class="input-group-prepend">
+                                                                    <select class="form-control">
+                                                                        <option value="sku">Tìm kiếm SKU</option>
+                                                                    </select>
+                                                                </div>
+                                                                <input type="text" class="form-control flex-grow-2" placeholder="Tìm kiếm sản phẩm">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 d-flex align-items-center">
+                                                            <!-- Button mở modal -->
+                                                            <button class="btn btn-outline-primary w-auto">
+                                                                Tìm kiếm
+                                                            </button>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
                                                 <!-- Bảng hiển thị sản phẩm đã chọn -->
                                                 <div class="mt-3">
                                                     <table class="table">
@@ -238,78 +258,8 @@
                 </div>
             </div>
         </div>
-<script>
-            // Hàm lọc sản phẩm
-            document.addEventListener("DOMContentLoaded", function () {
-                const searchInput = document.getElementById("searchInput");
 
-                if (searchInput) {
-                    searchInput.addEventListener("input", function () {
-                        const searchTerm = this.value.toLowerCase().trim();
-                        const productRows = document.querySelectorAll("#productTable tr");
-
-                        productRows.forEach(row => {
-                            // Skip if this is not a product row (e.g., no cells)
-                            if (row.cells.length < 2)
-                                return;
-
-                            // Get product name (2nd column) and SKU (4th column)
-                            const productName = row.cells[1].textContent.toLowerCase();
-                            const sku = row.cells[3].textContent.toLowerCase();
-
-                            // Check if either the product name or SKU contains the search term
-                            const matchFound = productName.includes(searchTerm) || sku.includes(searchTerm);
-
-                            // Show/hide the row based on search match
-                            row.style.display = matchFound ? "" : "none";
-                        });
-
-                        // Check if there are any visible rows after filtering
-                        let visibleRows = 0;
-                        productRows.forEach(row => {
-                            if (row.style.display !== "none")
-                                visibleRows++;
-                        });
-
-                        // If no results found and we have a table body
-                        if (visibleRows === 0 && productRows.length > 0) {
-                            // Check if we already have a "no results" row
-                            const noResultsRow = document.getElementById("no-results-row");
-                            if (!noResultsRow) {
-                                const tbody = document.getElementById("productTable");
-                                const tr = document.createElement("tr");
-                                tr.id = "no-results-row";
-                                const td = document.createElement("td");
-                                td.colSpan = 8; // Span all columns
-                                td.textContent = "Không tìm thấy sản phẩm phù hợp";
-                                td.className = "text-center text-muted py-3";
-                                tr.appendChild(td);
-                                tbody.appendChild(tr);
-                            } else {
-                                noResultsRow.style.display = "";
-                            }
-                        } else {
-                            // Remove "no results" row if results found
-                            const noResultsRow = document.getElementById("no-results-row");
-                            if (noResultsRow) {
-                                noResultsRow.style.display = "none";
-                            }
-                        }
-                    });
-
-                    // Add clear button for search input
-                    searchInput.addEventListener("keydown", function (event) {
-                        // Clear results when pressing Escape
-                        if (event.key === "Escape") {
-                            this.value = "";
-                            // Trigger the input event to update the table
-                            this.dispatchEvent(new Event("input"));
-                        }
-                    });
-                }
-            });
-        </script>
-<!--        <script>
+        <script>
         // Hàm lọc sản phẩm
             document.getElementById("searchInput").addEventListener("keyup", function () {
                 let searchText = this.value.toLowerCase();
@@ -326,7 +276,7 @@
                     }
                 });
             });
-        </script>-->
+        </script>
 
         <script>
             document.addEventListener("DOMContentLoaded", function () {

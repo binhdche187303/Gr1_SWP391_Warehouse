@@ -56,10 +56,8 @@ public class LoginServlet extends HttpServlet {
                     }
                 }
             }
-
             request.setAttribute("savedIdentifier", savedIdentifier);
             request.setAttribute("decodedPassword", decodedPassword);
-
             request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
             return;
         }
@@ -131,13 +129,13 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/home");
                 break;
             case 3:  // Warehouse manager
-                response.sendRedirect("/Gr1_Warehouse/manager/manager_dashboard.jsp");
+                response.sendRedirect("/Gr1_Warehouse/managerDashboard");
                 break;
             case 4:  // Warehouse staff
                 response.sendRedirect("/Gr1_Warehouse/staff-checklist");
                 break;
             case 5:  // Packing staff
-                response.sendRedirect("packing/staff/dashboard");
+                response.sendRedirect("/Gr1_Warehouse/packing-orders");
                 break;
             case 6:  // Shipper staff
                 response.sendRedirect("/Gr1_Warehouse/ship-orders");
@@ -312,13 +310,13 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/home");
                 break;
             case 3:  // Warehouse manager
-                response.sendRedirect("/Gr1_Warehouse/manager/manager_dashboard.jsp");
+                response.sendRedirect("/Gr1_Warehouse/managerDashboard");
                 break;
             case 4:  // Warehouse staff
                 response.sendRedirect("/Gr1_Warehouse/staff-checklist");
                 break;
             case 5:  // Packing staff
-                response.sendRedirect("packing/staff/dashboard");
+                response.sendRedirect("/Gr1_Warehouse/packing-orders");
                 break;
             case 6:  // Shipper staff
                 response.sendRedirect("/Gr1_Warehouse/ship-orders");

@@ -3,24 +3,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller;
+package dashboardController;
 
-import dao.ProductDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
-import model.Categories;
-import model.Products;
 
 /**
  *
- * @author Huy Nam
+ * @author Dell
  */
-public class Home extends HttpServlet {
+public class ManagerDashboard extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -37,10 +33,10 @@ public class Home extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Home</title>");  
+            out.println("<title>Servlet ManagerDashboard</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Home at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet ManagerDashboard at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -55,17 +51,10 @@ public class Home extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        ProductDAO dao = new ProductDAO();
-        List<Categories> categories = dao.getAllCategory();
-        List<Products> trendingProducts = dao.getTrendingProducts();
-        List<Products> bestSellerProducts = dao.getBestSellerProducts();
-        request.setAttribute("bestSellerProducts", bestSellerProducts);
-        request.setAttribute("trendingProducts", trendingProducts);
-        request.setAttribute("category", categories);
-        request.getRequestDispatcher("pages/home.jsp").forward(request, response);
-    }
+        request.getRequestDispatcher("/manager/manager_dashboard.jsp").forward(request, response);
+    } 
 
     /** 
      * Handles the HTTP <code>POST</code> method.

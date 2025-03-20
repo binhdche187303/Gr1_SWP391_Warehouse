@@ -241,4 +241,10 @@ public class InventoryCheckDetailDTO {
     public void setPriceDifferenceDown(double priceDifferenceDown) {
         this.priceDifferenceDown = priceDifferenceDown;
     }
+
+    @Override
+    public String toString() {
+        return "InventoryCheckDetailDTO{" + "checkId=" + checkId + ", status=" + status + ", completedAt=" + completedAt + ", fullname=" + fullname + ", userPhone=" + userPhone + ", userEmail=" + userEmail + ", warehouseName=" + warehouseName + ", warehouseAddress=" + warehouseAddress + ", warehousePhone=" + warehousePhone + ", productName=" + productName + ", sku=" + sku + ", sizeName=" + sizeName + ", batchId=" + batchId + ", recordedQuantity=" + recordedQuantity + ", actualQuantity=" + actualQuantity + ", discrepancy=" + discrepancy + ", differencePrice=" + differencePrice + ", expirationDate=" + expirationDate + ", reason=" + reason + ", warehouseStaff=" + warehouseStaff + ", notes=" + notes + ", differenceUp=" + differenceUp + ", differenceDown=" + differenceDown + ", priceDifferenceUp=" + priceDifferenceUp + ", priceDifferenceDown=" + priceDifferenceDown + '}';
+    }
+    
 }

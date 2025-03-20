@@ -52,7 +52,7 @@
                 <p><strong>Mã đơn hàng:</strong> #${orderDetail.order.orderId}</p>
                 <p><strong>Ngày đặt hàng:</strong> ${orderDetail.order.orderDate}</p>
                 <p><strong>Trạng thái đơn hàng:</strong> 
-                    <span class="badge ${orderDetail.order.status eq 'Pending' ? 'bg-warning' : 'bg-success'}">
+                    <span class="badge ${orderDetail.order.status eq 'Chờ xử lý' ? 'bg-warning' : 'bg-success'}">
                         ${orderDetail.order.status}
                     </span>
                 </p>
@@ -120,16 +120,21 @@
 
                 <form action="ajaxServlet" method="post">
                     <input type="hidden" name="orderId" value="${orderDetail.order.orderId}">
-                    <!-- Deposit Button -->
-                    <button type="submit" id="depositButton" class="btn btn-primary mt-3">Cọc 50% giá trị đơn hàng</button>
+
+                    <!-- Kiểm tra nếu trạng thái đơn hàng là "Đã xác nhận" thì mới hiển thị nút -->
+                    <c:if test="${orderDetail.order.status eq 'Đã xác nhận' and (paymentStatus eq 'Chờ xử lý' or paymentStatus eq 'Thanh toán thất bại')}">
+                        <button type="submit" id="depositButton" class="btn btn-primary mt-3">
+                            Cọc 50% giá trị đơn hàng
+                        </button>
+                    </c:if>
                 </form>
+
                 <!-- Back Button -->
                 <a href="profileSetting" class="btn btn-success mt-3">Quay trở lại</a>
             </div>
         </div>
 
         <%@ include file="/includes/footer.jsp" %>
-
 
         <style>
             .order-detail-container {

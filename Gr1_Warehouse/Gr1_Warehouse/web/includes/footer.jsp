@@ -56,7 +56,7 @@
                                     </div>
 
                                     <div class="service-detail">
-                                        <h5>Every Fresh Products</h5>
+                                        <h5>Sản phẩm luôn mới</h5>
                                     </div>
                                 </div>
 
@@ -66,7 +66,7 @@
                                     </div>
 
                                     <div class="service-detail">
-                                        <h5>Free Delivery For Order Over $50</h5>
+                                        <h5>Giao hàng nhanh chóng</h5>
                                     </div>
                                 </div>
 
@@ -76,7 +76,7 @@
                                     </div>
 
                                     <div class="service-detail">
-                                        <h5>Daily Mega Discounts</h5>
+                                        <h5>Chiết khấu phù hợp</h5>
                                     </div>
                                 </div>
 
@@ -86,7 +86,7 @@
                                     </div>
 
                                     <div class="service-detail">
-                                        <h5>Best Price On The Market</h5>
+                                        <h5>Giá tốt nhất thị trường</h5>
                                     </div>
                                 </div>
                             </div>
@@ -100,13 +100,14 @@
                             <div class="footer-logo">
                                 <div class="theme-logo">
                                     <a href="index.jsp">
-                                    <img src="${pageContext.request.contextPath}/assets/images/logo_1.png" class="img-fluid blur-up lazyload" alt="">
+                                        <img src="${pageContext.request.contextPath}/assets/images/logo_1.png" class="img-fluid blur-up lazyload" alt="">
                                     </a>
                                 </div>
 
                                 <div class="footer-logo-contain">
-                                    <p>We are a friendly bar serving a variety of cocktails, wines and beers. Our bar is a
-                                        perfect place for a couple.</p>
+                                    <p>Chúng tôi là kho bán buôn chuyên cung cấp đa dạng các mặt hàng thực phẩm, đồ uống và nhu yếu phẩm với giá sỉ hấp dẫn. 
+                                        BULKMART là lựa chọn lý tưởng cho các cửa hàng, đại lý và doanh nghiệp kinh doanh thực phẩm.</p>
+
 
                                     <ul class="address">
                                         <li>

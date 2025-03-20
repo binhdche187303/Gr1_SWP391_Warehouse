@@ -105,4 +105,10 @@ public class InventoryCheck {
     public void setReviewedBy(User reviewedBy) {
         this.reviewedBy = reviewedBy;
     }
+
+    @Override
+    public String toString() {
+        return "InventoryCheck{" + "checkId=" + checkId + ", status=" + status + ", checkDate=" + checkDate + ", balanceDate=" + balanceDate + ", completedAt=" + completedAt + ", warehouse=" + warehouse + ", createdBy=" + createdBy + ", reviewedBy=" + reviewedBy + '}';
+    }
+    
 }

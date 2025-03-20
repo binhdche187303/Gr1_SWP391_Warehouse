@@ -27,32 +27,32 @@ public class CheckStockController extends HttpServlet {
     }
 
     @Override
-protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    try {
-        int productId = Integer.parseInt(request.getParameter("productId"));
-        int sizeId = Integer.parseInt(request.getParameter("sizeId"));
-        int newSize = request.getParameter("newSize") != null 
-                      ? Integer.parseInt(request.getParameter("newSize")) 
-                      : -1;
-        int sizeCheck = (newSize > 0) ? newSize : sizeId;
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            int productId = Integer.parseInt(request.getParameter("productId"));
+            int sizeId = Integer.parseInt(request.getParameter("sizeId"));
+            int newSize = request.getParameter("newSize") != null
+                    ? Integer.parseInt(request.getParameter("newSize"))
+                    : -1;
+            int sizeCheck = (newSize > 0) ? newSize : sizeId;
 
-        int stock = productDAO.getStockByProductIdAndSize(productId, sizeCheck);
+            int stock = productDAO.getStockByProductIdAndSize(productId, sizeCheck);
 
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("{\"stock\": " + stock + "}");
-    } catch (NumberFormatException e) {
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("{\"error\": \"Invalid parameters\"}");
-        e.printStackTrace();
-    } catch (Exception e) {
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("{\"error\": \"Server error\"}");
-        e.printStackTrace();
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"stock\": " + stock + "}");
+        } catch (NumberFormatException e) {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"error\": \"Invalid parameters\"}");
+            e.printStackTrace();
+        } catch (Exception e) {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"error\": \"Server error\"}");
+            e.printStackTrace();
+        }
     }
-}
 
 }

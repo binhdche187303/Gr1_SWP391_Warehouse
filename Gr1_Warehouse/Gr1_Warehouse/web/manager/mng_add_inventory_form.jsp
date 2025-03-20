@@ -124,8 +124,6 @@
                             </div>
                         </div>
                     </div>
-
-
                 </form>
             </div>
         </div>
@@ -241,7 +239,9 @@
             // Kiểm tra nếu có tham số success hoặc error
             if (urlParams.has("success")) {
                 alert("✅ Phiếu kiểm kho đã được tạo thành công!");
-                window.location.href = 'http://localhost:8080/Gr1_Warehouse/inventory-checklist';
+                window.location.href = "/Gr1_Warehouse/inventory-checklist";
+                console.log("Redirecting to:", window.location.href);
+
             } else if (urlParams.has("error")) {
                 alert("❌ Lỗi! Không thể tạo phiếu kiểm kho. Vui lòng thử lại.");
                 window.location.href = "inventory_checklist.jsp";
