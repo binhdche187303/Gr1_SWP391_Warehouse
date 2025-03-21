@@ -8,14 +8,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description"
-              content="Fastkart admin is super flexible, powerful, clean &amp; modern responsive bootstrap 5 admin template with unlimited possibilities.">
-        <meta name="keywords"
-              content="admin template, Fastkart admin template, dashboard template, flat admin template, responsive admin template, web app">
-        <meta name="author" content="pixelstrap">
-        <link rel="icon" href="assets/images/favicon.png" type="image/x-icon">
-        <link rel="shortcut icon" href="assets/images/favicon.png" type="image/x-icon">
-        <title>Fastkart - Dashboard</title>
+        <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/8.png" type="image/x-icon">
+        <title>Báo cáo sổ quỹ</title>
 
         <!-- Google font-->
         <link
@@ -59,7 +53,7 @@
             <div class="page-body-wrapper">
                 <!-- Order section Start -->
                 <div class="page-body">
-                    <!-- Table Start -->
+                    <!-- Table Start --><br>
                     <div class="container-fluid">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h2 class="fw-bold">Sổ Quỹ</h2>
@@ -78,27 +72,26 @@
                             </span>
                         </form>
                         <div class="card p-3">
-
                             <div class="row text-center">
                                 <div class="col-md-6">
                                     <div class="p-4">
-                                        <p class="fw-bold fs-2">Tổng thu</p>
-                                        <p class="fs-2 text-success">
-                                            + <fmt:formatNumber value="${requestScope.totalRevenue}" type="currency" currencySymbol="₫" groupingUsed="true"  maxFractionDigits="0"/>
+                                        <p class="fw-bold fs-4 mb-2">Tổng thu</p>
+                                        <p class="fs-5 text-success mb-0">
+                                            + <fmt:formatNumber value="${requestScope.totalRevenue}" type="currency" currencySymbol="₫" groupingUsed="true" maxFractionDigits="0"/>
                                         </p>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="p-4 ">
-                                        <p class="fw-bold fs-2">Tổng chi</p>
-                                        <p class="fs-2 text-danger">- 
-                                            <fmt:formatNumber value="${requestScope.totalCost}" type="currency" currencySymbol="₫" groupingUsed="true"  maxFractionDigits="0"/>
+                                    <div class="p-4">
+                                        <p class="fw-bold fs-4 mb-2">Tổng chi</p>
+                                        <p class="fs-5 text-danger mb-0">
+                                            - <fmt:formatNumber value="${requestScope.totalCost}" type="currency" currencySymbol="₫" groupingUsed="true" maxFractionDigits="0"/>
                                         </p>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
+
 
                         <div class="card mt-3 p-3">
 

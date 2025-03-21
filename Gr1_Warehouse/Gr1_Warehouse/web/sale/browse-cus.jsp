@@ -7,9 +7,8 @@
 <html lang="en" dir="ltr">
 
     <head>
-        <link rel="icon" href="assets/images/favicon.png" type="image/x-icon">
-        <link rel="shortcut icon" href="assets/images/favicon.png" type="image/x-icon">
-        <title>Fastkart - Dashboard</title>
+        <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/8.png" type="image/x-icon">
+        <title>Duyệt khách hàng</title>
 
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -72,8 +71,17 @@
                             <c:if test="${error eq 'update_failed'}">
                                 <div class="alert alert-danger">Cập nhật trạng thái thất bại!</div>
                             </c:if>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h3></h3>
+                                <select id="statusFilter" class="form-select form-select-sm" style="max-width: 200px;">
+                                    <option value="all">Tất cả</option>
+                                    <option value="Hoạt động">Hoạt động</option>
+                                    <option value="Bị từ chối">Bị từ chối</option>
+                                    <option value="Chờ duyệt">Chờ duyệt</option>
+                                </select>
+                            </div>
                             <!-- Your table content -->
-                            <table class="table table-striped table-bordered">
+                            <table id="customerTable" class="table table-striped table-bordered">
                                 <thead class="table-light">
                                     <tr class="small fw-light">
                                         <th class="small text-center" style="font-size: 12px;">Mã khách hàng</th>
@@ -179,7 +187,21 @@
                 confirmButton.href = "browse-cus?action=" + action + "&id=" + userId;
             });
         </script>
+        <script>
+            document.getElementById("statusFilter").addEventListener("change", function () {
+                var filterValue = this.value;
+                var rows = document.querySelectorAll("table tbody tr");
 
+                rows.forEach(function (row) {
+                    var statusCell = row.querySelector("td:nth-child(6)"); // Cột trạng thái
+                    if (filterValue === "all" || statusCell.textContent.trim() === filterValue) {
+                        row.style.display = ""; // Hiển thị dòng
+                    } else {
+                        row.style.display = "none"; // Ẩn dòng
+                    }
+                });
+            });
+        </script>
         <!-- latest js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
 

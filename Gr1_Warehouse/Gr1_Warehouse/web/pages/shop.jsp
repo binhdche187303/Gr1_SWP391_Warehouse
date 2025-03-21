@@ -21,8 +21,8 @@
         <meta name="description" content="Fastkart">
         <meta name="keywords" content="Fastkart">
         <meta name="author" content="Fastkart">
-        <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/1.png" type="image/x-icon">
-        <title>Shop List</title>
+        <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/8.png" type="image/x-icon">
+        <title>Danh sách sản phẩm</title>
 
         <!-- Google font -->
         <link rel="preconnect" href="https://fonts.gstatic.com">

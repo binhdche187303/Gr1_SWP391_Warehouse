@@ -11,11 +11,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Fastkart">
-        <meta name="keywords" content="Fastkart">
-        <meta name="author" content="Fastkart">
-        <link rel="icon" href="../assets/images/favicon/1.png" type="image/x-icon">
-        <title>Log In</title>
+        <link rel="icon" href="../assets/images/favicon/1c.png" type="image/x-icon">
+        <title>Chân trang</title>
 
         <!-- Google font -->
         <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -99,7 +96,7 @@
                         <div class="col-xl-3 col-lg-4 col-sm-6">
                             <div class="footer-logo">
                                 <div class="theme-logo">
-                                    <a href="index.jsp">
+                                <a href="/Gr1_Warehouse/home" class="web-logo nav-logo">
                                         <img src="${pageContext.request.contextPath}/assets/images/logo_1.png" class="img-fluid blur-up lazyload" alt="">
                                     </a>
                                 </div>

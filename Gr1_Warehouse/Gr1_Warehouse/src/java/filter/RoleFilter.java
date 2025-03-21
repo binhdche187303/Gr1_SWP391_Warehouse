@@ -34,9 +34,9 @@ public class RoleFilter implements Filter {
     private static final Map<Integer, List<String>> rolePermissions = new HashMap<>();
 
     static {
-        rolePermissions.put(2, Arrays.asList("/home", "/profileSetting", "/login", "/shop", "/shopDetails", "/cart", "/checkout", "/logout", "/customerOrderDetail", "/changeprofile", "/changepassword", "/customer-order", "/ajaxServlet", "/vnpayReturn", "/error", "/confirm-order", "/logout"));
+        rolePermissions.put(2, Arrays.asList("/home", "/profileSetting", "/login","/remove-cart","/update-cart","/check-stock","/remove-cart", "/shop", "/shopDetails", "/cart", "/checkout", "/logout", "/customerOrderDetail", "/changeprofile", "/changepassword", "/customer-order", "/ajaxServlet", "/vnpayReturn", "/error", "/confirm-order", "/logout"));
         rolePermissions.put(1, Arrays.asList("/dashboard", "/financialmanagement", "/allusers", "/allstaff", "/createstaff", "/productlist", "/createproductgeneral", "/createproductimg", "/createproductvariants", "/role", "/couponlist", "/createcoupon", "/listdiscounthistory",
-                "/couponproductlist", "/createcouponproduct", "/discountproductdetail", "/brandlist", "/createbrand", "/categorylist", "/createcategory", "/sizelist", "/createsize", "/profilesettingadmin", "/logout", "/error"));
+                "/couponproductlist", "/createcouponproduct", "/discountproductdetail","/productdetail", "/brandlist", "/createbrand", "/categorylist", "/createcategory", "/sizelist", "/createsize", "/profilesettingadmin", "/logout", "/error"));
         rolePermissions.put(3, Arrays.asList("/orderlist", "/order-details", "/inventory-checklist", "/inventory-checklist-detail", "/importGood", "/importGoodDetail", "/handleImport", "/create-inventory-check", "/supplier", "/editSupplier", "/archive", "/editWarehouse",
                 "/managerDashboard", "/getSuppliers", "/allstaff", "/getArchive", "/productbrand", "/apply-discount", "/manager-confirmOrder", "/logout", "/error","/manager/mng_add_inventory_form.jsp", "/exportInventoryCheck"));
         rolePermissions.put(4, Arrays.asList("/staff-checklist", "/staff-checklist-details", "/inventory-checklist-detail", "/product-warehouse", "/logout", "/complete-inventory-check", "/error"));
@@ -147,7 +147,12 @@ public class RoleFilter implements Filter {
         if (acc == null) {
 
             if (//Customer
-                    uri.equals("/customer-order")
+                    uri.equals("/customer-order")||
+                    uri.equals("/checkout")||
+                    uri.equals("/check-stock")||
+                    uri.equals("/update-cart")||
+                    uri.equals("/remove-cart")
+
                     || //Manager
                     uri.equals("/getSuppliers")
                     || uri.equals("/allstaff")
@@ -176,6 +181,7 @@ public class RoleFilter implements Filter {
                     || uri.equals("/login")
                     || uri.equals("/register")
                     || uri.equals("/request")
+                    || uri.equals("/shop")
                     || uri.equals("/reset"))) {
                 res.sendRedirect(req.getContextPath() + "/login");
                 return;

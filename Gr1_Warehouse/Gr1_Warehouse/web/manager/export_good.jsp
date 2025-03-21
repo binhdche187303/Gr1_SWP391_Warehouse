@@ -332,6 +332,10 @@
                         alert("✅ Đơn hàng đã được xác nhận trước đó!");
                         return;
                     }
+                     else if (orderStatus === "Đã giao hàng thành công") {
+                        alert("✅ Đơn hàng đã được giao thành công!");
+                        return;
+                    }
 
                     // Nếu trạng thái hợp lệ, hiển thị modal xác nhận
                     document.getElementById("confirmOrderId").innerText = selectedOrderId;

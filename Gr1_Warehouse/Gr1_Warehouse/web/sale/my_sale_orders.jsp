@@ -7,8 +7,8 @@
 
     <head>
         <link rel="icon" href="assets/images/favicon.png" type="image/x-icon">
-        <link rel="shortcut icon" href="assets/images/favicon.png" type="image/x-icon">
-        <title>Fastkart - Dashboard</title>
+        <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/8.png" type="image/x-icon">
+        <title>Danh sách đơn hàng tư vấn của tôi</title>
 
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -58,13 +58,13 @@
                                 </div>
                             </div>
                             <div class="mb-2 d-flex align-items-center">
-    <label for="filterStatus" class="me-2 mb-0">Lọc trạng thái tư vấn:</label>
-    <select id="filterStatus" class="form-control" style="width: auto; min-width: 150px;">
-        <option value="">Tất cả</option>
-        <option value="Đã tư vấn">Đã tư vấn</option>
-        <option value="Chưa tư vấn">Chưa tư vấn</option>
-    </select>
-</div>
+                                <label for="filterStatus" class="me-2 mb-0">Lọc trạng thái tư vấn:</label>
+                                <select id="filterStatus" class="form-control" style="width: auto; min-width: 150px;">
+                                    <option value="">Tất cả</option>
+                                    <option value="Đã tư vấn">Đã tư vấn</option>
+                                    <option value="Chưa tư vấn">Chưa tư vấn</option>
+                                </select>
+                            </div>
                             <table id="myTable" class="table table-striped table-bordered">
                                 <thead class="table-light">
                                     <tr class="small fw-light">
