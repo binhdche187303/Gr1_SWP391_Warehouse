@@ -76,42 +76,49 @@ public class CreateStaff extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        UserDAO ud = new UserDAO();
-        User u = new User();
-        String username = request.getParameter("username");
-        String email = request.getParameter("email");
-        String roleId_raw = request.getParameter("roleId");
+        throws ServletException, IOException {
+    UserDAO ud = new UserDAO();
+    User u = new User();
+    String username = request.getParameter("username");
+    String email = request.getParameter("email");
+    String roleId_raw = request.getParameter("roleId");
+    
+    System.out.println(username);
+    try {
+        int roleId = Integer.parseInt(roleId_raw);
+        u.setUsername(username.trim());
+        u.setEmail(email);
+        u.setRole(new Role(roleId));
+        u.setStatus("Active");
         
-        System.out.println(username);
-        try {
-            int roleId = Integer.parseInt(roleId_raw);
-            u.setUsername(username.trim());
-            u.setEmail(email);
-            u.setRole(new Role(roleId));
-            u.setRole(new Role(roleId));
-            u.setStatus("Active");
-
-            if (ud.create(u)) {
-                request.getSession().setAttribute("message", "Nhân viên đã được tạo thành công!");
-                response.sendRedirect("/Gr1_Warehouse/allstaff");
+        if (ud.create(u)) {
+            // Gửi email thông báo
+            EmailSender emailSender = new EmailSender("smtp.gmail.com", 587, true, true);
+            boolean emailSent = emailSender.sendNewAccountEmail(email, username);
+            
+            if (emailSent) {
+                request.getSession().setAttribute("message", "Nhân viên đã được tạo thành công và email đã được gửi!");
             } else {
-                RoleDAO rd = new RoleDAO();
-                List<Role> listRoles = rd.getAllRoleStaff();
-                request.setAttribute("listRoles", listRoles);
-                request.setAttribute("username", username);
-                request.setAttribute("email", email);
-                request.setAttribute("roleId", roleId);
-                request.setAttribute("message", "Tên tài khoản hoặc email đã tồn tại!");
-                request.getRequestDispatcher("/dashboard/create-staff.jsp").forward(request, response);
+                request.getSession().setAttribute("message", "Nhân viên đã được tạo thành công nhưng không thể gửi email!");
             }
-        } catch (NumberFormatException | SQLException e) {
-            request.setAttribute("message", "Lỗi khi tạo người dùng: " + e.getMessage());
+            
+            response.sendRedirect("/Gr1_Warehouse/allstaff");
+        } else {
+            RoleDAO rd = new RoleDAO();
+            List<Role> listRoles = rd.getAllRoleStaff();
+            request.setAttribute("listRoles", listRoles);
+            request.setAttribute("username", username);
+            request.setAttribute("email", email);
+            request.setAttribute("roleId", roleId);
+            request.setAttribute("message", "Tên tài khoản hoặc email đã tồn tại!");
+            request.getRequestDispatcher("/dashboard/create-staff.jsp").forward(request, response);
         }
-
+    } catch (NumberFormatException | SQLException e) {
+        request.setAttribute("message", "Lỗi khi tạo người dùng: " + e.getMessage());
+        request.getRequestDispatcher("/dashboard/create-staff.jsp").forward(request, response);
     }
+}
 
     /**
      * Returns a short description of the servlet.

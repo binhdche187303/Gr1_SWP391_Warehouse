@@ -7,11 +7,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description"
-              content="Fastkart admin is super flexible, powerful, clean &amp; modern responsive bootstrap 5 admin template with unlimited possibilities.">
-        <meta name="keywords"
-              content="admin template, Fastkart admin template, dashboard template, flat admin template, responsive admin template, web app">
-        <meta name="author" content="pixelstrap">
         <link rel="icon" href="assets/images/favicon.png" type="image/x-icon">
         <link rel="shortcut icon" href="assets/images/favicon.png" type="image/x-icon">
         <title>Fastkart - Dashboard</title>
@@ -124,8 +119,6 @@
                             </div>
                         </div>
                     </div>
-
-
                 </form>
             </div>
         </div>
@@ -241,7 +234,9 @@
             // Kiểm tra nếu có tham số success hoặc error
             if (urlParams.has("success")) {
                 alert("✅ Phiếu kiểm kho đã được tạo thành công!");
-                window.location.href = 'http://localhost:8080/Gr1_Warehouse/inventory-checklist';
+                window.location.href = "/Gr1_Warehouse/inventory-checklist";
+                console.log("Redirecting to:", window.location.href);
+
             } else if (urlParams.has("error")) {
                 alert("❌ Lỗi! Không thể tạo phiếu kiểm kho. Vui lòng thử lại.");
                 window.location.href = "inventory_checklist.jsp";

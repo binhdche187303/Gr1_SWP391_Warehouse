@@ -10,10 +10,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description"
-              content="Fastkart admin is super flexible, powerful, clean &amp; modern responsive bootstrap 5 admin template with unlimited possibilities.">
-        <meta name="keywords"
-              content="admin template, Fastkart admin template, dashboard template, flat admin template, responsive admin template, web app">
         <meta name="author" content="pixelstrap">
         <link rel="icon" href="assets/images/favicon.png" type="image/x-icon">
         <link rel="shortcut icon" href="assets/images/favicon.png" type="image/x-icon">
@@ -84,6 +80,13 @@
                                                 <c:choose>
                                                     <c:when test="${roleId == 3}">
                                                         <div>
+                                                            <c:if test="${check.status == 'Đã kiểm kho'}">
+                                                                <button class="btn btn-success position-absolute" 
+                                                                        style="right: 120px; top: 1; margin-right: 10px;" 
+                                                                        onclick="window.location.href = '${pageContext.request.contextPath}/exportInventoryCheck?checkId=${check.checkId}'">
+                                                                    In phiếu kiểm
+                                                                </button>
+                                                            </c:if>
                                                             <button class="btn btn-primary" 
                                                                     onclick="window.location.href = 'http://localhost:8080/Gr1_Warehouse/inventory-checklist'">
                                                                 Quay lại
@@ -146,14 +149,14 @@
                                                         <table class="table table-striped table-bordered">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>Tên sản phẩm</th>
-                                                                    <th>Số lô</th>
-                                                                    <th>Tồn kho</th>
-                                                                    <th>Tồn thực tế</th>
-                                                                    <th>Lệch</th>
-                                                                    <th>Giá trị lệch</th>
-                                                                    <th>Ngày hết hạn</th>
-                                                                    <th>Lý do</th>
+                                                                    <th style="font-size: 16px; text-align: center">Tên sản phẩm</th>
+                                                                    <th style="font-size: 16px; text-align: center">Số lô</th>
+                                                                    <th style="font-size: 16px; text-align: center">Tồn kho</th>
+                                                                    <th style="font-size: 16px; text-align: center">Tồn thực tế</th>
+                                                                    <th style="font-size: 16px; text-align: center">Lệch</th>
+                                                                    <th style="font-size: 16px; text-align: center">Giá trị lệch</th>
+                                                                    <th style="font-size: 16px; text-align: center">Ngày hết hạn</th>
+                                                                    <th style="font-size: 16px; text-align: center">Lý do</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="productTable">
@@ -219,12 +222,13 @@
                                                             <c:when test="${roleId == 3}">
                                                                 <div style="width: 100%;">
                                                                     <button class="btn btn-primary w-100" 
-                                                                            onclick="completeInventoryCheck(${check.checkId})">
+                                                                            onclick="checkInventoryStatus(${check.checkId}, '${check.status}')">
                                                                         Hoàn tất kiểm kho
                                                                     </button>
                                                                 </div>
                                                             </c:when>
                                                         </c:choose>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -238,6 +242,15 @@
                 </div>  
             </div>  
         </div>
+        <script>
+            function checkInventoryStatus(checkId, status) {
+                if (status === "Đã kiểm kho") {
+                    completeInventoryCheck(checkId);
+                } else {
+                    alert("Chỉ có thể hoàn tất kiểm kho khi kho đã được kiểm.");
+                }
+            }
+        </script>
         <script>
             function completeInventoryCheck(checkId) {
                 if (confirm("Bạn có chắc muốn hoàn tất kiểm kho không?")) {

@@ -8,14 +8,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description"
-              content="Fastkart admin is super flexible, powerful, clean &amp; modern responsive bootstrap 5 admin template with unlimited possibilities.">
-        <meta name="keywords"
-              content="admin template, Fastkart admin template, dashboard template, flat admin template, responsive admin template, web app">
-        <meta name="author" content="pixelstrap">
-        <link rel="icon" href="${pageContext.request.contextPath}/assets2/images/favicon.png" type="image/x-icon">
-        <link rel="shortcut icon" href="${pageContext.request.contextPath}/assets2/images/favicon.png" type="image/x-icon">
-        <title>Fastkart - Profile Setting</title>
+        <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/8.png" type="image/x-icon">
+        <title>Thiết lập hồ sơ</title>
 
         <!-- Google font -->
         <link
@@ -57,6 +51,24 @@
 
         <!-- App css -->
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets2/css/style.css">
+        <style>
+            #passwordHelp ul {
+                margin-top: 0.5rem;
+                padding-left: 1rem;
+            }
+
+            #passwordHelp li small {
+                font-size: 0.8rem;
+            }
+
+            .text-danger {
+                color: #dc3545 !important;
+            }
+
+            .text-success {
+                color: #28a745 !important;
+            }
+        </style>
     </head>
 
     <body>
@@ -122,7 +134,7 @@
                                                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                                             </div>
                                                         </c:if>
-                                                            
+
                                                         <div class="d-flex justify-content-end gap-2 mt-3">
                                                             <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#edit-profile">
                                                                 <i class="fa-solid fa-pen-to-square me-2"></i> Thay đổi hồ sơ
@@ -195,7 +207,7 @@
                                                         <form action="profilesettingadmin" method="POST">
                                                             <input type="hidden" name="userId" value="${sessionScope.acc.userId}" />
                                                             <input type="hidden" name="action" value="1" />
-                                                            
+
                                                             <!-- Old Password -->
                                                             <div class="form-floating mb-4 theme-form-floating">
                                                                 <input type="password" class="form-control" id="currentpassword" name="currentpassword" placeholder="Enter Current Password" required />
@@ -204,8 +216,18 @@
 
                                                             <!-- New Password -->
                                                             <div class="form-floating mb-4 theme-form-floating">
-                                                                <input type="password" class="form-control" id="newpassword" name="newpassword" placeholder="Enter New Password" required />
+                                                                <input type="password" class="form-control" id="newpassword" name="newpassword" 
+                                                                      placeholder="Mật khẩu mới"  required />
                                                                 <label for="newpass">Mật khẩu mới</label>
+                                                                <div id="passwordHelp" class="form-text">
+                                                                    <small>Mật khẩu phải chứa:</small>
+                                                                    <ul class="list-unstyled mb-0">
+                                                                        <li id="length" class="text-danger"><small>• Tối thiểu 8 ký tự</small></li>
+                                                                        <li id="uppercase" class="text-danger"><small>• Ít nhất 1 chữ in hoa (A-Z)</small></li>
+                                                                        <li id="number" class="text-danger"><small>• Ít nhất 1 số (0-9)</small></li>
+                                                                        <li id="special" class="text-danger"><small>• Ít nhất 1 ký tự đặc biệt (@$!%*?&)</small></li>
+                                                                    </ul>
+                                                                </div>
                                                             </div>
 
                                                             <!-- Confirm New Password -->
@@ -219,14 +241,16 @@ String success = (String) request.getAttribute("success");
                                                             %>
 
                                                             <% if (error != null) { %>
-                                                            <div class="alert alert-danger" role="alert">
+                                                            <div class="alert alert-danger" role="alert" style="background-color:  red">
+                                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                                                 <%= error %>
                                                             </div>
                                                             <% } %>
 
                                                             <% if (success != null) { %>
-                                                            <div class="alert alert-success" role="alert">
+                                                            <div class="alert alert-success" role="alert" style="background-color:  green">
                                                                 <%= success %>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                                             </div>
                                                             <% } %>
                                                             <div class="modal-footer" >
@@ -234,9 +258,6 @@ String success = (String) request.getAttribute("success");
                                                                 <button type="submit" class="btn theme-bg-color btn-md text-white">Lưu thay đổi</button>
                                                             </div>
                                                         </form>
-
-
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -332,7 +353,51 @@ String success = (String) request.getAttribute("success");
             });
             <% } %>
         </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const passwordInput = document.getElementById('newpassword');
+                const form = document.querySelector('form[action="profilesettingadmin"]');
 
+                // Các điều kiện
+                const lengthReq = document.getElementById('length');
+                const upperReq = document.getElementById('uppercase');
+                const numberReq = document.getElementById('number');
+                const specialReq = document.getElementById('special');
+
+                // Kiểm tra khi người dùng nhập
+                passwordInput.addEventListener('input', function () {
+                    const password = passwordInput.value;
+
+                    // Kiểm tra độ dài
+                    if (password.length >= 8) {
+                        lengthReq.classList.replace('text-danger', 'text-success');
+                    } else {
+                        lengthReq.classList.replace('text-success', 'text-danger');
+                    }
+
+                    // Kiểm tra chữ hoa
+                    if (/[A-Z]/.test(password)) {
+                        upperReq.classList.replace('text-danger', 'text-success');
+                    } else {
+                        upperReq.classList.replace('text-success', 'text-danger');
+                    }
+
+                    // Kiểm tra số
+                    if (/\d/.test(password)) {
+                        numberReq.classList.replace('text-danger', 'text-success');
+                    } else {
+                        numberReq.classList.replace('text-success', 'text-danger');
+                    }
+
+                    // Kiểm tra ký tự đặc biệt
+                    if (/[@$!%*?&]/.test(password)) {
+                        specialReq.classList.replace('text-danger', 'text-success');
+                    } else {
+                        specialReq.classList.replace('text-success', 'text-danger');
+                    }
+                });
+            });
+        </script>
     </body>
 
 </html>

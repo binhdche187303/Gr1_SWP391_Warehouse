@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import dao.CartDAO;
 import dao.ProductDAO;
 import dao.SizeDAO;
@@ -90,67 +91,73 @@ public class CheckoutController extends HttpServlet {
     }
 
     @Override
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        // Đọc dữ liệu JSON từ request
-        BufferedReader reader = request.getReader();
-        Gson gson = new Gson();
-        JsonObject jsonData = gson.fromJson(reader, JsonObject.class);
-
-        String type = jsonData.get("type").getAsString();
-        JsonArray itemsArray = jsonData.getAsJsonArray("items");
-        List<Integer> items = new ArrayList<>();
-        for (JsonElement item : itemsArray) {
-            items.add(item.getAsInt());
-        }
-
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("acc");
-
-        if (user == null) {
-            response.sendRedirect("login");
-            return;
-        }
-
-        ProductDAO productDao = new ProductDAO();
-        CartDAO cartDAO = new CartDAO();
-        List<Cart> carts = new ArrayList<>();
-
         try {
-            // Nếu là từ giỏ hàng
-            // Nếu là từ giỏ hàng
+            BufferedReader reader = request.getReader();
+            Gson gson = new Gson();
+            JsonObject jsonData = gson.fromJson(reader, JsonObject.class);
+
+            if (jsonData == null || !jsonData.has("type") || !jsonData.has("items")) {
+                response.getWriter().write("{\"status\": \"error\", \"message\": \"Dữ liệu không đầy đủ.\"}");
+                return;
+            }
+
+            String type = jsonData.get("type").getAsString();
+            JsonArray itemsArray = jsonData.getAsJsonArray("items");
+            List<Cart> items = new ArrayList<>();
+
+            for (JsonElement item : itemsArray) {
+                JsonObject obj = item.getAsJsonObject();
+                int productId = obj.get("productId").getAsInt();
+                int sizeId = obj.get("sizeId").getAsInt();
+                items.add(new Cart(productId, sizeId));
+            }
+
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("acc");
+
+            if (user == null) {
+                response.sendRedirect("login");
+                return;
+            }
+
+            ProductDAO productDao = new ProductDAO();
+            CartDAO cartDAO = new CartDAO();
+            List<Cart> carts = new ArrayList<>();
+
             if (type.equals("cart")) {
                 List<Cart> cartOfUser = cartDAO.getCartByUserId(user.getUserId());
                 for (Cart cart : cartOfUser) {
-                    for (Integer item : items) {
-                        // Kiểm tra theo cả productId và sizeId
-                        if (item.intValue() == cart.getProductId()) {
-                            boolean isDuplicate = false;
-                            for (Cart c : carts) {
-                                // Kiểm tra trùng lặp cả productId và sizeId
-                                if (c.getProductId() == cart.getProductId() && c.getSizeId() == cart.getSizeId()) {
-                                    isDuplicate = true;
-                                    break;
-                                }
+                    for (Cart item : items) {
+                        if (item.getProductId() == cart.getProductId() && item.getSizeId() == cart.getSizeId()) {
+                            int stock = productDao.getStockByProductIdAndSize(cart.getProductId(), cart.getSizeId());
+
+                            if (stock < cart.getQuantity()) {
+                                response.getWriter().write("{\"status\": \"error\", \"message\": \"Số lượng tồn kho không đủ cho sản phẩm: "
+                                        + cart.getProductName() + " " + cart.getSizeName() + "\", \"stock\": " + stock + "}");
+                                return;
                             }
-                            // Nếu không trùng thì thêm sản phẩm mới
+
+                            boolean isDuplicate = carts.stream()
+                                    .anyMatch(c -> c.getProductId() == cart.getProductId() && c.getSizeId() == cart.getSizeId());
                             if (!isDuplicate) {
                                 carts.add(cart);
                             }
                         }
                     }
                 }
-            } // Nếu là mua trực tiếp
-            else {
-                int productId = items.get(0).intValue();
+            } else {
+                // Mua trực tiếp
+                int productId = items.get(0).getProductId();
+                int sizeId = items.get(0).getSizeId();
                 int quantity = jsonData.get("quantity").getAsInt();
-                int sizeId = jsonData.get("sizeId").getAsInt();
                 int stock = productDao.getStockByProductIdAndSize(productId, sizeId);
 
-                // Kiểm tra tồn kho
                 if (stock < quantity) {
                     response.getWriter().write("{\"status\": \"error\", \"message\": \"Số lượng tồn kho không đủ\", \"stock\": " + stock + "}");
                     return;
@@ -167,39 +174,19 @@ public class CheckoutController extends HttpServlet {
                         }
                     }
 
-                    // Tạo đối tượng Cart
                     Cart cart = new Cart(0, productId, product.getProductName(), sizeId, sizeName, price, quantity, product.getImages().get(0).getImage_url());
-
-                    boolean isDuplicate = false;
-                    for (Cart c : carts) {
-                        // Chỉ cộng dồn nếu trùng cả productId và sizeId
-                        if (c.getProductId() == productId && c.getSizeId() == sizeId) {
-                            c.setQuantity(c.getQuantity() + quantity);
-                            isDuplicate = true;
-                            break;
-                        }
-                    }
-                    // Nếu không trùng thì thêm sản phẩm mới
+                    boolean isDuplicate = carts.stream()
+                            .anyMatch(c -> c.getProductId() == productId && c.getSizeId() == sizeId);
                     if (!isDuplicate) {
                         carts.add(cart);
                     }
                 }
             }
 
-            // Debug kiểm tra kết quả
-            System.out.println("Cart size: " + carts.size());
-            for (Cart cart : carts) {
-                System.out.println("Product ID: " + cart.getProductId() + ", Size ID: " + cart.getSizeId() + ", Quantity: " + cart.getQuantity());
-            }
-
-            // Xóa session cũ trước khi thêm mới
             session.removeAttribute("cart_to_checkout");
             session.setAttribute("cart_to_checkout", carts);
             response.getWriter().write("{\"status\": \"success\"}");
 
-        } catch (NumberFormatException e) {
-            response.getWriter().write("{\"status\": \"error\", \"message\": \"Dữ liệu đầu vào không hợp lệ\"}");
-            e.printStackTrace();
         } catch (Exception e) {
             response.getWriter().write("{\"status\": \"error\", \"message\": \"Đã xảy ra lỗi: " + e.getMessage() + "\"}");
             e.printStackTrace();

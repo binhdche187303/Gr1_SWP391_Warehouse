@@ -14,9 +14,6 @@
 --go
 
 
-
-
-
 -- Bảng Roles (Vai trò người dùng)
 CREATE TABLE Roles (
     role_id INT PRIMARY KEY IDENTITY(1,1),
@@ -26,16 +23,28 @@ CREATE TABLE Roles (
 -- Bảng Users (Người dùng)
 CREATE TABLE Users (
     user_id INT PRIMARY KEY IDENTITY(1,1),
-    username NVARCHAR(255) NOT NULL,
+    username NVARCHAR(255) NOT NULL, --UNIQUE nên thêm để tránh trùng
     password NVARCHAR(255) NOT NULL,
     fullname NVARCHAR(255),
     phone NVARCHAR(11),
-    email NVARCHAR(255),
+    email NVARCHAR(255), --UNIQUE nên thêm để tránh trùng
     role_id INT NOT NULL,
     address NVARCHAR(255),
     status NVARCHAR(10) NOT NULL DEFAULT 'Active' CHECK (status IN ('Active', 'Deactive')),
     FOREIGN KEY (role_id) REFERENCES Roles(role_id)
 );
+
+CREATE TABLE WholesaleCustomers (
+    user_id INT PRIMARY KEY,  
+    storeName NVARCHAR(255) NOT NULL,  
+    storeAddress NVARCHAR(255) NOT NULL,
+    taxCode NVARCHAR(50) NOT NULL,
+    businessLicense NVARCHAR(255) NOT NULL, 
+    status NVARCHAR(20) DEFAULT N'Chờ duyệt' CHECK (status IN (N'Chờ duyệt', N'Hoạt động', N'Bị từ chối')),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
+);
+
+
 
 -- Bảng Brands (Thương hiệu)
 CREATE TABLE Brands (
@@ -385,11 +394,11 @@ VALUES
 (N'Warehouse staffs'),
 (N'Packing staffs'),
 (N'Shipper'),
-(N'Saler');
+(N'Seller');
 
 INSERT INTO dbo.Users(username, password, fullname, phone, email, role_id, status)
 VALUES
-(N'admin', '202cb962ac59075b964b07152d234b70', N'Admin 1', '0123456789', 'manager01@example.com', 1, 'Active'),
+(N'admin', '202cb962ac59075b964b07152d234b70', N'Admin 1', '0123456789', 'admin@example.com', 1, 'Active'),
 (N'cus1', '202cb962ac59075b964b07152d234b70', N'Customer 1', '0123456789', 'cus1@gmail.com', 2, 'Active'),
 (N'manager1', '202cb962ac59075b964b07152d234b70', N'Warehouse manager 1', '0123456789', 'manager@gmail.com', 3, 'Active'),
 (N'staff1', '202cb962ac59075b964b07152d234b70', N'Staff 1', '0123456789', 'staff1@gmail.com', 4, 'Active'),
@@ -1956,5 +1965,3 @@ VALUES	(1, 1), -- Nhà phân phối Kinh Đô bán thương hiệu Kinh Đô
 		(2, 2), -- Nhà phân phối Phạm Nguyên bán thương hiệu Phạm Nguyên
 		(3, 3), -- Nhà phân phối Pepsico bán thương hiệu Pepsico
 		(4, 4); -- Công ty TNHH Orion bán thương hiệu Orion
-
-

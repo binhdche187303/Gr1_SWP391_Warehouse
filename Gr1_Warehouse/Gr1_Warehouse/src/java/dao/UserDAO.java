@@ -4,13 +4,17 @@
  */
 package dao;
 
+import java.sql.Statement;
 import model.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import model.Role;
+import model.WholesaleCustomer;
 import ulti.MD5Hash;
 
 /**
@@ -21,49 +25,115 @@ public class UserDAO extends DBContext {
 
     // Phương thức login
     public User login(String identifier, String password) {
-        String sql = "SELECT u.user_id, u.username, u.password, u.fullname, u.phone, u.email, u.role_id, u.status, u.address, r.role_name "
+        String sql = "SELECT u.user_id, u.username, u.password, u.fullname, u.phone, u.email, "
+                + "u.role_id, r.role_name, u.address, u.status AS user_status, "
+                + "w.status AS wholesale_status "
                 + "FROM Users u "
-                + "JOIN Roles r ON u.role_id = r.role_id "
-                + "WHERE u.email = ? OR u.username = ?";
+                + "LEFT JOIN Roles r ON u.role_id = r.role_id "
+                + "LEFT JOIN WholesaleCustomers w ON u.user_id = w.user_id "
+                + "WHERE (u.username = ? OR u.email = ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, identifier);
             ps.setString(2, identifier);
             ResultSet rs = ps.executeQuery();
+
+            if (!rs.next()) {
+                System.out.println("❌ Sai tài khoản hoặc mật khẩu: " + identifier);
+                return null;
+            }
+
+            String storedHashedPassword = rs.getString("password");
+            String hashedInputPassword = MD5Hash.hash(password);
+            String userStatus = rs.getString("user_status");
+            String storeStatus = rs.getString("wholesale_status");
+
+            // Kiểm tra tài khoản bị vô hiệu hóa
+            if (userStatus == null || !"Active".equalsIgnoreCase(userStatus)) {
+                System.out.println("⚠️ Tài khoản bị vô hiệu hóa: " + identifier);
+                return createErrorUser("Tài khoản của bạn đã bị vô hiệu hóa. Vui lòng liên hệ quản trị viên.");
+            }
+
+            // Kiểm tra tài khoản bán buôn đang chờ duyệt
+            if ("Chờ duyệt".equalsIgnoreCase(storeStatus)) {
+                System.out.println("⏳ Tài khoản bán buôn đang chờ duyệt: " + identifier);
+                return createErrorUser("Tài khoản bán buôn của bạn đang chờ duyệt. Vui lòng liên hệ quản trị viên.");
+            }
+
+            // Kiểm tra mật khẩu
+            if (!hashedInputPassword.equals(storedHashedPassword)) {
+                System.out.println("🔴 Sai tài khoản hoặc mật khẩu: " + identifier);
+                return null;
+            }
+
+            User user = new User();
+            user.setUserId(rs.getInt("user_id"));
+            user.setUsername(rs.getString("username"));
+            user.setPassword(storedHashedPassword);
+            user.setFullname(rs.getString("fullname"));
+            user.setPhone(rs.getString("phone"));
+            user.setEmail(rs.getString("email"));
+            user.setAddress(rs.getString("address"));
+
+            Role role = new Role();
+            role.setRoleId(rs.getInt("role_id"));
+            role.setRoleName(rs.getString("role_name"));
+            user.setRole(role);
+            user.setStatus(userStatus);
+
+            System.out.println("🟢 Đăng nhập thành công: " + identifier + " | Role: " + role.getRoleName());
+            return user;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private User createErrorUser(String errorMessage) {
+        User errorUser = new User();
+        errorUser.setStatus(errorMessage);
+        return errorUser;
+    }
+
+    public String getWholesaleStatus(int userId) {
+        String sql = "SELECT status FROM WholesaleCustomers WHERE user_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                String storedHashedPassword = rs.getString("password");
-                String hashedInputPassword = MD5Hash.hash(password);
-                System.out.println("Hashed Input Password: " + hashedInputPassword);
-                System.out.println("Stored Hashed Password: " + storedHashedPassword);
-                if (hashedInputPassword.equals(storedHashedPassword)) {
-                    User user = new User();
-                    user.setUserId(rs.getInt("user_id"));
-                    user.setUsername(rs.getString("username"));
-                    user.setPassword(storedHashedPassword);
-                    user.setFullname(rs.getString("fullname"));
-                    user.setPhone(rs.getString("phone"));
-                    user.setEmail(rs.getString("email"));
-                    user.setAddress(rs.getString("address"));
-
-                    Role role = new Role();
-                    role.setRoleId(rs.getInt("role_id"));
-                    role.setRoleName(rs.getString("role_name"));
-                    user.setRole(role);
-
-                    user.setStatus(rs.getString("status"));
-
-                    return user;
-                } else {
-                    System.out.println("Đăng nhập thất bại: Sai mật khẩu.");
-                }
-            } else {
-                System.out.println("Đăng nhập thất bại: Người dùng không tồn tại.");
+                return rs.getString("status");
             }
         } catch (SQLException e) {
-            System.out.println("SQL Error: " + e.getMessage());
             e.printStackTrace();
         }
-        return null;
+        return null; // Không có tài khoản bán buôn
+    }
+
+    public User getUserByUsername(String identifier) {
+        User user = null;
+        String sql = "SELECT user_id, username, password, fullname, phone, email, role_id, status "
+                + "FROM Users WHERE username = ? OR email = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, identifier);
+            stmt.setString(2, identifier);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                user = new User();
+                user.setUserId(rs.getInt("user_id"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password")); // Lưu mật khẩu hash
+                user.setFullname(rs.getString("fullname"));
+                user.setPhone(rs.getString("phone"));
+                user.setEmail(rs.getString("email"));
+                user.setRole(new Role(rs.getInt("role_id")));
+                user.setStatus(rs.getString("status"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
     }
 
     // Kiểm tra email đã tồn tại chưa
@@ -82,37 +152,99 @@ public class UserDAO extends DBContext {
         return false;
     }
 
-    public boolean register(String username, String password, String fullname, String phone, String email, int roleId, String status) {
+    public boolean register(String username, String password, String fullname, String phone, String email, String storeName, String storeAddress, String taxCode, String businessLicense) {
         String hashedPassword = MD5Hash.hash(password);
         if (hashedPassword == null) {
             System.out.println("Lỗi khi hash mật khẩu!");
             return false;
         }
 
-        String sql = "INSERT INTO Users (username, password, fullname, phone, email, role_id, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Users (username, password, fullname, phone, email, role_id, address, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, username);
             ps.setString(2, hashedPassword);
             ps.setString(3, fullname);
             ps.setString(4, phone);
             ps.setString(5, email);
-            ps.setInt(6, roleId);
-            ps.setString(7, status);
+            ps.setInt(6, 2); // Mặc định role_id là 2 (Customer)
+            ps.setString(7, storeAddress); // ✅ Gán storeAddress vào address
+            ps.setString(8, "Active");
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
-                System.out.println("Đăng ký thành công: " + username);
-                return true;
-            } else {
-                System.out.println("Đăng ký thất bại: " + username);
-                return false;
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    int userId = rs.getInt(1);
+
+                    // ✅ Tạo đối tượng WholesaleCustomer
+                    WholesaleCustomer customer = new WholesaleCustomer(userId, storeName, storeAddress, taxCode, businessLicense, "Chờ duyệt");
+
+                    return addWholesaleCustomer(customer);
+                }
             }
+            return false;
         } catch (SQLException e) {
             System.out.println("SQL Error: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
+    }
+
+    public boolean addWholesaleCustomer(WholesaleCustomer customer) {
+        String sql = "INSERT INTO WholesaleCustomers (user_id, storeName, storeAddress, taxCode, businessLicense, status) VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, customer.getUserId());
+            ps.setString(2, customer.getStoreName());
+            ps.setString(3, customer.getStoreAddress());
+            ps.setString(4, customer.getTaxCode());
+            ps.setString(5, customer.getBusinessLicense());
+            ps.setString(6, customer.getStatus());
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updateStatus(int userId, String newStatus) {
+        String sql = "UPDATE WholesaleCustomers SET status = ? WHERE user_id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, newStatus);
+            ps.setInt(2, userId);
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0; // Trả về true nếu cập nhật thành công
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<WholesaleCustomer> getAllWholesaleCustomers() {
+        List<WholesaleCustomer> customers = new ArrayList<>();
+        String sql = "SELECT user_id, storeName, storeAddress, taxCode, businessLicense, status FROM WholesaleCustomers";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                WholesaleCustomer customer = new WholesaleCustomer(
+                        rs.getInt("user_id"),
+                        rs.getString("storeName"),
+                        rs.getString("storeAddress"),
+                        rs.getString("taxCode"),
+                        rs.getString("businessLicense"),
+                        rs.getString("status")
+                );
+                customers.add(customer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customers;
     }
 
     public User findByEmail(String email) {
@@ -467,7 +599,7 @@ public class UserDAO extends DBContext {
         return staffList;
     }
 
-        public List<User> getStaffByRole2(int roleId) {
+    public List<User> getStaffByRole2(int roleId) {
         List<User> staffList = new ArrayList<>();
         String sql = "SELECT user_id, username, fullname, password, phone, email, address, status FROM Users WHERE role_id = ? AND status = 'Active'";
 
@@ -485,7 +617,7 @@ public class UserDAO extends DBContext {
                 user.setEmail(rs.getString("email"));
                 user.setAddress(rs.getString("address"));
                 user.setStatus(rs.getString("status"));
-                
+
                 staffList.add(user);
             }
         } catch (SQLException e) {
@@ -493,7 +625,7 @@ public class UserDAO extends DBContext {
         }
         return staffList;
     }
-    
+
     public int getAllStaffDashboard() {
         int numberOfStaff = 0;
         String sql = "SELECT COUNT(*)AS numberOfStaff FROM dbo.Users\n"
@@ -545,5 +677,70 @@ public class UserDAO extends DBContext {
         }
         return false;
     }
+    
+        public boolean isPhoneExist(String phone) throws Exception {
+        String query = "SELECT COUNT(*) FROM Users WHERE phone = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, phone);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public boolean isTaxCodeExist(String taxCode) throws Exception {
+        String query = "SELECT COUNT(*) FROM WholesaleCustomers WHERE taxCode = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, taxCode);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+    
+    // Phương thức trong UserDAO để xác thực người dùng qua email hoặc username (với mã hóa MD5)
+    public boolean validateUser(String identifier, String password) {
+        try {
+            // Mã hóa mật khẩu trước khi so sánh
+            String hashedPassword = MD5Hash.hash(password);
 
+            String sql = "SELECT * FROM Users WHERE (username = ? OR email = ?) AND password = ? AND status = 'Active'";
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, identifier);
+            st.setString(2, identifier);
+            st.setString(3, hashedPassword);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            System.out.println("validateUser error: " + e.getMessage());
+        }
+        return false;
+    }
+
+// Phương thức trong UserDAO để cập nhật mật khẩu (với mã hóa MD5)
+    public boolean changePassword(String identifier, String newPassword) {
+        try {
+            // Mã hóa mật khẩu mới trước khi lưu vào cơ sở dữ liệu
+            String hashedPassword = MD5Hash.hash(newPassword);
+
+            String sql = "UPDATE Users SET password = ? WHERE username = ? OR email = ?";
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, hashedPassword);
+            st.setString(2, identifier);
+            st.setString(3, identifier);
+            int rowsAffected = st.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.out.println("changePassword error: " + e.getMessage());
+            return false;
+        }
+    }
 }

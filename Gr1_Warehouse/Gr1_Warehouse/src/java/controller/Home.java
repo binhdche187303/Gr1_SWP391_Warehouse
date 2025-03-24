@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.Categories;
+import model.Products;
 
 /**
  *
@@ -54,13 +55,17 @@ public class Home extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         ProductDAO dao = new ProductDAO();
         List<Categories> categories = dao.getAllCategory();
+        List<Products> trendingProducts = dao.getTrendingProducts();
+        List<Products> bestSellerProducts = dao.getBestSellerProducts();
+        request.setAttribute("bestSellerProducts", bestSellerProducts);
+        request.setAttribute("trendingProducts", trendingProducts);
         request.setAttribute("category", categories);
         request.getRequestDispatcher("pages/home.jsp").forward(request, response);
-    } 
+    }
 
     /** 
      * Handles the HTTP <code>POST</code> method.

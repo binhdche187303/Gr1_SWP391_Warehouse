@@ -1,6 +1,5 @@
 package controller;
 
-import dao.ProductDAO;
 import dao.UserDAO;
 import model.User;
 import jakarta.servlet.ServletException;
@@ -12,8 +11,6 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Base64;
-import java.util.List;
-import model.Categories;
 import model.GoogleAccount;
 import model.Role;
 import ulti.MD5Hash;
@@ -39,13 +36,28 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        ProductDAO productDAO = new ProductDAO();
-//        List<Categories> categories = productDAO.getAllCategory();
-//        request.setAttribute("category", categories);
-
         String code = request.getParameter("code");
-
         if (code == null || code.trim().isEmpty()) {
+            Cookie[] cookies = request.getCookies();
+            String decodedPassword = "";
+            String savedIdentifier = "";
+
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("identifier".equals(cookie.getName())) {
+                        savedIdentifier = cookie.getValue();
+                    }
+                    if ("password".equals(cookie.getName())) {
+                        try {
+                            decodedPassword = new String(Base64.getDecoder().decode(cookie.getValue()));
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Error decoding password: " + e.getMessage());
+                        }
+                    }
+                }
+            }
+            request.setAttribute("savedIdentifier", savedIdentifier);
+            request.setAttribute("decodedPassword", decodedPassword);
             request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
             return;
         }
@@ -117,13 +129,13 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/home");
                 break;
             case 3:  // Warehouse manager
-                response.sendRedirect("/Gr1_Warehouse/manager/manager_dashboard.jsp");
+                response.sendRedirect("/Gr1_Warehouse/managerDashboard");
                 break;
             case 4:  // Warehouse staff
                 response.sendRedirect("/Gr1_Warehouse/staff-checklist");
                 break;
             case 5:  // Packing staff
-                response.sendRedirect("packing/staff/dashboard");
+                response.sendRedirect("/Gr1_Warehouse/packing-orders");
                 break;
             case 6:  // Shipper staff
                 response.sendRedirect("/Gr1_Warehouse/ship-orders");
@@ -132,6 +144,7 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect("/Gr1_Warehouse/sale-orders");
                 break;
             default:
+                System.out.println("Unknown role ID: " + roleId + ". Redirecting to error page.");
                 response.sendRedirect("error");
         }
     }
@@ -139,20 +152,34 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+
         String identifier = request.getParameter("identifier");
         String password = request.getParameter("pass");
         String savePass = request.getParameter("save-pass");
 
-        if (identifier == null || identifier.trim().isEmpty()) {
-            System.out.println("User is empty.");
-            request.setAttribute("error", "Email or Username cannot be empty");
+        //Case : Để trống cả email và mật khẩu
+        if ((identifier == null || identifier.trim().isEmpty()) && (password == null || password.trim().isEmpty())) {
+            System.out.println("Người dùng không nhập cả tên đăng nhập / email và mật khẩu.");
+            request.setAttribute("error", "Email / Tên đăng nhập và Mật khẩu không được để trống.");
             request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
             return;
         }
+        //Case : Để trống cả email / tài khoản
+
+        if (identifier == null || identifier.trim().isEmpty()) {
+            System.out.println("Người dùng không nhập tên đăng nhập hoặc email.");
+            request.setAttribute("error", "Email hoặc Tên đăng nhập không được để trống.");
+            request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
+            return;
+        }
+        //Case : Để trống mật khẩu
 
         if (password == null || password.trim().isEmpty()) {
-            System.out.println("Password is empty.");
-            request.setAttribute("error", "Password cannot be empty");
+            System.out.println("Người dùng không nhập mật khẩu.");
+            request.setAttribute("error", "Mật khẩu không được để trống.");
             request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
             return;
         }
@@ -163,11 +190,11 @@ public class LoginServlet extends HttpServlet {
         UserDAO userDAO = null;
         try {
             userDAO = new UserDAO();
-            System.out.println("UserDAO instance created successfully.");
+            System.out.println("Khởi tạo UserDAO thành công.");
         } catch (Exception e) {
-            System.out.println("Error initializing UserDAO: " + e.getMessage());
+            System.out.println("Lỗi khi khởi tạo UserDAO: " + e.getMessage());
             e.printStackTrace();
-            request.setAttribute("error", "Internal Server Error. Please try again later.");
+            request.setAttribute("error", "Lỗi hệ thống. Vui lòng thử lại sau.");
             request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
             return;
         }
@@ -176,32 +203,69 @@ public class LoginServlet extends HttpServlet {
         try {
             hashedPassword = MD5Hash.hash(password);
         } catch (Exception e) {
-            System.out.println("Error hashing password: " + e.getMessage());
+            System.out.println("Lỗi khi mã hóa mật khẩu: " + e.getMessage());
             e.printStackTrace();
-            request.setAttribute("error", "Internal Server Error. Please try again later.");
+            request.setAttribute("error", "Lỗi hệ thống. Vui lòng thử lại sau.");
             request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
             return;
         }
 
-        User user = userDAO.login(identifier, password);
+        // Thực hiện đăng nhập với thông tin người dùng nhập vào (Email hoặc Tên đăng nhập)
+// Bước 1: Kiểm tra tài khoản có tồn tại không
+        User user = userDAO.getUserByUsername(identifier);
+
         if (user == null) {
-            System.out.println("Login failed for identifier: " + identifier);
+            System.out.println("🔴 Đăng nhập thất bại: Tài khoản không tồn tại - " + identifier);
             request.setAttribute("identifier", identifier);
-            request.setAttribute("error", "Email/Username or Password is incorrect. Please try again!");
+            request.setAttribute("error", "Tài khoản không tồn tại. Vui lòng thử lại!");
             request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
             return;
         }
 
-        if (user.getStatus() == null || "Deactive".equalsIgnoreCase(user.getStatus())) {
-            System.out.println("Login attempt with deactivated account: " + identifier);
+// Lấy trạng thái tài khoản từ bảng Users
+        String userStatus = user.getStatus();
+
+// Lấy trạng thái bán buôn từ bảng WholesaleCustomers
+        String wholesaleStatus = userDAO.getWholesaleStatus(user.getUserId());
+
+// Kiểm tra trạng thái tài khoản trước khi xác thực mật khẩu
+        if ("Deactive".equalsIgnoreCase(userStatus)) {
+            System.out.println("⚠️ Đăng nhập thất bại: Tài khoản bị vô hiệu hóa - " + identifier);
             request.setAttribute("identifier", identifier);
-            request.setAttribute("error", "Your account is deactivated. Please contact support.");
+            request.setAttribute("error", "Tài khoản của bạn đã bị vô hiệu hóa. Vui lòng liên hệ người quản lí.");
             request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
             return;
         }
 
-        System.out.println("Login successful for identifier: " + identifier);
+// Kiểm tra trạng thái tài khoản bán buôn
+        if (wholesaleStatus != null) {
+            if ("Chờ duyệt".equalsIgnoreCase(wholesaleStatus)) {
+                System.out.println("⏳ Đăng nhập thất bại: Tài khoản bán buôn đang chờ duyệt - " + identifier);
+                request.setAttribute("identifier", identifier);
+                request.setAttribute("error", "Tài khoản bán buôn của bạn đang chờ duyệt. Vui lòng liên hệ người quản lí.");
+                request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
+                return;
+            }
+            if ("Bị từ chối".equalsIgnoreCase(wholesaleStatus)) {
+                System.out.println("❌ Đăng nhập thất bại: Tài khoản bán buôn bị từ chối - " + identifier);
+                request.setAttribute("identifier", identifier);
+                request.setAttribute("error", "Tài khoản của bạn đã bị từ chối.");
+                request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
+                return;
+            }
+        }
 
+// Bước 2: Kiểm tra mật khẩu
+        user = userDAO.login(identifier, password);
+        if (user == null) {
+            System.out.println("🔴 Đăng nhập thất bại: Sai mật khẩu - " + identifier);
+            request.setAttribute("identifier", identifier);
+            request.setAttribute("error", "Mật khẩu không chính xác. Vui lòng thử lại!");
+            request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
+            return;
+        }
+
+// Đăng nhập thành công
         HttpSession session = request.getSession();
         session.setAttribute("acc", user);
 
@@ -220,9 +284,13 @@ public class LoginServlet extends HttpServlet {
             System.out.println("Identifier and password saved in cookies for 7 days.");
         } else {
             Cookie emailCookie = new Cookie("identifier", "");
+            Cookie passwordCookie = new Cookie("password", "");
             emailCookie.setMaxAge(0);
             emailCookie.setPath("/");
             response.addCookie(emailCookie);
+            passwordCookie.setMaxAge(0);
+            passwordCookie.setPath("/");
+            response.addCookie(passwordCookie);
             System.out.println("Identifier cookie deleted.");
         }
 
@@ -252,13 +320,13 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/home");
                 break;
             case 3:  // Warehouse manager
-                response.sendRedirect("/Gr1_Warehouse/manager/manager_dashboard.jsp");
+                response.sendRedirect("/Gr1_Warehouse/managerDashboard");
                 break;
             case 4:  // Warehouse staff
                 response.sendRedirect("/Gr1_Warehouse/staff-checklist");
                 break;
             case 5:  // Packing staff
-                response.sendRedirect("packing/staff/dashboard");
+                response.sendRedirect("/Gr1_Warehouse/packing-orders");
                 break;
             case 6:  // Shipper staff
                 response.sendRedirect("/Gr1_Warehouse/ship-orders");

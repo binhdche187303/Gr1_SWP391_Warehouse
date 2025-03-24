@@ -8,8 +8,8 @@
         <meta name="description" content="Fastkart">
         <meta name="keywords" content="Fastkart">
         <meta name="author" content="Fastkart">
-        <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/1.png" type="image/x-icon">
-        <title>Sign Up</title>
+        <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/8.png" type="image/x-icon">
+        <title>Đăng kí</title>
 
         <!-- Google font -->
         <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -72,41 +72,104 @@
                     <div class="col-xxl-4 col-xl-5 col-lg-6 col-sm-8 mx-auto">
                         <div class="log-in-box">
                             <div class="log-in-title">
-                                <h3>Welcome To Fastkart</h3>
+                                <h3>Chào mừng đến với BULKMART</h3>                                
                                 <h4>Tạo tài khoản mới</h4>
                             </div>
 
                             <div class="input-box">
                                 <!-- Registration Form -->
                                 <form action="${pageContext.request.contextPath}/register" method="post" class="mt-4">
+                                    <c:if test="${not empty error}">
+                                        <div class="alert alert-danger">${error}</div>
+                                    </c:if>
+                                    <c:if test="${not empty message}">
+                                        <div class="alert alert-success">${message}</div>
+                                    </c:if>
+
                                     <div class="form-group">
-                                        <label for="email">Email</label>
-                                        <input type="email" class="form-control" id="email" name="email" required value="${param.email}">
+                                        <label for="email">Email <span class="text-danger">*</span></label>
+                                        <input type="email" class="form-control ${not empty errorEmail ? 'is-invalid' : ''}" id="email" name="email" required value="${email}">
+                                        <c:if test="${not empty errorEmail}">
+                                            <div class="invalid-feedback">${errorEmail}</div>
+                                        </c:if>
                                     </div>
 
                                     <div class="form-group mt-3">
-                                        <label for="username">Tên người dùng</label>
-                                        <input type="text" class="form-control" id="username" name="username" required value="${param.username}">
+                                        <label for="username">Tên người dùng <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control ${not empty errorUsername ? 'is-invalid' : ''}" id="username" name="username" required value="${username}">
+                                        <c:if test="${not empty errorUsername}">
+                                            <div class="invalid-feedback">${errorUsername}</div>
+                                        </c:if>
                                     </div>
 
                                     <div class="form-group mt-3">
-                                        <label for="password">Mật khẩu</label>
-                                        <input type="password" class="form-control" id="password" name="password" required>
+                                        <label for="password">Mật khẩu <span class="text-danger">*</span></label>
+                                        <input type="password" class="form-control ${not empty errorPassword ? 'is-invalid' : ''}" id="password" name="password" required>
+                                        <small class="text-muted">Ít nhất 1 chữ in hoa, 1 ký tự đặc biệt, 1 số, tối thiểu 8 ký tự.</small>
+                                        <c:if test="${not empty errorPassword}">
+                                            <div class="invalid-feedback">${errorPassword}</div>
+                                        </c:if>
                                     </div>
 
                                     <div class="form-group mt-3">
-                                        <label for="fullname">Tên đầy đủ</label>
-                                        <input type="text" class="form-control" id="fullname" name="fullname" required value="${param.fullname}">
+                                        <label for="fullname">Tên đầy đủ <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control ${not empty errorFullname ? 'is-invalid' : ''}" id="fullname" name="fullname" required value="${fullname}">
+                                        <c:if test="${not empty errorFullname}">
+                                            <div class="invalid-feedback">${errorFullname}</div>
+                                        </c:if>
                                     </div>
 
                                     <div class="form-group mt-3">
-                                        <label for="phone">Số điện thoại</label>
-                                        <input type="text" class="form-control" id="phone" name="phone" required value="${param.phone}">
+                                        <label for="phone">Số điện thoại <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control ${not empty errorPhone ? 'is-invalid' : ''}" id="phone" name="phone" required value="${phone}">
+                                        <small class="text-muted">Bắt đầu bằng số 0, có 10-11 số.</small>
+                                        <c:if test="${not empty errorPhone}">
+                                            <div class="invalid-feedback">${errorPhone}</div>
+                                        </c:if>
                                     </div>
-                                    <br><!-- comment -->
-                                <div class="col-12">
-                                    <button class="btn btn-animation w-100" type="submit">Đăng kí</button>
-                                </div>                               
+
+                                    <!-- 🏪 Thêm thông tin cửa hàng -->
+                                    <div class="form-group mt-3">
+                                        <label for="storeName">Tên cửa hàng <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control ${not empty errorStoreName ? 'is-invalid' : ''}" id="storeName" name="storeName" required value="${storeName}">
+                                        <c:if test="${not empty errorStoreName}">
+                                            <div class="invalid-feedback">${errorStoreName}</div>
+                                        </c:if>
+                                    </div>
+
+                                    <div class="form-group mt-3">
+                                        <label for="storeAddress">Địa chỉ cửa hàng <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control ${not empty errorStoreAddress ? 'is-invalid' : ''}" id="storeAddress" name="storeAddress" required value="${storeAddress}">
+                                        <c:if test="${not empty errorStoreAddress}">
+                                            <div class="invalid-feedback">${errorStoreAddress}</div>
+                                        </c:if>
+                                    </div>
+
+                                    <div class="form-group mt-3">
+                                        <label for="taxCode">Mã số thuế <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control ${not empty errorTaxCode ? 'is-invalid' : ''}" id="taxCode" name="taxCode" required value="${taxCode}">
+                                        <small class="text-muted">10-13 chữ số.</small>
+                                        <c:if test="${not empty errorTaxCode}">
+                                            <div class="invalid-feedback">${errorTaxCode}</div>
+                                        </c:if>
+                                    </div>
+
+                                    <div class="form-group mt-3">
+                                        <label for="businessLicense">Giấy phép kinh doanh (URL Google Drive) <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control ${not empty errorBusinessLicense ? 'is-invalid' : ''}" id="businessLicense" name="businessLicense" required value="${businessLicense}">
+                                        <small class="text-muted">Ví dụ: https://drive.google.com/file/d/11qqtZj31PQRjCVBu80IdsJTfw2sGlkuh/view</small>
+                                        <c:if test="${not empty errorBusinessLicense}">
+                                            <div class="invalid-feedback">${errorBusinessLicense}</div>
+                                        </c:if>
+                                    </div>
+
+                                    <div class="col-12 mt-4">
+                                        <button class="btn btn-animation w-100" type="submit">Đăng ký</button>
+                                    </div>
+
+                                    <div class="mt-3 text-center">
+                                        <p>Đã có tài khoản? <a href="${pageContext.request.contextPath}/login" class="text-primary">Đăng nhập</a></p>
+                                    </div>
                                 </form>
 
                             </div>

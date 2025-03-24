@@ -73,7 +73,8 @@ public class Shop extends HttpServlet {
         // Lấy tham số từ request
         String[] categoryIdsParam = request.getParameterValues("category_id");
         String[] brandIdsParam = request.getParameterValues("brand_id");
-        String priceRange = request.getParameter("price_range");
+        String minPriceParam = request.getParameter("minPrice");
+        String maxPriceParam = request.getParameter("maxPrice");
         String subName = request.getParameter("subName");
         String sortOrder = request.getParameter("sortOrder");
 
@@ -82,17 +83,15 @@ public class Shop extends HttpServlet {
         Double maxPrice = null;
 
         // Xử lý giá trị price_range nếu có
-        if (priceRange != null && !priceRange.isEmpty()) {
-            // Giả sử giá trị price_range có dạng "min_price-max_price"
-            String[] prices = priceRange.split(";");
-            if (prices.length == 2) {
-                try {
-                    minPrice = Double.parseDouble(prices[0]);
-                    maxPrice = Double.parseDouble(prices[1]);
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid price range format.");
-                }
+        try {
+            if (minPriceParam != null && !minPriceParam.isEmpty()) {
+                minPrice = Double.parseDouble(minPriceParam);
             }
+            if (maxPriceParam != null && !maxPriceParam.isEmpty()) {
+                maxPrice = Double.parseDouble(maxPriceParam);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid price format.");
         }
         request.setAttribute("minPrice", minPrice);
         request.setAttribute("maxPrice", maxPrice);
@@ -164,7 +163,6 @@ public class Shop extends HttpServlet {
 
 // Đẩy dữ liệu lên JSP
         request.setAttribute("p_list", paginatedList);
-        request.setAttribute("price_range", priceRange);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/shop.jsp");
         dispatcher.forward(request, response);
     }

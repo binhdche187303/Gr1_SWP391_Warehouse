@@ -90,7 +90,7 @@ public class ProfileSetting extends HttpServlet {
             String address = request.getParameter("address");
             ud.updateUser(fullname, phone, address, Integer.parseInt(userID));
 
-            request.setAttribute("successprofile", "Change profile successfully");
+            request.setAttribute("successprofile", "Cập nhật hồ sơ thành công");
         } else //Change password
         {
             String currentpassword = request.getParameter("currentpassword");
@@ -100,20 +100,26 @@ public class ProfileSetting extends HttpServlet {
             String hashedCurrentPassword = MD5Hash.hash(currentpassword);
 
             if (!hashedCurrentPassword.equals(u.getPassword())) {
-                request.setAttribute("error", "Current password is incorrect!");
+                request.setAttribute("error", "Mật khẩu hiện tại không chính xác!");
+                request.getRequestDispatcher("/dashboard/profile-setting.jsp").forward(request, response);
+                return;
+            }
+
+            if (!newpassword.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$")) {
+                request.setAttribute("error", "Mật khẩu không đủ mạnh");
                 request.getRequestDispatcher("/dashboard/profile-setting.jsp").forward(request, response);
                 return;
             }
 
             if (!newpassword.equals(confirmpassword)) {
-                request.setAttribute("error", "New password and confirm password do not match!");
+                request.setAttribute("error", "Mật khẩu mới và mật khẩu xác nhận không khớp!");
                 request.getRequestDispatcher("/dashboard/profile-setting.jsp").forward(request, response);
                 return;
             }
             String hashedNewPassword = MD5Hash.hash(newpassword);
-            ud.updatePassword(hashedNewPassword, userID);
-            
-            request.setAttribute("success", "Change password successfully");
+            ud.updatePassword(u.getEmail(), newpassword);
+
+            request.setAttribute("success", "Đổi mật khẩu thành công");
         }
         User nuser = ud.getUserById(u.getUserId());
         session.setAttribute("acc", nuser);

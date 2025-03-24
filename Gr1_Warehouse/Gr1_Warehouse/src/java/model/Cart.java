@@ -31,6 +31,12 @@ public class Cart {
         this.image = image;
     }
 
+    public Cart(int productId, int sizeId) {
+        this.productId = productId;
+        this.sizeId = sizeId;
+    }
+
+    
     // Getters và Setters
     public int getCartId() {
         return cartId;

@@ -77,7 +77,19 @@ public class CustomerOrderServlet extends HttpServlet {
 
         OrderDAO orderDAO = new OrderDAO();
         List<OrderDetailDTO> orderList = orderDAO.getOrdersByCustomerId(customerId);
-
+        // Log kết quả trả về từ DB
+        if (orderList.isEmpty()) {
+            System.out.println("⚠️ [INFO] Không có đơn hàng nào được tìm thấy cho khách hàng ID: " + customerId);
+        } else {
+            System.out.println("✅ [SUCCESS] Tìm thấy " + orderList.size() + " đơn hàng cho khách hàng ID: " + customerId);
+            for (OrderDetailDTO orderDetail : orderList) {
+                Order order = orderDetail.getOrder();
+                System.out.println("🛒 Đơn hàng ID: " + order.getOrderId()
+                        + " | Ngày đặt: " + order.getOrderDate()
+                        + " | Tổng tiền: " + order.getTotalAmount()
+                        + " | Trạng thái: " + order.getStatus());
+            }
+        }
         response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
 

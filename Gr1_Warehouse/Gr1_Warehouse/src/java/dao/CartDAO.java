@@ -18,6 +18,92 @@ import model.Cart;
  */
 public class CartDAO extends DBContext {
 
+    public boolean updateCartItemSize(int productId, int oldSizeId, int newSizeId) {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            connection.setAutoCommit(false); // Bắt đầu transaction
+
+            // Lấy số lượng cũ của oldSizeId và kiểm tra xem newSizeId đã tồn tại chưa
+            String checkQuery = "SELECT size_id, quantity FROM Cart WHERE product_id = ? AND (size_id = ? OR size_id = ?)";
+            pstmt = connection.prepareStatement(checkQuery);
+            pstmt.setInt(1, productId);
+            pstmt.setInt(2, oldSizeId);
+            pstmt.setInt(3, newSizeId);
+            rs = pstmt.executeQuery();
+
+            int oldQuantity = 0, newQuantity = 0;
+            boolean newSizeExists = false;
+
+            while (rs.next()) {
+                int sizeId = rs.getInt("size_id");
+                int quantity = rs.getInt("quantity");
+
+                if (sizeId == oldSizeId) {
+                    oldQuantity = quantity;
+                } else if (sizeId == newSizeId) {
+                    newQuantity = quantity;
+                    newSizeExists = true;
+                }
+            }
+            rs.close();
+            pstmt.close();
+
+            if (oldQuantity == 0) {
+                System.out.println("Không có số lượng để chuyển!");
+                connection.rollback();
+                return false;
+            }
+
+            if (newSizeExists) {
+                // Nếu newSizeId đã tồn tại, cộng dồn số lượng
+                String updateNewSizeQuery = "UPDATE Cart SET quantity = ? WHERE product_id = ? AND size_id = ?";
+                pstmt = connection.prepareStatement(updateNewSizeQuery);
+                pstmt.setInt(1, newQuantity + oldQuantity);
+                pstmt.setInt(2, productId);
+                pstmt.setInt(3, newSizeId);
+                pstmt.executeUpdate();
+                pstmt.close();
+
+                // Xóa oldSizeId
+                String deleteOldSizeQuery = "DELETE FROM Cart WHERE product_id = ? AND size_id = ?";
+                pstmt = connection.prepareStatement(deleteOldSizeQuery);
+                pstmt.setInt(1, productId);
+                pstmt.setInt(2, oldSizeId);
+                pstmt.executeUpdate();
+                pstmt.close();
+            } else {
+                // Nếu newSizeId chưa tồn tại, chỉ cập nhật size_id
+                String updateSizeQuery = "UPDATE Cart SET size_id = ? WHERE product_id = ? AND size_id = ?";
+                pstmt = connection.prepareStatement(updateSizeQuery);
+                pstmt.setInt(1, newSizeId);
+                pstmt.setInt(2, productId);
+                pstmt.setInt(3, oldSizeId);
+                pstmt.executeUpdate();
+                pstmt.close();
+            }
+
+            connection.commit();
+            return true;
+
+        } catch (Exception e) {
+            try {
+                connection.rollback();
+            } catch (Exception rollbackEx) {
+                rollbackEx.printStackTrace();
+            }
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return false;
+    }
+
     public boolean removeCheckedOutItems(int userId, List<Cart> carts) {
         if (carts == null || carts.isEmpty()) {
             return false;
@@ -115,48 +201,20 @@ public class CartDAO extends DBContext {
         return cartList;
     }
 
-    public boolean updateCartQuantity(int productId, int quantity, int userId, int sizeId) {
+    public boolean updateCartQuantity(int productId, int quantity, int user_id, int sizeId) {
+        String updateQuery = "UPDATE Cart SET quantity = ? WHERE product_id = ? AND size_id = ? AND user_id = ?";
+
         try {
-            // 1. Kiểm tra nếu size mới đã tồn tại trong giỏ hàng
-            String checkQuery = "SELECT quantity FROM Cart WHERE product_Id = ? AND user_id = ? AND size_id = ?";
-            PreparedStatement psCheck = connection.prepareStatement(checkQuery);
-            psCheck.setInt(1, productId);
-            psCheck.setInt(2, userId);
-            psCheck.setInt(3, sizeId);
-            ResultSet rsCheck = psCheck.executeQuery();
+            PreparedStatement psUpdate = connection.prepareStatement(updateQuery);
+            psUpdate.setInt(1, quantity);
+            psUpdate.setInt(2, productId);
+            psUpdate.setInt(3, sizeId);
+            psUpdate.setInt(4, user_id);
 
-            if (rsCheck.next()) {
-                // 2. Nếu tồn tại thì cộng dồn số lượng
-                int currentQuantity = rsCheck.getInt("quantity");
-                int newQuantity = currentQuantity + quantity;
+            int rowsAffected = psUpdate.executeUpdate();
+            System.out.println("Update Cart Rows Affected: " + rowsAffected); // Debug
 
-                String updateQuery = "UPDATE Cart SET quantity = ? WHERE product_Id = ? AND user_id = ? AND size_id = ?";
-                PreparedStatement psUpdate = connection.prepareStatement(updateQuery);
-                psUpdate.setInt(1, newQuantity);
-                psUpdate.setInt(2, productId);
-                psUpdate.setInt(3, userId);
-                psUpdate.setInt(4, sizeId);
-                psUpdate.executeUpdate();
-
-                // 3. Xóa sản phẩm ở size cũ
-                String deleteQuery = "DELETE FROM Cart WHERE product_Id = ? AND user_id = ? AND size_id != ?";
-                PreparedStatement psDelete = connection.prepareStatement(deleteQuery);
-                psDelete.setInt(1, productId);
-                psDelete.setInt(2, userId);
-                psDelete.setInt(3, sizeId); // Giữ lại size mới
-                psDelete.executeUpdate();
-
-                return true;
-            } else {
-                // 4. Nếu size mới chưa tồn tại thì thêm mới
-                String insertQuery = "UPDATE Cart SET quantity = ?,  size_id=? WHERE product_Id = ? AND user_id=?";
-                PreparedStatement psInsert = connection.prepareStatement(insertQuery);
-                psInsert.setInt(1, quantity);
-                psInsert.setInt(2, sizeId);
-                psInsert.setInt(3, productId);
-                psInsert.setInt(4, userId);
-                return psInsert.executeUpdate() > 0;
-            }
+            return rowsAffected > 0;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -174,6 +232,21 @@ public class CartDAO extends DBContext {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public int getCartItemCount(int userId) {
+        int count = 0;
+        String sql = "SELECT COUNT(cart_id) FROM Cart WHERE user_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
     }
 
 }

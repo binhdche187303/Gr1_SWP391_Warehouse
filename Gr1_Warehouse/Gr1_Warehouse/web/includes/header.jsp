@@ -12,11 +12,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Fastkart">
-        <meta name="keywords" content="Fastkart">
-        <meta name="author" content="Fastkart">
-        <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/1.png" type="image/x-icon">
-        <title>Log In</title>
+        <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/8.png" type="image/x-icon">
+        <title>Tiêu đề</title>
 
         <!-- Google font -->
         <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -59,7 +56,7 @@
                                         <i class="fa-solid fa-bars"></i>
                                     </span>
                                 </button>
-                                <a href="index.html" class="web-logo nav-logo">
+                                <a href="/Gr1_Warehouse/home" class="web-logo nav-logo">
                                     <img src="${pageContext.request.contextPath}/assets/images/logo_1.png" class="img-fluid blur-up lazyload" alt="">
                                 </a>
 
@@ -102,8 +99,13 @@
                                         </li>
                                         <li class="right-side">
                                             <div class="onhover-dropdown header-badge">
-                                                <button type="button" class="btn p-0 position-relative header-wishlist" onclick="window.location.href = 'cart'">
-                                                    <i data-feather="shopping-cart"></i>
+                                                <button type="button" class="btn p-0 position-relative" onclick="window.location.href = 'cart'">
+                                                    <i data-feather="shopping-cart" style="font-size: 40px; color: black;"></i>
+                                                    <span id="cart-count" 
+                                                          class="position-absolute top-0 start-100 translate-middle badge bg-white text-danger px-2 py-1 rounded-pill shadow" 
+                                                          style="font-size: 10px; min-width: 30px; min-height: 20px;">
+                                                        0
+                                                    </span>
                                                 </button>
 
 
@@ -139,24 +141,24 @@
                                                                 if (user != null) {
                                                             %>
                                                             <!-- Nếu đã đăng nhập, hiển thị nút Log Out và My Dashboard -->
-                                                            <li class="product-box-contain">
-                                                                <a href="<%= request.getContextPath() %>/logout">Đăng xuất</a>
-                                                            </li>
+
                                                             <li class="product-box-contain">
                                                                 <a href="<%= request.getContextPath() %>/profileSetting">Tài khoản của tôi</a>
                                                             </li>
-
+                                                            <li class="product-box-contain">
+                                                                <a href="<%= request.getContextPath() %>/logout">Đăng xuất</a>
+                                                            </li>
 
                                                             <% } else { %>
                                                             <!-- Nếu chưa đăng nhập, hiển thị các tùy chọn khác -->
                                                             <li class="product-box-contain">
-                                                                <a href="${pageContext.request.contextPath}/login">Log In</a>
+                                                                <a href="${pageContext.request.contextPath}/login">Đăng nhập</a>
                                                             </li>
                                                             <li class="product-box-contain">
-                                                                <a href="${pageContext.request.contextPath}/register">Register</a>
+                                                                <a href="${pageContext.request.contextPath}/register">Đăng kí</a>
                                                             </li>
                                                             <li class="product-box-contain">
-                                                                <a href="${pageContext.request.contextPath}/request">Forgot Password</a>
+                                                                <a href="${pageContext.request.contextPath}/request">Quên mật khẩu</a>
                                                             </li>
                                                             <% } %>
                                                         </ul>
@@ -194,7 +196,7 @@
                                                                                             <a href="/Gr1_Warehouse/shop?category_id=${cate.category_id}">
                                                                                                 <h5>${cate.category_name}</h5>
                                                                                             </a>
-                                                                                            
+
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -222,22 +224,6 @@
                                                                                 <li class="nav-item dropdown">
                                                                                     <a class="nav-link " href="${pageContext.request.contextPath}/shop">Cửa hàng</a>
                                                                                 </li>                        
-
-                                                                                <li class="nav-item dropdown">
-                                                                                    <!--                                                                                    <a class="nav-link dropdown-toggle" href="javascript:void(0)"
-                                                                                                                                                                           data-bs-toggle="dropdown">Blog</a>-->
-                                                                                    <ul class="dropdown-menu">
-                                                                                        <li>
-                                                                                            <a class="dropdown-item" href="blog-detail.html">Blog Detail</a>
-                                                                                        </li>
-                                                                                        <li>
-                                                                                            <a class="dropdown-item" href="blog-grid.html">Blog Grid</a>
-                                                                                        </li>
-                                                                                        <li>
-                                                                                            <a class="dropdown-item" href="blog-list.html">Blog List</a>
-                                                                                        </li>
-                                                                                    </ul>
-                                                                                </li>
                                                                             </ul>
                                                                         </div>
                                                                     </div>
@@ -251,26 +237,6 @@
                                                 </div>
                                             </div>
                                             </header>
-                                            <!-- Modal -->
-                                            <div class="modal" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="paymentModalLabel">Yêu Cầu Thanh Toán 50%</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <p>Đơn hàng của bạn đã được xác nhận. Vui lòng thanh toán 50% tổng giá trị qua QR Code dưới đây:</p>
-                                                            <div id="qrCodeContainer"></div> <!-- QR code sẽ được hiển thị ở đây -->
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                                                            <button type="button" class="btn btn-primary" onclick="redirectToPayment()">Thanh Toán</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>                                    
-
                                             <!-- Header End -->
                                             <!-- Tap to top start -->
                                             <div class="theme-option">
@@ -281,7 +247,22 @@
                                                 </div>
                                             </div>
                                             <!-- Tap to top end -->
+                                            <script>
+                                                function updateCartCount() {
+                                                    fetch('/Gr1_Warehouse/count-cart') // Đường dẫn servlet để lấy số lượng sản phẩm
+                                                            .then(response => response.text())
+                                                            .then(count => {
+                                                                const cartCountElement = document.getElementById("cart-count");
+                                                                if (cartCountElement) {
+                                                                    cartCountElement.textContent = count;
+                                                                    cartCountElement.style.display = count > 0 ? "inline-block" : "none";
+                                                                }
+                                                            })
+                                                            .catch(error => console.error("Lỗi khi lấy số lượng giỏ hàng:", error));
+                                                }
+                                                document.addEventListener("DOMContentLoaded", updateCartCount);
 
+                                            </script>
                                             <!-- Bg overlay Start -->
                                             <div class="bg-overlay"></div>
                                             <!-- Bg overlay End -->

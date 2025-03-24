@@ -217,7 +217,7 @@
                                                                                         </div>  
 
                                                                                         <div class="form-floating mb-3">
-                                                                                            <input type="number" class="form-control" id="min_quantity" name="min_quantity" value="" required />
+                                                                                            <input type="number" class="form-control" id="min_quantity" name="min_quantity" value=""  min="1" required />
                                                                                             <label for="max_uses">Số lượng</label>
                                                                                         </div>
 

@@ -69,35 +69,167 @@ public class RegisterServlet extends HttpServlet {
         String fullname = request.getParameter("fullname");
         String phone = request.getParameter("phone");
         String email = request.getParameter("email");
+        String storeName = request.getParameter("storeName");
+        String storeAddress = request.getParameter("storeAddress");
+        String taxCode = request.getParameter("taxCode");
+        String businessLicense = request.getParameter("businessLicense");
+
+        System.out.println("📌 Nhận dữ liệu đăng ký:");
+        System.out.println("Username: " + username);
+        System.out.println("Password: " + password);
+        System.out.println("Fullname: " + fullname);
+        System.out.println("Phone: " + phone);
+        System.out.println("Email: " + email);
+        System.out.println("Store Name: " + storeName);
+        System.out.println("Store Address: " + storeAddress);
+        System.out.println("Tax Code: " + taxCode);
+        System.out.println("Business License: " + businessLicense);
+
+        boolean hasError = false;
+
+        // Lưu các giá trị đã nhập vào request để hiển thị lại khi có lỗi
+        request.setAttribute("username", username);
+        request.setAttribute("password", ""); // Không lưu lại mật khẩu vì lý do bảo mật
+        request.setAttribute("fullname", fullname);
+        request.setAttribute("phone", phone);
+        request.setAttribute("email", email);
+        request.setAttribute("storeName", storeName);
+        request.setAttribute("storeAddress", storeAddress);
+        request.setAttribute("taxCode", taxCode);
+        request.setAttribute("businessLicense", businessLicense);
+
+        // Kiểm tra email đúng định dạng
+        if (email == null || !email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")) {
+            request.setAttribute("errorEmail", "Email không đúng định dạng.");
+            System.out.println("❌ Lỗi: Email không đúng định dạng.");
+            hasError = true;
+        }
+
+        // Kiểm tra mật khẩu đúng định dạng
+        if (password == null || !password.matches("^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).{8,}$")) {
+            request.setAttribute("errorPassword", "Mật khẩu phải có ít nhất 1 chữ in hoa, 1 ký tự đặc biệt, 1 số, tối thiểu 8 ký tự.");
+            System.out.println("❌ Lỗi: Mật khẩu không hợp lệ.");
+            hasError = true;
+        }
+
+        // Kiểm tra username không được để trống
+        if (username == null || username.trim().isEmpty()) {
+            request.setAttribute("errorUsername", "Tên người dùng không được để trống.");
+            System.out.println("❌ Lỗi: Username không được để trống.");
+            hasError = true;
+        }
+
+        // Kiểm tra fullname không được để trống
+        if (fullname == null || fullname.trim().isEmpty()) {
+            request.setAttribute("errorFullname", "Tên đầy đủ không được để trống.");
+            System.out.println("❌ Lỗi: Fullname không được để trống.");
+            hasError = true;
+        }
+
+        // Kiểm tra số điện thoại đúng định dạng
+        if (phone == null || !phone.matches("^0[0-9]{9,10}$")) {
+            request.setAttribute("errorPhone", "Số điện thoại không đúng định dạng.");
+            System.out.println("❌ Lỗi: Số điện thoại không hợp lệ.");
+            hasError = true;
+        }
+
+        // Kiểm tra tên cửa hàng không được để trống
+        if (storeName == null || storeName.trim().isEmpty()) {
+            request.setAttribute("errorStoreName", "Tên cửa hàng không được để trống.");
+            System.out.println("❌ Lỗi: Store name không được để trống.");
+            hasError = true;
+        }
+
+        // Kiểm tra địa chỉ cửa hàng không được để trống
+        if (storeAddress == null || storeAddress.trim().isEmpty()) {
+            request.setAttribute("errorStoreAddress", "Địa chỉ cửa hàng không được để trống.");
+            System.out.println("❌ Lỗi: Store address không được để trống.");
+            hasError = true;
+        }
+
+        // Kiểm tra định dạng mã số thuế
+        if (taxCode == null || !taxCode.matches("^[0-9]{10,13}$")) {
+            request.setAttribute("errorTaxCode", "Mã số thuế không đúng định dạng.");
+            System.out.println("❌ Lỗi: Mã số thuế không hợp lệ.");
+            hasError = true;
+        }
+
+        // Kiểm tra URL businessLicense
+        if (businessLicense == null || !businessLicense.matches("^https://drive\\.google\\.com/file/d/[a-zA-Z0-9_-]+/view$")) {
+            request.setAttribute("errorBusinessLicense", "URL Giấy phép kinh doanh không hợp lệ.");
+            System.out.println("❌ Lỗi: Business License URL không hợp lệ.");
+            hasError = true;
+        }
 
         try {
             UserDAO userDAO = new UserDAO();
 
-            if (userDAO.isEmailExist(email)) {
-                request.setAttribute("error", "Email đã tồn tại. Vui lòng chọn email khác.");
-                request.getRequestDispatcher("pages/signup.jsp").forward(request, response);
+            // Kiểm tra email đã tồn tại chưa
+            if (!hasError && userDAO.isEmailExist(email)) {
+                request.setAttribute("errorEmail", "Email đã tồn tại. Vui lòng chọn email khác.");
+                System.out.println("❌ Lỗi: Email đã tồn tại.");
+                hasError = true;
+            }
+
+            // Kiểm tra username đã tồn tại chưa
+            if (!hasError && userDAO.isUserNameExist(username)) {
+                request.setAttribute("errorUsername", "Tên người dùng đã tồn tại. Vui lòng chọn tên khác.");
+                System.out.println("❌ Lỗi: Username đã tồn tại.");
+                hasError = true;
+            }
+
+            // Kiểm tra số điện thoại đã tồn tại chưa
+            if (!hasError && userDAO.isPhoneExist(phone)) {
+                request.setAttribute("errorPhone", "Số điện thoại đã tồn tại. Vui lòng nhập số khác.");
+                System.out.println("❌ Lỗi: Số điện thoại đã tồn tại.");
+                hasError = true;
+            }
+
+            // Kiểm tra mã số thuế đã tồn tại chưa
+            if (!hasError && userDAO.isTaxCodeExist(taxCode)) {
+                request.setAttribute("errorTaxCode", "Mã số thuế đã tồn tại. Vui lòng nhập mã khác.");
+                System.out.println("❌ Lỗi: Mã số thuế đã tồn tại.");
+                hasError = true;
+            }
+
+            if (hasError) {
+                System.out.println("🔴 Đăng ký thất bại do lỗi nhập liệu.");
+                request.getRequestDispatcher("/pages/signup.jsp").forward(request, response);
                 return;
             }
-            boolean isSuccess = userDAO.register(username, password, fullname, phone, email, 2, "Active");
+
+            // Chuyển đổi Google Drive URL
+            String fileId = businessLicense.split("/d/")[1].split("/")[0];
+            businessLicense = "https://drive.google.com/uc?export=view&id=" + fileId;
+            System.out.println("✅ Business License URL hợp lệ, chuyển đổi thành: " + businessLicense);
+
+            // Tiến hành đăng ký
+            boolean isSuccess = userDAO.register(username, password, fullname, phone, email, storeName, storeAddress, taxCode, businessLicense);
 
             if (isSuccess) {
-                response.sendRedirect("pages/login.jsp");
+                System.out.println("🎉 Đăng ký thành công!");
+                request.setAttribute("message", "Tài khoản đã được tạo thành công.");
+                request.getRequestDispatcher("/pages/login.jsp").forward(request, response);
             } else {
+                System.out.println("❌ Đăng ký thất bại do lỗi hệ thống hoặc dữ liệu.");
                 request.setAttribute("error", "Đăng ký thất bại. Vui lòng thử lại.");
-                request.getRequestDispatcher("pages/signup.jsp").forward(request, response);
+                request.getRequestDispatcher("/pages/signup.jsp").forward(request, response);
             }
         } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("⚠️ Lỗi hệ thống: " + e.getMessage());
             request.setAttribute("error", "Lỗi hệ thống. Vui lòng thử lại sau.");
-            request.getRequestDispatcher("pages/signup.jsp").forward(request, response);
+            request.getRequestDispatcher("/pages/signup.jsp").forward(request, response);
         }
     }
-/**
- * Returns a short description of the servlet.
- *
- * @return a String containing servlet description
- */
-@Override
-public String getServletInfo() {
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
 

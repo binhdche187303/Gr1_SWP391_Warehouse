@@ -20,7 +20,7 @@ public class MD5Hash {
         }
     }
     public static void main(String[] args) {
-    String password = "12";  
+    String password = "kimtuan09112004@";  
     //123456 => e10adc3949ba59abbe56e057f20f883e
     //12345 => 827ccb0eea8a706c4c34a16891f84e7b
     //1234 => 81dc9bdb52d04dc20036dbd8313ed055

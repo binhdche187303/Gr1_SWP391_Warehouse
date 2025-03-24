@@ -10,8 +10,8 @@
         <meta name="description" content="Fastkart" />
         <meta name="keywords" content="Fastkart" />
         <meta name="author" content="Fastkart" />
-        <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/1.png" type="image/x-icon" />
-        <title>User Dashboard</title>
+        <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/8.png" type="image/x-icon">
+        <title>Bảng điều khiển người dùng</title>
 
         <!-- Google font -->
         <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -114,27 +114,61 @@
 
                                         <div class="total-box">
                                             <div class="row g-sm-4 g-3">
+                                                <!-- Tổng đơn đặt hàng -->
                                                 <div class="col-xxl-6 col-lg-6 col-md-4 col-sm-6">
                                                     <div class="totle-contain">
-                                                        <img src="${pageContext.request.contextPath}/assets/images/svg/order.svg" class="blur-up lazyload" alt="" />
+                                                        <img src="${pageContext.request.contextPath}/assets/images/svg/total.png" 
+                                                             class="blur-up lazyload icon-img" 
+                                                             alt="Tổng đơn đặt hàng" />
                                                         <div class="totle-detail">
                                                             <h5>Tổng đơn đặt hàng</h5>
-                                                            <h3>3658</h3>
+                                                            <h3 id="total-orders">0 đơn</h3>
                                                         </div>
                                                     </div>
                                                 </div>
 
+                                                <!-- Tổng đơn chờ xử lý -->
                                                 <div class="col-xxl-6 col-lg-6 col-md-4 col-sm-6">
                                                     <div class="totle-contain">
-                                                        <img src="${pageContext.request.contextPath}/assets/images/svg/pending.svg" class="blur-up lazyload" alt="" />
+                                                        <img src="${pageContext.request.contextPath}/assets/images/svg/shipp.svg" 
+                                                             class="blur-up lazyload icon-img" 
+                                                             alt="Tổng đơn chờ xử lý" />
                                                         <div class="totle-detail">
-                                                            <h5>Tổng đơn chờ xử lí</h5>
-                                                            <h3>254</h3>
+                                                            <h5>Tổng đơn chờ xử lý</h5>
+                                                            <h3 id="pending-orders">0 đơn</h3>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Tổng đơn đã gửi hàng -->
+                                                <div class="col-xxl-6 col-lg-6 col-md-4 col-sm-6">
+                                                    <div class="totle-contain">
+                                                        <img src="${pageContext.request.contextPath}/assets/images/svg/7.png" 
+                                                             class="blur-up lazyload icon-img" 
+                                                             alt="Tổng đơn đã gửi hàng" />
+                                                        <div class="totle-detail">
+                                                            <h5>Tổng đơn đã gửi hàng</h5>
+                                                            <h3 id="shipped-orders">0 đơn</h3>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Tổng đơn đã nhận -->
+                                                <div class="col-xxl-6 col-lg-6 col-md-4 col-sm-6">
+                                                    <div class="totle-contain">
+                                                        <img src="${pageContext.request.contextPath}/assets/images/svg/cho.png" 
+                                                             class="blur-up lazyload icon-img" 
+                                                             alt="Tổng đơn đã nhận" />
+                                                        <div class="totle-detail">
+                                                            <h5>Tổng đơn đã nhận</h5>
+                                                            <h3 id="received-orders">0 đơn</h3>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+
+
                                     </div>
                                 </div>
 
@@ -149,10 +183,15 @@
                                                 </svg>
                                             </span>
                                         </div>
-
-                                        <div id="pills-order-content">
-                                            <!-- Dữ liệu đơn hàng sẽ được hiển thị ở đây -->
+                                        <div class="filter-bar">
+                                            <button class="filter-btn active" data-status="all">Tất cả</button>
+                                            <button class="filter-btn" data-status="Chờ xử lý">Chờ xử lý</button>
+                                            <button class="filter-btn" data-status="Đã xác nhận">Đã xác nhận</button>
+                                            <button class="filter-btn" data-status="Đang đóng gói">Đang đóng gói</button>
+                                            <button class="filter-btn" data-status="Đã gửi hàng">Đã gửi hàng</button>
+                                            <button class="filter-btn" data-status="Đã giao hàng thành công">Đã giao hàng thành công</button>
                                         </div>
+                                        <div id="pills-order-content"></div>
                                     </div>
                                 </div>
                                 <div
@@ -489,67 +528,181 @@
                 font-size: 16px;
                 border-radius: 5px;
             }
+
+            .filter-bar {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+
+            .filter-btn {
+                padding: 8px 16px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                background-color: #f9f9f9;
+                cursor: pointer;
+            }
+
+            .filter-btn.active {
+                background-color: #007bff;
+                color: white;
+            }
         </style>
 
 
         <script>
+                                                let allOrders = []; // Lưu trữ toàn bộ dữ liệu đơn hàng
+
+                                                // Tải dữ liệu đơn hàng từ API và hiển thị
                                                 function loadOrders() {
                                                     console.log("📌 Fetching order data...");
+
                                                     fetch('/Gr1_Warehouse/customer-order')
                                                             .then(function (response) {
                                                                 if (!response.ok) {
                                                                     throw new Error("Server returned " + response.status);
                                                                 }
-                                                                return response.json(); // ✅ Chuyển đổi phản hồi thành JSON
+                                                                return response.json();
                                                             })
                                                             .then(function (orderList) {
                                                                 console.log("✅ Orders received:", orderList);
 
-                                                                // Sắp xếp đơn hàng theo ngày (mới nhất lên đầu)
-                                                                orderList.sort(function (a, b) {
-                                                                    var dateA = new Date(a.order.orderDate);
-                                                                    var dateB = new Date(b.order.orderDate);
-                                                                    return dateB - dateA; // Sắp xếp giảm dần
-                                                                });
-                                                                
-                                                                var orderHTML = "";
-                                                                if (orderList.length === 0) {
-                                                                    orderHTML = "<p class='text-danger'>🚨 Bạn chưa có đơn hàng nào!</p>";
-                                                                } else {
-                                                                    orderList.forEach(function (orderDetail) {
-                                                                        var order = orderDetail.order;
+                                                                // Lưu dữ liệu đơn hàng vào biến toàn cục
+                                                                allOrders = orderList;
 
-                                                                        // ✅ Chuyển đổi timestamp thành ngày tháng chuẩn
-                                                                        var formattedDate = new Date(order.orderDate).toLocaleString('vi-VN', {
-                                                                            day: '2-digit', month: '2-digit', year: 'numeric',
-                                                                            hour: '2-digit', minute: '2-digit'
-                                                                        });
-
-                                                                        // ✅ Nối chuỗi bằng cách sử dụng dấu `+`
-                                                                        orderHTML += "<div class='order-contain'>" +
-                                                                                "<div class='order-box dashboard-bg-box'>" +
-                                                                                "<div class='order-container'>" +
-                                                                                "<div class='order-icon'><i data-feather='box'></i></div>" +
-                                                                                "<div class='order-detail'>" +
-                                                                                "<h4>Mã đơn hàng: <span>#" + order.orderId + "</span></h4>" +
-                                                                                "<h6 class='text-content'>Ngày đặt hàng: " + formattedDate + "</h6>" +
-                                                                                "<h6 class='text-content'>Trạng thái đơn hàng: <span class='badge bg-warning'>" + order.status + "</span></h6>" +
-                                                                                "<h6 class='text-content'>Tổng: " + order.totalAmount.toLocaleString('vi-VN') + " VND</h6>" +
-                                                                                "</div>" +
-                                                                                "</div>" +
-                                                                                "<div class='order-footer d-flex justify-content-end'>" +
-                                                                                "<a href='customerOrderDetail?orderId=" + order.orderId + "' class='btn btn-primary'>View Details</a>" +
-                                                                                "</div>" +
-                                                                                "</div>" +
-                                                                                "</div>";
-                                                                    });
-                                                                }
-                                                                document.getElementById('pills-order-content').innerHTML = orderHTML;
+                                                                // Hiển thị toàn bộ đơn hàng
+                                                                renderOrders(orderList);
                                                             })
                                                             .catch(function (error) {
                                                                 console.error("❌ Error loading orders:", error);
                                                             });
                                                 }
+
+                                                // Hàm hiển thị danh sách đơn hàng
+                                                function renderOrders(orderList) {
+                                                    orderList.sort(function (a, b) {
+                                                        var dateA = new Date(a.order.orderDate);
+                                                        var dateB = new Date(b.order.orderDate);
+                                                        return dateB - dateA; // Sắp xếp giảm dần theo ngày
+                                                    });
+
+                                                    var orderHTML = "";
+                                                    if (orderList.length === 0) {
+                                                        orderHTML = "<p class='text-danger'>🚨 Bạn chưa có đơn hàng nào!</p>";
+                                                    } else {
+                                                        orderList.forEach(function (orderDetail) {
+                                                            var order = orderDetail.order;
+
+                                                            // Chuyển đổi ngày tháng
+                                                            var formattedDate = new Date(order.orderDate).toLocaleString('vi-VN', {
+                                                                day: '2-digit', month: '2-digit', year: 'numeric',
+                                                                hour: '2-digit', minute: '2-digit'
+                                                            });
+
+                                                            orderHTML += "<div class='order-contain'>" +
+                                                                    "<div class='order-box dashboard-bg-box'>" +
+                                                                    "<div class='order-container'>" +
+                                                                    "<div class='order-icon'><i data-feather='box'></i></div>" +
+                                                                    "<div class='order-detail'>" +
+                                                                    "<h4>Mã đơn hàng: <span>#" + order.orderId + "</span></h4>" +
+                                                                    "<h6 class='text-content'>Ngày đặt hàng: " + formattedDate + "</h6>" +
+                                                                    "<h6 class='text-content'>Trạng thái đơn hàng: <span class='badge bg-warning'>" + order.status + "</span></h6>" +
+                                                                    "<h6 class='text-content'>Tổng: " + order.totalAmount.toLocaleString('vi-VN') + " VND</h6>" +
+                                                                    "</div>" +
+                                                                    "</div>" +
+                                                                    "<div class='order-footer d-flex justify-content-end'>" +
+                                                                    "<a href='customerOrderDetail?orderId=" + order.orderId + "' class='btn btn-primary'>Xem chi tiết</a>" +
+                                                                    "</div>" +
+                                                                    "</div>" +
+                                                                    "</div>";
+                                                        });
+                                                    }
+                                                    document.getElementById('pills-order-content').innerHTML = orderHTML;
+                                                }
+
+                                                // Lọc đơn hàng theo trạng thái
+                                                function filterOrders(status) {
+                                                    let filteredOrders = [];
+                                                    if (status === "all") {
+                                                        filteredOrders = allOrders;
+                                                    } else {
+                                                        filteredOrders = allOrders.filter(orderDetail => orderDetail.order.status === status);
+                                                    }
+                                                    console.log("🔍 Đơn hàng sau khi lọc:", filteredOrders);
+                                                    renderOrders(filteredOrders);
+                                                }
+
+
+                                                // Thêm sự kiện click cho các nút lọc
+                                                document.addEventListener('DOMContentLoaded', function () {
+                                                    // Tải dữ liệu đơn hàng khi trang được tải
+                                                    loadOrders();
+
+                                                    // Gắn sự kiện cho các nút lọc
+                                                    const filterButtons = document.querySelectorAll('.filter-btn');
+                                                    filterButtons.forEach(function (button) {
+                                                        button.addEventListener('click', function () {
+                                                            // Xóa lớp "active" khỏi tất cả các nút
+                                                            filterButtons.forEach(btn => btn.classList.remove('active'));
+
+                                                            // Thêm lớp "active" vào nút được click
+                                                            button.classList.add('active');
+
+                                                            // Lọc đơn hàng theo trạng thái
+                                                            const status = button.getAttribute('data-status');
+                                                            filterOrders(status);
+                                                        });
+                                                    });
+                                                });
+        </script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const apiUrl = '/Gr1_Warehouse/customer-order';
+
+                function fetchOrdersData() {
+                    fetch(apiUrl)
+                            .then((response) => {
+                                if (!response.ok) {
+                                    throw new Error("Network response was not ok");
+                                }
+                                return response.json();
+                            })
+                            .then((data) => {
+                                console.log("Dữ liệu từ API:", data); // Kiểm tra dữ liệu
+                                updateOrdersCount(data);
+                            })
+                            .catch((error) => {
+                                console.error("Có lỗi khi fetch dữ liệu đơn hàng:", error);
+                            });
+                }
+
+                function updateOrdersCount(orderData) {
+                    // Log toàn bộ dữ liệu để kiểm tra
+                    console.log("Dữ liệu nhận được từ API:", orderData);
+
+                    // Tổng số đơn hàng
+                    const totalOrders = orderData.length;
+                    console.log("Tổng số đơn hàng:", totalOrders);
+                    document.getElementById("total-orders").textContent = totalOrders;
+
+                    // Đếm số đơn theo trạng thái
+                    const pendingOrders = orderData.filter((data) => data.order.status === "Chờ xử lý").length;
+                    console.log("Tổng số đơn 'Chờ xử lý':", pendingOrders);
+
+                    const shippedOrders = orderData.filter((data) => data.order.status === "Đã gửi hàng").length;
+                    console.log("Tổng số đơn 'Đã gửi hàng':", shippedOrders);
+
+                    const receivedOrders = orderData.filter((data) => data.order.status === "Đã giao hàng thành công").length;
+                    console.log("Tổng số đơn 'Đã giao hàng thành công':", receivedOrders);
+
+                    // Cập nhật giao diện
+                    document.getElementById("pending-orders").textContent = pendingOrders;
+                    document.getElementById("shipped-orders").textContent = shippedOrders;
+                    document.getElementById("received-orders").textContent = receivedOrders;
+                }
+                fetchOrdersData();
+            });
 
         </script>
 

@@ -6,11 +6,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Fastkart">
-        <meta name="keywords" content="Fastkart">
-        <meta name="author" content="Fastkart">
-        <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/1.png" type="image/x-icon">
-        <title>404</title>
+        <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/8.png" type="image/x-icon">
+        <title>Trang lỗi</title>
 
         <!-- Google font -->
         <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -129,7 +126,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="image-404">
-                            <img src="${pageContext.request.contextPath}/assets/images/inner-page/404.png" class="img-fluid blur-up lazyload" alt="">
+                            <img src="${pageContext.request.contextPath}/assets/images/inner-page/404.png" class="img-fluid" alt="">
                         </div>
                     </div>
 

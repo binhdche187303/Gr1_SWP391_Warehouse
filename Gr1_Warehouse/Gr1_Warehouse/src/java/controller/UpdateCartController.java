@@ -39,7 +39,7 @@ public class UpdateCartController extends HttpServlet {
         String productIdPara = request.getParameter("productId");
         int userId = user.getUserId();
         String quantityPara = request.getParameter("quantity");
-        String sizeIdPara = request.getParameter("newSize");
+        String sizeIdPara = request.getParameter("sizeId");
         try {
             int productId = Integer.parseInt(productIdPara);
             int quantity = Integer.parseInt(quantityPara);
@@ -53,5 +53,4 @@ public class UpdateCartController extends HttpServlet {
         }
 
     }
-
 }

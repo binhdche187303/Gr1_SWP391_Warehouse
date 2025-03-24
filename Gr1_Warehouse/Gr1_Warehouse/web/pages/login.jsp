@@ -9,8 +9,8 @@
         <meta name="description" content="Fastkart">
         <meta name="keywords" content="Fastkart">
         <meta name="author" content="Fastkart">
-        <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/1.png" type="image/x-icon">
-        <title>Log In</title>
+        <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/8.png" type="image/x-icon">
+        <title>Đăng nhập</title>
 
         <!-- Google font -->
         <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -46,7 +46,7 @@
                             <nav>
                                 <ol class="breadcrumb mb-0">
                                     <li class="breadcrumb-item">
-                                        <a href="home">
+                                        <a href="index.html">
                                             <i class="fa-solid fa-house"></i>
                                         </a>
                                     </li>
@@ -74,12 +74,14 @@
                                 <h3>Chào mừng đến với BULKMART</h3>
                                 <h4>Đăng nhập tài khoản của bạn</h4>
                             </div>
-                            <br>
-                            <% if(request.getAttribute("error") != null) { %>
+
+                            <% String errorMessage = (String) request.getAttribute("error"); %>
+                            <% if (errorMessage != null) { %>
                             <div class="alert alert-danger">
-                                <%= request.getAttribute("error") %>
+                                <%= errorMessage %>
                             </div>
                             <% } %>
+
 
                             <div class="input-box">
                                 <form class="row g-4" method="post" action="${pageContext.request.contextPath}/login">
@@ -87,7 +89,7 @@
                                         <div class="form-floating theme-form-floating log-in-form">
                                             <input type="text" class="form-control" id="identifier" name="identifier" 
                                                    placeholder="Email or Username" 
-                                                   value="${savedIdentifier != null ? savedIdentifier : ''}" required>
+                                                   value="${savedIdentifier != null ? savedIdentifier : ''}" >
                                             <label for="identifier">Email hoặc tên tài khoản</label>
                                         </div>
                                     </div>
@@ -95,7 +97,7 @@
                                     <div class="col-12">
                                         <div class="form-floating theme-form-floating log-in-form">
                                             <input type="password" class="form-control" id="password" name="pass" 
-                                                   placeholder="Password" value="${decodedPassword != null ? decodedPassword : ''}" required>
+                                                   placeholder="Password" value="${decodedPassword != null ? decodedPassword : ''}">
                                             <label for="password">Mật khẩu</label>
                                         </div>
                                     </div>
@@ -157,7 +159,18 @@
         <!-- Bg overlay Start -->
         <div class="bg-overlay"></div>
         <!-- Bg overlay End -->
-
+        <script>
+            <% 
+                String successMessage = (String) session.getAttribute("success");
+                if(successMessage != null) {
+            %>
+    alert("<%= successMessage %>");
+            <%
+                    // Xóa session sau khi đã hiển thị
+                    session.removeAttribute("success");
+                }
+            %>
+        </script>
         <!-- latest jquery-->
         <script src="${pageContext.request.contextPath}/assets/js/jquery-3.6.0.min.js"></script>
 

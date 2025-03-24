@@ -6,9 +6,8 @@
 <html lang="en" dir="ltr">
 
     <head>
-        <link rel="icon" href="assets/images/favicon.png" type="image/x-icon">
-        <link rel="shortcut icon" href="assets/images/favicon.png" type="image/x-icon">
-        <title>Fastkart - Dashboard</title>
+        <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/8.png" type="image/x-icon">
+        <title>Đơn hàng chi tiết</title>
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -230,6 +229,9 @@
                     // Kiểm tra trạng thái đơn hàng
                     if (orderStatus === "Đã gửi hàng") {
                         alert("🚚 Đơn hàng đã được gửi, không thể xác nhận lại!");
+                        return;
+                    }else if (orderStatus === "Đã giao hàng thành công") {
+                        alert("🚚 Đơn hàng đã được giao !");
                         return;
                     }
 

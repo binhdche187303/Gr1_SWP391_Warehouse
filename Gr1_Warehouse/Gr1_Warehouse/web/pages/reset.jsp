@@ -9,8 +9,8 @@
         <meta name="description" content="Fastkart" />
         <meta name="keywords" content="Fastkart" />
         <meta name="author" content="Fastkart" />
-        <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/1.png" type="image/x-icon"/>
-        <title>Reset Password</title>
+        <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/8.png" type="image/x-icon">
+        <title>Đổi mật khẩu</title>
 
         <!-- Google font -->
         <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -73,8 +73,8 @@
                         <div class="d-flex align-items-center justify-content-center h-100">
                             <div class="log-in-box">
                                 <div class="log-in-title">
-                                    <h3>Welcome To Fastkart</h3>
-                                    <h4>Reset Your Password</h4>
+                                    <h3>Chào mừng đến với BULKMART</h3>
+                                    <h4>Đặt lại mật khẩu của bạn</h4>
                                 </div>
 
                                 <div class="input-box">
@@ -83,7 +83,7 @@
                                         <div class="col-12">
                                             <div class="form-floating theme-form-floating log-in-form">
                                                 <input type="email" class="form-control" id="email" name="email" placeholder="Email Address" required value="${email}" />
-                                                <label for="email">Email Address</label>
+                                                <label for="email">Địa chỉ email</label>
                                             </div>
                                         </div>
 
@@ -91,7 +91,7 @@
                                         <div class="col-12">
                                             <div class="form-floating theme-form-floating log-in-form">
                                                 <input type="password" class="form-control" id="password" name="password" placeholder="New Password" required />
-                                                <label for="password">New Password</label>
+                                                <label for="password">Mật khẩu mới</label>
                                             </div>
                                         </div>
 
@@ -99,14 +99,14 @@
                                         <div class="col-12">
                                             <div class="form-floating theme-form-floating log-in-form">
                                                 <input type="password" class="form-control" id="confirmPassword" name="confirm_password" placeholder="Confirm Password" required />
-                                                <label for="confirmPassword">Confirm Password</label>
+                                                <label for="confirmPassword">Xác nhận mật khẩu mới</label>
                                             </div>
                                         </div>
 
                                         <!-- Submit Button -->
                                         <div class="col-12">
                                             <button class="btn btn-animation w-100" type="submit">
-                                                Reset Password
+                                                Đặt lại mật khẩu
                                             </button>
                                         </div>
                                     </form>

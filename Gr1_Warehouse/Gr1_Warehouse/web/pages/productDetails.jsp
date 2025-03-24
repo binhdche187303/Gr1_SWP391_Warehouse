@@ -59,47 +59,6 @@
         <%@ include file="/includes/header.jsp" %> <!-- Nhúng header -->
         <!-- Header End -->
 
-        <!--         mobile fix menu start 
-                <div class="mobile-menu d-md-none d-block mobile-cart">
-                    <ul>
-                        <li class="active">
-                            <a href="index.html">
-                                <i class="iconly-Home icli"></i>
-                                <span>Home</span>
-                            </a>
-                        </li>
-        
-                        <li class="mobile-category">
-                            <a href="javascript:void(0)">
-                                <i class="iconly-Category icli js-link"></i>
-                                <span>Category</span>
-                            </a>
-                        </li>
-        
-                        <li>
-                            <a href="search.html" class="search-box">
-                                <i class="iconly-Search icli"></i>
-                                <span>Search</span>
-                            </a>
-                        </li>
-        
-                        <li>
-                            <a href="wishlist.html" class="notifi-wishlist">
-                                <i class="iconly-Heart icli"></i>
-                                <span>My Wish</span>
-                            </a>
-                        </li>
-        
-                        <li>
-                            <a href="cart.html">
-                                <i class="iconly-Bag-2 icli fly-cate"></i>
-                                <span>Cart</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                 mobile fix menu end -->
-
         <!-- Breadcrumb Section Start -->
         <!-- Product Left Sidebar Start -->
         <section class="product-section">
@@ -146,7 +105,7 @@
                                     <div class="price-rating">
                                         <h3 class="theme-color price">
                                             <span id="current-price">
-                                                <fmt:formatNumber value="${product.variants[0].price}" type="number" groupingUsed="true"/>₫
+                                                <fmt:formatNumber value="${product.variants[0].price}" type="number" groupingUsed="true"/> ₫
                                             </span>
                                         </h3>
                                     </div>
@@ -175,16 +134,16 @@
                                         </ul>
                                     </div>
 
-                                    <form action="cart" method="post">
+                                    <form action="cart" method="post" onsubmit="return validateStock()">
                                         <div class="note-box product-packege">
                                             <div class="cart_qty qty-box product-qty">
                                                 <div class="input-group">
-                                                    <button type="button" class="qty-right-plus" onclick="changeQuantity(1)">
-                                                        <i class="fa fa-plus" aria-hidden="true"></i>
-                                                    </button>
-                                                    <input class="form-control input-number qty-input" type="number" name="quantity" id="quantity" value="1" min="1">
-                                                    <button type="button" class="qty-left-minus" onclick="changeQuantity(-1)">
+                                                    <button type="button" class="" onclick="changeQuantity(-1)">
                                                         <i class="fa fa-minus" aria-hidden="true"></i>
+                                                    </button>
+                                                    <input name="quantity" class="form-control" type="number" id="quantity" value="1" min="1">
+                                                    <button type="button" class="" onclick="changeQuantity(1)">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
                                                     </button>
                                                 </div>
                                             </div>
@@ -274,7 +233,7 @@
                             </c:forEach>
 
                         </div>
-                      
+
                     </div>
                 </div>
             </div>
@@ -284,316 +243,6 @@
 
         <!-- Footer Section Start -->
         <%@ include file="/includes/footer.jsp" %> 
-        <!-- Footer Section End -->
-
-        <!-- Quick View Modal Box Start -->
-        <div class="modal fade theme-modal view-modal" id="view" tabindex="-1" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-sm-down">
-                <div class="modal-content">
-                    <div class="modal-header p-0">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row g-sm-4 g-2">
-                            <div class="col-lg-6">
-                                <div class="slider-image">
-                                    <img src="${pageContext.request.contextPath}/assets/images/product/category/1.jpg" class="img-fluid blur-up lazyload"
-                                         alt="">
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <div class="right-sidebar-modal">
-                                    <h4 class="title-name">Peanut Butter Bite Premium Butter Cookies 600 g</h4>
-                                    <h4 class="price">$36.99</h4>
-                                    <div class="product-rating">
-                                        <ul class="rating">
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star" class="fill"></i>
-                                            </li>
-                                            <li>
-                                                <i data-feather="star"></i>
-                                            </li>
-                                        </ul>
-                                        <span class="ms-2">8 Reviews</span>
-                                        <span class="ms-2 text-danger">6 sold in last 16 hours</span>
-                                    </div>
-
-                                    <div class="product-detail">
-                                        <h4>Product Details :</h4>
-                                        <p>Candy canes sugar plum tart cotton candy chupa chups sugar plum chocolate I love.
-                                            Caramels marshmallow icing dessert candy canes I love soufflé I love toffee.
-                                            Marshmallow pie sweet sweet roll sesame snaps tiramisu jelly bear claw. Bonbon
-                                            muffin I love carrot cake sugar plum dessert bonbon.</p>
-                                    </div>
-
-                                    <ul class="brand-list">
-                                        <li>
-                                            <div class="brand-box">
-                                                <h5>Brand Name:</h5>
-                                                <h6>Black Forest</h6>
-                                            </div>
-                                        </li>
-
-                                        <li>
-                                            <div class="brand-box">
-                                                <h5>Product Code:</h5>
-                                                <h6>W0690034</h6>
-                                            </div>
-                                        </li>
-
-                                        <li>
-                                            <div class="brand-box">
-                                                <h5>Product Type:</h5>
-                                                <h6>White Cream Cake</h6>
-                                            </div>
-                                        </li>
-                                    </ul>
-
-                                    <div class="select-size">
-                                        <h4>Cake Size :</h4>
-                                        <select class="form-select select-form-size">
-                                            <option selected>Select Size</option>
-                                            <option value="1.2">1/2 KG</option>
-                                            <option value="0">1 KG</option>
-                                            <option value="1.5">1/5 KG</option>
-                                            <option value="red">Red Roses</option>
-                                            <option value="pink">With Pink Roses</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="modal-button">
-                                        <button onclick="location.href = 'cart.html';"
-                                                class="btn btn-md add-cart-button icon">Add
-                                            To Cart</button>
-                                        <button onclick="location.href = 'product-left.html';"
-                                                class="btn theme-bg-color view-button icon text-white fw-bold btn-md">
-                                            View More Details</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Quick View Modal Box End -->
-
-        <!-- Location Modal Start -->
-        <div class="modal location-modal fade theme-modal" id="locationModal" tabindex="-1"
-             aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Choose your Delivery Location</h5>
-                        <p class="mt-1 text-content">Enter your address and we will specify the offer for your area.</p>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="location-list">
-                            <div class="search-input">
-                                <input type="search" class="form-control" placeholder="Search Your Area">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </div>
-
-                            <div class="disabled-box">
-                                <h6>Select a Location</h6>
-                            </div>
-
-                            <ul class="location-select custom-height">
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <h6>Alabama</h6>
-                                        <span>Min: $130</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <h6>Arizona</h6>
-                                        <span>Min: $150</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <h6>California</h6>
-                                        <span>Min: $110</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <h6>Colorado</h6>
-                                        <span>Min: $140</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <h6>Florida</h6>
-                                        <span>Min: $160</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <h6>Georgia</h6>
-                                        <span>Min: $120</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <h6>Kansas</h6>
-                                        <span>Min: $170</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <h6>Minnesota</h6>
-                                        <span>Min: $120</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <h6>New York</h6>
-                                        <span>Min: $110</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        <h6>Washington</h6>
-                                        <span>Min: $130</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Location Modal End -->
-
-        <!-- Deal Box Modal Start -->
-        <div class="modal fade theme-modal deal-modal" id="deal-box" tabindex="-1" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <div>
-                            <h5 class="modal-title w-100" id="deal_today">Deal Today</h5>
-                            <p class="mt-1 text-content">Recommended deals for you.</p>
-                        </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="deal-offer-box">
-                            <ul class="deal-offer-list">
-                                <li class="list-1">
-                                    <div class="deal-offer-contain">
-                                        <a href="shop-left-sidebar.html" class="deal-image">
-                                            <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/10.png" class="blur-up lazyload"
-                                                 alt="">
-                                        </a>
-
-                                        <a href="shop-left-sidebar.html" class="deal-contain">
-                                            <h5>Blended Instant Coffee 50 g Buy 1 Get 1 Free</h5>
-                                            <h6>$52.57 <del>57.62</del> <span>500 G</span></h6>
-                                        </a>
-                                    </div>
-                                </li>
-
-                                <li class="list-2">
-                                    <div class="deal-offer-contain">
-                                        <a href="shop-left-sidebar.html" class="deal-image">
-                                            <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/11.png" class="blur-up lazyload"
-                                                 alt="">
-                                        </a>
-
-                                        <a href="shop-left-sidebar.html" class="deal-contain">
-                                            <h5>Blended Instant Coffee 50 g Buy 1 Get 1 Free</h5>
-                                            <h6>$52.57 <del>57.62</del> <span>500 G</span></h6>
-                                        </a>
-                                    </div>
-                                </li>
-
-                                <li class="list-3">
-                                    <div class="deal-offer-contain">
-                                        <a href="shop-left-sidebar.html" class="deal-image">
-                                            <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/12.png" class="blur-up lazyload"
-                                                 alt="">
-                                        </a>
-
-                                        <a href="shop-left-sidebar.html" class="deal-contain">
-                                            <h5>Blended Instant Coffee 50 g Buy 1 Get 1 Free</h5>
-                                            <h6>$52.57 <del>57.62</del> <span>500 G</span></h6>
-                                        </a>
-                                    </div>
-                                </li>
-
-                                <li class="list-1">
-                                    <div class="deal-offer-contain">
-                                        <a href="shop-left-sidebar.html" class="deal-image">
-                                            <img src="${pageContext.request.contextPath}/assets/images/vegetable/product/13.png" class="blur-up lazyload"
-                                                 alt="">
-                                        </a>
-
-                                        <a href="shop-left-sidebar.html" class="deal-contain">
-                                            <h5>Blended Instant Coffee 50 g Buy 1 Get 1 Free</h5>
-                                            <h6>$52.57 <del>57.62</del> <span>500 G</span></h6>
-                                        </a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Deal Box Modal End -->
-
-        <!-- Add to cart Modal Start -->
-        <div class="add-cart-box">
-            <div class="add-iamge">
-                <img src="${pageContext.request.contextPath}/assets/images/cake/pro/1.jpg" class="img-fluid" alt="">
-            </div>
-
-            <div class="add-contain">
-                <h6>Added to Cart</h6>
-            </div>
-        </div>
-        <!-- Add to cart Modal End -->
-
-        <!-- Tap to top start -->
-        <div class="theme-option">
-            <div class="back-to-top">
-                <a id="back-to-top" href="#">
-                    <i class="fas fa-chevron-up"></i>
-                </a>
-            </div>
-        </div>
-        <!-- Tap to top end -->
-
         <!-- Sticky Cart Box Start -->
         <div class="sticky-bottom-cart">
             <div class="container-fluid-lg">
@@ -607,7 +256,9 @@
                                     <div class="content">
                                         <h5>${product.productName}</h5>
                                         <h6 class="theme-color price">
-                                            <span id="current-price2">${product.variants[0].price}</span>đ
+                                            <span id="current-price2">
+                                                <fmt:formatNumber value="${product.variants[0].price}" type="number" groupingUsed="true"/> ₫
+                                            </span>
                                         </h6>
                                     </div>
                                 </div>
@@ -626,12 +277,12 @@
 
                                     <div class="cart_qty qty-box product-qty m-0">
                                         <div class="input-group h-100">
-                                            <button type="button" class="qty-left-minus" data-type="minus" data-field="">
+                                            <button type="button" class="" data-type="minus" data-field="">
                                                 <i class="fa fa-minus" aria-hidden="true"></i>
                                             </button>
-                                            <input class="form-control input-number qty-input" type="text" name="quantity"
+                                            <input class="form-control" type="text" name="quantity"
                                                    value="1">
-                                            <button type="button" class="qty-right-plus" data-type="plus" data-field="">
+                                            <button type="button" class="" data-type="plus" data-field="">
                                                 <i class="fa fa-plus" aria-hidden="true"></i>
                                             </button>
                                         </div>
@@ -640,15 +291,14 @@
 
                                 </div>
                                 <div class="add-btn">
-                                    <button type="submit" class="btn theme-bg-color text-white">
-                                        <i class="fas fa-shopping-cart"></i> Thêm vào giỏ hàng
+                                    <button type="submit" class="btn btn-md bg-dark cart-button text-white w-100">
+                                        Thêm vào giỏ hàng
                                     </button>
-                                </div>
 
+                                </div>
                                 <input type="hidden" name="action" value="add">
                                 <input type="hidden" name="productId" value="${product.productId}">
                                 <input type="hidden" id="selected-variant-id2" name="size" value="${product.variants[0].size.size_id}">
-
                             </div> 
                         </form>
                     </div>
@@ -711,40 +361,29 @@
         <!-- script js -->
         <script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
         <script>
-                                            function updatePriceAndVariant2(selectElement) {
-                                                // Lấy option được chọn
-                                                var selectedOption = selectElement.options[selectElement.selectedIndex];
+                                            function formatCurrency(price) {
+                                                return new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(price);
+                                            }
 
-                                                // Lấy dữ liệu từ thuộc tính data-price và value của option đã chọn
+                                            function updatePriceAndVariant2(selectElement) {
+                                                var selectedOption = selectElement.options[selectElement.selectedIndex];
                                                 var price = selectedOption.getAttribute('data-price');
                                                 var variantId = selectedOption.value;
 
-                                                // Cập nhật giá trị của input hidden
                                                 document.getElementById('selected-variant-id2').value = variantId;
-
-                                                // Cập nhật giá hiển thị
-                                                document.getElementById('current-price2').innerText = price;
+                                                document.getElementById('current-price2').innerText = formatCurrency(price);
                                             }
 
                                             function updatePriceAndVariant(element) {
-                                                // Xóa class active của tất cả các lựa chọn
                                                 document.querySelectorAll('.select-packege a').forEach(a => a.classList.remove('active'));
-
-                                                // Thêm class active cho phần tử được chọn
                                                 element.classList.add('active');
 
-                                                // Lấy dữ liệu từ thuộc tính data-variant-id, data-price và data-stock
                                                 let variantId = element.getAttribute('data-variant-id');
                                                 let price = element.getAttribute('data-price');
                                                 let stock = element.getAttribute('data-stock');
 
-                                                // Cập nhật giá trị của input hidden
                                                 document.getElementById('selected-variant-id').value = variantId;
-
-                                                // Cập nhật giá hiển thị
-                                                document.getElementById('current-price').innerText = price;
-
-                                                // Cập nhật tồn kho hiển thị
+                                                document.getElementById('current-price').innerText = formatCurrency(price);
                                                 document.getElementById('current-stock').innerText = stock;
                                             }
 
@@ -762,7 +401,120 @@
                                                 }
                                             }
         </script>
+        <script>
+            function updatePriceAndVariant(element) {
+                console.log("🔹 updatePriceAndVariant() called");
+
+                // Xóa class 'active' khỏi tất cả các phần tử
+                document.querySelectorAll('.select-packege a').forEach(a => a.classList.remove('active'));
+                element.classList.add('active');
+
+                let price = parseFloat(element.getAttribute('data-price'));
+                let variantId = element.getAttribute('data-variant-id');
+                let stock = element.getAttribute('data-stock');
+
+                console.log("➡ Selected Variant:");
+                console.log("  - Variant ID:", variantId);
+                console.log("  - Price:", price);
+                console.log("  - Stock:", stock);
+
+                document.getElementById('current-price').innerText = new Intl.NumberFormat().format(price) + " ₫";
+                document.getElementById('selected-variant-id').value = variantId;
+                document.getElementById('current-stock').innerText = stock;
+
+                updateDiscountPrice(); // Cập nhật giá theo số lượng
+            }
+
+            function changeQuantity(change) {
+                console.log("🔹 changeQuantity() called with change:", change);
+
+                let quantityInput = document.getElementById('quantity');
+                let newQuantity = parseInt(quantityInput.value) + change;
+
+                if (newQuantity < 1)
+                    newQuantity = 1;
+
+                quantityInput.value = newQuantity; // Cập nhật giá trị ô input ngay lập tức
+                console.log("➡ New Quantity:", quantityInput.value); // Kiểm tra giá trị sau khi cập nhật
+
+                updateDiscountPrice(); // Cập nhật giá giảm nếu có
+            }
+        </script>
+
+        <script>
+            // Hàm kiểm tra số lượng sản phẩm trong giỏ và tồn kho
+            function validateStock(productId, sizeId) {
+                const quantityInput = document.querySelector('input[name="quantity"]');
+                const quantity = parseInt(quantityInput.value); // Số lượng người dùng muốn thêm
+                const currentStock = parseInt(document.getElementById("current-stock").textContent); // Tồn kho
+                // Kiểm tra nếu số lượng tồn kho là 0 hoặc nếu văn bản trong phần tử là "Hết hàng"
+                if (currentStock === 0) {
+                    alert("Sản phẩm này đã hết hàng!");
+                    event.preventDefault();  // Ngừng gửi form
+                    return false;  // Không thêm sản phẩm vào giỏ
+                }
+                // Lấy giỏ hàng từ session (giả sử giỏ hàng lưu dưới dạng JSON trong session)
+                const cart = JSON.parse(sessionStorage.getItem("cart")) || [];  // Giỏ hàng lấy từ session
+
+                // Tính tổng số lượng sản phẩm đã có trong giỏ hàng
+                let cartQuantity = 0;
+                cart.forEach(item => {
+                    if (item.productId === productId && item.sizeId === sizeId) {
+                        cartQuantity += item.quantity;
+                    }
+                });
+
+                // Giới hạn số lượng tối đa có thể chọn (tồn kho - tổng số lượng trong giỏ)
+                const maxQuantity = currentStock - cartQuantity;
+
+                // Kiểm tra nếu số lượng người dùng muốn thêm vượt quá số lượng tối đa
+                if (quantity > maxQuantity) {
+                    alert("Số lượng bạn muốn thêm vượt quá số lượng tồn kho! Tối đa bạn có thể thêm là " + maxQuantity + " sản phẩm.");
+                    quantityInput.value = 1; // Đặt lại giá trị input về số lượng tối đa
+                    return false; // Ngừng gửi form
+                }
+
+                return true; // Chấp nhận nếu không vượt quá số lượng tối đa
+            }
+
+            // Hàm thay đổi số lượng khi người dùng nhấn + hoặc -
+            function changeQuantity(delta) {
+                const quantityInput = document.querySelector('input[name="quantity"]');
+                const currentQuantity = parseInt(quantityInput.value);
+                const newQuantity = currentQuantity + delta;
+
+                if (newQuantity > 0) {
+                    quantityInput.value = newQuantity;
+                } else {
+                    quantityInput.value = 1; // Đặt lại về 1 nếu số lượng giảm dưới 1
+                }
+            }
+
+            // Hàm xử lý thêm sản phẩm vào giỏ
+            document.querySelector('form').addEventListener('submit', function (event) {
+                const productId = document.querySelector('input[name="productId"]').value;
+                const sizeId = document.querySelector('input[name="size"]').value;
+
+                // Kiểm tra số lượng trước khi thêm vào giỏ hàng
+                if (!validateStock(productId, sizeId)) {
+                    event.preventDefault();  // Ngừng gửi form nếu không hợp lệ
+                }
+            });
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const stockElement = document.getElementById('current-stock');
+                const stockQuantity = parseInt(stockElement.textContent); // Số lượng tồn kho
+                if (stockQuantity === 0) {
+                    // Nếu tồn kho bằng 0, hiển thị thông báo "Hết hàng"
+                    stockElement.style.color = "red";  // Bạn có thể thay đổi màu sắc nếu muốn                    
+                }
+            });
+        </script>
+
 
     </body>
 
 </html>
+
+

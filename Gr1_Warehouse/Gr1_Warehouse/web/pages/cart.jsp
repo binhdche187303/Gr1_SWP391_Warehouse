@@ -45,6 +45,27 @@
 
         <!-- Template css -->
         <link id="color-link" rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/style.css">
+        <style>
+            .cart-table {
+                overflow-x: auto; /* Cho phép cuộn ngang nếu bảng quá rộng */
+            }
+
+            .cart-table .table {
+                width: 100%;
+                table-layout: auto; /* Đảm bảo bảng tự điều chỉnh kích thước */
+                max-width: 100%; /* Không cho phép bảng rộng hơn thẻ chứa */
+                white-space: nowrap; /* Ngăn chữ xuống dòng gây vỡ layout */
+            }
+            .table td:first-child {
+                text-align: center; /* Căn giữa nội dung trong ô */
+                vertical-align: middle; /* Căn giữa theo chiều dọc */
+            }
+
+            .checkout-checkbox {
+                transform: scale(1.2); /* Tăng kích thước checkbox nếu cần */
+            }
+
+        </style>
     </head>
 
 
@@ -127,79 +148,137 @@
                                     <c:when test="${not empty cartItems}">
                                         <table class="table">
                                             <tbody>
-                                                <c:set var="totalAmount" value="0" />
-                                                <c:forEach var="item" items="${cartItems}">
-                                                    <c:set var="totalAmount" value="${totalAmount + (item.price * item.quantity)}" />
-                                                    <tr class="product-box-contain">
-                                                        <td style="width: 20px; min-width: 20px">
-                                                            <input type="checkbox" class="checkout-checkbox" data-price="${item.price * item.quantity}"  data-product-id="${item.productId}" onchange="updateTotal()">
-                                                        </td>
-                                                        <td class="product-detail">
-                                                            <div class="product border-0">
-                                                                <a href="shopDetails?productId=${item.productId}" class="product-image">
-                                                                    <img src="./${item.image}" class="img-fluid blur-up lazyload" alt="">
-                                                                </a>
-                                                                <div class="product-detail">
-                                                                    <ul>
-                                                                        <li class="name">
-                                                                            <a href="shopDetails?productId=${item.productId}">${item.productName}</a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <select data-product-id="${item.productId}"
-                                                                                    data-size-id="${item.sizeId}" id="typeSize-${item.productId}" name="variantId" class="form-select size-select select-size" data-price="${item.price}" data-stock="${item.quantity}">
-                                                                                <c:forEach var="variant" items="${sizeOptions[item.productId]}">
-                                                                                    <option value="${variant.size.size_id}" data-price="${variant.price}" data-stock="${variant.stock}"
-                                                                                            ${variant.size.size_id == item.sizeId ? 'selected' : ''}>
-                                                                                        ${variant.size.size_name} - 
-                                                                                        <fmt:formatNumber value="${variant.price}" pattern="#,###" />₫  
-                                                                                        (Còn: ${variant.stock})
-                                                                                    </option>
-                                                                                </c:forEach>
-                                                                            </select>
-                                                                        </li>
-                                                                        <input type="hidden" name="sizeId" value="${item.sizeId}">
-                                                                    </ul>
+                                            <input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)"> 
+                                            <label for="selectAll">Chọn tất cả</label>
+                                            <c:set var="totalAmount" value="0" />
+                                            <c:forEach var="item" items="${cartItems}">
+                                                <c:set var="totalAmount" value="${totalAmount + (item.price * item.quantity)}" />
+                                                <tr class="product-box-contain">
+
+                                                    <!-- Checkbox -->
+                                                    <td style="width: 20px; min-width: 20px">
+                                                        <c:forEach var="variant" items="${sizeOptions[item.productId]}">
+                                                            <c:if test="${variant.size.size_id == item.sizeId}">
+                                                                <input type="checkbox" 
+                                                                       name="selectedProducts" 
+                                                                       class="checkout-checkbox" 
+                                                                       data-price="${item.price * item.quantity}"  
+                                                                       data-product-id="${item.productId}" 
+                                                                       data-size-id="${item.sizeId}" 
+                                                                       onchange="updateTotal()"
+                                                                       <c:if test="${variant.stock == 0}">disabled</c:if>>
+                                                            </c:if>
+                                                        </c:forEach>
+                                                    </td>
+
+                                                    <!-- Product Details -->
+                                                    <td class="product-detail">
+                                                        <div class="product border-0">
+                                                            <a href="shopDetails?productId=${item.productId}" class="product-image">
+                                                                <img src="./${item.image}" class="img-fluid blur-up lazyload" alt="">
+                                                            </a>
+                                                            <div class="product-detail">
+                                                                <ul>
+                                                                    <li class="name">
+                                                                        <a href="shopDetails?productId=${item.productId}">${item.productName}</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <!-- Size Select -->
+                                                                        <select data-product-id="${item.productId}" 
+                                                                                data-size-id="${item.sizeId}" 
+                                                                                id="typeSize-${item.productId}-${item.sizeId}" 
+                                                                                name="variantId" 
+                                                                                class="form-select size-select select-size" 
+                                                                                onchange="changeSize(this)">
+                                                                            <c:forEach var="variant" items="${sizeOptions[item.productId]}">
+                                                                                <option value="${variant.size.size_id}" 
+                                                                                        data-price="${variant.price}" 
+                                                                                        data-stock="${variant.stock}"
+                                                                                        ${variant.size.size_id == item.sizeId ? 'selected' : ''}>
+                                                                                    ${variant.size.size_name} - 
+                                                                                    <fmt:formatNumber value="${variant.price}" pattern="#,###" />₫  
+                                                                                    (Còn: ${variant.stock})
+                                                                                </option>
+
+                                                                            </c:forEach>
+                                                                        </select>
+                                                                        <!-- Thông báo đỏ khi hết hàng -->
+                                                                        <p id="stockWarning-${item.productId}" 
+                                                                           class="text-danger fw-bold mt-2" 
+                                                                           style="text-align: center; display: none;">
+                                                                            ⚠️ Sản phẩm đã hết hàng. Vui lòng chọn size khác hoặc xóa sản phẩm!
+                                                                        </p>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+
+                                                    <!-- Price -->
+                                                    <td class="price">
+                                                        <h4 class="table-title text-content">Giá</h4>
+                                                        <h5><fmt:formatNumber value="${item.price}" pattern="#,###" />₫ </h5>
+                                                    </td>
+
+                                                    <!-- Quantity -->
+                                                    <td class="quantity">
+                                                        <h4 class="table-title text-content">Số lượng</h4>
+                                                        <div class="quantity-price">
+                                                            <div class="cart_qty">
+                                                                <div class="input-group">
+                                                                    <c:forEach var="variant" items="${sizeOptions[item.productId]}">
+                                                                        <c:if test="${variant.size.size_id == item.sizeId}">
+
+                                                                            <!-- Nút giảm số lượng -->
+                                                                            <button type="button" class="btn qty-left-minus"
+                                                                                    data-product-id="${item.productId}"
+                                                                                    data-size-id="${item.sizeId}"
+                                                                                    <c:if test="${variant.stock == 0}">disabled</c:if>>
+                                                                                        <i class="fa fa-minus ms-0" aria-hidden="true"></i>
+                                                                                    </button>
+
+                                                                                    <!-- Ô nhập số lượng -->
+                                                                                    <input class="form-control input-number qty-input"
+                                                                                           type="number" 
+                                                                                           name="quantity" 
+                                                                                           value="${item.quantity}"
+                                                                                    data-product-id="${item.productId}"
+                                                                                    data-size-id="${item.sizeId}"
+                                                                                    min="1"
+                                                                                    max="${variant.stock}"
+                                                                                    oninput="validateQuantity(this)"
+                                                                                    <c:if test="${variant.stock == 0}">disabled</c:if>>
+
+                                                                                    <!-- Nút tăng số lượng -->
+                                                                                    <button type="button" class="btn qty-right-plus"
+                                                                                            data-product-id="${item.productId}"
+                                                                                    data-size-id="${item.sizeId}"
+                                                                                    <c:if test="${variant.stock == 0}">disabled</c:if>>
+                                                                                        <i class="fa fa-plus ms-0" aria-hidden="true"></i>
+                                                                                    </button>
+                                                                        </c:if>
+                                                                    </c:forEach>
                                                                 </div>
                                                             </div>
-                                                        </td>
-                                                        <td class="price">
-                                                            <h4 class="table-title text-content">Giá</h4>
-                                                            <h5><fmt:formatNumber value="${item.price}" pattern="#,###" />₫ </h5>
-                                                        </td>
-                                                        <td class="quantity">
-                                                            <h4 class="table-title text-content">Số lượng</h4>
-                                                            <div class="quantity-price">
-                                                                <div class="cart_qty">
-                                                                    <div class="input-group">
-                                                                        <button type="button" class="btn qty-left-minus"
-                                                                                data-product-id="${item.productId}"
-                                                                                data-size-id="${item.sizeId}"
-                                                                                >
-                                                                            <i class="fa fa-minus ms-0" aria-hidden="true"></i>
-                                                                        </button>
-                                                                        <input class="form-control input-number qty-input"
-                                                                               type="text" name="quantity" value="${item.quantity}"
-                                                                               data-product-id="${item.productId}">
-                                                                        <button type="button" class="btn qty-right-plus"
-                                                                                data-product-id="${item.productId}"
-                                                                                data-size-id="${item.sizeId}"
-                                                                                >
-                                                                            <i class="fa fa-plus ms-0" aria-hidden="true"></i>
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td class="subtotal">
-                                                            <h4 class="table-title text-content">Tổng</h4>
-                                                            <h5><fmt:formatNumber value="${item.price * item.quantity}" pattern="#,###" />₫ </h5>
-                                                        </td>
-                                                        <td class="save-remove">
-                                                            <h4 class="table-title text-content">Hành động</h4>
-                                                            <a class="remove close_button" onclick="removeFromCart(${item.cartId})">Xóa</a>
-                                                        </td>
-                                                    </tr>
-                                                </c:forEach>
+                                                        </div>
+                                                    </td>
+
+                                                    <!-- Subtotal -->
+                                                    <td class="subtotal">
+                                                        <h4 class="table-title text-content">Tổng</h4>
+                                                        <h5><fmt:formatNumber value="${item.price * item.quantity}" pattern="#,###" />₫</h5>
+                                                    </td>
+
+                                                    <!-- Remove -->
+                                                    <td class="save-remove">
+                                                        <h4 class="table-title text-content">Hành động</h4>
+                                                        <a class="remove close_button" onclick="removeFromCart(${item.cartId})">Xóa</a>
+                                                    </td>
+                                                </tr>
+
+                                            </c:forEach>
+
+
                                             </tbody>
                                         </table>
                                     </c:when>
@@ -248,7 +327,7 @@
 
                             <ul class="summery-total">
                                 <li class="list-total border-top-0">
-                                    <h4>Total (USD)</h4>
+                                    <h4>Tổng</h4>
                                     <h4 class="price theme-color" id="totalAmount">0₫</h4>
                                 </li>
                             </ul>
@@ -269,22 +348,57 @@
                     </div>
 
                     <script>
+                        function toggleSelectAll(selectAllCheckbox) {
+                            // Lấy tất cả checkbox nhưng bỏ qua checkbox bị disabled
+                            let checkboxes = document.querySelectorAll(".checkout-checkbox:not(:disabled)");
+                            checkboxes.forEach(checkbox => checkbox.checked = selectAllCheckbox.checked);
+
+                            // Cập nhật tổng tiền ngay sau khi chọn tất cả
+                            updateTotal();
+                        }
+
+// Cập nhật trạng thái của "Chọn tất cả" dựa trên các checkbox khác
+                        document.querySelectorAll(".checkout-checkbox").forEach(checkbox => {
+                            checkbox.addEventListener("change", function () {
+                                let selectAll = document.getElementById("selectAll");
+
+                                // Lấy tất cả checkbox không bị disabled
+                                let enabledCheckboxes = document.querySelectorAll(".checkout-checkbox:not(:disabled)");
+                                let enabledChecked = document.querySelectorAll(".checkout-checkbox:not(:disabled):checked");
+
+                                // Kiểm tra nếu tất cả checkbox được chọn
+                                let allChecked = enabledCheckboxes.length === enabledChecked.length;
+                                selectAll.checked = allChecked;
+
+                                // Cập nhật tổng tiền mỗi khi thay đổi trạng thái checkbox
+                                updateTotal();
+                            });
+                        });
+
                         function updateTotal() {
                             let total = 0;
-                            document.querySelectorAll(".checkout-checkbox").forEach((checkbox) => {
+                            document.querySelectorAll(".checkout-checkbox:not(:disabled)").forEach((checkbox) => {
                                 if (checkbox.checked) {
-                                    total += parseFloat(checkbox.getAttribute("data-price"));
+                                    // Lấy giá trị từ data-price và chuyển thành số
+                                    let price = parseFloat(checkbox.getAttribute("data-price")) || 0;
+                                    total += price;
                                 }
                             });
 
-                            document.getElementById("subtotalAmount").innerText = total.toLocaleString("vi-VN") + "₫";
-                            document.getElementById("totalAmount").innerText = total.toLocaleString("vi-VN") + "₫";
+                            // Format tiền tệ (VNĐ) và cập nhật vào giao diện
+                            let formattedTotal = total.toLocaleString("vi-VN") + "₫";
+                            document.getElementById("subtotalAmount").innerText = formattedTotal;
+                            document.getElementById("totalAmount").innerText = formattedTotal;
                         }
+
 
                         async function processCheckout() {
                             let selectedItems = [];
                             document.querySelectorAll(".checkout-checkbox:checked").forEach((checkbox) => {
-                                selectedItems.push(checkbox.getAttribute("data-product-id"));
+                                selectedItems.push({
+                                    productId: parseInt(checkbox.getAttribute("data-product-id")),
+                                    sizeId: parseInt(checkbox.getAttribute("data-size-id"))
+                                });
                             });
 
                             if (selectedItems.length === 0) {
@@ -304,18 +418,32 @@
                                     })
                                 });
 
+                                // ✅ Kiểm tra xem HTTP status có OK không
+                                if (!response.ok) {
+                                    console.error("HTTP Status Code:", response.status);
+                                    throw new Error("HTTP Error: " + response.status);
+                                }
+
+                                // ✅ Kiểm tra Content-Type trả về
+                                const contentType = response.headers.get("content-type");
+                                if (!contentType || !contentType.includes("application/json")) {
+                                    throw new Error("Invalid Content-Type: " + contentType);
+                                }
+
                                 let result = await response.json();
 
                                 if (result.status === "success") {
                                     window.location.href = "checkout";
                                 } else {
-                                    alert("Lỗi: " + result.message);
+                                    alert(result.message);
                                 }
                             } catch (error) {
                                 console.error("Lỗi khi gửi yêu cầu:", error);
-                                alert("Đã xảy ra lỗi, vui lòng thử lại!");
+                                alert("Đã xảy ra lỗi: " + error.message);
                             }
                         }
+
+
                     </script>
                 </div>
             </div>
@@ -331,144 +459,26 @@
         <!-- jQuery UI -->
         <script src="${pageContext.request.contextPath}/assets/js/jquery-ui.min.js"></script>
         <script>
-//                        document.querySelectorAll(".qty-left-minus, .qty-right-plus").forEach(button => {
-//                            button.addEventListener("click", function () {
-//
-//                                let productId = this.getAttribute("data-product-id");
-//                                let typeSizeSelect = document.querySelector("#typeSize-" + productId);
-//                                let selectedOption = typeSizeSelect.options[typeSizeSelect.selectedIndex];
-//                                let typeSizeId = selectedOption.value;
-//                                let sizeId = this.getAttribute("data-size-id");
-//                                let inputField = document.querySelector(".qty-input[data-product-id='" + productId + "']");
-//                                let currentQuantity = parseInt(inputField.value);
-//                                let newQuantity = currentQuantity; // Giữ giá trị cũ phòng khi có lỗi
-//                                fetch("check-stock?productId=" + productId + "&sizeId=" + sizeId + "&newSize=" + typeSizeId)
-//                                        .then(response => response.json())
-//                                        .then(data => {
-//                                            let stock = data.stock;
-//
-//                                            if (this.classList.contains("qty-left-minus") && currentQuantity > 1) {
-//                                                newQuantity = currentQuantity - 1;
-//                                            } else if (this.classList.contains("qty-right-plus")) {
-//                                                if (currentQuantity < stock) {
-//                                                    newQuantity = currentQuantity + 1;
-//                                                } else {
-//                                                    alert("Sản phẩm đã hết hàng!");
-//                                                    return;
-//                                                }
-//                                            }
-//
-//                                            // Cập nhật số lượng trong input ngay lập tức
-//                                            inputField.value = newQuantity;
-//
-//                                            // Gửi yêu cầu cập nhật giỏ hàng
-//                                            fetch("update-cart", {
-//                                                method: "POST",
-//                                                headers: {
-//                                                    "Content-Type": "application/x-www-form-urlencoded"
-//                                                },
-//                                                body: "productId=" + productId + "&quantity=" + newQuantity + "&newSize=" + typeSizeId
-//                                            })
-//                                                    .then(response => response.json())
-//                                                    .then(data => {
-//                                                        if (data.success) {
-//                                                            console.log("Cập nhật thành công!");
-//                                                            location.reload(); // Reload lại trang để cập nhật tổng giá và mọi thứ khác
-//                                                        } else {
-//                                                            alert("Có lỗi xảy ra khi cập nhật giỏ hàng!");
-//                                                            inputField.value = currentQuantity; // Nếu lỗi, khôi phục số lượng ban đầu
-//                                                        }
-//                                                    })
-//                                                    .catch(error => {
-//                                                        console.error("Lỗi khi gửi request cập nhật giỏ hàng:", error);
-//                                                        inputField.value = currentQuantity; // Nếu lỗi, khôi phục số lượng ban đầu
-//                                                    });
-//                                        })
-//                                        .catch(error => {
-//                                            console.error("Lỗi khi kiểm tra stock:", error);
-//                                            inputField.value = currentQuantity; // Nếu lỗi, khôi phục số lượng ban đầu
-//                                        });
-//                            });
-//                        });
-                 document.querySelectorAll(".qty-left-minus, .qty-right-plus").forEach(button => {
+                        document.querySelectorAll(".qty-left-minus, .qty-right-plus").forEach(button => {
                             button.addEventListener("click", function () {
-                                let productId = this.dataset.productId;
-                                let sizeId = this.dataset.sizeId;
-                                let inputField = document.querySelector(".qty-input[data-product-id='" + productId + "'][data-size-id='" + sizeId + "']");
-                                let currentQuantity = parseInt(inputField.value);
-                                let newQuantity = currentQuantity;
+                                let productId = this.getAttribute("data-product-id");
+                                let sizeId = this.getAttribute("data-size-id");
 
-                                // Kiểm tra loại nút (tăng hoặc giảm)
-                                if (this.classList.contains("qty-left-minus")) {
-                                    if (currentQuantity > 1) {
-                                        newQuantity = currentQuantity - 1;
-                                    } else {
-                                        return;
-                                    }
-                                } else if (this.classList.contains("qty-right-plus")) {
-                                    // Kiểm tra tồn kho trước khi tăng số lượng
-                                    fetch("check-stock?productId=" + productId + "&sizeId=" + sizeId)
-                                            .then(response => response.json())
-                                            .then(data => {
-                                                let stock = data.stock;
-                                                if (currentQuantity < stock) {
-                                                    newQuantity = currentQuantity + 1;
-                                                    updateQuantity(productId, sizeId, newQuantity, inputField);
-                                                } else {
-                                                    alert("Sản phẩm đã hết hàng!");
-                                                }
-                                            })
-                                            .catch(error => {
-                                                console.error("Lỗi khi kiểm tra stock:", error);
-                                            });
+                                // Chọn đúng dropdown tương ứng với sizeId
+                                let typeSizeSelect = document.querySelector("#typeSize-" + productId + "-" + sizeId);
+                                if (!typeSizeSelect) {
+                                    console.warn("Không tìm thấy dropdown cho productId: " + productId + " và sizeId: " + sizeId);
                                     return;
                                 }
 
-                                // Cập nhật số lượng nếu giảm
-                                updateQuantity(productId, sizeId, newQuantity, inputField);
-                            });
-                        });
-
-                        function updateQuantity(productId, sizeId, newQuantity, inputField) {
-                            fetch("update-cart", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/x-www-form-urlencoded"
-                                },
-                                body: "productId=" + productId + "&sizeId=" + sizeId + "&quantity=" + newQuantity
-                            })
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        if (data.success) {
-                                            inputField.value = newQuantity;
-
-                                            // Cập nhật lại tổng tiền
-                                            let price = parseFloat(inputField.closest('tr').querySelector('.price h5').innerText.replace(/[^0-9.-]+/g, ""));
-                                            let newTotal = price * newQuantity;
-                                            inputField.closest('tr').querySelector('.subtotal h5').innerText = newTotal.toLocaleString() + "₫";
-
-                                            // Cập nhật tổng tiền của tất cả sản phẩm
-                                            updateTotal();
-                                        } else {
-                                            alert("Có lỗi xảy ra khi cập nhật giỏ hàng!");
-                                        }
-                                    })
-                                    .catch(error => {
-                                        console.error("Lỗi khi gửi request cập nhật giỏ hàng:", error);
-                                    });
-                        }
-
-                        document.querySelectorAll(".select-size").forEach(button => {
-                            button.addEventListener("change", function () {
-
-                                let productId = this.getAttribute("data-product-id");
-                                let typeSizeSelect = document.querySelector("#typeSize-" + productId);
                                 let selectedOption = typeSizeSelect.options[typeSizeSelect.selectedIndex];
                                 let typeSizeId = selectedOption.value;
-                                let sizeId = this.getAttribute("data-size-id");
-                                let inputField = document.querySelector(".qty-input[data-product-id='" + productId + "']");
+
+                                let inputField = document.querySelector(".qty-input[data-product-id='" + productId + "'][data-size-id='" + sizeId + "']");
+
                                 let currentQuantity = parseInt(inputField.value);
                                 let newQuantity = currentQuantity; // Giữ giá trị cũ phòng khi có lỗi
+
                                 // Gửi AJAX kiểm tra stock
                                 fetch("check-stock?productId=" + productId + "&sizeId=" + sizeId + "&newSize=" + typeSizeId)
                                         .then(response => response.json())
@@ -481,12 +491,11 @@
                                                 if (currentQuantity < stock) {
                                                     newQuantity = currentQuantity + 1;
                                                 } else {
-                                                    alert("Sản phẩm đã hết hàng!");
+                                                    alert("Sản phẩm đã đạt số lượng tối đa!");
                                                     return;
                                                 }
                                             }
-
-                                            // Cập nhật số lượng trong input ngay lập tức
+                                            // Cập nhật lại giá trị sau khi kiểm tra
                                             inputField.value = newQuantity;
 
                                             // Gửi yêu cầu cập nhật giỏ hàng
@@ -495,8 +504,78 @@
                                                 headers: {
                                                     "Content-Type": "application/x-www-form-urlencoded"
                                                 },
-                                                body: "productId=" + productId + "&quantity=" + newQuantity + "&newSize=" + typeSizeId
+                                                body: "productId=" + productId + "&quantity=" + newQuantity + "&sizeId=" + sizeId
                                             })
+                                                    .then(response => response.json())
+                                                    .then(data => {
+                                                        if (data.success) {
+                                                            console.log("Cập nhật thành công!");
+                                                            location.reload(); // Reload lại trang để cập nhật tổng giá và mọi thứ khác
+                                                        } else {
+                                                            alert("Có lỗi xảy ra khi cập nhật giỏ hàng!");
+                                                            inputField.value = currentQuantity; // Nếu lỗi, khôi phục số lượng ban đầu
+                                                        }
+                                                    })
+                                                    .catch(error => {
+                                                        console.error("Lỗi khi gửi request cập nhật giỏ hàng:", error);
+                                                        inputField.value = currentQuantity; // Nếu lỗi, khôi phục số lượng ban đầu
+                                                    });
+                                        })
+                                        .catch(error => {
+                                            console.error("Lỗi khi kiểm tra stock:", error);
+                                            inputField.value = currentQuantity; // Nếu lỗi, khôi phục số lượng ban đầu
+                                        });
+                            });
+                        });
+
+
+                        document.querySelectorAll(".select-size").forEach(button => {
+                            button.addEventListener("change", function () {
+                                let productId = this.getAttribute("data-product-id");
+                                let sizeId = this.getAttribute("data-size-id");
+
+                                // Chọn đúng dropdown tương ứng với sizeId
+                                let typeSizeSelect = document.querySelector("#typeSize-" + productId + "-" + sizeId);
+                                if (!typeSizeSelect) {
+                                    console.warn("Không tìm thấy dropdown cho productId: " + productId + " và sizeId: " + sizeId);
+                                    return;
+                                }
+
+                                let selectedOption = typeSizeSelect.options[typeSizeSelect.selectedIndex];
+                                let typeSizeId = selectedOption.value;
+
+                                let inputField = document.querySelector(".qty-input[data-product-id='" + productId + "'][data-size-id='" + sizeId + "']");
+
+                                let currentQuantity = parseInt(inputField.value);
+                                let newQuantity = currentQuantity; // Giữ giá trị cũ phòng khi có lỗi
+
+                                // Gửi AJAX kiểm tra stock
+                                fetch("check-stock?productId=" + productId + "&sizeId=" + sizeId + "&newSize=" + typeSizeId)
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            let stock = data.stock;
+
+                                            if (this.classList.contains("qty-left-minus") && currentQuantity > 1) {
+                                                newQuantity = currentQuantity - 1;
+                                            } else if (this.classList.contains("qty-right-plus")) {
+                                                if (currentQuantity < stock) {
+                                                    newQuantity = currentQuantity + 1;
+                                                } else {
+                                                    alert("Sản phẩm đã đạt số lượng tối đa!");
+                                                    return;
+                                                }
+                                            }
+                                            // Cập nhật lại giá trị sau khi kiểm tra
+                                            inputField.value = newQuantity;
+
+                                            fetch("update-cart2", {
+                                                method: "POST",
+                                                headers: {
+                                                    "Content-Type": "application/x-www-form-urlencoded"
+                                                },
+                                                body: "productId=" + productId + "&quantity=" + newQuantity + "&oldSize=" + sizeId + "&newSize=" + typeSizeId
+                                            })
+
                                                     .then(response => response.json())
                                                     .then(data => {
                                                         if (data.success) {
@@ -536,8 +615,19 @@
                                         }
                                     });
                         }
+                        function validateQuantity(input) {
+                            const stock = input.getAttribute('data-stock');
+                            const quantity = parseInt(input.value);
 
+                            if (quantity > stock) {
+                                input.value = stock;
+                                input.nextElementSibling.style.display = "block"; // Hiện thông báo lỗi
+                            } else {
+                                input.nextElementSibling.style.display = "none";  // Ẩn thông báo lỗi
+                            }
+                        }
         </script>
+
         <!-- Bootstrap JS -->
         <script src="${pageContext.request.contextPath}/assets/js/bootstrap/bootstrap.bundle.min.js"></script>
         <script src="${pageContext.request.contextPath}/assets/js/bootstrap/bootstrap-notify.min.js"></script>

@@ -90,8 +90,12 @@
                                                         <td>${product.sku}</td>
                                                         <td>${product.size_name}</td>
                                                         <td>${product.quantity}</td>
-                                                        <td><fmt:formatNumber value="${product.unit_price}" type="currency" currencySymbol="₫" /></td>
-                                                        <td><fmt:formatNumber value="${product.total_price}" type="currency" currencySymbol="₫" /></td>
+                                                        <td>
+                                                            <fmt:formatNumber value="${product.unit_price}" type="number" groupingUsed="true"/>₫
+                                                        </td>
+                                                        <td>
+                                                            <fmt:formatNumber value="${product.total_price}" type="number" groupingUsed="true"/>₫
+                                                        </td>
                                                     </tr>
                                                     <c:set var="totalBeforeDiscount" value="${totalBeforeDiscount + product.total_price}" />
                                                 </c:forEach>
