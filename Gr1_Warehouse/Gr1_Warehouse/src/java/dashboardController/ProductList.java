@@ -4,6 +4,8 @@
  */
 package dashboardController;
 
+import dao.BrandDAO;
+import dao.CategoryDAO;
 import dao.ProductDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +14,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import model.Brands;
+import model.Categories;
 import model.Products;
 
 /**
@@ -59,8 +63,15 @@ public class ProductList extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ProductDAO pd = new ProductDAO();
+        BrandDAO bd = new BrandDAO();
+        CategoryDAO cd = new CategoryDAO();
         List<Products> listProducts = pd.getAllProductsManager();
+        List<Brands> listBrands = bd.getAllBrands();
+        List<Categories> listCategories = cd.getAllCategories();
         request.setAttribute("listProducts", listProducts);
+        request.setAttribute("listBrands", listBrands);
+        request.setAttribute("listCategories", listCategories);
+
         request.getRequestDispatcher("/dashboard/product_list.jsp").forward(request, response);
     }
 

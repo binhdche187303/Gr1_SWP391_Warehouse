@@ -61,8 +61,35 @@
                                                     <i class="fas fa-plus-circle"></i>Tạo sản phẩm mới
                                                 </a>
                                             </form>
-
                                         </div>
+
+
+                                        <div class="card-body">
+                                            <div class="row mb-4">
+                                                <div class="col-md-3 mb-2">
+                                                    <input type="text" id="productNameFilter" class="form-control" placeholder="Tìm theo tên sản phẩm">
+                                                </div>
+                                                <div class="col-md-3 mb-2">
+                                                    <select id="brandFilter" class="form-control">
+                                                        <option value="">Tất cả thương hiệu</option>
+                                                        <c:forEach var="brand" items="${listBrands}">
+                                                            <option value="${brand.brand_name}">${brand.brand_name}</option>
+                                                        </c:forEach>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-3 mb-2">
+                                                    <select id="categoryFilter" class="form-control">
+                                                        <option value="">Tất cả loại</option>
+                                                        <c:forEach var="category" items="${listCategories}">
+                                                            <option value="${category.category_name}">${category.category_name}</option>
+                                                        </c:forEach>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-3 mb-2">
+                                                    <input type="text" id="originFilter" class="form-control" placeholder="Tìm theo nguồn gốc">
+                                                </div>
+                                            </div>
+                                        </div> 
 
                                         <div class="table-responsive table-product">
                                             <table class="table all-package theme-table" id="table_id">
@@ -167,31 +194,7 @@
 
 
         <script>
-
             $(document).ready(function () {
-                // Add filter form to the page
-                const filterForm = `
-        <div class="card-body">
-            <div class="row mb-4">
-                <div class="col-md-3 mb-2">
-                    <input type="text" id="productNameFilter" class="form-control" placeholder="Tìm theo tên sản phẩm">
-                </div>
-                <div class="col-md-3 mb-2">
-                    <input type="text" id="brandFilter" class="form-control" placeholder="Tìm theo thương hiệu">
-                </div>
-                <div class="col-md-3 mb-2">
-                    <input type="text" id="categoryFilter" class="form-control" placeholder="Tìm theo loại">
-                </div>
-                <div class="col-md-3 mb-2">
-                    <input type="text" id="originFilter" class="form-control" placeholder="Tìm theo nguồn gốc">
-                </div>
-            </div>
-        </div>
-    `;
-
-                // Insert the filter form after the title-header
-                $('.title-header').after(filterForm);
-
                 // Initialize DataTable with search functionality
                 const table = $('#table_id').DataTable({
                     paging: true,
@@ -202,14 +205,11 @@
                     lengthChange: false,
                     language: {
                         url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/vi.json',
-                        // Tùy chỉnh thông báo không tìm thấy dữ liệu
                         emptyTable: "Không có sản phẩm nào trong hệ thống",
                         zeroRecords: "Không tìm thấy sản phẩm phù hợp",
-                        // Tùy chỉnh thông tin hiển thị phân trang
                         info: "Hiển thị _START_ đến _END_ của _TOTAL_ sản phẩm",
                         infoEmpty: "Hiển thị 0 đến 0 của 0 sản phẩm",
                         infoFiltered: "(được lọc từ tổng số _MAX_ sản phẩm)",
-                        // Tùy chỉnh nút phân trang
                         paginate: {
                             first: "Đầu tiên",
                             last: "Cuối cùng",
@@ -221,12 +221,11 @@
                         {orderable: false, targets: 0}, // Disable sorting on image column
                         {orderable: false, targets: 5}  // Disable sorting on action column
                     ],
-                    // Ẩn thanh tìm kiếm mặc định và thực hiện các cài đặt khác
                     initComplete: function () {
                         // Remove sort indicator from image column
                         $('.sorting:first').removeClass('sorting').addClass('sorting_disabled');
 
-                        // Ẩn thanh tìm kiếm mặc định
+                        // Hide default search
                         $('.dataTables_filter').hide();
                     }
                 });
@@ -246,8 +245,8 @@
 
                             // Return true if all filters match
                             return (nameFilter === '' || productName.includes(nameFilter)) &&
-                                    (brandFilter === '' || brand.includes(brandFilter)) &&
-                                    (categoryFilter === '' || category.includes(categoryFilter)) &&
+                                    (brandFilter === '' || brand === brandFilter) &&
+                                    (categoryFilter === '' || category === categoryFilter) &&
                                     (originFilter === '' || origin.includes(originFilter));
                         }
                 );
@@ -257,7 +256,6 @@
                     table.draw();
                 });
             });
-
         </script>
     </body>
 
