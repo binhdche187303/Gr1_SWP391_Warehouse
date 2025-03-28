@@ -40,11 +40,6 @@
     </head>
 
     <body>
-        <!-- tap on top start -->
-        <div class="tap-top">
-            <span class="lnr lnr-chevron-up"></span>
-        </div>
-        <!-- tap on tap end -->
 
         <!-- page-wrapper Start-->
         <div class="page-wrapper compact-wrapper" id="pageWrapper">
@@ -71,6 +66,7 @@
 
                                     <div class="user-name-hide media-body">
                                         <span>${sessionScope.acc.username}</span>
+                                        <p class="mb-0 font-roboto">${sessionScope.acc.role.roleName}<i class="middle ri-arrow-down-s-line"></i></p>                                         
                                     </div>
                                 </div>
                                 <ul class="profile-dropdown onhover-show-div">
@@ -249,23 +245,12 @@
                                             </li>
                                         </ul>
                                     </li>
-
-
-
                                     <li class="sidebar-list">
                                         <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/profilesetting">
                                             <i class="ri-file-chart-line"></i>
                                             <span>Cài đặt</span>
                                         </a>
                                     </li>                                 
-
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/dashboard/report.jsp">
-                                            <i class="ri-file-chart-line"></i>
-                                            <span>Báo cáo</span>
-                                        </a>
-                                    </li>
-
                                 </ul>
                             </div>
 
@@ -337,7 +322,7 @@
         <script src="${pageContext.request.contextPath}/assets2/js/custom-slick.js"></script>
 
         <!-- customizer js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>
+<!--        <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>-->
 
         <!-- ratio js -->
         <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>

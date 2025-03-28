@@ -76,440 +76,407 @@
 
         <!-- page-wrapper Start-->
         <div class="page-wrapper compact-wrapper" id="pageWrapper">
+            <!-- Page Header Start-->
+            <div class="page-header">
+                <div class="header-wrapper m-0">
+                    <div class="header-logo-wrapper p-0">
+                        <div class="logo-wrapper">
+                            <a href="index.html">
+                                <img class="img-fluid white-logo" src="${pageContext.request.contextPath}/assets2/images/logo_1.png" >
+                            </a>
+                        </div>
+
+                    </div>
+
+                    <div class="nav-right col-6 pull-right right-header p-0">
+                        <ul class="nav-menus">
+                            <li class="profile-nav onhover-dropdown pe-0 me-0">
+                                <div class="media profile-media">
+
+                                    <div class="user-name-hide media-body">
+                                        <span>${sessionScope.acc.username}</span>
+                                        <p class="mb-0 font-roboto">${sessionScope.acc.role.roleName}<i class="middle ri-arrow-down-s-line"></i></p>                                         
+                                    </div>
+                                </div>
+                                <ul class="profile-dropdown onhover-show-div">
+                                    <li>
+                                        <a href="/Gr1_Warehouse/profilesetting">
+                                            <i data-feather="settings"></i>
+                                            <span>Chỉnh sửa</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                           href="javascript:void(0)">
+                                            <i data-feather="log-out"></i>
+                                            <span>Đăng xuất</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Page Header Ends-->
 
             <!-- Page Body Start-->
             <div class="page-body-wrapper">
-                <!-- tap on top start -->
-                <div class="tap-top">
-                    <span class="lnr lnr-chevron-up"></span>
+                <!-- Page Sidebar Start-->
+                <div class="sidebar-wrapper">
+                    <div class="logo-wrapper logo-wrapper-center">
+                        <a data-bs-original-title="" title="">
+                            <img class="img-fluid for-white" src="${pageContext.request.contextPath}/assets2/images/logo_1.png" 
+                                 alt="logo" 
+                                 style="width: 150px; height: auto;">
+                        </a> 
+                        <br><br>
+                    </div>
+
+                    <nav class="sidebar-main" >
+                        <div class="left-arrow" id="left-arrow">
+                            <i data-feather="arrow-left"></i>
+                        </div>
+                        <div id="sidebar-menu">
+                            <ul class="sidebar-links" id="simple-bar">
+                                <li class="back-btn"></li>
+                                    <c:set var="roleId" value="${sessionScope.user.role.roleId}" />
+                                    <c:choose>
+                                        <c:when test="${roleId == 1}">
+                                        <br><br><br>
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/dashboard">
+                                                <i class="ri-home-line"></i>
+                                                <span>Dashboard</span>
+                                            </a>
+                                        </li>
+
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/financialmanagement">
+                                                <i class="ri-store-3-line"></i>
+                                                <span>Quản lý thu chi</span>
+                                            </a>
+                                        </li>
+
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title" href="javascript:void(0)">
+                                                <i class="ri-user-3-line"></i>
+                                                <span>Tài khoản</span>
+                                            </a>
+                                            <ul class="sidebar-submenu">
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/allusers">Khách hàng</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/allstaff">Nhân viên</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
+                                        <li class="sidebar-list">
+                                            <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
+                                                <i class="ri-store-3-line"></i>
+                                                <span>Quản lý sản phẩm</span>
+                                            </a>
+                                            <ul class="sidebar-submenu">
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/productlist">Danh sách sản phẩm</a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/createproductgeneral">Tạo sản phẩm mới</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/role">
+                                                <i class="ri-star-line"></i>
+                                                <span>Vai trò</span>
+                                            </a>
+                                        </li>
+
+                                        <li class="sidebar-list">
+                                            <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
+                                                <i class="ri-price-tag-3-line"></i>
+                                                <span>Giảm giá hóa đơn</span>
+                                            </a>
+                                            <ul class="sidebar-submenu">
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/couponlist">Danh sách giảm giá</a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/createcoupon">Tạo mã giảm giá</a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/listdiscounthistory">Lịch sử mã giảm giá</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
+                                        <li class="sidebar-list">
+                                            <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
+                                                <i class="ri-price-tag-3-line"></i>
+                                                <span>Giảm giá sản phẩm</span>
+                                            </a>
+                                            <ul class="sidebar-submenu">
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/couponproductlist">Danh sách giảm giá</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
+                                        <li class="sidebar-list">
+                                            <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
+                                                <i class="ri-store-3-line"></i>
+                                                <span>Quản lí thương hiệu</span>
+                                            </a>
+                                            <ul class="sidebar-submenu">
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/brandlist">Danh sách thương hiệu</a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/createbrand">Tạo thương hiệu mới</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
+                                        <li class="sidebar-list">
+                                            <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
+                                                <i class="ri-store-3-line"></i>
+                                                <span>Quản lí thể loại</span>
+                                            </a>
+                                            <ul class="sidebar-submenu">
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/categorylist">Danh sách thể loại</a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/createcategory">Tạo thể loại mới</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
+                                        <li class="sidebar-list">
+                                            <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
+                                                <i class="ri-store-3-line"></i>
+                                                <span>Quản lí kích cỡ sản phẩm</span>
+                                            </a>
+                                            <ul class="sidebar-submenu">
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/sizelist">Danh sách kích cỡ</a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/createsize">Tạo kích cỡ mới</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </c:when>
+                                    <c:when test="${roleId == 3}">
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title link-nav" href="index.html">
+                                                <i class="ri-home-line"></i>
+                                                <span>Dashboard</span>
+                                            </a>
+                                        </li>
+
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title" href="javascript:void(0)">
+                                                <i class="ri-archive-line"></i>
+                                                <span>Đơn hàng</span>
+                                            </a>
+                                            <ul class="sidebar-submenu">
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/orderlist">Danh sách đơn hàng</a>
+                                                </li>
+                                                <li>
+                                                    <a href="order-tracking.html">Theo dõi đơn hàng</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
+                                        <li class="sidebar-list">
+                                            <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
+                                                <i class="ri-store-3-line"></i>
+                                                <span>Quản lí tồn kho</span>
+                                            </a>
+                                            <ul class="sidebar-submenu">
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/inventory-checklist">Chi tiết tồn kho</a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/importGood">Nhập hàng</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/supplier">Nhà cung cấp</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/archive">Kho lưu trữ</a>
+                                                </li>
+                                                <li>
+                                                    <a href="add-new-product.html">Trả hàng</a>
+                                                </li>
+                                                <li>
+                                                    <a href="add-new-product.html">Lịch sử</a>
+                                                </li> 
+                                            </ul>
+                                        </li>
+
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title link-nav" href="reports.html">
+                                                <i class="ri-file-chart-line"></i>
+                                                <span>Báo cáo</span>
+                                            </a>
+                                        </li>
+                                    </c:when>
+                                    <c:when test="${roleId == 4}">
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/staff-checklist">
+                                                <i class="ri-file-chart-line"></i>
+                                                <span>Danh sách phiếu kiểm kho</span>
+                                            </a>
+                                        </li>
+                                    </c:when>
+                                    <c:when test="${roleId == 5}">
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title link-nav" href="index.html">
+                                                <i class="ri-home-line"></i>
+                                                <span>Dashboard</span>
+                                            </a>
+                                        </li>
+
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title" href="javascript:void(0)">
+                                                <i class="ri-archive-line"></i>
+                                                <span>Đơn hàng</span>
+                                            </a>
+                                            <ul class="sidebar-submenu">
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/packing-orders">Danh sách đơn hàng</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/my-packing-orders">Đơn hàng của tôi</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title link-nav" href="reports.html">
+                                                <i class="ri-file-chart-line"></i>
+                                                <span>Báo cáo</span>
+                                            </a>
+                                        </li>
+                                    </c:when>   
+                                    <c:when test="${roleId == 6}">
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title link-nav" href="index.html">
+                                                <i class="ri-home-line"></i>
+                                                <span>Dashboard</span>
+                                            </a>
+                                        </li>
+
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title" href="javascript:void(0)">
+                                                <i class="ri-archive-line"></i>
+                                                <span>Đơn hàng</span>
+                                            </a>
+                                            <ul class="sidebar-submenu">
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/ship-orders">Danh sách đơn hàng</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/my-shipping-orders">Đơn hàng của tôi</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title link-nav" href="reports.html">
+                                                <i class="ri-file-chart-line"></i>
+                                                <span>Báo cáo</span>
+                                            </a>
+                                        </li>
+                                    </c:when> 
+                                    <c:when test="${roleId == 7}">
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title link-nav" href="index.html">
+                                                <i class="ri-home-line"></i>
+                                                <span>Dashboard</span>
+                                            </a>
+                                        </li>
+
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title" href="javascript:void(0)">
+                                                <i class="ri-archive-line"></i>
+                                                <span>Đơn hàng</span>
+                                            </a>
+                                            <ul class="sidebar-submenu">
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/sale-orders">Danh sách đơn hàng</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/my-sale-orders">Đơn hàng của tôi</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title" href="javascript:void(0)">
+                                                <i class="ri-archive-line"></i>
+                                                <span>Khách hàng</span>
+                                            </a>
+                                            <ul class="sidebar-submenu">
+                                                <li>
+                                                    <a href="/Gr1_Warehouse/browse-cus">Danh sách khách hàng</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title link-nav" href="reports.html">
+                                                <i class="ri-file-chart-line"></i>
+                                                <span>Báo cáo</span>
+                                            </a>
+                                        </li>
+                                    </c:when> 
+                                </c:choose>
+                                <li class="sidebar-list">
+                                    <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/profilesetting">
+                                        <i class="ri-file-chart-line"></i>
+                                        <span>Cài đặt</span>
+                                    </a>
+                                </li>      
+                            </ul>
+                        </div>
+
+                        <div class="right-arrow" id="right-arrow">
+                            <i data-feather="arrow-right"></i>
+                        </div>
+                    </nav>
                 </div>
-                <!-- tap on tap end -->
+                <!-- Page Sidebar Ends-->
+                <!-- Page Body End -->
 
-                <!-- page-wrapper Start-->
-
-                <div class="page-wrapper compact-wrapper" id="pageWrapper">
-                    <!-- Page Header Start-->
-                    <div class="page-header">
-                        <div class="header-wrapper m-0">
-                            <div class="header-logo-wrapper p-0">
-                                <div class="logo-wrapper">
-                                    <a href="index.html">
-                                        <img class="img-fluid white-logo" src="${pageContext.request.contextPath}/assets2/images/logo_1.png" class="img-fluid" alt="logo">
-                                    </a>
-                                </div>
-                                <div class="toggle-sidebar">
-                                    <i class="status_toggle middle sidebar-toggle" data-feather="align-center"></i>
-                                    <a href="index.html">
-                                        <img class="img-fluid white-logo" src="${pageContext.request.contextPath}/assets2/images/logo_1.png" class="img-fluid" alt="logo">
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="nav-right col-6 pull-right right-header p-0">
-                                <ul class="nav-menus">
-                                    <li class="profile-nav onhover-dropdown pe-0 me-0">
-                                        <div class="media profile-media">
-
-                                            <div class="user-name-hide media-body">
-                                                <span>${sessionScope.acc.username}</span><br>
-                                                <p class="mb-0 font-roboto">${sessionScope.acc.role.roleName}<i class="middle ri-arrow-down-s-line"></i></p>
-
-                                                <p class="mb-0 font-roboto"><i class="middle ri-arrow-down-s-line"></i></p>
-                                            </div>
-                                        </div>
-                                        <ul class="profile-dropdown onhover-show-div">
-                                            <li>
-                                                <a href="/Gr1_Warehouse/profilesetting">
-                                                    <i data-feather="settings"></i>
-                                                    <span>Cài đặt</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                                   href="javascript:void(0)">
-                                                    <i data-feather="log-out"></i>
-                                                    <span>Đăng xuất</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Page Header Ends-->
-                    </br>
-                    <!-- Page Body Start-->
-                    <div class="page-body-wrapper">
-                        <!-- Page Sidebar Start-->
-                        <div class="sidebar-wrapper">
-                            <div id="sidebarEffect"></div>
-                            <div>
-                                <div class="logo-wrapper logo-wrapper-center">
-                                    <a href="index.html" data-bs-original-title="" title="">
-                                        <img class="img-fluid white-logo" src="${pageContext.request.contextPath}/assets2/images/logo_1.png" class="img-fluid" alt="logo">
-                                    </a>
-                                    <div class="back-btn">
-                                        <i class="fa fa-angle-left"></i>
-                                    </div>
-                                </div>
-                                <div class="logo-icon-wrapper">
-                                    <a href="index.html">
-                                        <img class="img-fluid white-logo" src="${pageContext.request.contextPath}/assets2/images/logo_1.png" class="img-fluid" alt="logo">
-                                    </a>
-                                </div>
-                                <nav class="sidebar-main">
-                                    <div class="left-arrow" id="left-arrow">
-                                        <i data-feather="arrow-left"></i>
-                                    </div>
-                                    <div id="sidebar-menu">
-                                        <ul class="sidebar-links" id="simple-bar">
-                                            <li class="back-btn"></li>
-                                                <c:set var="roleId" value="${sessionScope.user.role.roleId}" />
-                                                <c:choose>
-                                                    <c:when test="${roleId == 1}">
-                                                    <li class="sidebar-list">
-                                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/dashboard">
-                                                            <i class="ri-home-line"></i>
-                                                            <span>Dashboard</span>
-                                                        </a>
-                                                    </li>
-
-                                                    <li class="sidebar-list">
-                                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/financialmanagement">
-                                                            <i class="ri-store-3-line"></i>
-                                                            <span>Quản lý thu chi</span>
-                                                        </a>
-                                                    </li>
-
-                                                    <li class="sidebar-list">
-                                                        <a class="sidebar-link sidebar-title" href="javascript:void(0)">
-                                                            <i class="ri-user-3-line"></i>
-                                                            <span>Tài khoản</span>
-                                                        </a>
-                                                        <ul class="sidebar-submenu">
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/allusers">Khách hàng</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/allstaff">Nhân viên</a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-
-                                                    <li class="sidebar-list">
-                                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                                            <i class="ri-store-3-line"></i>
-                                                            <span>Quản lý sản phẩm</span>
-                                                        </a>
-                                                        <ul class="sidebar-submenu">
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/productlist">Danh sách sản phẩm</a>
-                                                            </li>
-
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/createproductgeneral">Tạo sản phẩm mới</a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-
-                                                    <li class="sidebar-list">
-                                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/role">
-                                                            <i class="ri-star-line"></i>
-                                                            <span>Vai trò</span>
-                                                        </a>
-                                                    </li>
-
-                                                    <li class="sidebar-list">
-                                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                                            <i class="ri-price-tag-3-line"></i>
-                                                            <span>Giảm giá hóa đơn</span>
-                                                        </a>
-                                                        <ul class="sidebar-submenu">
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/couponlist">Danh sách giảm giá</a>
-                                                            </li>
-
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/createcoupon">Tạo mã giảm giá</a>
-                                                            </li>
-
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/listdiscounthistory">Lịch sử mã giảm giá</a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-
-                                                    <li class="sidebar-list">
-                                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                                            <i class="ri-price-tag-3-line"></i>
-                                                            <span>Giảm giá sản phẩm</span>
-                                                        </a>
-                                                        <ul class="sidebar-submenu">
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/couponproductlist">Danh sách giảm giá</a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-
-                                                    <li class="sidebar-list">
-                                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                                            <i class="ri-store-3-line"></i>
-                                                            <span>Quản lí thương hiệu</span>
-                                                        </a>
-                                                        <ul class="sidebar-submenu">
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/brandlist">Danh sách thương hiệu</a>
-                                                            </li>
-
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/createbrand">Tạo thương hiệu mới</a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-
-                                                    <li class="sidebar-list">
-                                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                                            <i class="ri-store-3-line"></i>
-                                                            <span>Quản lí thể loại</span>
-                                                        </a>
-                                                        <ul class="sidebar-submenu">
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/categorylist">Danh sách thể loại</a>
-                                                            </li>
-
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/createcategory">Tạo thể loại mới</a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-
-                                                    <li class="sidebar-list">
-                                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                                            <i class="ri-store-3-line"></i>
-                                                            <span>Quản lí kích cỡ sản phẩm</span>
-                                                        </a>
-                                                        <ul class="sidebar-submenu">
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/sizelist">Danh sách kích cỡ</a>
-                                                            </li>
-
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/createsize">Tạo kích cỡ mới</a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-
-                                                    <li class="sidebar-list">
-                                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/dashboard/report.jsp">
-                                                            <i class="ri-file-chart-line"></i>
-                                                            <span>Báo cáo</span>
-                                                        </a>
-                                                    </li>
-                                                </c:when>
-                                                <c:when test="${roleId == 3}">
-                                                    <li class="sidebar-list">
-                                                        <a class="sidebar-link sidebar-title link-nav" href="index.html">
-                                                            <i class="ri-home-line"></i>
-                                                            <span>Dashboard</span>
-                                                        </a>
-                                                    </li>
-
-                                                    <li class="sidebar-list">
-                                                        <a class="sidebar-link sidebar-title" href="javascript:void(0)">
-                                                            <i class="ri-archive-line"></i>
-                                                            <span>Đơn hàng</span>
-                                                        </a>
-                                                        <ul class="sidebar-submenu">
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/orderlist">Danh sách đơn hàng</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="order-tracking.html">Theo dõi đơn hàng</a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-
-                                                    <li class="sidebar-list">
-                                                        <a class="linear-icon-link sidebar-link sidebar-title" href="javascript:void(0)">
-                                                            <i class="ri-store-3-line"></i>
-                                                            <span>Quản lí tồn kho</span>
-                                                        </a>
-                                                        <ul class="sidebar-submenu">
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/inventory-checklist">Chi tiết tồn kho</a>
-                                                            </li>
-
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/importGood">Nhập hàng</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/supplier">Nhà cung cấp</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/archive">Kho lưu trữ</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="add-new-product.html">Trả hàng</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="add-new-product.html">Lịch sử</a>
-                                                            </li> 
-                                                        </ul>
-                                                    </li>
-
-                                                    <li class="sidebar-list">
-                                                        <a class="sidebar-link sidebar-title link-nav" href="reports.html">
-                                                            <i class="ri-file-chart-line"></i>
-                                                            <span>Báo cáo</span>
-                                                        </a>
-                                                    </li>
-                                                </c:when>
-                                                <c:when test="${roleId == 4}">
-                                                    <li class="sidebar-list">
-                                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/staff-checklist">
-                                                            <i class="ri-file-chart-line"></i>
-                                                            <span>Danh sách phiếu kiểm kho</span>
-                                                        </a>
-                                                    </li>
-                                                </c:when>
-                                                <c:when test="${roleId == 5}">
-                                                    <li class="sidebar-list">
-                                                        <a class="sidebar-link sidebar-title link-nav" href="index.html">
-                                                            <i class="ri-home-line"></i>
-                                                            <span>Dashboard</span>
-                                                        </a>
-                                                    </li>
-
-                                                    <li class="sidebar-list">
-                                                        <a class="sidebar-link sidebar-title" href="javascript:void(0)">
-                                                            <i class="ri-archive-line"></i>
-                                                            <span>Đơn hàng</span>
-                                                        </a>
-                                                        <ul class="sidebar-submenu">
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/packing-orders">Danh sách đơn hàng</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/my-packing-orders">Đơn hàng của tôi</a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="sidebar-list">
-                                                        <a class="sidebar-link sidebar-title link-nav" href="reports.html">
-                                                            <i class="ri-file-chart-line"></i>
-                                                            <span>Báo cáo</span>
-                                                        </a>
-                                                    </li>
-                                                </c:when>   
-                                                <c:when test="${roleId == 6}">
-                                                    <li class="sidebar-list">
-                                                        <a class="sidebar-link sidebar-title link-nav" href="index.html">
-                                                            <i class="ri-home-line"></i>
-                                                            <span>Dashboard</span>
-                                                        </a>
-                                                    </li>
-
-                                                    <li class="sidebar-list">
-                                                        <a class="sidebar-link sidebar-title" href="javascript:void(0)">
-                                                            <i class="ri-archive-line"></i>
-                                                            <span>Đơn hàng</span>
-                                                        </a>
-                                                        <ul class="sidebar-submenu">
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/ship-orders">Danh sách đơn hàng</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/my-shipping-orders">Đơn hàng của tôi</a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="sidebar-list">
-                                                        <a class="sidebar-link sidebar-title link-nav" href="reports.html">
-                                                            <i class="ri-file-chart-line"></i>
-                                                            <span>Báo cáo</span>
-                                                        </a>
-                                                    </li>
-                                                </c:when> 
-                                                <c:when test="${roleId == 7}">
-                                                    <li class="sidebar-list">
-                                                        <a class="sidebar-link sidebar-title link-nav" href="index.html">
-                                                            <i class="ri-home-line"></i>
-                                                            <span>Dashboard</span>
-                                                        </a>
-                                                    </li>
-
-                                                    <li class="sidebar-list">
-                                                        <a class="sidebar-link sidebar-title" href="javascript:void(0)">
-                                                            <i class="ri-archive-line"></i>
-                                                            <span>Đơn hàng</span>
-                                                        </a>
-                                                        <ul class="sidebar-submenu">
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/sale-orders">Danh sách đơn hàng</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/my-sale-orders">Đơn hàng của tôi</a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-
-                                                    <li class="sidebar-list">
-                                                        <a class="sidebar-link sidebar-title" href="javascript:void(0)">
-                                                            <i class="ri-archive-line"></i>
-                                                            <span>Khách hàng</span>
-                                                        </a>
-                                                        <ul class="sidebar-submenu">
-                                                            <li>
-                                                                <a href="/Gr1_Warehouse/browse-cus">Danh sách khách hàng</a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="sidebar-list">
-                                                        <a class="sidebar-link sidebar-title link-nav" href="reports.html">
-                                                            <i class="ri-file-chart-line"></i>
-                                                            <span>Báo cáo</span>
-                                                        </a>
-                                                    </li>
-                                                </c:when> 
-                                            </c:choose>
-                                            <li class="sidebar-list">
-                                                <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/profilesetting">
-                                                    <i class="ri-file-chart-line"></i>
-                                                    <span>Cài đặt</span>
-                                                </a>
-                                            </li>      
-                                        </ul>
-                                    </div>
-
-                                    <div class="right-arrow" id="right-arrow">
-                                        <i data-feather="arrow-right"></i>
-                                    </div>
-                                </nav>
-                            </div>
-                        </div>
-                        <!-- Page Sidebar Ends-->
-                    </div>
-                    <!-- Page Body End -->
-
-                    <!-- Modal Start -->
-                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-                        <div class="modal-dialog  modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-body">
-                                    <h5 class="modal-title" id="staticBackdropLabel">Đăng xuất</h5>
-                                    <p>Bạn có chắc chắn muốn đăng xuất?</p>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    <div class="button-box">
-                                        <button type="button" class="btn btn--no" data-bs-dismiss="modal">Không</button>
-                                        <a href="<%= request.getContextPath() %>/logout" class="btn btn--yes btn-primary">Có</a>
-                                    </div>
+                <!-- Modal Start -->
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+                    <div class="modal-dialog  modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <h5 class="modal-title" id="staticBackdropLabel">Đăng xuất</h5>
+                                <p>Bạn có chắc chắn muốn đăng xuất?</p>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <div class="button-box">
+                                    <button type="button" class="btn btn--no" data-bs-dismiss="modal">Không</button>
+                                    <a href="<%= request.getContextPath() %>/logout" class="btn btn--yes btn-primary">Có</a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Modal End -->
                 </div>
+                <!-- Modal End -->
+
                 <!-- page-wrapper End-->
 
                 <!-- Settings Section Start -->
@@ -722,7 +689,6 @@ String success = (String) request.getAttribute("success");
                 <!-- Settings Section End -->
             </div>
             <!-- Page Body End-->
-            <!-- footer End-->
         </div>
         <!-- page-wrapper End-->
 

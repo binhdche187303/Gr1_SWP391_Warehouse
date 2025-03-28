@@ -142,154 +142,6 @@
                                 </div>
                             </div>
                             <!-- chart card section End -->
-
-
-                            <!-- Earning chart star-->
-                            <div class="col-xl-6">
-                                <div class="card o-hidden card-hover">
-                                    <div class="card-header border-0 pb-1">
-                                        <div class="card-header-title">
-                                            <h4>Tổng thu chi</h4>
-                                        </div>
-                                    </div>
-                                    <div class="card-body p-0">
-                                        <div id="report-chart"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Earning chart  end-->
-
-                            <!-- Best Selling Product End -->
-
-
-                            <!-- Recent orders start-->
-                            
-                            <!-- Recent orders end-->
-
-                            <!-- Earning chart star-->
-                            <div class="col-xl-6">
-                                <div class="card o-hidden card-hover">
-                                    <div class="card-header border-0 mb-0">
-                                        <div class="card-header-title">
-                                            <h4>Earning</h4>
-                                        </div>
-                                    </div>
-                                    <div class="card-body p-0">
-                                        <div id="bar-chart-earning"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Earning chart end-->
-
-
-                            <!-- Transactions start-->
-                            <div class="col-xxl-4 col-md-6">
-                                <div class="card o-hidden card-hover">
-                                    <div class="card-header border-0">
-                                        <div class="card-header-title">
-                                            <h4>Transactions</h4>
-                                        </div>
-                                    </div>
-
-                                    <div class="card-body pt-0">
-                                        <div>
-                                            <div class="table-responsive">
-                                                <table class="user-table transactions-table table border-0">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>
-                                                                <div class="transactions-icon">
-                                                                    <i class="ri-shield-line"></i>
-                                                                </div>
-                                                                <div class="transactions-name">
-                                                                    <h6>Wallets</h6>
-                                                                    <p>Starbucks</p>
-                                                                </div>
-                                                            </td>
-
-                                                            <td class="lost">-$74</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="td-color-1">
-                                                                <div class="transactions-icon">
-                                                                    <i class="ri-check-line"></i>
-                                                                </div>
-                                                                <div class="transactions-name">
-                                                                    <h6>Bank Transfer</h6>
-                                                                    <p>Add Money</p>
-                                                                </div>
-                                                            </td>
-
-                                                            <td class="success">+$125</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="td-color-2">
-                                                                <div class="transactions-icon">
-                                                                    <i class="ri-exchange-dollar-line"></i>
-                                                                </div>
-                                                                <div class="transactions-name">
-                                                                    <h6>Paypal</h6>
-                                                                    <p>Add Money</p>
-                                                                </div>
-                                                            </td>
-
-                                                            <td class="lost">-$50</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="td-color-3">
-                                                                <div class="transactions-icon">
-                                                                    <i class="ri-bank-card-line"></i>
-                                                                </div>
-                                                                <div class="transactions-name">
-                                                                    <h6>Mastercard</h6>
-                                                                    <p>Ordered Food</p>
-                                                                </div>
-                                                            </td>
-
-                                                            <td class="lost">-$40</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="td-color-4 pb-0">
-                                                                <div class="transactions-icon">
-                                                                    <i class="ri-bar-chart-grouped-line"></i>
-                                                                </div>
-                                                                <div class="transactions-name">
-                                                                    <h6>Transfer</h6>
-                                                                    <p>Refund</p>
-                                                                </div>
-                                                            </td>
-
-                                                            <td class="success pb-0">+$90</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Transactions end-->
-
-                            <!-- visitors chart start-->
-                            <div class="col-xxl-4 col-md-6">
-                                <div class="h-100">
-                                    <div class="card o-hidden card-hover">
-                                        <div class="card-header border-0">
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <div class="card-header-title">
-                                                    <h4>Visitors</h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card-body pt-0">
-                                            <div class="pie-chart">
-                                                <div id="pie-chart-visitors"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- visitors chart end-->
                         </div>
                     </div>
                     <!-- Container-fluid Ends-->
@@ -319,7 +171,7 @@
         <script src="${pageContext.request.contextPath}/assets2/js/config.js"></script>
 
         <!-- tooltip init js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/tooltip-init.js"></script>
+<!--        <script src="${pageContext.request.contextPath}/assets2/js/tooltip-init.js"></script>-->
 
         <!-- Plugins JS -->
         <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
@@ -345,7 +197,7 @@
         <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>
 
         <!-- sidebar effect -->
-        <script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>
+<!--        <script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>-->
 
         <!-- Theme js -->
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
