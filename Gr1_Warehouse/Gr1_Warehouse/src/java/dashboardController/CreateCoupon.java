@@ -100,14 +100,18 @@ public class CreateCoupon extends HttpServlet {
             if (discountCode == null || discountCode.trim().isEmpty()
                     || discountPercentageStr == null || discountPercentageStr.trim().isEmpty()
                     || startDateStr == null || startDateStr.trim().isEmpty()) {
-                request.setAttribute("message", "Required fields cannot be empty.");
+                request.setAttribute("message", "Mã giảm giá không được để trống");
                 request.getRequestDispatcher("/dashboard/create-coupon.jsp").forward(request, response);
                 return;
             }
 
             // Check if discount code exists
             DiscountDAO discountDAO = new DiscountDAO();
-            if (discountDAO.isDiscountCodeExists(discountCode)) {
+
+            // Xử lý brand_name: loại bỏ khoảng trắng thừa
+            String cleanedDiscountCode = discountCode.trim();
+
+            if (discountDAO.isDiscountCodeExists(cleanedDiscountCode)) {
                 request.setAttribute("message", "Mã giảm giá đã tồn tại! Vui lòng tạo mã khác.");
                 request.getRequestDispatcher("/dashboard/create-coupon.jsp").forward(request, response);
                 return;

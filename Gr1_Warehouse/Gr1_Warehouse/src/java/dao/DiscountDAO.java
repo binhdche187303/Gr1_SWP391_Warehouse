@@ -238,11 +238,16 @@ public class DiscountDAO extends DBContext {
         }
     }
 
+    //Ham nay check luc tao
     public boolean isDiscountCodeExists(String discountCode) throws SQLException {
-        String checkCodeSql = "SELECT COUNT(*) FROM dbo.Discounts WHERE discount_code = ?";
-        try (PreparedStatement ps = connection.prepareStatement(checkCodeSql)) {
-            ps.setString(1, discountCode);
-            try (ResultSet rs = ps.executeQuery()) {
+        // Loại bỏ tất cả khoảng trắng và chuyển về chữ thường
+        String cleanedDiscountCode = discountCode.replaceAll("\\s+", "").toLowerCase();
+
+        String sql = "SELECT COUNT(*) FROM Discounts WHERE LOWER(REPLACE(discount_code, ' ', '')) = ?";
+
+        try (PreparedStatement pstm = connection.prepareStatement(sql)) {
+            pstm.setString(1, cleanedDiscountCode);
+            try (ResultSet rs = pstm.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt(1) > 0;
                 }
