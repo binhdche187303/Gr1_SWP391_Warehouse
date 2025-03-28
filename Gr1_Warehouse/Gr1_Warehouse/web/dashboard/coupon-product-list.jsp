@@ -45,58 +45,6 @@
         <!-- App css -->
         <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets2/css/style.css">
 
-        <style>
-            .coupon-list-table {
-                table-layout: fixed;
-                width: 100%;
-            }
-
-            .coupon-list-table th,
-            .coupon-list-table td {
-                white-space: nowrap; /* Ngăn chữ xuống dòng không mong muốn */
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-            .coupon-list-table td span {
-                display: block; /* Đảm bảo không bị tràn do inline */
-            }
-
-
-            .coupon-list-table th:nth-child(10),
-            .coupon-list-table td:nth-child(10) {
-                width: 12%; /* Đảm bảo cột Action không bị chồng lên */
-            }
-
-            /* Pagination Styling */
-            .pagination-container {
-                margin-top: 20px;
-                margin-bottom: 20px;
-            }
-
-            .pagination .page-item.active .page-link {
-                background-color: #0da487;
-                border-color: #0da487;
-            }
-
-            .pagination .page-link {
-                color: #0da487;
-            }
-
-            .pagination .page-link:hover {
-                background-color: #e9ecef;
-                border-color: #dee2e6;
-                color: #0da487;
-            }
-
-            .pagination .page-item.disabled .page-link {
-                color: #6c757d;
-                pointer-events: none;
-                background-color: #fff;
-                border-color: #dee2e6;
-            }
-        </style>
-
     </head>
 
     <body>
@@ -120,340 +68,145 @@
                                             <div class="right-options">
                                                 <ul>
                                                     <li>
-                                                        <form action="couponproductlist" method="post">
-                                                            <input style="width: 300px" type="text" name="sub_name" id="searchBox" class="form-control" placeholder="Tìm kiếm sản phẩm giảm giá...">
-                                                            <input hidden type="submit">
-                                                        </form>
+                                                        <input type="text" id="productNameFilter" class="form-control" placeholder="Tìm theo tên sản phẩm">
                                                     </li>
                                                 </ul>
                                             </div>
                                         </div>
                                         <div>
-                                            <div class="table-responsive">
-                                                <table class="table all-package coupon-list-table table-hover theme-table" id="table_id">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Tên sản phẩm</th>
-                                                            <th>Hành động</th>
-                                                        </tr>
-                                                    </thead>
-
-                                                    <tbody>
-                                                        <c:forEach items="${requestScope.listProduct}" var="lp">
+                                            <div class="card-body">
+                                                <div class="table-responsive table-product">
+                                                    <table class="table all-package coupon-list-table table-hover theme-table" id="table_id">
+                                                        <thead>
                                                             <tr>
-                                                                <td class="theme-color">${lp.productName}</td>
-                                                                <td>
-                                                                    <ul>
-                                                                        <a href="discountproductdetail?product_id=${lp.productId}" 
-                                                                           class="view-discount-history" 
-                                                                           >
-                                                                            <i class="ri-eye-line"></i>
-                                                                        </a>
-                                                                        <a href="createcouponproduct?product_id=${lp.productId}" class="view-discount-history">
-                                                                            <i class="ri-add-circle-line" style="color: rgb(116, 125, 198);width: 19;height: 18"></i>
-                                                                        </a>
-                                                                    </ul>
-                                                                </td>
+                                                                <th>Tên sản phẩm</th>
+                                                                <th>Hành động</th>
                                                             </tr>
-                                                        </c:forEach>
-                                                    </tbody>
-                                                </table>
+                                                        </thead>
+
+                                                        <tbody>
+                                                            <c:forEach items="${requestScope.listProduct}" var="lp">
+                                                                <tr>
+                                                                    <td class="theme-color">${lp.productName}</td>
+                                                                    <td>
+                                                                        <ul>
+                                                                            <a href="discountproductdetail?product_id=${lp.productId}" 
+                                                                               class="view-discount-history" 
+                                                                               >
+                                                                                <i class="ri-eye-line"></i>
+                                                                            </a>
+                                                                            <a href="createcouponproduct?product_id=${lp.productId}" class="view-discount-history">
+                                                                                <i class="ri-add-circle-line" style="color: rgb(116, 125, 198);width: 19;height: 18"></i>
+                                                                            </a>
+                                                                        </ul>
+                                                                    </td>
+                                                                </tr>
+                                                            </c:forEach>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </div>
+                                        <!-- Pagination End -->
                                     </div>
-                                    <!-- Pagination End -->
                                 </div>
                             </div>
                         </div>
+                        <!-- Container-fluid Ends-->
+
                     </div>
-                    <!-- Container-fluid Ends-->
-
                 </div>
+
             </div>
-
-        </div>
-        <!-- page-wrapper End -->
+            <!-- page-wrapper End -->
 
 
-        <!-- latest js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
+            <!-- latest js -->
+            <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
 
-        <!-- Bootstrap js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/bootstrap/bootstrap.bundle.min.js"></script>
+            <!-- Bootstrap js -->
+            <script src="${pageContext.request.contextPath}/assets2/js/bootstrap/bootstrap.bundle.min.js"></script>
 
-        <!-- feather icon js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/icons/feather-icon/feather.min.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/icons/feather-icon/feather-icon.js"></script>
+            <!-- feather icon js -->
+            <script src="${pageContext.request.contextPath}/assets2/js/icons/feather-icon/feather.min.js"></script>
+            <script src="${pageContext.request.contextPath}/assets2/js/icons/feather-icon/feather-icon.js"></script>
 
-        <!-- scrollbar simplebar js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/simplebar.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/custom.js"></script>
+            <!-- scrollbar simplebar js -->
+            <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/simplebar.js"></script>
+            <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/custom.js"></script>
 
-        <!-- customizer js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>
+            <!-- customizer js -->
+            <!--<script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>-->
 
-        <!-- Sidebar js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/config.js"></script>
+            <!-- Sidebar js -->
+            <script src="${pageContext.request.contextPath}/assets2/js/config.js"></script>
 
-        <!-- Plugins JS -->
-        <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
-<!--        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
+            <!-- Plugins JS -->
+            <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
+    <!--        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
+            <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
 
-        <!-- Data table js -->
-<!--        <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>-->
+            <!-- Data table js -->
+    <!--        <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script>
+            <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>-->
 
-        <!-- all checkbox select js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/checkbox-all-check.js"></script>
+            <!-- all checkbox select js -->
+            <script src="${pageContext.request.contextPath}/assets2/js/checkbox-all-check.js"></script>
 
-        <!-- sidebar effect -->
-        <script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>
+            <!-- sidebar effect -->
+            <!--<script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>-->
 
-        <!-- Theme js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
+            <!-- Theme js -->
+            <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
 
-        <script>
+            <!-- DataTables CSS -->
+            <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 
-            /**
-             * Product List Pagination Implementation
-             * - Adds pagination to the product list table with exactly 10 products per page
-             * - Fixed pagination calculation and display
-             */
+            <!-- DataTables JS -->
+            <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
-            document.addEventListener('DOMContentLoaded', function () {
-                // Pagination configuration
-                const itemsPerPage = 10;
-                let currentPage = 1;
-                let allProducts = [];
-
-                // Initial load - fetch all products and implement pagination
-                function initializePagination() {
-                    // Get initial list of products from the table
-                    allProducts = [];
-                    const rows = document.querySelectorAll('#table_id tbody tr');
-
-                    rows.forEach(function (row) {
-                        const productName = row.querySelector('td:first-child').textContent;
-                        const link = row.querySelector('a:first-child');
-                        const href = link.getAttribute('href');
-                        const productId = href.split('product_id=')[1];
-
-                        allProducts.push({
-                            productName: productName,
-                            productId: productId
-                        });
-                    });
-
-                    // Render the pagination
-                    renderPagination();
-                    showPage(1);
-                }
-
-                // Render pagination controls
-                function renderPagination() {
-                    const pageCount = Math.ceil(allProducts.length / itemsPerPage);
-
-                    // Clear existing pagination if any
-                    const existingPagination = document.querySelector('.pagination-container');
-                    if (existingPagination) {
-                        existingPagination.remove();
-                    }
-
-                    // Don't show pagination if only one page or no products
-                    if (pageCount <= 1) {
-                        return;
-                    }
-
-                    // Create pagination container
-                    const paginationContainer = document.createElement('div');
-                    paginationContainer.className = 'pagination-container mt-4 d-flex justify-content-center';
-
-                    let paginationHTML = '<ul class="pagination">';
-                    paginationHTML += '<li class="page-item" id="prevPage">';
-                    paginationHTML += '<a class="page-link" href="#" aria-label="Previous">';
-                    paginationHTML += '<span aria-hidden="true">&laquo;</span>';
-                    paginationHTML += '</a></li>';
-
-                    // Add page numbers
-                    for (let i = 1; i <= pageCount; i++) {
-                        paginationHTML += '<li class="page-item" data-page="' + i + '">';
-                        paginationHTML += '<a class="page-link" href="#">' + i + '</a>';
-                        paginationHTML += '</li>';
-                    }
-
-                    paginationHTML += '<li class="page-item" id="nextPage">';
-                    paginationHTML += '<a class="page-link" href="#" aria-label="Next">';
-                    paginationHTML += '<span aria-hidden="true">&raquo;</span>';
-                    paginationHTML += '</a></li>';
-                    paginationHTML += '</ul>';
-
-                    paginationContainer.innerHTML = paginationHTML;
-
-                    // Append pagination controls after the table
-                    const table = document.getElementById('table_id');
-                    table.parentNode.insertBefore(paginationContainer, table.nextSibling);
-
-                    // Add event listeners to pagination controls
-                    const pageItems = document.querySelectorAll('.page-item');
-                    pageItems.forEach(function (item) {
-                        item.addEventListener('click', function (e) {
-                            e.preventDefault();
-
-                            if (this.id === 'prevPage') {
-                                if (currentPage > 1) {
-                                    showPage(currentPage - 1);
-                                }
-                            } else if (this.id === 'nextPage') {
-                                if (currentPage < pageCount) {
-                                    showPage(currentPage + 1);
-                                }
-                            } else {
-                                const page = parseInt(this.getAttribute('data-page'));
-                                showPage(page);
+            <script>
+                $(document).ready(function () {
+                    // Khởi tạo DataTable với các cài đặt chi tiết
+                    const table = $('#table_id').DataTable({
+                        paging: true,
+                        searching: true,
+                        ordering: false,
+                        info: true,
+                        pageLength: 10,
+                        lengthChange: false,
+                        language: {
+                            url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/vi.json',
+                            emptyTable: "Không có sản phẩm nào trong hệ thống",
+                            zeroRecords: "Không tìm thấy sản phẩm phù hợp",
+                            info: "Hiển thị _START_ đến _END_ của _TOTAL_ sản phẩm",
+                            infoEmpty: "Hiển thị 0 đến 0 của 0 sản phẩm",
+                            infoFiltered: "(được lọc từ tổng số _MAX_ sản phẩm)",
+                            paginate: {
+                                first: "Đầu tiên",
+                                last: "Cuối cùng",
+                                next: "Tiếp theo",
+                                previous: "Trước đó"
                             }
-                        });
-                    });
-                }
-
-                // Show specific page of products with exactly 10 items per page
-                function showPage(page) {
-                    currentPage = page;
-
-                    // Calculate start and end indices for this page
-                    const startIndex = (page - 1) * itemsPerPage;
-                    const endIndex = Math.min(startIndex + itemsPerPage, allProducts.length);
-
-                    // Only show items for this specific page
-                    const productsForThisPage = allProducts.slice(startIndex, endIndex);
-
-                    // Clear the table
-                    const tbody = document.querySelector('#table_id tbody');
-                    tbody.innerHTML = '';
-
-                    // Add products for current page
-                    productsForThisPage.forEach(function (product) {
-                        const row = document.createElement('tr');
-
-                        // Product name cell
-                        const nameCell = document.createElement('td');
-                        nameCell.className = 'theme-color';
-                        nameCell.textContent = product.productName;
-                        row.appendChild(nameCell);
-
-                        // Define href variables
-                        const hrefView = "discountproductdetail?product_id=" + product.productId;
-                        const hrefEdit = "createcouponproduct?product_id=" + product.productId;
-
-                        // Actions cell
-                        const actionsCell = document.createElement("td");
-                        let actionsHTML = '<ul>';
-                        actionsHTML += '<a href="' + hrefView + '" class="view-discount-history">';
-                        actionsHTML += '<i class="ri-eye-line"></i>';
-                        actionsHTML += '</a>';
-                        actionsHTML += '<a href="' + hrefEdit + '" class="view-discount-history">';
-                        actionsHTML += '<i class="ri-add-circle-line" style="color: rgb(116, 125, 198);"></i>';
-                        actionsHTML += '</a>';
-                        actionsHTML += '</ul>';
-
-                        actionsCell.innerHTML = actionsHTML;
-                        row.appendChild(actionsCell);
-                        tbody.appendChild(row);
-                    });
-
-                    // Update active page
-                    const pageItems = document.querySelectorAll('.page-item');
-                    pageItems.forEach(function (item) {
-                        item.classList.remove('active');
-                        if (item.getAttribute('data-page') == page) {
-                            item.classList.add('active');
+                        },
+                        columnDefs: [
+                            {orderable: false, targets: 0}, // Vô hiệu hóa sắp xếp cho các cột 0 và 1
+                            {orderable: false, targets: 1} // Vô hiệu hóa sắp xếp cho các cột 0 và 1
+                        ],
+                        initComplete: function () {
+                            // Ẩn thanh tìm kiếm mặc định của DataTables
+                            $('.dataTables_filter').hide();
                         }
                     });
 
-                    // Update prev/next buttons
-                    const pageCount = Math.ceil(allProducts.length / itemsPerPage);
-                    const prevButton = document.getElementById('prevPage');
-                    const nextButton = document.getElementById('nextPage');
-
-                    if (prevButton) {
-                        if (page === 1) {
-                            prevButton.classList.add('disabled');
-                        } else {
-                            prevButton.classList.remove('disabled');
-                        }
-                    }
-
-                    if (nextButton) {
-                        if (page === pageCount) {
-                            nextButton.classList.add('disabled');
-                        } else {
-                            nextButton.classList.remove('disabled');
-                        }
-                    }
-                }
-
-                // Handle search with vanilla JavaScript
-                let timeoutId;
-                const searchBox = document.getElementById('searchBox');
-
-                if (searchBox) {
-                    searchBox.addEventListener('input', function () {
-                        clearTimeout(timeoutId);
-                        timeoutId = setTimeout(function () {
-                            const searchValue = searchBox.value;
-
-                            // Create XMLHttpRequest
-                            const xhr = new XMLHttpRequest();
-                            xhr.open('POST', 'couponproductlist', true);
-                            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-
-                            xhr.onload = function () {
-                                if (xhr.status === 200) {
-                                    console.log('Response:', xhr.responseText);
-
-                                    // Parse JSON response
-                                    try {
-                                        // Update the global products array
-                                        allProducts = JSON.parse(xhr.responseText);
-                                        console.log('Total products loaded:', allProducts.length);
-
-                                        // Reset to first page and re-render pagination
-                                        currentPage = 1;
-                                        renderPagination();
-                                        showPage(1);
-                                    } catch (e) {
-                                        console.error('Error parsing JSON:', e);
-                                    }
-                                } else {
-                                    console.error('Error:', xhr.statusText);
-                                }
-                            };
-
-                            xhr.onerror = function () {
-                                console.error('Network Error');
-                            };
-
-                            // Send request
-                            xhr.send('sub_name=' + encodeURIComponent(searchValue));
-                        }, 300);
+                    // Xử lý tìm kiếm
+                    $('#productNameFilter').on('keyup', function () {
+                        // Tìm kiếm không phân biệt chữ hoa chữ thường
+                        table.columns(0).search(this.value.trim()).draw();
                     });
                 }
-
-                // Prevent form submission
-                const searchForm = searchBox ? searchBox.closest('form') : null;
-                if (searchForm) {
-                    searchForm.addEventListener('submit', function (e) {
-                        e.preventDefault();
-                    });
-                }
-
-                // Initialize pagination on page load
-                initializePagination();
-            });
-        </script>
-
-
+                );
+            </script>
     </body>
 
 </html>

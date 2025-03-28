@@ -193,7 +193,7 @@
                                         </a>
                                         <ul class="sidebar-submenu">
                                             <li>
-                                                <a href="/Gr1_Warehouse/couponproductlist">Danh sách giảm giá</a>
+                                                <a href="/Gr1_Warehouse/couponproductlist">Danh sách sản phẩm</a>
                                             </li>
                                         </ul>
                                     </li>

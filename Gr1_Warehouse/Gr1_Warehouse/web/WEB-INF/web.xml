@@ -633,7 +633,7 @@
         <url-pattern>/changepasswordemail</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
-        <welcome-file>login</welcome-file>
+        <welcome-file>shop</welcome-file>
         <!-- hoặc tên file jsp khác, ví dụ home.jsp -->
     </welcome-file-list>
     <servlet>

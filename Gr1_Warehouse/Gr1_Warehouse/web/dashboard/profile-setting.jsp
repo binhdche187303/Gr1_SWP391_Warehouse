@@ -716,7 +716,7 @@ String success = (String) request.getAttribute("success");
         <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
 
         <!-- customizer js start  -->
-        <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>
+        <!--<script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>-->
         <!-- customizer js end -->
 
         <!--Dropzon start-->

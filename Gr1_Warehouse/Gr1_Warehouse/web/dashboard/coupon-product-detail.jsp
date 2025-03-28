@@ -343,7 +343,7 @@
         <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/custom.js"></script>
 
         <!-- customizer js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>
+        <!--<script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>-->
 
         <!-- Sidebar js -->
         <script src="${pageContext.request.contextPath}/assets2/js/config.js"></script>
@@ -361,7 +361,7 @@
         <script src="${pageContext.request.contextPath}/assets2/js/checkbox-all-check.js"></script>
 
         <!-- sidebar effect -->
-        <script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>
+        <!--<script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>-->
 
         <!-- Theme js -->
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>

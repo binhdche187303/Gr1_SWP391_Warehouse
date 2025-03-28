@@ -187,11 +187,11 @@
 
 
         <!-- slick slider js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/slick.min.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/custom-slick.js"></script>
+<!--        <script src="${pageContext.request.contextPath}/assets2/js/slick.min.js"></script>
+        <script src="${pageContext.request.contextPath}/assets2/js/custom-slick.js"></script>-->
 
         <!-- customizer js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>
+<!--        <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>-->
 
         <!-- ratio js -->
         <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>
