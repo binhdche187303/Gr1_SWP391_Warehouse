@@ -79,7 +79,6 @@
 
                                     <div class="user-name-hide media-body">
                                         <span>${sessionScope.acc.username}</span>
-                                        <p class="mb-0 font-roboto">${sessionScope.acc.role.roleName}<i class="middle ri-arrow-down-s-line"></i></p>
                                     </div>
                                 </div>
                                 <ul class="profile-dropdown onhover-show-div">
@@ -112,30 +111,17 @@
                     <div>
                         <div class="logo-wrapper logo-wrapper-center">
                             <a href="index.html" data-bs-original-title="" title="">
-                                <img class="img-fluid for-white" src="${pageContext.request.contextPath}/assets2/images/logo/full-white.png" alt="logo">
-                            </a>
-                            <div class="back-btn">
-                                <i class="fa fa-angle-left"></i>
-                            </div>
-                            <div class="toggle-sidebar">
-                                <i class="ri-apps-line status_toggle middle sidebar-toggle"></i>
-                            </div>
-                        </div>
-                        <div class="logo-icon-wrapper">
-                            <a href="index.html">
-                                <img class="img-fluid main-logo main-white" src="${pageContext.request.contextPath}/assets2/images/logo/logo.png" alt="logo">
-                                <img class="img-fluid main-logo main-dark" src="${pageContext.request.contextPath}/assets2/images/logo/logo-white.png"
-                                     alt="logo">
+                                <img class="img-fluid for-white" src="${pageContext.request.contextPath}/assets2/images/logo_1.png" alt="logo">
                             </a>
                         </div>
                         <nav class="sidebar-main">
                             <div class="left-arrow" id="left-arrow">
                                 <i data-feather="arrow-left"></i>
                             </div>
-
+                            
                             <div id="sidebar-menu">
                                 <ul class="sidebar-links" id="simple-bar">
-                                    <li class="back-btn"></li>
+                                    <li class="back-btn"></li><br><br><br>
                                     <li class="sidebar-list">
                                         <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/staff-checklist">
                                             <i class="ri-file-chart-line"></i>
@@ -148,7 +134,6 @@
                                     </li>
                                 </ul>
                             </div>
-
                             <div class="right-arrow" id="right-arrow">
                                 <i data-feather="arrow-right"></i>
                             </div>
@@ -449,14 +434,9 @@
         <script src="${pageContext.request.contextPath}/assets2/js/slick.min.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/custom-slick.js"></script>
 
-        <!-- customizer js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>
 
         <!-- ratio js -->
         <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>
-
-        <!-- sidebar effect -->
-        <script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>
 
         <!-- Theme js -->
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>

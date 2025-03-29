@@ -140,12 +140,6 @@
                                                             <td>
                                                                 <ul>
                                                                     <li>
-                                                                        <a href="order-detail.html">
-                                                                            <i class="ri-eye-line"></i>
-                                                                        </a>
-                                                                    </li>
-
-                                                                    <li>
                                                                         <form action="/Gr1_Warehouse/editSupplier" method="get">
                                                                             <input class="form-control" type="text" name="supplier_id" value="${supplier.supplierId}" readonly hidden="">
                                                                             <button type="submit" style="background: none; border: none;">
@@ -269,8 +263,8 @@
         <!-- Plugins JS -->
         <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
 
-        <!-- customizer js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>
+<!--         customizer js 
+        <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>-->
 
         <!-- ratio js -->
         <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>

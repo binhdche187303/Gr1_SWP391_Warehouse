@@ -254,16 +254,4 @@ public class StatisticDAO extends DBContext {
         return transactions;
     }
 
-    public static void main(String[] args) {
-        StatisticDAO sd = new StatisticDAO();
-        BigInteger totalR = sd.getAllTimeRevenue();
-        BigInteger totalC = sd.getAllTimeCost();
-
-        List<TransactionRecord> tr = sd.getTransactionsByDate(1);
-        for (TransactionRecord transactionRecord : tr) {
-            System.out.println(transactionRecord);
-        }
-
-    }
-
 }

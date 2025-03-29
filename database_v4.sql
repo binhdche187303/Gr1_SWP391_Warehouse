@@ -30,7 +30,7 @@ CREATE TABLE Users (
     email NVARCHAR(255), --UNIQUE nên thêm để tránh trùng
     role_id INT NOT NULL,
     address NVARCHAR(255),
-    status NVARCHAR(10) NOT NULL DEFAULT 'Active' CHECK (status IN ('Active', 'Deactive')),
+    status NVARCHAR(10) NOT NULL DEFAULT 'Active' CHECK (status IN ('Active', 'Deactive','Reject')),
     FOREIGN KEY (role_id) REFERENCES Roles(role_id)
 );
 
@@ -43,8 +43,6 @@ CREATE TABLE WholesaleCustomers (
     status NVARCHAR(20) DEFAULT N'Chờ duyệt' CHECK (status IN (N'Chờ duyệt', N'Hoạt động', N'Bị từ chối')),
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
-
-
 
 -- Bảng Brands (Thương hiệu)
 CREATE TABLE Brands (
@@ -207,7 +205,7 @@ CREATE TABLE InventoryBatches (
     batch_id INT PRIMARY KEY IDENTITY(1,1),   -- ID của lô hàng
     variant_id INT NOT NULL,                   -- ID biến thể sản phẩm
     quantity INT NOT NULL,                     -- Số lượng tồn trong lô
-    unit_price DECIMAL(10,2) NOT NULL,          -- Giá nhập của lô hàng
+    unit_price DECIMAL(18,2) NOT NULL,          -- Giá nhập của lô hàng
     expiration_date DATE,                      -- Ngày hết hạn (nếu có)
     received_date DATETIME NOT NULL,            -- Ngày nhập kho
     warehouse_id INT NOT NULL,                 -- Kho lưu trữ
@@ -215,6 +213,7 @@ CREATE TABLE InventoryBatches (
     FOREIGN KEY (variant_id) REFERENCES ProductVariants(variant_id),
     FOREIGN KEY (warehouse_id) REFERENCES Warehouses(warehouse_id)
 );
+
 
 --Bảng PurchaseOrder (Phiếu nhập hàng)
 CREATE TABLE PurchaseOrder (
@@ -233,6 +232,7 @@ CREATE TABLE PurchaseOrder (
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
+
 --Bảng PurchaseDetails (Phiếu nhập hàng chi tiết)
 CREATE TABLE PurchaseDetails (
     detail_id INT PRIMARY KEY IDENTITY(1,1),  -- ID chi tiết nhập hàng
@@ -249,6 +249,7 @@ CREATE TABLE PurchaseDetails (
     FOREIGN KEY (batch_id) REFERENCES InventoryBatches(batch_id),
 	FOREIGN KEY (variant_id) REFERENCES ProductVariants(variant_id)
 );
+
 
 
 --Bảng InventoryCheck (Phiếu kiểm kho)
@@ -340,6 +341,7 @@ CREATE TABLE ShippingDetails (
     FOREIGN KEY (staff_id) REFERENCES Users(user_id)
 );
 
+
 CREATE TABLE SaleDetails (
     sale_id INT IDENTITY(1,1) PRIMARY KEY, -- Mã vận chuyển
     order_id INT NOT NULL, -- Mã đơn hàng
@@ -348,6 +350,10 @@ CREATE TABLE SaleDetails (
     FOREIGN KEY (order_id) REFERENCES Orders(order_id),
     FOREIGN KEY (staff_id) REFERENCES Users(user_id)
 );
+
+
+
+
 
 CREATE TRIGGER trg_AfterDiscountUpdate
 ON Discounts
@@ -398,13 +404,14 @@ VALUES
 
 INSERT INTO dbo.Users(username, password, fullname, phone, email, role_id, status)
 VALUES
-(N'admin', '202cb962ac59075b964b07152d234b70', N'Admin 1', '0123456789', 'admin@example.com', 1, 'Active'),
-(N'cus1', '202cb962ac59075b964b07152d234b70', N'Customer 1', '0123456789', 'cus1@gmail.com', 2, 'Active'),
-(N'manager1', '202cb962ac59075b964b07152d234b70', N'Warehouse manager 1', '0123456789', 'manager@gmail.com', 3, 'Active'),
-(N'staff1', '202cb962ac59075b964b07152d234b70', N'Staff 1', '0123456789', 'staff1@gmail.com', 4, 'Active'),
-(N'packing1', '202cb962ac59075b964b07152d234b70', N'Packing 1', '0123456789', 'packing@gmail.com', 5, 'Active'),
-(N'shipper1', '202cb962ac59075b964b07152d234b70', N'Shipper 1', '0123456789', 'shipper@gmail.com', 6, 'Active'),
-(N'seller1', '202cb962ac59075b964b07152d234b70', N'Seller 1', '0123456789', 'seller1@gmail.com', 7, 'Active');
+(N'kimtuan82', '2f89cde69ad0520bbd31e64731dac798', N'Nguyễn Kim Tuấn', '0353581228', 'kimtuan09112004@gmail.com', 1, 'Active'),
+(N'binhdche', '531314543b60b5052af92aef2624b976', N'Đinh Công Bình', '0352612225', 'binhdche187303@fpt.edu.vn', 2, 'Active'),
+--(N'minhphuong12', 'c5edad8e580b55d5cfefaf984fdd0b7b', N'Nghiêm Ngọc Minh Phương', '0352612225', 'nghiemngocminhphuong@gmail.com', 2, 'Active'),
+(N'ducthanhnt', 'f679e98af45c84e3e83a59cdfb4efc92', N'Phạm Đức Thành', '0123456789', 'phamducthanh@gmail.com', 3, 'Active'),
+(N'phuonganhnt', '09005624de6652e69b8f3e0996e265dc', N'Nguyễn Phương Anh', '0358962225', 'nguyenphuonganh@gmail.com', 4, 'Active'),
+(N'thuylinhdt', 'c74b4fffbfc87c7b6b443d82a449e939', N'Phạm Thùy Linh', '0359962335', 'phamthuylinh@gmail.com', 5, 'Active'),
+(N'hiepquocnn', 'e0d717d69d88b13478f0d6ada2fbc401', N'Đoàn Hiệp Quốc', '0341221558', 'doanhhiepquoc@gmail.com', 6, 'Active'),
+(N'nhatanhna', '1e1d2e16a428c1ccce2f6286960317c6', N'Nguyễn Nhật Anh', '0977240005', 'nguyennhatanh@gmail.com', 7, 'Active');
 
 INSERT INTO dbo.Brands(brand_name)
 VALUES
@@ -1344,6 +1351,7 @@ VALUES
 INSERT INTO Warehouses (warehouse_name, phone, address, status)
 VALUES (N'Kho Hà Nội', N'0987654321', N'Hà Nội', N'Active');
 
+
 INSERT INTO InventoryBatches (variant_id, quantity, unit_price, expiration_date, received_date, warehouse_id, status)
 SELECT
     variant_id,
@@ -1355,9 +1363,6 @@ SELECT
     'In Stock' AS status
 FROM ProductVariants
 WHERE variant_id between 1 and 143;
-
-
-
 
 CREATE TABLE ProductQuantityDiscounts (
     product_discount_id INT IDENTITY(1,1) PRIMARY KEY,
@@ -1965,3 +1970,4 @@ VALUES	(1, 1), -- Nhà phân phối Kinh Đô bán thương hiệu Kinh Đô
 		(2, 2), -- Nhà phân phối Phạm Nguyên bán thương hiệu Phạm Nguyên
 		(3, 3), -- Nhà phân phối Pepsico bán thương hiệu Pepsico
 		(4, 4); -- Công ty TNHH Orion bán thương hiệu Orion
+

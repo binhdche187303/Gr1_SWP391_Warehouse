@@ -211,14 +211,39 @@ public class UserDAO extends DBContext {
         }
     }
 
-    public boolean updateStatus(int userId, String newStatus) {
-        String sql = "UPDATE WholesaleCustomers SET status = ? WHERE user_id = ?";
+//    public boolean updateStatus(int userId, String newStatus) {
+//        String sql = "UPDATE WholesaleCustomers SET status = ? WHERE user_id = ?";
+//
+//        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+//            ps.setString(1, newStatus);
+//            ps.setInt(2, userId);
+//            int affectedRows = ps.executeUpdate();
+//            return affectedRows > 0; // Trả về true nếu cập nhật thành công
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
+    public boolean updateStatusBothTables(int userId, String userStatus, String customerStatus) {
+        String updateUserStatusSql = "UPDATE Users SET status = ? WHERE user_id = ?";
+        String updateCustomerStatusSql = "UPDATE WholesaleCustomers SET status = ? WHERE user_id = ?";
+        try (PreparedStatement updateUserStmt = connection.prepareStatement(updateUserStatusSql); PreparedStatement updateCustomerStmt = connection.prepareStatement(updateCustomerStatusSql)) {
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, newStatus);
-            ps.setInt(2, userId);
-            int affectedRows = ps.executeUpdate();
-            return affectedRows > 0; // Trả về true nếu cập nhật thành công
+            connection.setAutoCommit(false); // Bắt đầu transaction
+
+            // Cập nhật bảng Users
+            updateUserStmt.setString(1, userStatus);
+            updateUserStmt.setInt(2, userId);
+            updateUserStmt.executeUpdate();
+
+            // Cập nhật bảng WholesaleCustomers
+            updateCustomerStmt.setString(1, customerStatus);
+            updateCustomerStmt.setInt(2, userId);
+            updateCustomerStmt.executeUpdate();
+
+            connection.commit(); // Commit transaction
+            return true;
+
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -420,7 +445,7 @@ public class UserDAO extends DBContext {
         List<User> list = new ArrayList<>();
         String sql = "SELECT u.user_id, u.username, u.password,u.fullname,u.phone,u.email,u.address,r.role_id,u.status, r.role_name FROM dbo.Users u JOIN dbo.Roles r\n"
                 + "ON r.role_id = u.role_id\n"
-                + "WHERE r.role_name = N'Customer'";
+                + "WHERE r.role_id = 2";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -454,7 +479,7 @@ public class UserDAO extends DBContext {
         List<User> list = new ArrayList<>();
         String sql = "SELECT u.user_id,u.username, u.password,u.fullname,u.phone,u.email,u.address,u.role_id,r.role_name,u.status FROM dbo.Users u\n"
                 + "JOIN dbo.Roles r ON r.role_id = u.role_id\n"
-                + "WHERE r.role_name NOT IN (N'Customer', N'Admin System');";
+                + "WHERE r.role_id NOT IN (1,2);";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -744,5 +769,50 @@ public class UserDAO extends DBContext {
             System.out.println("changePassword error: " + e.getMessage());
             return false;
         }
+    }
+    
+    //Change profile
+    public boolean updateUser(String fullname, String phone, String address, String storeName, int user_id) {
+        String sql = "UPDATE dbo.Users SET fullname=?,  phone=?, address=? WHERE user_id=?";
+        String sql1 = "UPDATE dbo.WholesaleCustomers SET storeName =?, storeAddress=? WHERE USER_ID = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, fullname);
+            st.setString(2, phone);
+            st.setString(3, address);
+            st.setInt(4, user_id);
+            int rowsUpdated = st.executeUpdate();
+
+            PreparedStatement st1 = connection.prepareStatement(sql1);
+            st1.setString(1, storeName);
+            st1.setString(2, address);
+            st1.setInt(3, user_id);
+            int rowsUpdated1 = st1.executeUpdate();
+            return rowsUpdated > 0 && rowsUpdated1 > 0; // Trả về true nếu có dòng được cập nhật
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // Trả về false nếu có lỗi xảy ra
+        }
+    }
+    
+    public WholesaleCustomer getWholesaleCustomersById(int id) {
+        String sql = "SELECT * FROM WholesaleCustomers WHERE user_id = " + id;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                WholesaleCustomer customer = new WholesaleCustomer(
+                        rs.getInt("user_id"),
+                        rs.getString("storeName"),
+                        rs.getString("storeAddress"),
+                        rs.getString("taxCode"),
+                        rs.getString("businessLicense"),
+                        rs.getString("status")
+                );
+                return customer;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

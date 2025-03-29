@@ -250,6 +250,31 @@
                 const orderId = document.getElementById("order-id").value;
                 const discountPercentage = document.getElementById("discount-percentage").value.trim();
 
+                // Kiểm tra trạng thái đơn hàng
+                const orderStatusElement = document.querySelector(".badge.bg-primary.p-2"); // Thay đổi selector nếu cần
+                if (!orderStatusElement) {
+                    alert("⚠️ Không tìm thấy thông tin trạng thái đơn hàng!");
+                    return;
+                }
+
+                const orderStatus = orderStatusElement.innerText.trim();
+
+                // Xử lý các trường hợp trạng thái đơn hàng
+                if (orderStatus === "Đang đóng gói") {
+                    alert("📦 Đơn hàng đang được đóng gói, không thể áp dụng giảm giá!");
+                    return;
+                } else if (orderStatus === "Đã gửi hàng") {
+                    alert("🚚 Đơn hàng đã được gửi, không thể áp dụng giảm giá!");
+                    return;
+                } else if (orderStatus === "Đã giao hàng thành công") {
+                    alert("✅ Đơn hàng đã được giao thành công, không thể áp dụng giảm giá!");
+                    return;
+                } else if (orderStatus !== "Chờ xử lý") {
+                    alert("⚠️ Chỉ đơn hàng có trạng thái 'Chờ xử lý' mới được áp dụng giảm giá.");
+                    return;
+                }
+
+
                 if (!discountPercentage || isNaN(discountPercentage) || discountPercentage < 0 || discountPercentage > 100) {
                     alert("⚠️ Vui lòng nhập phần trăm giảm giá hợp lệ (0-100)!");
                     return;
@@ -322,18 +347,21 @@
                     }
 
                     // Kiểm tra trạng thái đơn hàng và hiển thị thông báo tương ứng
-                    if (orderStatus === "Đã gửi hàng") {
-                        alert("🚚 Đơn hàng đã được gửi, không thể xác nhận lại!");
+                    // Xử lý các trường hợp trạng thái đơn hàng
+                    if (orderStatus === "Đã xác nhận") {
+                        alert("✅ Đơn hàng đã được xác nhận, không thể xác nhận đơn hàng!");
                         return;
                     } else if (orderStatus === "Đang đóng gói") {
-                        alert("📦 Đơn hàng đang được đóng gói, không thể xác nhận lại!");
+                        alert("📦 Đơn hàng đang được đóng gói, không thể xác nhận đơn hàng!");
                         return;
-                    } else if (orderStatus === "Đã xác nhận") {
-                        alert("✅ Đơn hàng đã được xác nhận trước đó!");
+                    } else if (orderStatus === "Đã gửi hàng") {
+                        alert("🚚 Đơn hàng đã được gửi, không thể xác nhận đơn hàng!");
                         return;
-                    }
-                     else if (orderStatus === "Đã giao hàng thành công") {
-                        alert("✅ Đơn hàng đã được giao thành công!");
+                    } else if (orderStatus === "Đã giao hàng thành công") {
+                        alert("✅ Đơn hàng đã được giao thành công, không thể xác nhận đơn hàng!");
+                        return;
+                    } else if (orderStatus !== "Chờ xử lý") {
+                        alert("⚠️ Chỉ đơn hàng có trạng thái 'Chờ xử lý' mới được xác nhận đơn hàng.");
                         return;
                     }
 

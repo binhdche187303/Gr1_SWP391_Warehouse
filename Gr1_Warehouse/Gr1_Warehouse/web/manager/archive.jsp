@@ -126,11 +126,6 @@
                                                             </td>
                                                             <td>
                                                                 <ul>
-                                                                    <li>
-                                                                        <a href="/Gr1_Warehouse/warehouseDetail?warehouseId=${warehouse.warehouseId}">
-                                                                            <i class="ri-eye-line"></i>
-                                                                        </a>
-                                                                    </li>
 
                                                                     <li>
                                                                         <form action="/Gr1_Warehouse/editWarehouse" method="get">
@@ -234,8 +229,6 @@
                 <!-- Plugins JS -->
                 <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
 
-                <!-- customizer js -->
-                <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>
 
                 <!-- ratio js -->
                 <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>

@@ -77,7 +77,7 @@ public class ProfileSetting extends HttpServlet {
             System.out.println("User lấy từ DB: " + (userLogedIn != null ? userLogedIn.getUserId() : "null"));
 
             if (userLogedIn != null) {
-                session.setAttribute("user", userLogedIn); // Lưu User vào session
+                session.setAttribute("acc", userLogedIn); // Lưu User vào session
                 System.out.println("Đã lưu user vào session với userId: " + userLogedIn.getUserId());
             }
         }
@@ -121,7 +121,9 @@ public class ProfileSetting extends HttpServlet {
                 ud.updateUser(fullname, phone, address, Integer.parseInt(userID));
                 request.setAttribute("successprofile", "Cập nhật hồ sơ thành công");
                 request.getRequestDispatcher("/dashboard/profile-setting.jsp").forward(request, response);
-                return;
+                User nuser = ud.getUserById(u.getUserId());
+                session.setAttribute("acc", nuser);
+                request.getRequestDispatcher("/dashboard/profile-setting.jsp").forward(request, response);
             }
         } else //Change password
         {
@@ -150,13 +152,11 @@ public class ProfileSetting extends HttpServlet {
             }
             String hashedNewPassword = MD5Hash.hash(newpassword);
             ud.updatePassword(u.getEmail(), newpassword);
-
             request.setAttribute("success", "Đổi mật khẩu thành công");
+            User nuser = ud.getUserById(u.getUserId());
+            session.setAttribute("acc", nuser);
+            request.getRequestDispatcher("/dashboard/profile-setting.jsp").forward(request, response);
         }
-        User nuser = ud.getUserById(u.getUserId());
-        session.setAttribute("acc", nuser);
-        request.getRequestDispatcher("/dashboard/profile-setting.jsp").forward(request, response);
-
     }
 
     // Phương thức kiểm tra số điện thoại

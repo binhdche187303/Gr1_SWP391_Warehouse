@@ -87,7 +87,7 @@
                                     </c:if>
 
                                     <div class="form-group">
-                                        <label for="email">Email <span class="text-danger">*</span></label>
+                                        <label for="email">Email </label>
                                         <input type="email" class="form-control ${not empty errorEmail ? 'is-invalid' : ''}" id="email" name="email" required value="${email}">
                                         <c:if test="${not empty errorEmail}">
                                             <div class="invalid-feedback">${errorEmail}</div>
@@ -95,7 +95,7 @@
                                     </div>
 
                                     <div class="form-group mt-3">
-                                        <label for="username">Tên người dùng <span class="text-danger">*</span></label>
+                                        <label for="username">Tên người dùng </label>
                                         <input type="text" class="form-control ${not empty errorUsername ? 'is-invalid' : ''}" id="username" name="username" required value="${username}">
                                         <c:if test="${not empty errorUsername}">
                                             <div class="invalid-feedback">${errorUsername}</div>
@@ -103,7 +103,7 @@
                                     </div>
 
                                     <div class="form-group mt-3">
-                                        <label for="password">Mật khẩu <span class="text-danger">*</span></label>
+                                        <label for="password">Mật khẩu </label>
                                         <input type="password" class="form-control ${not empty errorPassword ? 'is-invalid' : ''}" id="password" name="password" required>
                                         <small class="text-muted">Ít nhất 1 chữ in hoa, 1 ký tự đặc biệt, 1 số, tối thiểu 8 ký tự.</small>
                                         <c:if test="${not empty errorPassword}">
@@ -112,7 +112,7 @@
                                     </div>
 
                                     <div class="form-group mt-3">
-                                        <label for="fullname">Tên đầy đủ <span class="text-danger">*</span></label>
+                                        <label for="fullname">Tên đầy đủ </label>
                                         <input type="text" class="form-control ${not empty errorFullname ? 'is-invalid' : ''}" id="fullname" name="fullname" required value="${fullname}">
                                         <c:if test="${not empty errorFullname}">
                                             <div class="invalid-feedback">${errorFullname}</div>
@@ -120,8 +120,8 @@
                                     </div>
 
                                     <div class="form-group mt-3">
-                                        <label for="phone">Số điện thoại <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control ${not empty errorPhone ? 'is-invalid' : ''}" id="phone" name="phone" required value="${phone}">
+                                        <label for="phone">Số điện thoại </label>
+                                        <input type="number" class="form-control ${not empty errorPhone ? 'is-invalid' : ''}" id="phone" name="phone" required value="${phone}">
                                         <small class="text-muted">Bắt đầu bằng số 0, có 10-11 số.</small>
                                         <c:if test="${not empty errorPhone}">
                                             <div class="invalid-feedback">${errorPhone}</div>
@@ -130,7 +130,7 @@
 
                                     <!-- 🏪 Thêm thông tin cửa hàng -->
                                     <div class="form-group mt-3">
-                                        <label for="storeName">Tên cửa hàng <span class="text-danger">*</span></label>
+                                        <label for="storeName">Tên cửa hàng </label>
                                         <input type="text" class="form-control ${not empty errorStoreName ? 'is-invalid' : ''}" id="storeName" name="storeName" required value="${storeName}">
                                         <c:if test="${not empty errorStoreName}">
                                             <div class="invalid-feedback">${errorStoreName}</div>
@@ -138,7 +138,7 @@
                                     </div>
 
                                     <div class="form-group mt-3">
-                                        <label for="storeAddress">Địa chỉ cửa hàng <span class="text-danger">*</span></label>
+                                        <label for="storeAddress">Địa chỉ cửa hàng </label>
                                         <input type="text" class="form-control ${not empty errorStoreAddress ? 'is-invalid' : ''}" id="storeAddress" name="storeAddress" required value="${storeAddress}">
                                         <c:if test="${not empty errorStoreAddress}">
                                             <div class="invalid-feedback">${errorStoreAddress}</div>
@@ -146,8 +146,8 @@
                                     </div>
 
                                     <div class="form-group mt-3">
-                                        <label for="taxCode">Mã số thuế <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control ${not empty errorTaxCode ? 'is-invalid' : ''}" id="taxCode" name="taxCode" required value="${taxCode}">
+                                        <label for="taxCode">Mã số thuế </label>
+                                        <input type="number" class="form-control ${not empty errorTaxCode ? 'is-invalid' : ''}" id="taxCode" name="taxCode" required value="${taxCode}">
                                         <small class="text-muted">10-13 chữ số.</small>
                                         <c:if test="${not empty errorTaxCode}">
                                             <div class="invalid-feedback">${errorTaxCode}</div>
@@ -155,7 +155,7 @@
                                     </div>
 
                                     <div class="form-group mt-3">
-                                        <label for="businessLicense">Giấy phép kinh doanh (URL Google Drive) <span class="text-danger">*</span></label>
+                                        <label for="businessLicense">Giấy phép kinh doanh (URL Google Drive) </label>
                                         <input type="text" class="form-control ${not empty errorBusinessLicense ? 'is-invalid' : ''}" id="businessLicense" name="businessLicense" required value="${businessLicense}">
                                         <small class="text-muted">Ví dụ: https://drive.google.com/file/d/11qqtZj31PQRjCVBu80IdsJTfw2sGlkuh/view</small>
                                         <c:if test="${not empty errorBusinessLicense}">
@@ -166,31 +166,13 @@
                                     <div class="col-12 mt-4">
                                         <button class="btn btn-animation w-100" type="submit">Đăng ký</button>
                                     </div>
-
-                                    <div class="mt-3 text-center">
-                                        <p>Đã có tài khoản? <a href="${pageContext.request.contextPath}/login" class="text-primary">Đăng nhập</a></p>
-                                    </div>
                                 </form>
 
                             </div>
 
                             <div class="other-log-in">
-                                <h6>or</h6>
+                                <h6>hoặc</h6>
                             </div>
-
-                            <div class="log-in-button">
-                                <ul>
-                                    <li>
-                                        <a href="https://accounts.google.com/signin/v2/identifier?flowName=GlifWebSignIn&flowEntry=ServiceLogin"
-                                           class="btn google-button w-100">
-                                            <img src="${pageContext.request.contextPath}/assets/images/inner-page/google.png" class="blur-up lazyload"
-                                                 alt="">
-                                            Đăng ký với Google
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-
                             <div class="sign-up-box">
                                 <h4>Bạn đã có tài khoản?</h4>
                                 <a href="${pageContext.request.contextPath}/login">Đăng nhập</a>

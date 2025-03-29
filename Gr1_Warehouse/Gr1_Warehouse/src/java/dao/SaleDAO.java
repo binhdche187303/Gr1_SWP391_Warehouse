@@ -301,14 +301,4 @@ public class SaleDAO extends DBContext {
         }
         return s;
     }
-
-    public static void main(String[] args) {
-        SaleDAO sd = new SaleDAO();
-        List<Order> list = sd.getAllOrders();
-        for (Order order : list) {
-            System.out.println(order);
-        }
-//        Sale s = sd.getSaleByOrderId(13);
-//        System.out.println(s);
-    }
 }

@@ -238,15 +238,6 @@
                                             </div>
                                             </header>
                                             <!-- Header End -->
-                                            <!-- Tap to top start -->
-                                            <div class="theme-option">
-                                                <div class="back-to-top">
-                                                    <a id="back-to-top" href="#">
-                                                        <i class="fas fa-chevron-up"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <!-- Tap to top end -->
                                             <script>
                                                 function updateCartCount() {
                                                     fetch('/Gr1_Warehouse/count-cart') // Đường dẫn servlet để lấy số lượng sản phẩm

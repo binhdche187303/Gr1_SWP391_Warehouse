@@ -163,61 +163,12 @@
 
                                                         <div class="mb-3">
                                                             <label for="shippingAddress" class="form-label">Địa chỉ nhận hàng:</label>
-                                                            <textarea class="form-control" id="shippingAddress" name="shippingAddress" rows="2" required>${user.address}</textarea>
+                                                            <input type="text" class="form-control" id="shippingAddress" name="shippingAddress" required value="${user.address}">
                                                         </div>
 
                                                         <div class="mb-3">
                                                             <label for="notes" class="form-label">Ghi chú:</label>
                                                             <textarea class="form-control" id="notes" name="notes" rows="2"></textarea>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-
-                                        <li>
-                                            <div class="checkout-icon">
-                                                <lord-icon target=".nav-item" src="https://cdn.lordicon.com/oaflahpk.json"
-                                                           trigger="loop-on-hover" colors="primary:#0baf9a" class="lord-icon">
-                                                </lord-icon>
-                                            </div>
-                                            <div class="checkout-box">
-                                                <div class="checkout-title">
-                                                    <h4>Delivery Option</h4>
-                                                </div>
-
-                                                <div class="checkout-detail">
-                                                    <div class="row g-4">
-                                                        <div class="col-xxl-6">
-                                                            <div class="delivery-option">
-                                                                <div class="delivery-category">
-                                                                    <div class="shipment-detail">
-                                                                        <div
-                                                                            class="form-check custom-form-check hide-check-box">
-                                                                            <input class="form-check-input" type="radio"
-                                                                                   name="standard" id="standard" checked>
-                                                                            <label class="form-check-label"
-                                                                                   for="standard">Standard
-                                                                                Delivery Option</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-xxl-6">
-                                                            <div class="delivery-option">
-                                                                <div class="delivery-category">
-                                                                    <div class="shipment-detail">
-                                                                        <div
-                                                                            class="form-check mb-0 custom-form-check show-box-checked">
-                                                                            <input class="form-check-input" type="radio"
-                                                                                   name="standard" id="future">
-                                                                            <label class="form-check-label" for="future">Thanh toán</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -233,22 +184,22 @@
                                             </div>
                                             <div class="checkout-box">
                                                 <div class="checkout-title">
-                                                    <h4>Payment Option</h4>
+                                                    <h4>Thanh toán</h4>
                                                 </div>
 
-                                                <div class="checkout-detail">
-                                                    <div class="accordion accordion-flush custom-accordion"
-                                                         id="accordionFlushExample">
-                                                        <div class="accordion-item">
-                                                            <div class="accordion-header" id="flush-headingFour">
-                                                                <div class="accordion-button collapsed"
-                                                                     data-bs-toggle="collapse"
-                                                                     data-bs-target="#flush-collapseFour">
-                                                                    <div class="custom-form-check form-check mb-0">
-                                                                        <label class="form-check-label" for="cash"><input
-                                                                                class="form-check-input mt-0" type="radio"
-                                                                                name="paymentMethod" id="paymentCod" value="cod" checked> Cash
-                                                                            On Delivery</label>
+                                                <div class="checkout-detail"> 
+                                                    <div class="row g-4">
+                                                        <div class="col-xxl-12">
+                                                            <div class="delivery-option">
+                                                                <div class="delivery-category">
+                                                                    <div class="shipment-detail">
+                                                                        <div class="custom-form-check form-check mb-0">
+                                                                            <!-- Sửa lại ID cho đúng -->
+                                                                            <input class="form-check-input mt-0" type="checkbox" id="paymentCod" name="paymentMethod" value="cod" onclick="toggleButton()">
+                                                                            <label class="form-check-label" for="paymentCod">
+                                                                                Tôi đồng ý thanh toán 50% giá trị đơn hàng
+                                                                            </label>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -285,18 +236,6 @@
                                     </ul>
 
                                     <ul class="summery-total">
-                                        <li>
-                                            <h4>Tổng phụ: </h4>
-                                            <h4 class="price">
-                                                <fmt:formatNumber value="${totalAmount}" pattern="#,###" />₫
-                                            </h4>
-                                        </li>
-
-                                        <li>
-                                            <h4>Coupon/Code</h4>
-                                            <h4 class="price">$0</h4>
-                                        </li>
-
                                         <li class="list-total">
                                             <h4>Tổng: </h4>
                                             <h4 class="price">
@@ -308,7 +247,7 @@
                                 </div>
 
 
-                                <button class="btn theme-bg-color text-white btn-md w-100 mt-4 fw-bold">Đặt hàng</button>
+                                <button id="checkoutBtn" class="btn theme-bg-color text-white btn-md w-100 mt-4 fw-bold" disabled>Đặt hàng</button>
                             </div>
                         </div>
                     </div>
@@ -356,5 +295,16 @@
 
         <!-- Script JS -->
         <script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
+
+        <script>
+                                                                                function toggleButton() {
+                                                                                    // Lấy đúng id của checkbox
+                                                                                    const checkbox = document.getElementById("paymentCod");
+                                                                                    const button = document.getElementById("checkoutBtn");
+
+                                                                                    // Bật/tắt nút dựa trên checkbox
+                                                                                    button.disabled = !checkbox.checked;
+                                                                                }
+        </script>
     </body>
 </html>

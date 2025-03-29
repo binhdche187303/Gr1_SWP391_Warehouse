@@ -577,11 +577,4 @@ public class OrderDAO extends DBContext {
         }
         return numberOfAmount;
     }
-
-    public static void main(String[] args) {
-        OrderDAO od = new OrderDAO();
-        OrderDetailDTO odd = od.getOrderDetailById(8);
-        System.out.println(odd.getPayment().getPaymentStatus());
-    }
-
 }

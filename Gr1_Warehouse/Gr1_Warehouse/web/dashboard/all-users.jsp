@@ -129,10 +129,8 @@
                                                         <th>Trạng thái</th>
                                                     </tr>
                                                 </thead>
-
                                                 <tbody>
                                                     <c:forEach items="${requestScope.listUser}" var="lu">
-
                                                         <tr>
                                                             <td>
                                                                 ${lu.username}
@@ -147,15 +145,28 @@
                                                                 <form action="allusers" method="POST" style="margin: 0; text-align: center">
                                                                     <input type="hidden" name="user_id" value="${lu.userId}">
                                                                     <div class="select-wrapper">
-                                                                        <select name="status" onchange="confirmStatusChange(this)" data-original="${lu.status}">
-                                                                            <option value="Active" ${lu.status == 'Active' ? 'selected' : ''}>Active</option>
-                                                                            <option value="Deactive" ${lu.status == 'Deactive' ? 'selected' : ''}>Deactive</option>
-                                                                        </select>
+                                                                        <c:choose>
+                                                                            <c:when test="${lu.status == 'Reject'}">
+                                                                                <select name="status" disabled>
+                                                                                    <option value="Reject" selected>Reject</option>
+                                                                                </select>
+                                                                            </c:when>
+                                                                            <c:otherwise>
+                                                                                <select 
+                                                                                    name="status" 
+                                                                                    onchange="confirmStatusChange(this)" 
+                                                                                    data-original="${lu.status}"
+                                                                                    >
+                                                                                    <option value="Active" ${lu.status == 'Active' ? 'selected' : ''}>Active</option>
+                                                                                    <option value="Deactive" ${lu.status == 'Deactive' ? 'selected' : ''}>Deactive</option>
+                                                                                </select>
+                                                                            </c:otherwise>
+                                                                        </c:choose>
                                                                     </div>
                                                                 </form>
                                                             </td>
                                                         </tr>
-                                                    </c:forEach >
+                                                    </c:forEach>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -207,7 +218,8 @@
                         var options = [
                             {value: '', text: 'Tất cả trạng thái'},
                             {value: 'Active', text: 'Active'},
-                            {value: 'Deactive', text: 'Deactive'}
+                            {value: 'Deactive', text: 'Deactive'},
+                            {value: 'Reject', text: 'Reject'}
                         ];
 
                         options.forEach(function (optionData) {
@@ -341,7 +353,6 @@
         <script src="${pageContext.request.contextPath}/assets2/js/icons/feather-icon/feather-icon.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/simplebar.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/custom.js"></script>
-        <!--<script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>-->
         <script src="${pageContext.request.contextPath}/assets2/js/config.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
 <!--        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
@@ -349,7 +360,6 @@
         <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script><!--
         <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>-->
         <script src="${pageContext.request.contextPath}/assets2/js/checkbox-all-check.js"></script>
-        <!--<script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>-->
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
 
     </body>

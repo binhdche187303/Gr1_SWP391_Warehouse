@@ -126,9 +126,4 @@ public class CategoryDAO extends DBContext {
         }
         return false;
     }
-
-    public static void main(String[] args) throws SQLException {
-        CategoryDAO cd = new CategoryDAO();
-        System.out.println(cd.isCategoryNameExists(1, "  K ẹO          "));
-    }
 }

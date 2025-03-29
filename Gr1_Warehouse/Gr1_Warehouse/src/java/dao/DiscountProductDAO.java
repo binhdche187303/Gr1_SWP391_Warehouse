@@ -247,18 +247,4 @@ public class DiscountProductDAO extends DBContext {
             }
         }
     }
-
-    public static void main(String[] args) throws SQLException {
-        DiscountProductDAO dpd = new DiscountProductDAO();
-        //        List<DiscountProduct> list = dpd.getAllDiscountsProductById(1);
-        //        for (DiscountProduct discountProduct : list) {
-        //            System.out.println(discountProduct);
-        //        }
-//        List<DiscountProductHistory> list = dpd.getAllDiscountsHistoryById(1);
-//        for (DiscountProductHistory discountProductHistory : list) {
-//            System.out.println(discountProductHistory);
-//        }
-
-        dpd.updateDiscountProduct(1, 50, 125, "Active");
-    }
 }

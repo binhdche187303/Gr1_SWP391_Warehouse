@@ -50,9 +50,8 @@
                                         <h4 class="fw-bold">Đơn hàng #${orderDetail.order_id}</h4><br>
                                         <p class="text-muted">Thời gian đặt hàng: ${orderDetail.order_date}</p>
                                         <c:set var="sd" value="${requestScope.shippingDetail}" />
-                                        <c:if test="${not empty shippingDetail.shippedAt}">
+                                        <c:if test="${not empty shippingDetail.status and shippingDetail.status != 'Đang giao hàng'}">
                                             <p class="text-muted">Thời gian giao hàng thành công: ${shippingDetail.shippedAt}</p>
-                                            </p>
                                         </c:if>
 
                                     </div>

@@ -5,6 +5,7 @@
 package controller;
 
 import dao.ProductDAO;
+import dao.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,6 +14,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.Categories;
+import model.User;
+import model.WholesaleCustomer;
 
 /**
  *
@@ -58,9 +61,13 @@ public class ProfileSettingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         ProductDAO productDAO = new ProductDAO();
+        ProductDAO productDAO = new ProductDAO();
         List<Categories> categories = productDAO.getAllCategory();
         request.setAttribute("category", categories);
+        UserDAO ud = new UserDAO();
+        User u = (User) request.getSession().getAttribute("acc");
+        WholesaleCustomer wholesaleCustomer = ud.getWholesaleCustomersById(u.getUserId());
+        request.setAttribute("wholesaleCustomer", wholesaleCustomer);
         request.getRequestDispatcher("/pages/profileSetting.jsp").forward(request, response);
     }
 

@@ -79,7 +79,7 @@ public class requestPassword extends HttpServlet {
 
         User user = UserDAO.getUserByEmail(email);
         if (user == null) {
-            request.setAttribute("mess", "Email does not exist");
+            request.setAttribute("mess", "Email không tồn tại");
             request.getRequestDispatcher("/pages/forgot.jsp").forward(request, response);
             return;
         }
@@ -91,12 +91,12 @@ public class requestPassword extends HttpServlet {
 
         TokenForgetPassword newTokenForget = new TokenForgetPassword(user.getUserId(), false, token, service.expireDateTime());
 
-        System.out.println("Inserting token into the database");
+        System.out.println("Chèn mã thông báo vào cơ sở dữ liệu");
         DAOTokenForget daoToken = new DAOTokenForget();
         boolean isInserted = daoToken.insertTokenForget(newTokenForget);
         if (!isInserted) {
-            System.out.println("Token insert failed"); 
-            request.setAttribute("mess", "An error occurred on the server");
+            System.out.println("Chèn mã thông báo không thành công"); 
+            request.setAttribute("mess", "Đã xảy ra lỗi trên máy chủ");
             request.getRequestDispatcher("/pages/forgot.jsp").forward(request, response);
             return;
             
@@ -104,16 +104,16 @@ public class requestPassword extends HttpServlet {
         try {
             boolean isSent = service.sendEmail(email, linkReset, user.getUsername());
             if (!isSent) {
-                throw new Exception("Failed to send email."); // Ném lỗi nếu gửi email không thành công
+                throw new Exception("Không gửi được email."); // Ném lỗi nếu gửi email không thành công
             }
         } catch (Exception e) {
             System.out.println("Error occurred: " + e.getMessage()); // Ghi log lỗi
-            request.setAttribute("mess", "An error occurred on the server: " + e.getMessage());
+            request.setAttribute("mess", "Đã xảy ra lỗi trên máy chủ: " + e.getMessage());
             request.getRequestDispatcher("/pages/forgot.jsp").forward(request, response);
             return; 
         }
 
-        request.setAttribute("mess", "Request sent successfully");
+        request.setAttribute("mess", "Yêu cầu đã được gửi thành công");
         request.getRequestDispatcher("/pages/forgot.jsp").forward(request, response);
 
     }

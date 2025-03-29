@@ -130,6 +130,7 @@
                                                         order.status eq 'Đã xác nhận' ? 'bg-primary' : 
                                                         order.status eq 'Đang đóng gói' ? 'bg-info' : 
                                                         order.status eq 'Đã gửi hàng' ? 'bg-success' : 
+                                                        order.status eq 'Đang giao hàng' ? 'bg-success' : 
                                                         order.status eq 'Đã giao hàng thành công' ? 'bg-success' : 'bg-secondary'}">
                                                           ${order.status}
                                                       </span>

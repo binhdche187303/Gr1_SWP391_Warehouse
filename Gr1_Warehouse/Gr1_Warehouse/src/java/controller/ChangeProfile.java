@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.User;
+import model.WholesaleCustomer;
 
 /**
  *
@@ -50,14 +51,14 @@ public class ChangeProfile extends HttpServlet {
 
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
-    }  
+    }
+
     @Override
     public void init() throws ServletException {
         if (this.userDAO == null) {
             this.userDAO = new UserDAO();
         }
     }
-    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -88,6 +89,7 @@ public class ChangeProfile extends HttpServlet {
         String name = request.getParameter("fullname");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
+        String storeName = request.getParameter("storeName");
         HttpSession session = request.getSession();
         User u = (User) session.getAttribute("acc");
         // Kiểm tra session hợp lệ
@@ -103,6 +105,8 @@ public class ChangeProfile extends HttpServlet {
                 || address == null || address.trim().isEmpty()) {
             System.out.println("Validation failed: Missing required fields.");
             request.setAttribute("errorprofile", "Vui lòng điền đầy đủ thông tin.");
+            WholesaleCustomer wholesaleCustomer = userDAO.getWholesaleCustomersById(u.getUserId());
+            request.setAttribute("wholesaleCustomer", wholesaleCustomer);
             request.getRequestDispatcher("/pages/profileSetting.jsp").forward(request, response);
             return;
         }
@@ -112,6 +116,8 @@ public class ChangeProfile extends HttpServlet {
         if (!phone.matches(phonePattern)) {
             System.out.println("Validation failed: Số điện thoại không hợp lệ.");
             request.setAttribute("errorprofile", "Số điện thoại không hợp lệ.");
+            WholesaleCustomer wholesaleCustomer = userDAO.getWholesaleCustomersById(u.getUserId());
+            request.setAttribute("wholesaleCustomer", wholesaleCustomer);
             request.getRequestDispatcher("/pages/profileSetting.jsp").forward(request, response);
             return;
         }
@@ -120,6 +126,8 @@ public class ChangeProfile extends HttpServlet {
         if (name.length() > 100) {
             System.out.println("Validation failed: Họ tên không được vượt quá 100 ký tự.");
             request.setAttribute("errorprofile", "Họ tên không được vượt quá 100 ký tự.");
+            WholesaleCustomer wholesaleCustomer = userDAO.getWholesaleCustomersById(u.getUserId());
+            request.setAttribute("wholesaleCustomer", wholesaleCustomer);
             request.getRequestDispatcher("/pages/profileSetting.jsp").forward(request, response);
             return;
         }
@@ -127,14 +135,18 @@ public class ChangeProfile extends HttpServlet {
         if (address.length() > 255) {
             System.out.println("Validation failed: Địa chỉ không được vượt quá 255 ký tự.");
             request.setAttribute("errorprofile", "Địa chỉ không được vượt quá 255 ký tự.");
+            WholesaleCustomer wholesaleCustomer = userDAO.getWholesaleCustomersById(u.getUserId());
+            request.setAttribute("wholesaleCustomer", wholesaleCustomer);
             request.getRequestDispatcher("/pages/profileSetting.jsp").forward(request, response);
             return;
         }
 
         // Cập nhật thông tin người dùng
         //UserDAO ud = new UserDAO();
-        if (!userDAO.updateUser(name, phone, address, u.getUserId())) {
+        if (!userDAO.updateUser(name, phone, address, storeName, u.getUserId())) {
             request.setAttribute("errorprofile", "Cập nhật thông tin thất bại. Vui lòng thử lại.");
+            WholesaleCustomer wholesaleCustomer = userDAO.getWholesaleCustomersById(u.getUserId());
+            request.setAttribute("wholesaleCustomer", wholesaleCustomer);
             request.getRequestDispatcher("/pages/profileSetting.jsp").forward(request, response);
             return;
         }
@@ -143,6 +155,8 @@ public class ChangeProfile extends HttpServlet {
         User nuser = userDAO.getUserById(u.getUserId());
         session.setAttribute("acc", nuser);
         System.out.println("User updated in session. UserID: " + nuser.getUserId());
+        WholesaleCustomer wholesaleCustomer = userDAO.getWholesaleCustomersById(u.getUserId());
+        request.setAttribute("wholesaleCustomer", wholesaleCustomer);
         request.setAttribute("successprofile", "Thông tin cá nhân đã được cập nhật thành công.");
         request.getRequestDispatcher("/pages/profileSetting.jsp").forward(request, response);
     }

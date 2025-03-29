@@ -167,13 +167,5 @@ public class SizeDAO extends DBContext {
         }
         return false;
     }
-    
-    public static void main(String[] args) {
-        SizeDAO sd = new SizeDAO();
-        List<Sizes> l = sd.getAllSizes();
-        for (Sizes size : l) {
-            System.out.println(size.getSize_name());
-        }
-    }
 
 }

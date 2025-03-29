@@ -52,16 +52,9 @@
             <div class="page-header">
                 <div class="header-wrapper m-0">
                     <div class="header-logo-wrapper p-0">
-                        <div class="logo-wrapper">
-                            <a href="index.html">
-                                <img class="img-fluid main-logo" src="${pageContext.request.contextPath}/assets2/images/logo/1.png" alt="logo">
-                                <img class="img-fluid white-logo" src="${pageContext.request.contextPath}/assets2/images/logo/1-white.png" alt="logo">
-                            </a>
-                        </div>
-                        <div class="toggle-sidebar">
-                            <i class="status_toggle middle sidebar-toggle" data-feather="align-center"></i>
-                            <a href="index.html">
-                                <img src="${pageContext.request.contextPath}/assets2/images/logo/1.png" class="img-fluid" alt="">
+                        <div class="logo-wrapper logo-wrapper-center">
+                            <a href="index.html" data-bs-original-title="" title="">
+                                <img class="img-fluid for-white" src="${pageContext.request.contextPath}/assets2/images/logo_1.png" alt="logo">
                             </a>
                         </div>
                     </div>
@@ -106,43 +99,29 @@
                     <div>
                         <div class="logo-wrapper logo-wrapper-center">
                             <a href="index.html" data-bs-original-title="" title="">
-                                <img class="img-fluid for-white" src="${pageContext.request.contextPath}/assets2/images/logo/full-white.png" alt="logo">
-                            </a>
-                            <div class="back-btn">
-                                <i class="fa fa-angle-left"></i>
-                            </div>
-                            <div class="toggle-sidebar">
-                                <i class="ri-apps-line status_toggle middle sidebar-toggle"></i>
-                            </div>
-                        </div>
-                        <div class="logo-icon-wrapper">
-                            <a href="index.html">
-                                <img class="img-fluid main-logo main-white" src="${pageContext.request.contextPath}/assets2/images/logo/logo.png" alt="logo">
-                                <img class="img-fluid main-logo main-dark" src="${pageContext.request.contextPath}/assets2/images/logo/logo-white.png"
-                                     alt="logo">
+                                <img class="img-fluid for-white" src="${pageContext.request.contextPath}/assets2/images/logo_1.png" alt="logo">
                             </a>
                         </div>
                         <nav class="sidebar-main">
                             <div class="left-arrow" id="left-arrow">
                                 <i data-feather="arrow-left"></i>
                             </div>
-
+                            
                             <div id="sidebar-menu">
                                 <ul class="sidebar-links" id="simple-bar">
-                                    <li class="back-btn"></li>
+                                    <li class="back-btn"></li><br><br><br>
                                     <li class="sidebar-list">
                                         <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/staff-checklist">
                                             <i class="ri-file-chart-line"></i>
                                             <span>Danh sách phiếu kiểm kho</span>
                                         </a>
-                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/profilesettingadmin">
+                                        <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/profilesetting">
                                             <i class="ri-file-chart-line"></i>
                                             <span>Cài đặt</span>
                                         </a>
                                     </li>
                                 </ul>
                             </div>
-
                             <div class="right-arrow" id="right-arrow">
                                 <i data-feather="arrow-right"></i>
                             </div>
@@ -935,14 +914,14 @@
         <!-- Plugins JS -->
         <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
 
-        <!-- customizer js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>
+<!--         customizer js 
+        <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>-->
 
         <!-- ratio js -->
         <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>
 
-        <!-- sidebar effect -->
-        <script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>
+<!--         sidebar effect 
+        <script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>-->
 
         <!-- Theme js -->
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>

@@ -315,8 +315,4 @@ public class ShippingDetailDAO extends DBContext {
         return shippingDetail;
     }
 
-    public static void main(String[] args) throws SQLException {
-        ShippingDetailDAO sdd = new ShippingDetailDAO();
-        System.out.println(sdd.getShippingDetailByOrderId(7).getShippedAt());
-    }
 }

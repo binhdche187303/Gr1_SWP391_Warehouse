@@ -95,7 +95,6 @@
 
                                     <div class="user-name-hide media-body">
                                         <span>${sessionScope.acc.username}</span>
-                                        <p class="mb-0 font-roboto">${sessionScope.acc.role.roleName}<i class="middle ri-arrow-down-s-line"></i></p>                                         
                                     </div>
                                 </div>
                                 <ul class="profile-dropdown onhover-show-div">
@@ -140,10 +139,10 @@
                         <div id="sidebar-menu">
                             <ul class="sidebar-links" id="simple-bar">
                                 <li class="back-btn"></li>
-                                    <c:set var="roleId" value="${sessionScope.user.role.roleId}" />
-                                    <c:choose>
-                                        <c:when test="${roleId == 1}">
-                                        <br><br><br>
+                                <br><br><br>
+                                <c:set var="roleId" value="${sessionScope.acc.role.roleId}" />
+                                <c:choose>
+                                    <c:when test="${roleId == 1}">
                                         <li class="sidebar-list">
                                             <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/dashboard">
                                                 <i class="ri-home-line"></i>
@@ -278,13 +277,6 @@
                                     </c:when>
                                     <c:when test="${roleId == 3}">
                                         <li class="sidebar-list">
-                                            <a class="sidebar-link sidebar-title link-nav" href="index.html">
-                                                <i class="ri-home-line"></i>
-                                                <span>Dashboard</span>
-                                            </a>
-                                        </li>
-
-                                        <li class="sidebar-list">
                                             <a class="sidebar-link sidebar-title" href="javascript:void(0)">
                                                 <i class="ri-archive-line"></i>
                                                 <span>Đơn hàng</span>
@@ -326,13 +318,6 @@
                                                 </li> 
                                             </ul>
                                         </li>
-
-                                        <li class="sidebar-list">
-                                            <a class="sidebar-link sidebar-title link-nav" href="reports.html">
-                                                <i class="ri-file-chart-line"></i>
-                                                <span>Báo cáo</span>
-                                            </a>
-                                        </li>
                                     </c:when>
                                     <c:when test="${roleId == 4}">
                                         <li class="sidebar-list">
@@ -343,13 +328,6 @@
                                         </li>
                                     </c:when>
                                     <c:when test="${roleId == 5}">
-                                        <li class="sidebar-list">
-                                            <a class="sidebar-link sidebar-title link-nav" href="index.html">
-                                                <i class="ri-home-line"></i>
-                                                <span>Dashboard</span>
-                                            </a>
-                                        </li>
-
                                         <li class="sidebar-list">
                                             <a class="sidebar-link sidebar-title" href="javascript:void(0)">
                                                 <i class="ri-archive-line"></i>
@@ -364,21 +342,8 @@
                                                 </li>
                                             </ul>
                                         </li>
-                                        <li class="sidebar-list">
-                                            <a class="sidebar-link sidebar-title link-nav" href="reports.html">
-                                                <i class="ri-file-chart-line"></i>
-                                                <span>Báo cáo</span>
-                                            </a>
-                                        </li>
                                     </c:when>   
                                     <c:when test="${roleId == 6}">
-                                        <li class="sidebar-list">
-                                            <a class="sidebar-link sidebar-title link-nav" href="index.html">
-                                                <i class="ri-home-line"></i>
-                                                <span>Dashboard</span>
-                                            </a>
-                                        </li>
-
                                         <li class="sidebar-list">
                                             <a class="sidebar-link sidebar-title" href="javascript:void(0)">
                                                 <i class="ri-archive-line"></i>
@@ -393,21 +358,8 @@
                                                 </li>
                                             </ul>
                                         </li>
-                                        <li class="sidebar-list">
-                                            <a class="sidebar-link sidebar-title link-nav" href="reports.html">
-                                                <i class="ri-file-chart-line"></i>
-                                                <span>Báo cáo</span>
-                                            </a>
-                                        </li>
                                     </c:when> 
                                     <c:when test="${roleId == 7}">
-                                        <li class="sidebar-list">
-                                            <a class="sidebar-link sidebar-title link-nav" href="index.html">
-                                                <i class="ri-home-line"></i>
-                                                <span>Dashboard</span>
-                                            </a>
-                                        </li>
-
                                         <li class="sidebar-list">
                                             <a class="sidebar-link sidebar-title" href="javascript:void(0)">
                                                 <i class="ri-archive-line"></i>
@@ -433,12 +385,6 @@
                                                     <a href="/Gr1_Warehouse/browse-cus">Danh sách khách hàng</a>
                                                 </li>
                                             </ul>
-                                        </li>
-                                        <li class="sidebar-list">
-                                            <a class="sidebar-link sidebar-title link-nav" href="reports.html">
-                                                <i class="ri-file-chart-line"></i>
-                                                <span>Báo cáo</span>
-                                            </a>
                                         </li>
                                     </c:when> 
                                 </c:choose>
@@ -691,7 +637,21 @@ String success = (String) request.getAttribute("success");
             <!-- Page Body End-->
         </div>
         <!-- page-wrapper End-->
-
+        <!-- Đặt đoạn code này ở cuối trang, trước thẻ đóng </body> -->
+        <script>
+            // Kiểm tra nếu có thông báo thành công từ profile hoặc password
+            <% if (request.getAttribute("successprofile") != null || request.getAttribute("success") != null) { %>
+            // Sử dụng sessionStorage để đảm bảo chỉ reload 1 lần
+            if (sessionStorage.getItem("alreadyReloaded") !== "true") {
+                sessionStorage.setItem("alreadyReloaded", "true");
+                setTimeout(function () {
+                    window.location.reload();
+                }, 0, 1);
+            } else {
+                sessionStorage.removeItem("alreadyReloaded"); // Reset để lần sau hoạt động lại
+            }
+            <% } %>
+        </script>
 
         <!-- latest jquery-->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
@@ -715,9 +675,6 @@ String success = (String) request.getAttribute("success");
         <script src="${pageContext.request.contextPath}/assets2/js/bootstrap-tagsinput.min.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
 
-        <!-- customizer js start  -->
-        <!--<script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>-->
-        <!-- customizer js end -->
 
         <!--Dropzon start-->
         <script src="${pageContext.request.contextPath}/assets2/js/dropzone/dropzone.js"></script>

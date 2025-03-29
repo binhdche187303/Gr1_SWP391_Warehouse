@@ -66,7 +66,6 @@
 
                                     <div class="user-name-hide media-body">
                                         <span>${sessionScope.acc.username}</span>
-                                        <p class="mb-0 font-roboto">${sessionScope.acc.role.roleName}<i class="middle ri-arrow-down-s-line"></i></p>                                         
                                     </div>
                                 </div>
                                 <ul class="profile-dropdown onhover-show-div">
@@ -193,7 +192,7 @@
                                         </a>
                                         <ul class="sidebar-submenu">
                                             <li>
-                                                <a href="/Gr1_Warehouse/couponproductlist">Danh sách sản phẩm</a>
+                                                <a href="/Gr1_Warehouse/couponproductlist">Danh sách giảm giá</a>
                                             </li>
                                         </ul>
                                     </li>
@@ -321,14 +320,9 @@
         <script src="${pageContext.request.contextPath}/assets2/js/slick.min.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/custom-slick.js"></script>
 
-        <!-- customizer js -->
-<!--        <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>-->
 
         <!-- ratio js -->
         <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>
-
-        <!-- sidebar effect -->
-        <!--<script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>-->
 
         <!-- Theme js -->
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>

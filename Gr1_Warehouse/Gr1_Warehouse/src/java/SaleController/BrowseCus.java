@@ -69,29 +69,31 @@ public class BrowseCus extends HttpServlet {
             return;
         }
 
-        int userId = 0;
+        int userId;
         try {
             userId = Integer.parseInt(request.getParameter("id"));
         } catch (NumberFormatException e) {
-            response.sendRedirect("/sale/browse-cus.jsp?error=invalid_id");
+            response.sendRedirect("/Gr1_Warehouse/browse-cus?error=invalid_id");
             return;
         }
 
         if (!action.equals("approve") && !action.equals("reject")) {
-            response.sendRedirect("/sale/browse-cus.jsp?error=invalid_action");
+            response.sendRedirect("/Gr1_Warehouse/browse-cus?error=invalid_action");
             return;
         }
 
         UserDAO userDAO = new UserDAO();
-        String newStatus = action.equals("approve") ? "Hoạt động" : "Bị từ chối";
+        // Xác định giá trị `status` cần cập nhật
+        String userStatus = action.equals("approve") ? "Active" : "Reject";
+        String customerStatus = action.equals("approve") ? "Hoạt động" : "Bị từ chối";
 
-        boolean success = userDAO.updateStatus(userId, newStatus);
+        // Cập nhật `status` trong cả hai bảng
+        boolean success = userDAO.updateStatusBothTables(userId, userStatus, customerStatus);
         if (success) {
             response.sendRedirect("/Gr1_Warehouse/browse-cus?status=success");
         } else {
             response.sendRedirect("/Gr1_Warehouse/browse-cus?status=error");
         }
-
     }
 
     /**
@@ -109,18 +111,21 @@ public class BrowseCus extends HttpServlet {
         int userId = Integer.parseInt(request.getParameter("id"));
 
         if (action == null || (!action.equals("approve") && !action.equals("reject"))) {
-            response.sendRedirect("/sale/browse-cus.jsp?error=invalid_action");
+            response.sendRedirect("/Gr1_Warehouse/browse-cus?error=invalid_action");
             return;
         }
 
-        UserDAO userDAO = new UserDAO();
-        String newStatus = action.equals("approve") ? "Hoạt động" : "Bị từ chối";
+        // Xác định trạng thái cho cả hai bảng
+        String userStatus = action.equals("approve") ? "Active" : "Reject";
+        String customerStatus = action.equals("approve") ? "Hoạt động" : "Bị từ chối";
 
-        boolean success = userDAO.updateStatus(userId, newStatus);
+        UserDAO userDAO = new UserDAO();
+        boolean success = userDAO.updateStatusBothTables(userId, userStatus, customerStatus);
+
         if (success) {
-            response.sendRedirect("/sale/browse-cus.jsp?success=" + action);
+            response.sendRedirect("/Gr1_Warehouse/browse-cus?success=" + action);
         } else {
-            response.sendRedirect("/sale/browse-cus.jsp?error=update_failed");
+            response.sendRedirect("/Gr1_Warehouse/browse-cus?error=update_failed");
         }
     }
 

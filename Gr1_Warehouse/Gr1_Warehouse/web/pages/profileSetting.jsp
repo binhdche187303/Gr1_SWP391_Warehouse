@@ -255,14 +255,33 @@
                                                                 <tr>
                                                                     <td>Số điện thoại :</td>
                                                                     <td>
-                                                                        <a href="javascript:void(0)">
-                                                                            ${sessionScope.acc.phone}</a
-                                                                        >
+                                                                        ${sessionScope.acc.phone}
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>Địa chỉ :</td>
-                                                                    <td>${sessionScope.acc.address}</td>
+                                                                    <td>Tên cửa hàng :</td>
+                                                                    <td>
+                                                                        ${requestScope.wholesaleCustomer.storeName}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Địa chỉ cửa hàng:</td>
+                                                                    <td>${requestScope.wholesaleCustomer.storeAddress}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Mã số thuế :</td>
+                                                                    <td>
+
+                                                                        ${requestScope.wholesaleCustomer.taxCode}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Giấy phép kinh doanh :</td>
+                                                                    <td>
+                                                                        <a href="${requestScope.wholesaleCustomer.businessLicense}">
+                                                                            Xem giấy phép kinh doanh</a
+                                                                        >
+                                                                    </td>
                                                                 </tr>
                                                                 <tr>
 
@@ -366,8 +385,8 @@
                                                                     </div>
                                                                     <% } %>
                                                                     <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary btn-md" data-bs-dismiss="modal">Close</button>
-                                                                        <button type="submit" class="btn theme-bg-color btn-md text-white">Save changes</button>
+                                                                        <button type="button" class="btn btn-secondary btn-md" data-bs-dismiss="modal">Đóng</button>
+                                                                        <button type="submit" class="btn theme-bg-color btn-md text-white">Lưu</button>
                                                                     </div>
                                                                 </form>
                                                             </div>
@@ -402,10 +421,15 @@
                                                                         <label for="phone">Số điện thoại:</label>
                                                                     </div>
 
+                                                                    <div class="form-floating mb-4 theme-form-floating">
+                                                                        <input type="text" class="form-control" id="storeName" name="storeName" placeholder="Enter storeName" value="${requestScope.wholesaleCustomer.storeName}" required />
+                                                                        <label for="address">Tên cửa hàng: </label>
+                                                                    </div>
+                                                                        
                                                                     <!-- Address -->
                                                                     <div class="form-floating mb-4 theme-form-floating">
                                                                         <input type="text" class="form-control" id="address" name="address" placeholder="Enter address" value="${sessionScope.acc.address}" required />
-                                                                        <label for="address">Địa chỉ: </label>
+                                                                        <label for="address">Địa chỉ cửa hàng: </label>
                                                                     </div>
 
                                                                     <div class="modal-footer">
@@ -609,7 +633,7 @@
                                                                     "<h4>Mã đơn hàng: <span>#" + order.orderId + "</span></h4>" +
                                                                     "<h6 class='text-content'>Ngày đặt hàng: " + formattedDate + "</h6>" +
                                                                     "<h6 class='text-content'>Trạng thái đơn hàng: <span class='badge bg-warning'>" + order.status + "</span></h6>" +
-                                                                    "<h6 class='text-content'>Tổng: " + order.totalAmount.toLocaleString('vi-VN') + " VND</h6>" +
+                                                                    "<h6 class='text-content'>Tổng: " + order.totalAmount.toLocaleString('vi-VN') + "₫</h6>" +
                                                                     "</div>" +
                                                                     "</div>" +
                                                                     "<div class='order-footer d-flex justify-content-end'>" +

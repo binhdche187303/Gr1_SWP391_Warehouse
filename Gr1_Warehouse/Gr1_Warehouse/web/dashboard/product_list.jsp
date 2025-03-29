@@ -63,34 +63,6 @@
                                             </form>
                                         </div>
 
-
-                                        <div class="card-body">
-                                            <div class="row mb-4">
-                                                <div class="col-md-3 mb-2">
-                                                    <input type="text" id="productNameFilter" class="form-control" placeholder="Tìm theo tên sản phẩm">
-                                                </div>
-                                                <div class="col-md-3 mb-2">
-                                                    <select id="brandFilter" class="form-control">
-                                                        <option value="">Tất cả thương hiệu</option>
-                                                        <c:forEach var="brand" items="${listBrands}">
-                                                            <option value="${brand.brand_name}">${brand.brand_name}</option>
-                                                        </c:forEach>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-3 mb-2">
-                                                    <select id="categoryFilter" class="form-control">
-                                                        <option value="">Tất cả loại</option>
-                                                        <c:forEach var="category" items="${listCategories}">
-                                                            <option value="${category.category_name}">${category.category_name}</option>
-                                                        </c:forEach>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-3 mb-2">
-                                                    <input type="text" id="originFilter" class="form-control" placeholder="Tìm theo nguồn gốc">
-                                                </div>
-                                            </div>
-                                        </div> 
-
                                         <div class="table-responsive table-product">
                                             <table class="table all-package theme-table" id="table_id">
                                                 <thead>
@@ -192,11 +164,65 @@
         <!-- DataTables JS -->
         <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
-
         <script>
             $(document).ready(function () {
-                // Initialize DataTable with search functionality
-                const table = $('#table_id').DataTable({
+                // Lấy danh sách các thương hiệu duy nhất từ bảng
+                var brandNames = {};
+                $('#table_id tbody tr').each(function () {
+                    var brand = $(this).find('td:eq(2)').text().trim(); // Cột 2: Thương hiệu
+                    if (brand && !brandNames[brand]) {
+                        brandNames[brand] = true;
+                    }
+                });
+
+                // Tạo dropdown Thương hiệu thủ công
+                var brandFilter = '<option value="">Tất cả thương hiệu</option>';
+                for (var brand in brandNames) {
+                    if (brandNames.hasOwnProperty(brand)) {
+                        brandFilter += '<option value="' + brand + '">' + brand + '</option>';
+                    }
+                }
+
+                // Lấy danh sách các danh mục duy nhất từ bảng
+                var categoryNames = {};
+                $('#table_id tbody tr').each(function () {
+                    var category = $(this).find('td:eq(3)').text().trim(); // Cột 3: Danh mục
+                    if (category && !categoryNames[category]) {
+                        categoryNames[category] = true;
+                    }
+                });
+
+                // Tạo dropdown Danh mục thủ công
+                var categoryFilter = '<option value="">Tất cả danh mục</option>';
+                for (var category in categoryNames) {
+                    if (categoryNames.hasOwnProperty(category)) {
+                        categoryFilter += '<option value="' + category + '">' + category + '</option>';
+                    }
+                }
+
+                // Cập nhật form filter
+                var filterForm =
+                        '<div class="card-body">' +
+                        '<div class="row mb-4">' +
+                        '<div class="col-md-2 mb-2">' +
+                        '<input type="text" id="productNameFilter" class="form-control" placeholder="Tìm theo Tên sản phẩm">' +
+                        '</div>' +
+                        '<div class="col-md-2 mb-2">' +
+                        '<select id="brandFilter" class="form-control">' + brandFilter + '</select>' +
+                        '</div>' +
+                        '<div class="col-md-2 mb-2">' +
+                        '<select id="categoryFilter" class="form-control">' + categoryFilter + '</select>' +
+                        '</div>' +
+                        '<div class="col-md-2 mb-2">' +
+                        '<input type="text" id="originFilter" class="form-control" placeholder="Tìm theo Nguồn gốc">' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+
+                $('.title-header').after(filterForm);
+
+                // Khởi tạo DataTable
+                var table = $('#table_id').DataTable({
                     paging: true,
                     searching: true,
                     ordering: true,
@@ -209,7 +235,7 @@
                         zeroRecords: "Không tìm thấy sản phẩm phù hợp",
                         info: "Hiển thị _START_ đến _END_ của _TOTAL_ sản phẩm",
                         infoEmpty: "Hiển thị 0 đến 0 của 0 sản phẩm",
-                        infoFiltered: "(được lọc từ tổng số _MAX_ sản phẩm)",
+                        infoFiltered: "(lọc từ _MAX_ sản phẩm)",
                         paginate: {
                             first: "Đầu tiên",
                             last: "Cuối cùng",
@@ -222,38 +248,28 @@
                         {orderable: false, targets: 5}  // Disable sorting on action column
                     ],
                     initComplete: function () {
-                        // Remove sort indicator from image column
-                        $('.sorting:first').removeClass('sorting').addClass('sorting_disabled');
-
-                        // Hide default search
                         $('.dataTables_filter').hide();
                     }
                 });
 
-                // Custom filtering function
-                $.fn.dataTable.ext.search.push(
-                        function (settings, data, dataIndex) {
-                            const productName = data[1].toLowerCase();
-                            const brand = data[2].toLowerCase();
-                            const category = data[3].toLowerCase();
-                            const origin = data[4].toLowerCase();
+                // Xử lý tìm kiếm theo Tên sản phẩm
+                document.getElementById("productNameFilter").addEventListener("keyup", function () {
+                    table.columns(1).search(this.value.trim()).draw(); // Cột 1: Tên sản phẩm
+                });
 
-                            const nameFilter = $('#productNameFilter').val().toLowerCase();
-                            const brandFilter = $('#brandFilter').val().toLowerCase();
-                            const categoryFilter = $('#categoryFilter').val().toLowerCase();
-                            const originFilter = $('#originFilter').val().toLowerCase();
+                // Xử lý tìm kiếm theo Thương hiệu
+                document.getElementById("brandFilter").addEventListener("change", function () {
+                    table.columns(2).search(this.value.trim()).draw(); // Cột 2: Thương hiệu
+                });
 
-                            // Return true if all filters match
-                            return (nameFilter === '' || productName.includes(nameFilter)) &&
-                                    (brandFilter === '' || brand === brandFilter) &&
-                                    (categoryFilter === '' || category === categoryFilter) &&
-                                    (originFilter === '' || origin.includes(originFilter));
-                        }
-                );
+                // Xử lý tìm kiếm theo Danh mục
+                document.getElementById("categoryFilter").addEventListener("change", function () {
+                    table.columns(3).search(this.value.trim()).draw(); // Cột 3: Danh mục
+                });
 
-                // Add event listeners to the filter inputs
-                $('#productNameFilter, #brandFilter, #categoryFilter, #originFilter').on('keyup change', function () {
-                    table.draw();
+                // Xử lý tìm kiếm theo Nguồn gốc
+                document.getElementById("originFilter").addEventListener("keyup", function () {
+                    table.columns(4).search(this.value.trim()).draw(); // Cột 4: Nguồn gốc
                 });
             });
         </script>

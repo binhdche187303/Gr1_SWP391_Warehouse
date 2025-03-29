@@ -149,8 +149,6 @@
                 <!-- Plugins JS -->
                 <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
 
-                <!-- customizer js -->
-                <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>
 
                 <!-- ratio js -->
                 <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>

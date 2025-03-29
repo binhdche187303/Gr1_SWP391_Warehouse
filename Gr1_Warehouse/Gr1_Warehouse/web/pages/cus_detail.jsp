@@ -69,7 +69,7 @@
 
 
                     <p><strong>Tổng:</strong> 
-                        <fmt:formatNumber value="${orderDetail.order.totalAmount}" type="currency" currencySymbol="VND" groupingUsed="true"/>
+                        <fmt:formatNumber value="${orderDetail.order.totalAmount}" type="currency" currencySymbol="₫" groupingUsed="true"/>
                     </p>
                 </div>
                 <input type="hidden" id="order-id" value="${orderDetail.order.orderId}">
@@ -92,28 +92,28 @@
                                 <td>${orderDetail.products[i].productName}</td>
                                 <td>${orderDetail.productVariants[i].sku}</td>
                                 <td>${orderDetail.sizes[i].size_name}</td>
-                                <td><fmt:formatNumber value="${orderDetail.orderDetails[i].unitPrice}" type="currency" currencySymbol="VND" /></td>
+                                <td><fmt:formatNumber value="${orderDetail.orderDetails[i].unitPrice}" type="currency" currencySymbol="₫" /></td>
                                 <td>${orderDetail.orderDetails[i].quantity}</td>
-                                <td><fmt:formatNumber value="${orderDetail.orderDetails[i].unitPrice * orderDetail.orderDetails[i].quantity}" type="currency" currencySymbol="VND" /></td>
+                                <td><fmt:formatNumber value="${orderDetail.orderDetails[i].unitPrice * orderDetail.orderDetails[i].quantity}" type="currency" currencySymbol="₫" /></td>
                             </tr>
                         </c:forEach>
                     </tbody>
                     <tfoot>
                         <tr>
                             <td colspan="5" class="text-end"><strong>Tổng (trước khi giảm giá):</strong></td>
-                            <td><strong><fmt:formatNumber value="${orderDetail.totalBeforeDiscount}" type="currency" currencySymbol="VND" groupingUsed="true"/></strong></td>
+                            <td><strong><fmt:formatNumber value="${orderDetail.totalBeforeDiscount}" type="currency" currencySymbol="₫" groupingUsed="true"/></strong></td>
                         </tr>
                         <tr>
                             <td colspan="5" class="text-end"><strong>Tổng (sau khi giảm giá):</strong></td>
-                            <td><strong><fmt:formatNumber value="${orderDetail.order.totalAmount}" type="currency" currencySymbol="VND" groupingUsed="true"/></strong></td>
+                            <td><strong><fmt:formatNumber value="${orderDetail.order.totalAmount}" type="currency" currencySymbol="₫" groupingUsed="true"/></strong></td>
                         </tr>
                         <tr>
                             <td colspan="5" class="text-end"><strong>Tiền cọc:</strong></td>
-                            <td><strong><fmt:formatNumber value="${orderPayment.depositAmount}" type="currency" currencySymbol="VND" groupingUsed="true"/></strong></td>
+                            <td><strong><fmt:formatNumber value="${orderPayment.depositAmount}" type="currency" currencySymbol="₫" groupingUsed="true"/></strong></td>
                         </tr>
                         <tr>
                             <td colspan="5" class="text-end"><strong>Tổng (sau khi cọc 50%):</strong></td>
-                            <td><strong><fmt:formatNumber value="${remainingAmount}" type="currency" currencySymbol="VND" groupingUsed="true"/></strong></td>
+                            <td><strong><fmt:formatNumber value="${remainingAmount}" type="currency" currencySymbol="₫" groupingUsed="true"/></strong></td>
                         </tr>
                     </tfoot>
                 </table>

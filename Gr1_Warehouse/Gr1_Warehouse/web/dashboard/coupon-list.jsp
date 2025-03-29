@@ -323,16 +323,13 @@
         <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/simplebar.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/custom.js"></script>
 
-        <!-- customizer js -->
-        <!--<script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>-->
 
         <!-- Sidebar js -->
         <script src="${pageContext.request.contextPath}/assets2/js/config.js"></script>
 
         <!-- Plugins JS -->
         <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
-<!--        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
+
 
         <!-- Data table js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script><!--
@@ -341,8 +338,6 @@
         <!-- all checkbox select js -->
         <script src="${pageContext.request.contextPath}/assets2/js/checkbox-all-check.js"></script>
 
-        <!-- sidebar effect -->
-        <!--<script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>-->
 
         <!-- Theme js -->
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>

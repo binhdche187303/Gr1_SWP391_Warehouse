@@ -269,7 +269,7 @@
                                 <div class="card card-table">
                                     <div class="card-body">
                                         <div class="title-header option-title">
-                                            <h5>Danh sách sản phẩm giảm giá chi tiết</h5>
+                                            <h5>Danh sách giảm giá sản phẩm chi tiết</h5>
                                         </div>
                                         <div>
                                             <div class="table-responsive">
@@ -283,7 +283,6 @@
                                                             <th>Số lượng mới</th>
                                                             <th>Trạng thái cũ</th>
                                                             <th>Trạng thái mới</th>
-                                                            <th>Người thay đổi</th>
                                                         </tr>
                                                     </thead>
 
@@ -307,7 +306,6 @@
                                                                         <c:when test='${ldph.new_status == "Active"}'>text-success</c:when>
                                                                         <c:otherwise>text-danger</c:otherwise>
                                                                     </c:choose>">${ldph.new_status}</td>
-                                                                <td class="theme-color">${ldph.changed_by}</td>
                                                             </tr>
                                                         </c:forEach>
                                                     </tbody>
@@ -342,26 +340,19 @@
         <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/simplebar.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/custom.js"></script>
 
-        <!-- customizer js -->
-        <!--<script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>-->
+
 
         <!-- Sidebar js -->
         <script src="${pageContext.request.contextPath}/assets2/js/config.js"></script>
 
         <!-- Plugins JS -->
         <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
-<!--        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
 
         <!-- Data table js -->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script><!--
-    <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>-->
 
         <!-- all checkbox select js -->
         <script src="${pageContext.request.contextPath}/assets2/js/checkbox-all-check.js"></script>
-
-        <!-- sidebar effect -->
-        <!--<script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>-->
 
         <!-- Theme js -->
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>

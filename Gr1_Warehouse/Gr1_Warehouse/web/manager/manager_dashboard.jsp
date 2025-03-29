@@ -70,7 +70,7 @@
                                 </div>
                                 <ul class="profile-dropdown onhover-show-div">
                                     <li>
-                                        <a href="/Gr1_Warehouse/">
+                                        <a href="/Gr1_Warehouse/profilesetting">
                                             <i data-feather="settings"></i>
                                             <span>Chỉnh sửa</span>
                                         </a>
@@ -113,12 +113,6 @@
                                 <ul class="sidebar-links" id="simple-bar">
                                     <li class="back-btn"></li>
                                     <br><br><br>
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="index.html">
-                                            <i class="ri-home-line"></i>
-                                            <span>Dashboard</span>
-                                        </a>
-                                    </li>
 
                                     <li class="sidebar-list">
                                         <a class="sidebar-link sidebar-title" href="javascript:void(0)">
@@ -128,9 +122,6 @@
                                         <ul class="sidebar-submenu">
                                             <li>
                                                 <a href="/Gr1_Warehouse/orderlist">Danh sách đơn hàng</a>
-                                            </li>
-                                            <li>
-                                                <a href="order-tracking.html">Theo dõi đơn hàng</a>
                                             </li>
                                         </ul>
                                     </li>
@@ -154,20 +145,7 @@
                                             <li>
                                                 <a href="/Gr1_Warehouse/archive">Kho lưu trữ</a>
                                             </li>
-                                            <li>
-                                                <a href="add-new-product.html">Trả hàng</a>
-                                            </li>
-                                            <li>
-                                                <a href="add-new-product.html">Lịch sử</a>
-                                            </li> 
                                         </ul>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="reports.html">
-                                            <i class="ri-file-chart-line"></i>
-                                            <span>Báo cáo</span>
-                                        </a>
                                     </li>
                                     <li class="sidebar-list">
                                         <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/profilesetting">
@@ -244,8 +222,6 @@
         <script src="${pageContext.request.contextPath}/assets2/js/slick.min.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/custom-slick.js"></script>
 
-        <!-- customizer js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>
 
         <!-- ratio js -->
         <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>

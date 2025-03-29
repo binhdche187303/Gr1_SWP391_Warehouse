@@ -126,7 +126,7 @@
             let warehouseList = []; // Lưu danh sách kho
 
             document.addEventListener("DOMContentLoaded", function () {
-                fetch('/Gr1_Warehouse/getArchive')
+                fetch('/Gr1_Warehouse/getArchive?filter=Active')
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error("Lỗi khi lấy dữ liệu kho lưu trữ");
@@ -283,14 +283,8 @@
         <script src="${pageContext.request.contextPath}/assets2/js/slick.min.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/custom-slick.js"></script>
 
-        <!-- customizer js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>
-
         <!-- ratio js -->
         <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>
-
-        <!-- sidebar effect -->
-        <script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>
 
         <!-- Theme js -->
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>

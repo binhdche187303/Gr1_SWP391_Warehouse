@@ -181,7 +181,7 @@
                     <div class="col-xxl-9 col-xl-8">
                         <div class="title title-flex">
                             <div>
-                                <h2>10 Sản Phẩm HOT Nhất Trong Tháng</h2>
+                                <h2>12 Sản Phẩm HOT Nhất Trong Tháng</h2>
                                 <span class="title-leaf">
                                     <svg class="icon-width">
                                     <use xlink:href="${pageContext.request.contextPath}/assets/svg/leaf.svg#leaf"></use>
@@ -247,7 +247,7 @@
                         <br>
                         <div class="title d-block">
                             <div>
-                                <h2>Top 10 Sản Phẩm Bán Chạy Nhất</h2>
+                                <h2>Top 12 Sản Phẩm Bán Chạy Nhất</h2>
                                 <span class="title-leaf">
                                     <svg class="icon-width">
                                     <use xlink:href="${pageContext.request.contextPath}/assets/svg/leaf.svg#leaf"></use>

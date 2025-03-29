@@ -52,7 +52,7 @@
             <!-- Page Body Start -->
             <div class="page-body-wrapper">
                 <!-- Order section Start -->
-                <form method="POST" enctype="multipart/form-data" id="importForm">
+                <form method="POST" enctype="multipart/form-data" id="importForm" onsubmit="return validateForm();">
                     <div class="page-body">
                         <!-- Table Start -->
                         <div class="container-fluid">
@@ -169,7 +169,7 @@
                                                                     <td>Phân loại</td>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody id="productTable"></tbody> <!-- JS sẽ render sản phẩm vào đây -->
+                                                            <tbody id="productTable"></tbody>
                                                         </table>
                                                     </div>
                                                     <div class="modal-footer">
@@ -240,7 +240,14 @@
     </div>
 
 
-
+    <script>
+        dropdown.addEventListener("change", function (event) {
+            event.preventDefault(); // Ngăn chặn submit mặc định
+            clearSelectedProducts();
+            productTableBody.innerHTML = "";
+            updateSupplierDetails(this);
+        });
+    </script>
     <!--Chọn sản phẩm theo nhà cung cấp-->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -291,6 +298,7 @@
 
             // 🔹 Khi nhấn vào nút mở danh sách sản phẩm
             openProductModalBtn.addEventListener("click", function () {
+                event.preventDefault(); // Ngăn chặn hành vi mặc định
                 if (!selectedSupplierCode) {
                     alert("Vui lòng chọn nhà cung cấp trước!");
                     event.preventDefault(); // Ngăn chặn điều hướng
@@ -986,6 +994,8 @@
         });
     </script>
 
+
+
     <style>
         .modal-dialog {
             max-width: 800px; /* Giới hạn chiều rộng modal */
@@ -1045,9 +1055,6 @@
     <!-- slick slider js -->
     <script src="${pageContext.request.contextPath}/assets2/js/slick.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets2/js/custom-slick.js"></script>
-
-    <!-- customizer js -->
-    <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>
 
     <!-- ratio js -->
     <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>

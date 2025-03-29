@@ -146,16 +146,6 @@
         </section>
         <!-- log in section end -->
 
-        <!-- Tap to top start -->
-        <div class="theme-option">
-            <div class="back-to-top">
-                <a id="back-to-top" href="#">
-                    <i class="fas fa-chevron-up"></i>
-                </a>
-            </div>
-        </div>
-        <!-- Tap to top end -->
-
         <!-- Bg overlay Start -->
         <div class="bg-overlay"></div>
         <!-- Bg overlay End -->

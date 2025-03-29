@@ -300,31 +300,6 @@
                             <div class="summery-header">
                                 <h3>Tổng giỏ hàng</h3>
                             </div>
-
-                            <div class="summery-contain">
-                                <div class="coupon-cart">
-                                    <h6 class="text-content mb-2">Áp mã giảm giá</h6>
-                                    <div class="mb-3 coupon-box input-group">
-                                        <input type="text" class="form-control" placeholder="Enter Coupon Code Here...">
-                                        <button class="btn-apply">Áp dụng</button>
-                                    </div>
-                                </div>
-                                <ul>
-                                    <li>
-                                        <h4>Subtotal</h4>
-                                        <h4 class="price" id="subtotalAmount">0₫</h4>
-                                    </li>
-                                    <li>
-                                        <h4>Coupon Discount</h4>
-                                        <h4 class="price">(-) 0.00</h4>
-                                    </li>
-                                    <li class="align-items-start">
-                                        <h4>Shipping</h4>
-                                        <h4 class="price text-end">6.90₫</h4>
-                                    </li>
-                                </ul>
-                            </div>
-
                             <ul class="summery-total">
                                 <li class="list-total border-top-0">
                                     <h4>Tổng</h4>
@@ -387,7 +362,6 @@
 
                             // Format tiền tệ (VNĐ) và cập nhật vào giao diện
                             let formattedTotal = total.toLocaleString("vi-VN") + "₫";
-                            document.getElementById("subtotalAmount").innerText = formattedTotal;
                             document.getElementById("totalAmount").innerText = formattedTotal;
                         }
 

@@ -300,21 +300,16 @@
             </script>
         </c:if>
 
-        <script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
+<script src="${pageContext.request.contextPath}/assets2/js/jquery-3.6.0.min.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/bootstrap/bootstrap.bundle.min.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/icons/feather-icon/feather.min.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/icons/feather-icon/feather-icon.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/simplebar.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/scrollbar/custom.js"></script>
-        <!--<script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>-->
         <script src="${pageContext.request.contextPath}/assets2/js/config.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
-<!--        <script src="${pageContext.request.contextPath}/assets2/js/notify/bootstrap-notify.min.js"></script>
-        <script src="${pageContext.request.contextPath}/assets2/js/notify/index.js"></script>-->
         <script src="${pageContext.request.contextPath}/assets2/js/jquery.dataTables.js"></script>
-<!--        <script src="${pageContext.request.contextPath}/assets2/js/custom-data-table.js"></script>-->
         <script src="${pageContext.request.contextPath}/assets2/js/checkbox-all-check.js"></script>
-        <!--<script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>-->
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>
 
 

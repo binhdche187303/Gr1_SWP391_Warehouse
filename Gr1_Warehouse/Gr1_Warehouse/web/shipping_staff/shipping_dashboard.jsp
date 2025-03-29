@@ -69,7 +69,7 @@
                                 </div>
                                 <ul class="profile-dropdown onhover-show-div">
                                     <li>
-                                        <a href="/Gr1_Warehouse/">
+                                        <a href="/Gr1_Warehouse/profilesetting">
                                             <i data-feather="settings"></i>
                                             <span>Chỉnh sửa</span>
                                         </a>
@@ -113,13 +113,6 @@
                                     <li class="back-btn"></li>
                                     <br><br><br>
                                     <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="index.html">
-                                            <i class="ri-home-line"></i>
-                                            <span>Dashboard</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="sidebar-list">
                                         <a class="sidebar-link sidebar-title" href="javascript:void(0)">
                                             <i class="ri-archive-line"></i>
                                             <span>Đơn hàng</span>
@@ -132,12 +125,6 @@
                                                 <a href="/Gr1_Warehouse/my-shipping-orders">Đơn hàng của tôi</a>
                                             </li>
                                         </ul>
-                                    </li>
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="reports.html">
-                                            <i class="ri-file-chart-line"></i>
-                                            <span>Báo cáo</span>
-                                        </a>
                                     </li>
                                     <li class="sidebar-list">
                                         <a class="sidebar-link sidebar-title link-nav" href="/Gr1_Warehouse/profilesetting">
@@ -213,9 +200,6 @@
         <!-- slick slider js -->
         <script src="${pageContext.request.contextPath}/assets2/js/slick.min.js"></script>
         <script src="${pageContext.request.contextPath}/assets2/js/custom-slick.js"></script>
-
-        <!-- customizer js -->
-        <script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>
 
         <!-- ratio js -->
         <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>

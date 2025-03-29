@@ -11,7 +11,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" href="../assets/images/favicon/1c.png" type="image/x-icon">
+        <link rel="icon" href="${pageContext.request.contextPath}/assets/images/favicon/1c.png" type="image/x-icon">
         <title>Chân trang</title>
 
         <!-- Google font -->
@@ -21,23 +21,23 @@
             rel="stylesheet">
 
         <!-- bootstrap css -->
-        <link id="rtl-link" rel="stylesheet" type="text/css" href="../assets/css/vendors/bootstrap.css">
+        <link id="rtl-link" rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/vendors/bootstrap.css">
 
         <!-- font-awesome css -->
-        <link rel="stylesheet" type="text/css" href="../assets/css/vendors/font-awesome.css">
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/vendors/font-awesome.css">
 
         <!-- feather icon css -->
-        <link rel="stylesheet" type="text/css" href="../assets/css/vendors/feather-icon.css">
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/vendors/feather-icon.css">
 
         <!-- slick css -->
-        <link rel="stylesheet" type="text/css" href="../assets/css/vendors/slick/slick.css">
-        <link rel="stylesheet" type="text/css" href="../assets/css/vendors/slick/slick-theme.css">
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/vendors/slick/slick.css">
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/vendors/slick/slick-theme.css">
 
         <!-- Iconly css -->
-        <link rel="stylesheet" type="text/css" href="../assets/css/bulk-style.css">
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/bulk-style.css">
 
         <!-- Template css -->
-        <link id="color-link" rel="stylesheet" type="text/css" href="../assets/css/style.css">
+        <link id="color-link" rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/css/style.css">
     </head>
     <body>
         <!-- Footer Section Start -->
@@ -104,16 +104,10 @@
                                 <div class="footer-logo-contain">
                                     <p>Chúng tôi là kho bán buôn chuyên cung cấp đa dạng các mặt hàng thực phẩm, đồ uống và nhu yếu phẩm với giá sỉ hấp dẫn. 
                                         BULKMART là lựa chọn lý tưởng cho các cửa hàng, đại lý và doanh nghiệp kinh doanh thực phẩm.</p>
-
-
                                     <ul class="address">
                                         <li>
                                             <i data-feather="home"></i>
-                                            <a href="javascript:void(0)">1418 Riverwood Drive, CA 96052, US</a>
-                                        </li>
-                                        <li>
-                                            <i data-feather="mail"></i>
-                                            <a href="javascript:void(0)">support@fastkart.com</a>
+                                            <a href="javascript:void(0)">Đại học FPT, Khu Công Nghệ Cao Hòa Lạc, km 29</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -121,84 +115,25 @@
                         </div>
 
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
-                            <div class="footer-title">
-                                <h4>Categories</h4>
-                            </div>
-
-                            <div class="footer-contain">
-                                <ul>
-                                    <li>
-                                        <a href="shop-left-sidebar.html" class="text-content">Vegetables & Fruit</a>
-                                    </li>
-                                    <li>
-                                        <a href="shop-left-sidebar.html" class="text-content">Beverages</a>
-                                    </li>
-                                    <li>
-                                        <a href="shop-left-sidebar.html" class="text-content">Meats & Seafood</a>
-                                    </li>
-                                    <li>
-                                        <a href="shop-left-sidebar.html" class="text-content">Frozen Foods</a>
-                                    </li>
-                                    <li>
-                                        <a href="shop-left-sidebar.html" class="text-content">Biscuits & Snacks</a>
-                                    </li>
-                                    <li>
-                                        <a href="shop-left-sidebar.html" class="text-content">Grocery & Staples</a>
-                                    </li>
-                                </ul>
-                            </div>
+                           
                         </div>
 
                         <div class="col-xl col-lg-2 col-sm-3">
-                            <div class="footer-title">
-                                <h4>Useful Links</h4>
-                            </div>
-
-                            <div class="footer-contain">
-                                <ul>
-                                    <li>
-                                        <a href="index.html" class="text-content">Home</a>
-                                    </li>
-                                    <li>
-                                        <a href="shop-left-sidebar.html" class="text-content">Shop</a>
-                                    </li>
-                                    <li>
-                                        <a href="about-us.html" class="text-content">About Us</a>
-                                    </li>
-                                    <li>
-                                        <a href="blog-list.html" class="text-content">Blog</a>
-                                    </li>
-                                    <li>
-                                        <a href="contact-us.html" class="text-content">Contact Us</a>
-                                    </li>
-                                </ul>
-                            </div>
+                         
                         </div>
 
                         <div class="col-xl-2 col-sm-3">
                             <div class="footer-title">
-                                <h4>Help Center</h4>
+                                <h4>Trung tâm trợ giúp</h4>
                             </div>
 
                             <div class="footer-contain">
                                 <ul>
                                     <li>
-                                        <a href="order-success.html" class="text-content">Your Order</a>
+                                        <a href="/cart" class="text-content">Đơn hàng của bạn</a>
                                     </li>
                                     <li>
-                                        <a href="user-dashboard.html" class="text-content">Your Account</a>
-                                    </li>
-                                    <li>
-                                        <a href="order-tracking.html" class="text-content">Track Order</a>
-                                    </li>
-                                    <li>
-                                        <a href="wishlist.html" class="text-content">Your Wishlist</a>
-                                    </li>
-                                    <li>
-                                        <a href="search.html" class="text-content">Search</a>
-                                    </li>
-                                    <li>
-                                        <a href="faq.html" class="text-content">FAQ</a>
+                                        <a href="/profileSetting" class="text-content">Tài khoản của bạn</a>
                                     </li>
                                 </ul>
                             </div>
@@ -206,7 +141,7 @@
 
                         <div class="col-xl-3 col-lg-4 col-sm-6">
                             <div class="footer-title">
-                                <h4>Contact Us</h4>
+                                <h4>Liên hệ chúng tôi</h4>
                             </div>
 
                             <div class="footer-contact">
@@ -216,7 +151,7 @@
                                             <i data-feather="phone"></i>
                                             <div class="contact-number">
                                                 <h6 class="text-content">Hotline 24/7 :</h6>
-                                                <h5>+91 888 104 2340</h5>
+                                                <h5>0382525040</h5>
                                             </div>
                                         </div>
                                     </li>
@@ -226,37 +161,13 @@
                                             <i data-feather="mail"></i>
                                             <div class="contact-number">
                                                 <h6 class="text-content">Email Address :</h6>
-                                                <h5>fastkart@hotmail.com</h5>
+                                                <h5>kimtuan09112004@gmail.com</h5>
                                             </div>
                                         </div>
-                                    </li>
-
-                                    <li class="social-app">
-                                        <h5 class="mb-2 text-content">Download App :</h5>
-                                        <ul>
-                                            <li class="mb-0">
-                                                <a href="https://play.google.com/store/apps" target="_blank">
-                                                    <img src="${pageContext.request.contextPath}/assets/images/playstore.svg" class="blur-up lazyload"
-                                                         alt="">
-                                                </a>
-                                            </li>
-                                            <li class="mb-0">
-                                                <a href="https://www.apple.com/in/app-store/" target="_blank">
-                                                    <img src="${pageContext.request.contextPath}/assets/images/appstore.svg" class="blur-up lazyload"
-                                                         alt="">
-                                                </a>
-                                            </li>
-                                        </ul>
                                     </li>
                                 </ul>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="sub-footer section-small-space">
-                    <div class="payment">
-                        <img src="../assets/images/payment/1.png" class="blur-up lazyload" alt="">
                     </div>
                 </div>
             </div>
@@ -269,25 +180,25 @@
         <!-- Bg overlay End -->
 
         <!-- latest jquery-->
-        <script src="../assets/js/jquery-3.6.0.min.js"></script>
+        <script src="${pageContext.request.contextPath}/assets/js/jquery-3.6.0.min.js"></script>
 
         <!-- Bootstrap js-->
-        <script src="../assets/js/bootstrap/bootstrap.bundle.min.js"></script>
-        <script src="../assets/js/bootstrap/popper.min.js"></script>
+        <script src="${pageContext.request.contextPath}/assets/js/bootstrap/bootstrap.bundle.min.js"></script>
+        <script src="${pageContext.request.contextPath}/assets/js/bootstrap/popper.min.js"></script>
 
         <!-- feather icon js-->
-        <script src="../assets/js/feather/feather.min.js"></script>
-        <script src="../assets/js/feather/feather-icon.js"></script>
+        <script src="${pageContext.request.contextPath}/assets/js/feather/feather.min.js"></script>
+        <script src="${pageContext.request.contextPath}/assets/js/feather/feather-icon.js"></script>
 
         <!-- Slick js-->
-        <script src="../assets/js/slick/slick.js"></script>
-        <script src="../assets/js/slick/slick-animation.min.js"></script>
-        <script src="../assets/js/slick/custom_slick.js"></script>
+        <script src="${pageContext.request.contextPath}/assets/js/slick/slick.js"></script>
+        <script src="${pageContext.request.contextPath}/assets/js/slick/slick-animation.min.js"></script>
+        <script src="${pageContext.request.contextPath}/assets/js/slick/custom_slick.js"></script>
 
         <!-- Lazyload Js -->
-        <script src="../assets/js/lazysizes.min.js"></script>
+        <script src="${pageContext.request.contextPath}/assets/js/lazysizes.min.js"></script>
 
         <!-- script js -->
-        <script src="../assets/js/script.js"></script>
+        <script src="${pageContext.request.contextPath}/assets/js/script.js"></script>
     </body>
 </html>

@@ -126,12 +126,4 @@ public class BrandDAO extends DBContext {
         }
         return false;
     }
-
-    public static void main(String[] args) {
-        BrandDAO bd = new BrandDAO();
-        List<Brands> l = bd.getAllBrands();
-        for (Brands brands : l) {
-            System.out.println(brands.getBrand_name());
-        }
-    }
 }

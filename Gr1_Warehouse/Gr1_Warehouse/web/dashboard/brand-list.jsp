@@ -198,19 +198,16 @@
         <script src="${pageContext.request.contextPath}/assets2/js/config.js"></script>
 
         <!-- tooltip init js -->
-        <!--<script src="${pageContext.request.contextPath}/assets2/js/tooltip-init.js"></script>-->
+        <script src="${pageContext.request.contextPath}/assets2/js/tooltip-init.js"></script>
 
         <!-- Plugins JS -->
         <script src="${pageContext.request.contextPath}/assets2/js/sidebar-menu.js"></script>
 
-        <!-- customizer js -->
-        <!--<script src="${pageContext.request.contextPath}/assets2/js/customizer.js"></script>-->
+
 
         <!-- ratio js -->
         <script src="${pageContext.request.contextPath}/assets2/js/ratio.js"></script>
 
-        <!-- sidebar effect -->
-        <!--<script src="${pageContext.request.contextPath}/assets2/js/sidebareffect.js"></script>-->
 
         <!-- Theme js -->
         <script src="${pageContext.request.contextPath}/assets2/js/script.js"></script>

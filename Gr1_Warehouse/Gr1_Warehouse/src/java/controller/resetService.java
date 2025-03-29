@@ -57,17 +57,17 @@ public boolean sendEmail(String to, String link, String name) {
     try {
         msg.setFrom(new InternetAddress(from));
         msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false));
-        msg.setSubject("Reset Your Password", "UTF-8");
-        String content = "<h1>Hello " + name + ",</h1>"
-                + "<p>Please click the following link to reset your password:</p>"
-                + "<p><a href='" + link + "'>Reset Password</a></p>"
-                + "<p>The link is valid for 10 minutes only.</p>";
+        msg.setSubject("Đặt lại mật khẩu của bạn", "UTF-8");
+        String content = "<h1>Xin chào " + name + ",</h1>"
+                + "<p>Vui lòng nhấp vào liên kết sau để đặt lại mật khẩu của bạn:</p>"
+                + "<p><a href='" + link + "'>Đặt lại mật khẩu</a></p>"
+                + "<p>Liên kết này chỉ có hiệu lực trong 10 phút.</p>";
         msg.setContent(content, "text/html; charset=UTF-8");
         Transport.send(msg);
-        System.out.println("Email sent successfully");
+        System.out.println("Email đã được gửi thành công");
         return true;
     } catch (Exception e) {
-        System.out.println("Failed to send email: " + e.getMessage());  // Ghi lại thông báo lỗi chi tiết
+        System.out.println("Không gửi được email: " + e.getMessage());  // Ghi lại thông báo lỗi chi tiết
         return false;
     }
 }
